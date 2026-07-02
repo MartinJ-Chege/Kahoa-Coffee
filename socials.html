@@ -1,6 +1,41 @@
 <!doctype html><html lang=en><meta charset=UTF-8>
 <script src="https://www.googletagmanager.com/gtag/js?id=G-MP3BK1KXZ7" async></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-MP3BK1KXZ7');</script>
+<script>
+function kahoaTrack(event,params){if(typeof gtag==="function"){gtag("event",event,params||{});}}
+(function(){
+var _origOpenSquare=window.openSquare;
+if(typeof _origOpenSquare==="function"){
+window.openSquare=function(product,grind,qty){
+kahoaTrack("begin_checkout",{currency:"USD",item_id:product,item_name:product,item_category:"coffee"});
+return _origOpenSquare.apply(this,arguments);
+};}
+var _origCartAdd=window.kahoaCartAdd;
+if(typeof _origCartAdd==="function"){
+window.kahoaCartAdd=function(product,grind,qty){
+kahoaTrack("add_to_cart",{currency:"USD",item_id:product,item_name:product,item_category:"coffee",quantity:qty||1});
+return _origCartAdd.apply(this,arguments);
+};}
+var _origPaySuccess=window.kahoaPaymentSuccess;
+if(typeof _origPaySuccess==="function"){
+window.kahoaPaymentSuccess=function(data){
+var ctx=window._kahoaPaymentContext||{};
+kahoaTrack("purchase",{currency:"USD",value:ctx.grandTotal||0,transaction_id:Date.now().toString(),item_id:ctx.product||"unknown"});
+return _origPaySuccess.apply(this,arguments);
+};}
+document.addEventListener("click",function(e){
+var btn=e.target.closest("button,a");
+if(!btn)return;
+var txt=(btn.textContent||"").trim();
+if(txt.includes("Shop Now"))kahoaTrack("click",{button:"shop_now_nav"});
+if(txt.includes("Free Sample"))kahoaTrack("click",{button:"free_sample"});
+if(txt.includes("Subscribe"))kahoaTrack("click",{button:"subscribe_save"});
+if(txt.includes("Wholesale"))kahoaTrack("click",{button:"wholesale_inquiry"});
+if(txt.includes("Pre-Order"))kahoaTrack("click",{button:"preorder_teamusa"});
+if(txt.includes("Notify Me"))kahoaTrack("click",{button:"notify_me",product:document.getElementById("notify-product-name")?document.getElementById("notify-product-name").textContent:""});
+});
+})();
+</script>
 <meta content="width=device-width,initial-scale=1.0" name=viewport>
 <title>Follow Kahoa Coffee | Social Media</title>
 <meta content="Follow Kahoa Coffee on Instagram and Facebook." name=description>
