@@ -58,13 +58,3 @@
   from = "/team-usa.html"
   to = "/usa-kayak.html"
   status = 301
-
-[[redirects]]
-  from = "/wholesale.html"
-  to = "/wholesale-v2.html"
-  status = 302
-
-[[redirects]]
-  from = "/wholesale"
-  to = "/wholesale-v2.html"
-  status = 302
