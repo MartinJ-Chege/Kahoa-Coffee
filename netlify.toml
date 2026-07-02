@@ -1,0 +1,70 @@
+[build]
+  publish = "."
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    Content-Security-Policy = "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https: http:;"
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+
+[[redirects]]
+  from = "/shop"
+  to = "/shop.html"
+  status = 301
+
+[[redirects]]
+  from = "/team-usa"
+  to = "/usa-kayak.html"
+  status = 301
+
+[[redirects]]
+  from = "/usa-kayak"
+  to = "/usa-kayak.html"
+  status = 301
+
+[[redirects]]
+  from = "/our-story"
+  to = "/our-story.html"
+  status = 301
+
+[[redirects]]
+  from = "/brew-guide"
+  to = "/brew-guide.html"
+  status = 301
+
+[[redirects]]
+  from = "/reviews"
+  to = "/reviews.html"
+  status = 301
+
+[[redirects]]
+  from = "/wholesale"
+  to = "/wholesale.html"
+  status = 301
+
+[[redirects]]
+  from = "/sample"
+  to = "/sample.html"
+  status = 301
+
+[[redirects]]
+  from = "/socials"
+  to = "/socials.html"
+  status = 301
+
+[[redirects]]
+  from = "/team-usa.html"
+  to = "/usa-kayak.html"
+  status = 301
+
+[[redirects]]
+  from = "/wholesale.html"
+  to = "/wholesale-v2.html"
+  status = 302
+
+[[redirects]]
+  from = "/wholesale"
+  to = "/wholesale-v2.html"
+  status = 302
