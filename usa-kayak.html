@@ -175,3 +175,15 @@ function kahoaSelectBundleBlend(blendKey){
   if(typeof openSquare==='function'){openSquare(ctx.productKey||'teamusabundle');}
 }
 </script>
+
+<script>
+var _origGetShipping = window.getShipping;
+window.getShipping = function(subtotal, zip){
+  if(['teamusa','teamusabundle'].indexOf(window.currentProduct)!==-1){
+    var isLocal = typeof isLocalZip==='function' && zip && isLocalZip(zip);
+    return isLocal ? 0 : 7.99;
+  }
+  if(typeof _origGetShipping==='function') return _origGetShipping(subtotal, zip);
+  return subtotal >= 80 ? 0 : 7.99;
+};
+</script>
