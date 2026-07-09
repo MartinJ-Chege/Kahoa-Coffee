@@ -95,7 +95,31 @@ if(txt.includes("Notify Me"))kahoaTrack("click",{button:"notify_me",product:docu
 <button onclick="kahoaAddTrioBundle()" id=kahoa-trio-bundle-btn style="background:var(--gold);color:var(--coffee-dark);border:none;padding:16px 48px;font-family:Montserrat,sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;">Add Bundle to Cart →</button>
 <p style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:14px;">Free Austin delivery · Roasted fresh to order</p>
 </div>
-</section><script>function kahoaAddTrioBundle(){if(typeof kahoaCartAdd==="function"){kahoaCartAdd("nyeri","whole",1);kahoaCartAdd("kirinyaga","whole",1);kahoaCartAdd("dark","whole",1);if(typeof kahoaCartOpen==="function")kahoaCartOpen();var b=document.querySelector("#kahoa-trio-bundle-btn");if(b){b.textContent="Added to Cart ✓";setTimeout(function(){b.textContent="Add Bundle to Cart →";},2000);}}else{window.location.href="/shop.html";}}</script>
+</section><script>function kahoaAddTrioBundle(){
+  var btn=document.getElementById('kahoa-trio-bundle-btn');
+  var added=false;
+  if(typeof kahoaAddToCart==='function'){
+    kahoaAddToCart('nyeri','whole');
+    kahoaAddToCart('kirinyaga','whole');
+    kahoaAddToCart('dark','whole');
+    if(typeof kahoaCartOpen==='function')kahoaCartOpen();
+    added=true;
+  } else if(typeof kahoaCartGet==='function'){
+    var items=kahoaCartGet();
+    ['nyeri','kirinyaga','dark'].forEach(function(key){
+      var prod=squareProducts[key];
+      if(prod){
+        var ex=items.find(function(i){return i.productKey===key&&i.grind==='whole';});
+        if(ex){ex.qty+=1;}else{items.push({productKey:key,productName:prod.name,grind:'whole',grindLabel:'Whole Bean',unitPrice:prod.priceNum.whole,qty:1});}
+      }
+    });
+    if(typeof kahoaCartSave==='function')kahoaCartSave(items);
+    if(typeof kahoaCartOpen==='function')kahoaCartOpen();
+    added=true;
+  }
+  if(added&&btn){btn.textContent='Added to Cart ✓';setTimeout(function(){btn.textContent='Add Bundle to Cart →';},2000);}
+  if(!added){window.location.href='/shop.html?bundle=trio';}
+},2000);}}else{window.location.href="/shop.html";}}</script>
 
 <section style="background:linear-gradient(135deg,#1C0E06 0%,#2C1408 100%);padding:64px 6%;text-align:center;">
 <div style="max-width:600px;margin:0 auto;">
