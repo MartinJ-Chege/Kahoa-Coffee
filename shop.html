@@ -307,23 +307,18 @@ function kahoaAddTrioBundle(){
     var CART_KEY='kahoa_cart_v1';
     var items=[];
     try{items=JSON.parse(localStorage.getItem(CART_KEY)||'[]');}catch(e){}
-    // Remove any existing coffee items first
     items=items.filter(function(i){return['nyeri','kirinyaga','dark'].indexOf(i.productKey)===-1;});
-    // Add bundle items at $16 each
     [{key:'nyeri',name:'Nairobi Sunrise Signature Blend'},{key:'kirinyaga',name:'Savanna Gold Signature Blend'},{key:'dark',name:'Ngong Dark Reserve Signature Blend'}].forEach(function(p){
       items.push({productKey:p.key,productName:p.name,grind:'whole',grindLabel:'Whole Bean',unitPrice:16,qty:1,bundleItem:true});
     });
     localStorage.setItem(CART_KEY,JSON.stringify(items));
-    // Render and open cart
-    if(typeof kahoaCartRender==='function') kahoaCartRender();
-    var ov=document.getElementById('kahoa-cart-overlay');
-    var dr=document.getElementById('kahoa-cart-drawer');
-    if(ov) ov.style.display='block';
-    if(dr){dr.style.cssText='z-index:10001;background:#faf4e8;flex-direction:column;width:100%;max-width:440px;height:100vh;position:fixed;top:0;right:0;display:flex;box-shadow:-12px 0 48px #140c0552';}
+    // Use existing kahoaCartOpen which handles render+open
+    if(typeof kahoaCartOpen==='function'){
+      kahoaCartOpen();
+    }
     if(btn){btn.textContent='Added ✓ $48';setTimeout(function(){btn.textContent='Add Bundle to Cart →';},2500);}
   }catch(err){
     console.error('Bundle error:',err);
-    if(btn) btn.textContent='Error - try again';
   }
 }
 </script>
