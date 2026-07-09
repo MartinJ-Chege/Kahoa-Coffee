@@ -250,17 +250,22 @@ function kahoaAddTrioBundle(){
     {key:'kirinyaga',name:'Savanna Gold Signature Blend',price:16},
     {key:'dark',name:'Ngong Dark Reserve Signature Blend',price:16}
   ];
-  var KAHOA_CART_KEY='kahoa_cart_v2';
-  function getCart(){try{return JSON.parse(localStorage.getItem(KAHOA_CART_KEY)||'[]');}catch(e){return[];}}
-  function saveCart(items){try{localStorage.setItem(KAHOA_CART_KEY,JSON.stringify(items));}catch(e){}}
-  var items=getCart();
-  items=items.filter(function(i){return['nyeri','kirinyaga','dark'].indexOf(i.productKey)===-1;});
-  products.forEach(function(p){
-    items.push({productKey:p.key,productName:p.name,grind:'whole',grindLabel:'Whole Bean',unitPrice:p.price,qty:1,bundleItem:true,bundleLabel:'Bundle Deal'});
-  });
-  saveCart(items);
-  if(typeof kahoaCartOpen==='function'){kahoaCartOpen();}
-  else if(typeof kahoaCartRender==='function'){kahoaCartRender();document.getElementById('kahoa-cart-overlay').style.display='block';document.getElementById('kahoa-cart-drawer').style.display='flex';document.getElementById('kahoa-cart-drawer').style.right='0';}
-  if(btn){btn.textContent='Added to Cart ✓ ($48)';setTimeout(function(){btn.textContent='Add Bundle to Cart →';},2500);}
+  // Use correct cart key
+  var CART_KEY='kahoa_cart_v1';
+  try{
+    var items=JSON.parse(localStorage.getItem(CART_KEY)||'[]');
+    items=items.filter(function(i){return['nyeri','kirinyaga','dark'].indexOf(i.productKey)===-1;});
+    products.forEach(function(p){
+      items.push({productKey:p.key,productName:p.name,grind:'whole',grindLabel:'Whole Bean',unitPrice:p.price,qty:1,bundleItem:true,bundleLabel:'Bundle Deal'});
+    });
+    localStorage.setItem(CART_KEY,JSON.stringify(items));
+  }catch(e){console.log('Cart error:',e);}
+  // Open cart
+  if(typeof kahoaCartRender==='function') kahoaCartRender();
+  var overlay=document.getElementById('kahoa-cart-overlay');
+  var drawer=document.getElementById('kahoa-cart-drawer');
+  if(overlay) overlay.style.display='block';
+  if(drawer){drawer.style.display='flex';drawer.style.right='0';drawer.style.boxShadow='-12px 0 48px #140c0552';}
+  if(btn){btn.textContent='Added! ✓ $48';setTimeout(function(){btn.textContent='Add Bundle to Cart →';},2500);}
 }
 </script>
