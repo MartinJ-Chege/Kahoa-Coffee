@@ -302,30 +302,37 @@ window.toggleSideNav = function(){
 <script>
 function kahoaAddTrioBundle(){
   var btn=document.getElementById('kahoa-trio-bundle-btn');
+  var BUNDLE_PRICE=48;
+  var products=[
+    {key:'nyeri',  name:'Nairobi Sunrise',  price:16},
+    {key:'kirinyaga', name:'Savanna Gold',  price:16},
+    {key:'dark',   name:'Ngong Dark Reserve', price:16}
+  ];
   var added=false;
-  if(typeof kahoaAddToCart==='function'){
-    kahoaAddToCart('nyeri','whole');
-    kahoaAddToCart('kirinyaga','whole');
-    kahoaAddToCart('dark','whole');
-    if(typeof kahoaCartOpen==='function')kahoaCartOpen();
-    added=true;
-  } else if(typeof kahoaCartGet==='function'){
+  if(typeof kahoaCartGet==='function'&&typeof kahoaCartSave==='function'){
     var items=kahoaCartGet();
-    ['nyeri','kirinyaga','dark'].forEach(function(key){
-      var prod=squareProducts[key];
-      if(prod){
-        var ex=items.find(function(i){return i.productKey===key&&i.grind==='whole';});
-        if(ex){ex.qty+=1;}else{items.push({productKey:key,productName:prod.name,grind:'whole',grindLabel:'Whole Bean',unitPrice:prod.priceNum.whole,qty:1});}
-      }
+    // Remove existing single coffees to avoid duplication
+    items=items.filter(function(i){return ['nyeri','kirinyaga','dark'].indexOf(i.productKey)===-1;});
+    products.forEach(function(p){
+      items.push({
+        productKey:p.key,
+        productName:p.name+' Signature Blend',
+        grind:'whole',
+        grindLabel:'Whole Bean',
+        unitPrice:p.price,
+        qty:1,
+        bundleItem:true,
+        bundleLabel:'Bundle Deal'
+      });
     });
-    if(typeof kahoaCartSave==='function')kahoaCartSave(items);
+    kahoaCartSave(items);
     if(typeof kahoaCartOpen==='function')kahoaCartOpen();
     added=true;
   }
-  if(added&&btn){btn.textContent='Added to Cart ✓';setTimeout(function(){btn.textContent='Add Bundle to Cart →';},2000);}
-  if(!added){window.location.href='/shop.html?bundle=trio';}
-} else {
-    window.location.href='/shop.html';
+  if(btn){
+    btn.textContent=added?'Added to Cart ✓ ($48)':'Add Bundle to Cart →';
+    if(added)setTimeout(function(){btn.textContent='Add Bundle to Cart →';},2500);
   }
+  if(!added)window.location.href='/shop.html?bundle=trio';
 }
 </script>
