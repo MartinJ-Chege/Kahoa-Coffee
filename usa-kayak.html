@@ -210,13 +210,20 @@ function kahoaShowBlendPicker(productKey,price,priceStr,productName,msg){
   window._kahoaBundleCtx={productKey:productKey,price:price,priceStr:priceStr,productName:productName};
 }
 
-function kahoaSelectBundleBlend(blendKey){
+
+function kahoaPickBlend(blendKey){
+  window._kahoaPickedBlend=blendKey;
+  var blendNames={nyeri:'Nairobi Sunrise',kirinyaga:'Savanna Gold',dark:'Ngong Dark Reserve'};
+  document.getElementById('blend-picker-step1').style.display='none';
+  document.getElementById('blend-picker-step2').style.display='block';
+}
+function kahoaSelectBundleBlend(blendKey,grind){
   var el=document.getElementById('kahoa-blend-picker');
   if(el)el.remove();
   var ctx=window._kahoaBundleCtx||{};
   var blendNames={nyeri:'Nairobi Sunrise',kirinyaga:'Savanna Gold',dark:'Ngong Dark Reserve'};
   window.currentProduct=ctx.productKey||'teamusabundle';
-  window.currentGrind='whole';
+  window.currentGrind=grind||'whole';
   window.currentQty=1;
   if(typeof openSquare==='function'){openSquare(ctx.productKey||'teamusabundle');}
 }
