@@ -168,7 +168,13 @@ function adjustQty(d){currentQty=Math.max(1,Math.min(10,currentQty+d)),document.
   var saleActive=window.kahoaIsMemorialSaleActive&&window.kahoaIsMemorialSaleActive();
   var shipping=0;
   var bundleShip=hasBundleItems?7.99:0;
-  if(bagCount===0&&!hasBundleItems||saleActive||hasTrio||subtotal>=KAHOA_CART_FREE_THRESHOLD){
+  if(saleActive||hasTrio){
+    shipping=0;
+  } else if(hasBundleItems&&bagCount===0){
+    shipping=bundleShip;
+  } else if(bagCount===0){
+    shipping=0;
+  } else if(subtotal>=KAHOA_CART_FREE_THRESHOLD){
     shipping=bundleShip;
   } else if(bagCount===1){
     shipping=KAHOA_CART_FLAT_TIERS[1]+bundleShip;
