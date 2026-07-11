@@ -307,9 +307,9 @@ window.toggleSideNav = function(){
 function kahoaAddTrioBundle(){
   var btn=document.getElementById('kahoa-trio-bundle-btn');
   if(btn) btn.textContent='Adding...';
-  // Add each coffee using existing kahoaAddToCart
-  ['nyeri','kirinyaga','dark'].forEach(function(key){kahoaAddToCart(key,'whole');});
-  // Adjust prices to bundle rate ($16 each)
+  kahoaAddToCart('nyeri','whole');
+  kahoaAddToCart('kirinyaga','whole');
+  kahoaAddToCart('dark','whole');
   var items=kahoaCartGet();
   items.forEach(function(i){
     if(['nyeri','kirinyaga','dark'].indexOf(i.productKey)!==-1){
