@@ -245,17 +245,19 @@ window.toggleSideNav = function(){
 <script>
 function kahoaAddTrioBundle(){
   var btn=document.getElementById('kahoa-trio-bundle-btn');
-  if(typeof kahoaCartGet==='function'&&typeof kahoaCartSave==='function'){
-    var items=kahoaCartGet();
-    items=items.filter(function(i){return['nyeri','kirinyaga','dark'].indexOf(i.productKey)===-1;});
-    [{key:'nyeri',name:'Nairobi Sunrise Signature Blend'},{key:'kirinyaga',name:'Savanna Gold Signature Blend'},{key:'dark',name:'Ngong Dark Reserve Signature Blend'}].forEach(function(p){
-      items.push({productKey:p.key,productName:p.name,grind:'whole',grindLabel:'Whole Bean',unitPrice:16,qty:1,bundleItem:true});
-    });
-    kahoaCartSave(items);
-    kahoaCartOpen();
-    if(btn){btn.textContent='Added ✓ $48';setTimeout(function(){btn.textContent='Add Bundle to Cart →';},2500);}
-  } else {
-    window.location.href='/shop.html?bundle=trio';
-  }
+  var CART_KEY='kahoa_cart_v1';
+  var items=[];
+  try{items=JSON.parse(localStorage.getItem(CART_KEY)||'[]');}catch(e){}
+  items=items.filter(function(i){return['nyeri','kirinyaga','dark'].indexOf(i.productKey)===-1;});
+  [{key:'nyeri',name:'Nairobi Sunrise Signature Blend'},{key:'kirinyaga',name:'Savanna Gold Signature Blend'},{key:'dark',name:'Ngong Dark Reserve Signature Blend'}].forEach(function(p){
+    items.push({productKey:p.key,productName:p.name,grind:'whole',grindLabel:'Whole Bean',unitPrice:16,qty:1,bundleItem:true});
+  });
+  try{localStorage.setItem(CART_KEY,JSON.stringify(items));}catch(e){}
+  if(typeof kahoaCartRender==='function') kahoaCartRender();
+  var ov=document.getElementById('kahoa-cart-overlay');
+  var dr=document.getElementById('kahoa-cart-drawer');
+  if(ov) ov.style.display='block';
+  if(dr){dr.style.display='flex';dr.style.right='0';dr.style.boxShadow='-12px 0 48px #140c0552';}
+  if(btn){btn.textContent='Added ✓ $48';setTimeout(function(){btn.textContent='Add Bundle to Cart →';},2500);}
 }
 </script>
