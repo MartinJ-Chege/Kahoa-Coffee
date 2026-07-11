@@ -468,3 +468,21 @@ window.proceedToReview=function(){
   if(cs) cs.style.display=allBundle?'none':'block';
 };
 </script>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  // Ensure cart overlay starts hidden
+  var ov=document.getElementById('kahoa-cart-overlay');
+  var dr=document.getElementById('kahoa-cart-drawer');
+  if(ov) ov.style.display='none';
+  if(dr) dr.style.display='none';
+  
+  // Ensure cart icon works
+  var icon=document.getElementById('kahoa-cart-icon');
+  if(icon){
+    icon.addEventListener('click',function(e){
+      e.stopPropagation();
+      if(typeof kahoaCartOpen==='function') kahoaCartOpen();
+    });
+  }
+});
+</script>
