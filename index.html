@@ -247,16 +247,19 @@ window.toggleSideNav = function(){
 function kahoaAddTrioBundle(){
   var btn=document.getElementById('kahoa-trio-bundle-btn');
   if(btn) btn.textContent='Adding...';
-  var items=kahoaCartGet();
-  // Remove any existing coffee items
-  items=items.filter(function(i){return['nyeri','kirinyaga','dark'].indexOf(i.productKey)===-1;});
-  // Add all 3 at bundle price
-  var prods=squareProducts||{};
-  [{k:'nyeri',n:'Nairobi Sunrise Signature Blend'},{k:'kirinyaga',n:'Savanna Gold Signature Blend'},{k:'dark',n:'Ngong Dark Reserve Signature Blend'}].forEach(function(p){
-    items.push({productKey:p.k,productName:p.n,grind:'whole',grindLabel:'Whole Bean',unitPrice:16,qty:1,bundleItem:true});
-  });
-  kahoaCartSave(items);
-  kahoaCartOpen();
-  if(btn){btn.textContent='Added ✓ $48';setTimeout(function(){btn.textContent='Add Bundle to Cart →';},2500);}
+  setTimeout(function(){
+    try{
+      var items=kahoaCartGet();
+      items=items.filter(function(i){return['nyeri','kirinyaga','dark'].indexOf(i.productKey)===-1;});
+      [{k:'nyeri',n:'Nairobi Sunrise Signature Blend'},{k:'kirinyaga',n:'Savanna Gold Signature Blend'},{k:'dark',n:'Ngong Dark Reserve Signature Blend'}].forEach(function(p){
+        items.push({productKey:p.k,productName:p.n,grind:'whole',grindLabel:'Whole Bean',unitPrice:16,qty:1,bundleItem:true});
+      });
+      kahoaCartSave(items);
+      kahoaCartOpen();
+    }catch(e){
+      alert('Error adding bundle: '+e.message);
+    }
+    if(btn){btn.textContent='Added ✓ $48';setTimeout(function(){btn.textContent='Add Bundle to Cart →';},2500);}
+  },50);
 }
 </script>
