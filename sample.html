@@ -421,6 +421,7 @@ window.kahoaGenerateReferral=function(){
   // Register with Sheet (handles duplicates with suffix)
   fetch(KAHOA_SHEET_URL,{
     method:'POST',
+    mode:'no-cors',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({action:'register_referral',name:name,email:email,code:code})
   }).then(function(r){return r.json();}).then(function(data){
@@ -463,11 +464,7 @@ window.applyCoupon=function(){
   var customerEmail=(document.getElementById('sq-email')||{}).value||'';
   if(statusEl) statusEl.textContent='Checking...';
 
-  fetch(KAHOA_SHEET_URL,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({action:'validate_referral',code:code,email:customerEmail})
-  }).then(function(r){return r.json();}).then(function(data){
+  fetch(KAHOA_SHEET_URL+'?action=validate_referral&code='+encodeURIComponent(code)+'&email='+encodeURIComponent(customerEmail),{method:'GET',mode:'cors'}).then(function(r){return r.json();}).then(function(data){
     if(data.valid){
       // Apply 10% discount
       window._kahoaActiveCoupon=code;
