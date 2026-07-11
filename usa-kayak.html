@@ -293,8 +293,8 @@ window.applyCoupon=function(){
   var code=(inputEl.value||'').trim().toUpperCase();
   var statusEl=document.getElementById('rv-coupon-status');
 
-  // Check static codes first (uber254, storyzajaba)
-  var staticCodes=['UBER254','STORYZAJABA'];
+  // Check static codes first (STORYZAJABA, storyzajaba)
+  var staticCodes=['STORYZAJABA','STORYZAJABA'];
   if(staticCodes.indexOf(code)!==-1){
     if(typeof _origApplyCoupon==='function') _origApplyCoupon();
     return;
@@ -379,4 +379,21 @@ window.kahoaPaymentSuccess=function(orderData){
     loadUnits();
   });
 })();
+</script>
+<script>
+var kahoaIdleTimer;
+function kahoaResetIdle(){
+  clearTimeout(kahoaIdleTimer);
+  kahoaIdleTimer=setTimeout(function(){
+    var modal=document.getElementById('kahoa-exit-modal');
+    if(modal&&modal.style.display==='none'&&!localStorage.getItem('kahoa_exit_seen')){
+      modal.style.display='flex';
+      localStorage.setItem('kahoa_exit_seen','1');
+    }
+  },30000);
+}
+['mousemove','keypress','scroll','touchstart','click'].forEach(function(e){
+  document.addEventListener(e,kahoaResetIdle,{passive:true});
+});
+kahoaResetIdle();
 </script>
