@@ -288,25 +288,31 @@ function kahoaAddTrioBundle(){
   if(btn) btn.textContent='Adding...';
   try{
     var KEY=typeof KAHOA_CART_KEY!=='undefined'?KAHOA_CART_KEY:'kahoa_cart_v1';
-    var getCart=typeof kahoaCartGet==='function'?kahoaCartGet:function(){try{return JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){return[];}};
-    var saveCart=typeof kahoaCartSave==='function'?kahoaCartSave:function(items){try{localStorage.setItem(KEY,JSON.stringify(items));}catch(e){}};
-    var items=getCart().filter(function(i){return['nyeri','kirinyaga','dark'].indexOf(i.productKey)===-1;});
+    var items=[];
+    try{items=JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){}
+    items=items.filter(function(i){return['nyeri','kirinyaga','dark'].indexOf(i.productKey)===-1;});
     [{k:'nyeri',n:'Nairobi Sunrise Signature Blend'},{k:'kirinyaga',n:'Savanna Gold Signature Blend'},{k:'dark',n:'Ngong Dark Reserve Signature Blend'}].forEach(function(p){
       items.push({productKey:p.k,productName:p.n,grind:'whole',grindLabel:'Whole Bean',unitPrice:16,qty:1,bundleItem:true});
     });
-    saveCart(items);
-    if(typeof kahoaCartRender==='function') kahoaCartRender();
-    if(typeof kahoaCartOpen==='function'){
-      kahoaCartOpen();
-    } else {
-      var ov=document.getElementById('kahoa-cart-overlay');
-      var dr=document.getElementById('kahoa-cart-drawer');
-      if(ov) ov.style.display='block';
-      if(dr){dr.style.display='flex';dr.style.right='0';dr.style.boxShadow='-12px 0 48px #140c0552';}
-    }
-    if(btn){btn.textContent='Added ✓ $48';setTimeout(function(){btn.textContent='Add Bundle to Cart →';},2500);}
+    // Save first
+    localStorage.setItem(KEY,JSON.stringify(items));
+    // Then render with slight delay so DOM has latest data
+    setTimeout(function(){
+      if(typeof kahoaCartRender==='function') kahoaCartRender();
+      setTimeout(function(){
+        if(typeof kahoaCartOpen==='function'){
+          kahoaCartOpen();
+        } else {
+          var ov=document.getElementById('kahoa-cart-overlay');
+          var dr=document.getElementById('kahoa-cart-drawer');
+          if(ov) ov.style.display='block';
+          if(dr){dr.style.display='flex';dr.style.right='0';dr.style.boxShadow='-12px 0 48px #140c0552';}
+        }
+        if(btn){btn.textContent='Added ✓ $48';setTimeout(function(){btn.textContent='Add Bundle to Cart →';},2500);}
+      },50);
+    },50);
   }catch(err){
-    alert('Error adding bundle: '+err.message);
+    alert('Error: '+err.message);
     if(btn) btn.textContent='Add Bundle to Cart →';
   }
 }
