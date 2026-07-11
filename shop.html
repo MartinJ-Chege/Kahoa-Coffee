@@ -306,16 +306,11 @@ window.toggleSideNav = function(){
 <script>
 function kahoaAddTrioBundle(){
   var btn=document.getElementById('kahoa-trio-bundle-btn');
-  try{
-    var products=[
-      {productKey:'nyeri',productName:'Nairobi Sunrise Signature Blend',grind:'whole',grindLabel:'Whole Bean',unitPrice:16,qty:1,bundleItem:true},
-      {productKey:'kirinyaga',productName:'Savanna Gold Signature Blend',grind:'whole',grindLabel:'Whole Bean',unitPrice:16,qty:1,bundleItem:true},
-      {productKey:'dark',productName:'Ngong Dark Reserve Signature Blend',grind:'whole',grindLabel:'Whole Bean',unitPrice:16,qty:1,bundleItem:true}
-    ];
-    var existing=kahoaCartGet().filter(function(i){return['nyeri','kirinyaga','dark'].indexOf(i.productKey)===-1;});
-    kahoaCartSave(existing.concat(products));
-    kahoaCartOpen();
-    if(btn){btn.textContent='Added ✓ $48';setTimeout(function(){btn.textContent='Add Bundle to Cart →';},2500);}
-  }catch(err){console.error('Bundle err:',err);}
+  if(btn) btn.textContent='Adding...';
+  kahoaCartAdd('nyeri','whole',1);
+  kahoaCartAdd('kirinyaga','whole',1);
+  kahoaCartAdd('dark','whole',1);
+  kahoaCartOpen();
+  if(btn){btn.textContent='Added ✓ $48';setTimeout(function(){btn.textContent='Add Bundle to Cart →';},2500);}
 }
 </script>
