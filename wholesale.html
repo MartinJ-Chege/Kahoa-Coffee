@@ -351,3 +351,117 @@ function kahoaResetIdle(){
 });
 kahoaResetIdle();
 </script>
+<script>
+(function(){
+
+// ── 1. ABANDONED CART REMINDER ─────────────────────────────────────────────
+var _kahoaAbandonTimer;
+function kahoaCheckAbandon(){
+  var KEY=typeof KAHOA_CART_KEY!=='undefined'?KAHOA_CART_KEY:'kahoa_cart_v1';
+  var items=[];try{items=JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){}
+  if(items.length===0) return;
+  // Show reminder popup
+  var existing=document.getElementById('kahoa-abandon-popup');
+  if(existing) return;
+  var popup=document.createElement('div');
+  popup.id='kahoa-abandon-popup';
+  popup.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1C0E06;border:1px solid rgba(212,168,67,0.4);padding:16px 20px;z-index:99999;max-width:340px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.5);border-radius:3px;display:flex;align-items:center;gap:12px;animation:slideUp .4s ease;';
+  popup.innerHTML='<style>@keyframes slideUp{from{transform:translateX(-50%) translateY(100px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}</style>'
+    +'<span style="font-size:28px;">☕</span>'
+    +'<div style="flex:1;">'
+    +'<p style="font-family:Montserrat,sans-serif;font-size:12px;font-weight:700;color:#e8c76a;margin:0 0 3px;letter-spacing:1px;">YOU LEFT SOMETHING BEHIND</p>'
+    +'<p style="font-family:Montserrat,sans-serif;font-size:11px;color:rgba(255,255,255,0.7);margin:0;">Your cart is waiting. Complete your order?</p>'
+    +'</div>'
+    +'<button onclick="kahoaCartOpen();document.getElementById('kahoa-abandon-popup').remove();" style="background:var(--gold,#D4A843);color:#1C0E06;border:none;padding:8px 14px;font-family:Montserrat,sans-serif;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">View Cart</button>'
+    +'<button onclick="document.getElementById('kahoa-abandon-popup').remove();" style="background:none;border:none;color:rgba(255,255,255,0.3);font-size:18px;cursor:pointer;padding:0 4px;">×</button>';
+  document.body.appendChild(popup);
+  setTimeout(function(){if(popup.parentNode)popup.remove();},8000);
+}
+// Show after 20 seconds on page if cart has items
+setTimeout(function(){
+  var KEY=typeof KAHOA_CART_KEY!=='undefined'?KAHOA_CART_KEY:'kahoa_cart_v1';
+  var items=[];try{items=JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){}
+  if(items.length>0&&!sessionStorage.getItem('kahoa_abandon_shown')){
+    sessionStorage.setItem('kahoa_abandon_shown','1');
+    kahoaCheckAbandon();
+  }
+},20000);
+
+// ── 2. SOCIAL PROOF TICKER ─────────────────────────────────────────────────
+var _kahoaProofs=[
+  {name:'James',city:'Austin',product:'Savanna Gold',time:'2 min ago'},
+  {name:'Amara',city:'Houston',product:'Nairobi Sunrise',time:'5 min ago'},
+  {name:'David',city:'Dallas',product:'Try All Three Bundle',time:'8 min ago'},
+  {name:'Sarah',city:'Austin',product:'Ngong Dark Reserve',time:'12 min ago'},
+  {name:'Michael',city:'San Antonio',product:'Savanna Gold',time:'15 min ago'},
+  {name:'Zoe',city:'Austin',product:'Nairobi Sunrise',time:'just now'},
+  {name:'Kevin',city:'New York',product:'Try All Three Bundle',time:'3 min ago'},
+  {name:'Fatima',city:'Chicago',product:'Ngong Dark Reserve',time:'7 min ago'},
+  {name:'Lucas',city:'Austin',product:'Savanna Gold',time:'11 min ago'},
+  {name:'Priya',city:'Seattle',product:'Nairobi Sunrise',time:'18 min ago'},
+];
+var _kahoaProofIdx=0,_kahoaProofEl=null;
+function kahoaShowProof(){
+  if(!_kahoaProofEl){
+    _kahoaProofEl=document.createElement('div');
+    _kahoaProofEl.id='kahoa-proof-popup';
+    _kahoaProofEl.style.cssText='position:fixed;bottom:20px;left:20px;background:#1C0E06;border:1px solid rgba(212,168,67,0.3);padding:12px 16px;z-index:88888;max-width:280px;box-shadow:0 4px 20px rgba(0,0,0,0.4);border-radius:3px;display:none;';
+    document.body.appendChild(_kahoaProofEl);
+  }
+  var p=_kahoaProofs[_kahoaProofIdx%_kahoaProofs.length];
+  _kahoaProofIdx++;
+  _kahoaProofEl.innerHTML='<div style="display:flex;align-items:center;gap:10px;">'
+    +'<span style="font-size:22px;">☕</span>'
+    +'<div><p style="font-family:Montserrat,sans-serif;font-size:11px;font-weight:700;color:#e8c76a;margin:0;">'+p.name+' from '+p.city+'</p>'
+    +'<p style="font-family:Montserrat,sans-serif;font-size:10px;color:rgba(255,255,255,0.6);margin:2px 0 0;">just ordered '+p.product+'</p></div>'
+    +'<span style="font-family:Montserrat,sans-serif;font-size:9px;color:rgba(255,255,255,0.3);margin-left:auto;">'+p.time+'</span>'
+    +'</div>';
+  _kahoaProofEl.style.display='block';
+  _kahoaProofEl.style.animation='none';
+  setTimeout(function(){_kahoaProofEl.style.display='none';},4000);
+}
+// Start after 5s, then every 25s
+setTimeout(function(){
+  kahoaShowProof();
+  setInterval(kahoaShowProof,25000);
+},5000);
+
+// ── 3. POST-PURCHASE UPSELL ────────────────────────────────────────────────
+window.kahoaShowUpsell=function(purchasedKey){
+  var upsells={
+    nyeri:{key:'kirinyaga',name:'Savanna Gold',price:'$17'},
+    kirinyaga:{key:'dark',name:'Ngong Dark Reserve',price:'$21'},
+    dark:{key:'nyeri',name:'Nairobi Sunrise',price:'$19'},
+    teamusa:{key:'nyeri',name:'Nairobi Sunrise',price:'$19'},
+    teamusabundle:{key:'kirinyaga',name:'Savanna Gold',price:'$17'}
+  };
+  var u=upsells[purchasedKey]||upsells.nyeri;
+  var modal=document.createElement('div');
+  modal.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;padding:20px;';
+  modal.innerHTML='<div style="background:#1C0E06;border:1px solid rgba(212,168,67,0.3);padding:32px;max-width:400px;width:100%;text-align:center;">'
+    +'<p style="font-size:10px;letter-spacing:3px;color:rgba(212,168,67,0.7);text-transform:uppercase;margin:0 0 8px;">One more thing...</p>'
+    +'<h3 style="font-family:Cormorant Garamond,serif;font-size:26px;color:#fff;font-weight:300;margin:0 0 10px;">Add '+u.name+' before your order ships?</h3>'
+    +'<p style="font-size:13px;color:rgba(255,255,255,0.5);margin:0 0 20px;">Just '+u.price+' — ships in the same box. No extra shipping.</p>'
+    +'<div style="display:flex;gap:10px;">'
+    +'<button onclick="kahoaAddToCart(''+u.key+'','whole');this.closest('div').parentElement.parentElement.remove();" style="flex:1;background:var(--gold,#D4A843);color:#1C0E06;border:none;padding:13px;font-family:Montserrat,sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;">Yes, Add It →</button>'
+    +'<button onclick="this.closest('div').parentElement.parentElement.remove();" style="flex:1;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.1);padding:13px;font-family:Montserrat,sans-serif;font-size:11px;cursor:pointer;">No thanks</button>'
+    +'</div></div>';
+  document.body.appendChild(modal);
+};
+
+// ── 4. SUBSCRIPTION NUDGE IN CART ─────────────────────────────────────────
+// Added to cart render via existing freeship bar area
+window.kahoaShowSubNudge=function(productKey,savings){
+  var nudge=document.getElementById('kahoa-sub-nudge');
+  if(!nudge){
+    nudge=document.createElement('div');
+    nudge.id='kahoa-sub-nudge';
+    nudge.style.cssText='background:rgba(212,168,67,0.08);border-top:1px solid rgba(212,168,67,0.15);padding:12px 20px;font-family:Montserrat,sans-serif;';
+    var footer=document.getElementById('kahoa-cart-footer');
+    if(footer) footer.insertBefore(nudge,footer.firstChild);
+  }
+  nudge.innerHTML='<p style="font-size:11px;color:rgba(212,168,67,0.8);margin:0;"><strong>💰 Subscribe & save 12%</strong> — get this delivered monthly for <strong>'+savings+' less</strong>. <a href="/shop.html#subscribe" onclick="kahoaCartClose()" style="color:var(--gold,#D4A843);">Learn more →</a></p>';
+};
+
+})();
+</script>
