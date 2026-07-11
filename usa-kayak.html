@@ -228,9 +228,18 @@ function kahoaSelectBundleBlend(blendKey,grind){
   if(el)el.remove();
   var ctx=window._kahoaBundleCtx||{};
   var blendNames={nyeri:'Nairobi Sunrise',kirinyaga:'Savanna Gold',dark:'Ngong Dark Reserve'};
+  var blendName=blendNames[blendKey]||blendKey;
+  var grindLabel=grind==='ground'?'Ground':'Whole Bean';
   window.currentProduct=ctx.productKey||'teamusabundle';
   window.currentGrind=grind||'whole';
   window.currentQty=1;
+  // Store blend+grind so it appears in email
+  window._kahoaBundleSelection=blendName+' - '+grindLabel;
+  // Update product name to include blend and grind
+  if(squareProducts&&squareProducts.teamusabundle){
+    squareProducts.teamusabundle.name='Kahoa x USA Kayak Bundle — '+blendName;
+    squareProducts.teamusabundle.detail='Backpack + '+blendName+' ('+grindLabel+') · Ships Aug 15, 2026';
+  }
   if(typeof openSquare==='function'){openSquare(ctx.productKey||'teamusabundle');}
 }
 </script>
