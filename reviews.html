@@ -137,7 +137,7 @@ function kahoaCartRender(){var items=kahoaCartGet(),items_container=document.get
 <h2 style="font-family:'Cormorant Garamond',serif;font-size:32px;color:#fff;font-weight:300;line-height:1.2;margin-bottom:10px;">Get <em style="color:var(--gold);">10% off</em> your first order</h2>
 <p style="font-size:14px;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:24px;font-weight:300;">Single-origin Kenyan coffee, roasted fresh in Austin. Use code at checkout:</p>
 <div style="background:rgba(212,168,67,0.12);border:1px dashed rgba(212,168,67,0.4);padding:14px;margin-bottom:24px;">
-<p style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--gold);font-weight:600;letter-spacing:4px;margin:0;">UBER254</p>
+<p style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--gold);font-weight:600;letter-spacing:4px;margin:0;">STORYZAJABA</p>
 </div>
 <a href=/shop.html onclick="kahoaDismissExit()" style="display:block;background:var(--gold);color:var(--coffee-dark);padding:14px;font-family:Montserrat,sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-decoration:none;margin-bottom:10px;">Shop Now →</a>
 <button onclick="kahoaDismissExit()" style="background:none;border:none;color:rgba(255,255,255,0.3);font-size:12px;cursor:pointer;font-family:Montserrat,sans-serif;">No thanks, I don't want 10% off</button>
@@ -226,8 +226,8 @@ window.applyCoupon=function(){
   var code=(inputEl.value||'').trim().toUpperCase();
   var statusEl=document.getElementById('rv-coupon-status');
 
-  // Check static codes first (uber254, storyzajaba)
-  var staticCodes=['UBER254','STORYZAJABA'];
+  // Check static codes first (STORYZAJABA, storyzajaba)
+  var staticCodes=['STORYZAJABA','STORYZAJABA'];
   if(staticCodes.indexOf(code)!==-1){
     if(typeof _origApplyCoupon==='function') _origApplyCoupon();
     return;
@@ -271,4 +271,21 @@ window.kahoaPaymentSuccess=function(orderData){
   }
   if(typeof _origPaySuccess==='function') _origPaySuccess.apply(this,arguments);
 };
+</script>
+<script>
+var kahoaIdleTimer;
+function kahoaResetIdle(){
+  clearTimeout(kahoaIdleTimer);
+  kahoaIdleTimer=setTimeout(function(){
+    var modal=document.getElementById('kahoa-exit-modal');
+    if(modal&&modal.style.display==='none'&&!localStorage.getItem('kahoa_exit_seen')){
+      modal.style.display='flex';
+      localStorage.setItem('kahoa_exit_seen','1');
+    }
+  },30000);
+}
+['mousemove','keypress','scroll','touchstart','click'].forEach(function(e){
+  document.addEventListener(e,kahoaResetIdle,{passive:true});
+});
+kahoaResetIdle();
 </script>
