@@ -299,3 +299,129 @@ window.toggleSideNav = function(){
   }
 };
 </script>
+<script>
+var KAHOA_SHEET_URL='https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289hVmWtR1OKDqxLruwmKbRf_GkAwkiuEepPfk22Q/exec';
+
+// Validate referral code against Sheet in real-time
+window.kahoaValidateReferral=function(code, email, callback){
+  fetch(KAHOA_SHEET_URL,{
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'validate_referral',code:code.toUpperCase().trim(),email:email||''})
+  }).then(function(r){return r.json();}).then(function(data){
+    callback(data);
+  }).catch(function(){
+    // If sheet unreachable, fall back to local check
+    callback({valid:true,code:code});
+  });
+};
+
+// Register new referral code in Sheet
+window.kahoaRegisterReferral=function(name, email, code){
+  fetch(KAHOA_SHEET_URL,{
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'register_referral',name:name,email:email,code:code})
+  }).catch(function(){});
+};
+
+// Redeem referral code after successful payment
+window.kahoaRedeemReferral=function(code, usedByEmail){
+  fetch(KAHOA_SHEET_URL,{
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'redeem_referral',code:code,used_by:usedByEmail})
+  }).catch(function(){});
+};
+
+// Override kahoaGenerateReferral to register with Sheet
+var _origGenerate=window.kahoaGenerateReferral;
+window.kahoaGenerateReferral=function(){
+  var name=(document.getElementById('kahoa-ref-name').value||'').trim();
+  var email=(document.getElementById('kahoa-ref-email').value||'').trim();
+  if(!name||!email||!email.includes('@')){
+    document.getElementById('kahoa-ref-name').style.borderColor='#c0392b';
+    return;
+  }
+  var code=name.trim().toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,8)+'10';
+  // Register with Sheet (handles duplicates with suffix)
+  fetch(KAHOA_SHEET_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'register_referral',name:name,email:email,code:code})
+  }).then(function(r){return r.json();}).then(function(data){
+    var finalCode=data.code||code;
+    document.getElementById('kahoa-ref-code').textContent=finalCode;
+    document.getElementById('kahoa-ref-step1').style.display='none';
+    document.getElementById('kahoa-ref-step2').style.display='block';
+    // Store referrer email for self-use check
+    window._kahoaReferrerEmail=email;
+  }).catch(function(){
+    // Fallback if fetch fails
+    document.getElementById('kahoa-ref-code').textContent=code;
+    document.getElementById('kahoa-ref-step1').style.display='none';
+    document.getElementById('kahoa-ref-step2').style.display='block';
+  });
+};
+
+// Override applyCoupon to validate against Sheet
+var _origApplyCoupon=window.applyCoupon;
+window.applyCoupon=function(){
+  var inputEl=document.getElementById('rv-coupon-input');
+  if(!inputEl)return;
+  var code=(inputEl.value||'').trim().toUpperCase();
+  var statusEl=document.getElementById('rv-coupon-status');
+
+  // Check static codes first (uber254, storyzajaba)
+  var staticCodes=['UBER254','STORYZAJABA'];
+  if(staticCodes.indexOf(code)!==-1){
+    if(typeof _origApplyCoupon==='function') _origApplyCoupon();
+    return;
+  }
+
+  // Check if looks like a referral code (ends in 10)
+  if(!code.match(/10[A-Z]?$/)){
+    if(typeof _origApplyCoupon==='function') _origApplyCoupon();
+    return;
+  }
+
+  // Validate referral against Sheet
+  var customerEmail=(document.getElementById('sq-email')||{}).value||'';
+  if(statusEl) statusEl.textContent='Checking...';
+
+  fetch(KAHOA_SHEET_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'validate_referral',code:code,email:customerEmail})
+  }).then(function(r){return r.json();}).then(function(data){
+    if(data.valid){
+      // Apply 10% discount
+      window._kahoaActiveCoupon=code;
+      window._kahoaDiscountRate=0.10;
+      if(statusEl){statusEl.style.color='#2a7a3b';statusEl.textContent='✓ 10% off applied';}
+      if(typeof updateOrderSummary==='function') updateOrderSummary();
+    } else {
+      window._kahoaActiveCoupon=null;
+      window._kahoaDiscountRate=0;
+      var msg=data.reason==='already_used'?'Code already used':data.reason==='self_use'?'You cannot use your own code':'Invalid code';
+      if(statusEl){statusEl.style.color='#c0392b';statusEl.textContent=msg;}
+    }
+  }).catch(function(){
+    // Fallback to original
+    if(typeof _origApplyCoupon==='function') _origApplyCoupon();
+  });
+};
+
+// Redeem referral after successful payment
+var _origPaySuccess=window.kahoaPaymentSuccess;
+window.kahoaPaymentSuccess=function(orderData){
+  if(window._kahoaActiveCoupon&&window._kahoaActiveCoupon.match(/10[A-Z]?$/)){
+    var email=(orderData&&orderData.email)||'';
+    kahoaRedeemReferral(window._kahoaActiveCoupon, email);
+  }
+  if(typeof _origPaySuccess==='function') _origPaySuccess.apply(this,arguments);
+};
+</script>
