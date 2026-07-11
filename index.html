@@ -276,20 +276,23 @@ window.toggleSideNav = function(){
 function kahoaAddTrioBundle(){
   var btn=document.getElementById('kahoa-trio-bundle-btn');
   if(btn) btn.textContent='Adding...';
-  setTimeout(function(){
-    try{
-      var items=kahoaCartGet();
-      items=items.filter(function(i){return['nyeri','kirinyaga','dark'].indexOf(i.productKey)===-1;});
-      [{k:'nyeri',n:'Nairobi Sunrise Signature Blend'},{k:'kirinyaga',n:'Savanna Gold Signature Blend'},{k:'dark',n:'Ngong Dark Reserve Signature Blend'}].forEach(function(p){
-        items.push({productKey:p.k,productName:p.n,grind:'whole',grindLabel:'Whole Bean',unitPrice:16,qty:1,bundleItem:true});
-      });
-      kahoaCartSave(items);
-      kahoaCartOpen();
-    }catch(e){
-      alert('Error adding bundle: '+e.message);
-    }
-    if(btn){btn.textContent='Added ✓ $48';setTimeout(function(){btn.textContent='Add Bundle to Cart →';},2500);}
-  },50);
+  // Save items
+  var KEY=typeof KAHOA_CART_KEY!=='undefined'?KAHOA_CART_KEY:'kahoa_cart_v1';
+  var items=[];
+  try{items=JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){}
+  items=items.filter(function(i){return['nyeri','kirinyaga','dark'].indexOf(i.productKey)===-1;});
+  [{k:'nyeri',n:'Nairobi Sunrise Signature Blend'},{k:'kirinyaga',n:'Savanna Gold Signature Blend'},{k:'dark',n:'Ngong Dark Reserve Signature Blend'}].forEach(function(p){
+    items.push({productKey:p.k,productName:p.n,grind:'whole',grindLabel:'Whole Bean',unitPrice:16,qty:1,bundleItem:true});
+  });
+  localStorage.setItem(KEY,JSON.stringify(items));
+  // Open cart directly - no function dependency
+  var ov=document.getElementById('kahoa-cart-overlay');
+  var dr=document.getElementById('kahoa-cart-drawer');
+  if(ov) ov.style.cssText='backdrop-filter:blur(3px);z-index:10000;background:#140c059e;transition:opacity .3s;display:block;position:fixed;inset:0';
+  if(dr) dr.style.cssText='z-index:10001;background:#faf4e8;flex-direction:column;width:100%;max-width:440px;height:100vh;position:fixed;top:0;right:0;display:flex;box-shadow:-12px 0 48px #140c0552';
+  // Render cart content
+  if(typeof kahoaCartRender==='function') kahoaCartRender();
+  if(btn){btn.textContent='Added ✓ $48';setTimeout(function(){btn.textContent='Add Bundle to Cart →';},2500);}
 }
 </script>
 <script>
