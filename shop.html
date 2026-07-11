@@ -346,35 +346,16 @@ window.toggleSideNav = function(){
 function kahoaAddTrioBundle(){
   var btn=document.getElementById('kahoa-trio-bundle-btn');
   if(btn) btn.textContent='Adding...';
-  try{
-    var KEY=typeof KAHOA_CART_KEY!=='undefined'?KAHOA_CART_KEY:'kahoa_cart_v1';
-    var items=[];
-    try{items=JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){}
-    items=items.filter(function(i){return['nyeri','kirinyaga','dark'].indexOf(i.productKey)===-1;});
-    [{k:'nyeri',n:'Nairobi Sunrise Signature Blend'},{k:'kirinyaga',n:'Savanna Gold Signature Blend'},{k:'dark',n:'Ngong Dark Reserve Signature Blend'}].forEach(function(p){
-      items.push({productKey:p.k,productName:p.n,grind:'whole',grindLabel:'Whole Bean',unitPrice:16,qty:1,bundleItem:true});
-    });
-    // Save first
-    localStorage.setItem(KEY,JSON.stringify(items));
-    // Then render with slight delay so DOM has latest data
-    setTimeout(function(){
-      if(typeof kahoaCartRender==='function') kahoaCartRender();
-      setTimeout(function(){
-        if(typeof kahoaCartOpen==='function'){
-          kahoaCartOpen();
-        } else {
-          var ov=document.getElementById('kahoa-cart-overlay');
-          var dr=document.getElementById('kahoa-cart-drawer');
-          if(ov) ov.style.display='block';
-          if(dr){dr.style.display='flex';dr.style.right='0';dr.style.boxShadow='-12px 0 48px #140c0552';}
-        }
-        if(btn){btn.textContent='Added ✓ $48';setTimeout(function(){btn.textContent='Add Bundle to Cart →';},2500);}
-      },50);
-    },50);
-  }catch(err){
-    alert('Error: '+err.message);
-    if(btn) btn.textContent='Add Bundle to Cart →';
-  }
+  var KEY=typeof KAHOA_CART_KEY!=='undefined'?KAHOA_CART_KEY:'kahoa_cart_v1';
+  var items=[];
+  try{items=JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){}
+  items=items.filter(function(i){return['nyeri','kirinyaga','dark'].indexOf(i.productKey)===-1;});
+  [{k:'nyeri',n:'Nairobi Sunrise Signature Blend'},{k:'kirinyaga',n:'Savanna Gold Signature Blend'},{k:'dark',n:'Ngong Dark Reserve Signature Blend'}].forEach(function(p){
+    items.push({productKey:p.k,productName:p.n,grind:'whole',grindLabel:'Whole Bean',unitPrice:16,qty:1,bundleItem:true});
+  });
+  localStorage.setItem(KEY,JSON.stringify(items));
+  if(typeof kahoaCartOpen==='function') kahoaCartOpen();
+  if(btn){btn.textContent='Added ✓ $48';setTimeout(function(){btn.textContent='Add Bundle to Cart →';},2500);}
 }
 </script>
 <script>
@@ -431,6 +412,7 @@ window.kahoaGenerateReferral=function(){
   // Register with Sheet (handles duplicates with suffix)
   fetch(KAHOA_SHEET_URL,{
     method:'POST',
+    mode:'no-cors',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({action:'register_referral',name:name,email:email,code:code})
   }).then(function(r){return r.json();}).then(function(data){
@@ -473,11 +455,7 @@ window.applyCoupon=function(){
   var customerEmail=(document.getElementById('sq-email')||{}).value||'';
   if(statusEl) statusEl.textContent='Checking...';
 
-  fetch(KAHOA_SHEET_URL,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({action:'validate_referral',code:code,email:customerEmail})
-  }).then(function(r){return r.json();}).then(function(data){
+  fetch(KAHOA_SHEET_URL+'?action=validate_referral&code='+encodeURIComponent(code)+'&email='+encodeURIComponent(customerEmail),{method:'GET',mode:'cors'}).then(function(r){return r.json();}).then(function(data){
     if(data.valid){
       // Apply 10% discount
       window._kahoaActiveCoupon=code;
