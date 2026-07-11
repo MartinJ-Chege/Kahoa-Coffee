@@ -325,7 +325,11 @@ window.kahoaGenerateReferral=function(){
     document.getElementById('kahoa-ref-name').style.borderColor='#c0392b';
     return;
   }
-  var code=name.trim().toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,8)+'10';
+  var animals=['LION','BEAR','HAWK','WOLF','ZEBRA','CRANE','RHINO','CHEETAH','EAGLE','HIPPO','GIRAFFE','MAMBA','KUDU','ORYX'];
+  var adj=['SWIFT','BOLD','WILD','FIERCE','PROUD','BRAVE','FREE','ROAR'];
+  var rand=animals[Math.floor(Math.random()*animals.length)];
+  var namePrefix=name.trim().toUpperCase().replace(/[^A-Z]/g,'').slice(0,4);
+  var code=namePrefix+rand+'10';
   // Register with Sheet (handles duplicates with suffix)
   fetch(KAHOA_SHEET_URL,{
     method:'POST',
