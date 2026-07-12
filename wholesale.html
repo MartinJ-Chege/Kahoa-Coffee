@@ -492,19 +492,36 @@ window.kahoaShowSubNudge=function(productKey,savings){
       return;
     }
 
-    // Check if already used (locally)
+    // Check if already used (locally first)
     var used=localStorage.getItem('kahoa_sare_used');
     if(used){
       if(statusEl){statusEl.style.color='#c0392b';statusEl.textContent='Already redeemed';}
       return;
     }
-
-    // Apply 100% discount
-    window._kahoaActiveCoupon=CODE;
-    window._kahoaDiscountRate=1.00;
-    if(statusEl){statusEl.style.color='#2a7a3b';statusEl.textContent='🎉 100% off applied!';}
-    if(discLine) discLine.style.display='flex';
-    if(typeof updateOrderSummary==='function') updateOrderSummary();
+    // Validate against Sheet by email+address
+    var customerEmail=(document.getElementById('sq-email')||{}).value||'';
+    var customerAddr=(document.getElementById('sq-address')||{}).value||'';
+    if(statusEl){statusEl.style.color='rgba(212,168,67,0.7)';statusEl.textContent='Checking...';}
+    fetch(SHEET+'?action=validate_sare&email='+encodeURIComponent(customerEmail)+'&address='+encodeURIComponent(customerAddr),{method:'GET'})
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(data.used){
+        if(statusEl){statusEl.style.color='#c0392b';statusEl.textContent='Already redeemed by this email/address';}
+        return;
+      }
+      window._kahoaActiveCoupon=CODE;
+      window._kahoaDiscountRate=1.00;
+      if(statusEl){statusEl.style.color='#2a7a3b';statusEl.textContent='🎉 100% off applied!';}
+      if(discLine) discLine.style.display='flex';
+      if(typeof updateOrderSummary==='function') updateOrderSummary();
+    }).catch(function(){
+      // Sheet unreachable - fall back to local check only
+      window._kahoaActiveCoupon=CODE;
+      window._kahoaDiscountRate=1.00;
+      if(statusEl){statusEl.style.color='#2a7a3b';statusEl.textContent='🎉 100% off applied!';}
+      if(discLine) discLine.style.display='flex';
+      if(typeof updateOrderSummary==='function') updateOrderSummary();
+    });
   };
 
   // Hook into cart coupon too
