@@ -767,14 +767,14 @@ function kahoaProcessFreeOrder(){
     order_type:'FREE ORDER — SARE COUPON',
     customer_name:o.fname+' '+o.lname,
     customer_email:o.email,
-    customer_phone:o.phone,
+    customer_phone:o.phone||'',
     customer_address:o.address+', '+o.city+', '+o.state+' '+o.zip,
     product_name:productNameForEmail,
     grind:grindForEmail,
     price:'$0.00 (SARE — 100% off)',
     shipping_method:ctx.isLocal?'FREE local Austin':ctx.shippingCost===0?'FREE':'Standard Shipping $'+ctx.shippingCost.toFixed(2),
     checkout_url:'',
-    notes:'FREE ORDER via SARE coupon. Please fulfill and ship.'
+    notes:'FREE ORDER via SARE coupon. Please fulfill and ship. Items: '+productNameForEmail
   };
 
   // Send to Kahoa
