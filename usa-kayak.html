@@ -122,7 +122,7 @@ html,body{overflow-x:clip;width:100%;}
 <p style="font-size:13px;color:rgba(212,168,67,0.7);margin-top:14px;font-style:italic;">Support the team. Taste Kenya. Cheer them on. 🇺🇸</p>
 </div><div style="margin-bottom:20px;"><p style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:20px;font-weight:500;">Drops in</p><div style="text-align:center;margin-bottom:32px;">
 <p style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(212,168,67,0.6);margin:0 0 8px;font-weight:600;">UNITS REMAINING</p>
-<p style="font-family:'Cormorant Garamond',serif;font-size:72px;color:#fff;font-weight:700;margin:0;line-height:1;"><span id=units-left>97</span><span style="font-size:22px;color:rgba(255,255,255,0.3);font-weight:300;"> / 100</span></p>
+<p style="font-family:'Cormorant Garamond',serif;font-size:72px;color:#fff;font-weight:700;margin:0;line-height:1;"><span id=units-left>96</span><span style="font-size:22px;color:rgba(255,255,255,0.3);font-weight:300;"> / 100</span></p>
 <p style="font-size:11px;color:rgba(220,80,80,0.9);margin:8px 0 0;letter-spacing:2px;text-transform:uppercase;font-weight:600;">🔴 Limited edition — pre-orders live now</p>
 </div></div>
 
@@ -391,7 +391,7 @@ window.kahoaPaymentSuccess=function(orderData){
     // Optimistically update display
     var el=document.getElementById('units-left');
     if(el){
-      var n=parseInt(el.textContent||'97')-1;
+      var n=parseInt(el.textContent||'96')-1;
       if(n<0)n=0;
       el.textContent=n;
     }
