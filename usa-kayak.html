@@ -710,64 +710,83 @@ function kahoaProcessFreeOrder(){
 </script>
 <script>
 function kahoaPreOrder(type,blend,grind,price,msgId){
-  try {
-    if(type==='bag'){
-      currentProduct='teamusa';
-      currentGrind='whole';
-      currentQty=1;
-      openSquare('teamusa');
-    } else if(type==='bundle'){
-      kahoaShowBlendPicker('teamusabundle',price,'$'+price,'Kahoa x USA Kayak Bundle');
-    }
-  } catch(e) {
-    alert('Error: '+e.message);
+  if(type==='bag'){
+    currentProduct='teamusa';
+    currentGrind='whole';
+    currentQty=1;
+    openSquare('teamusa');
+  } else {
+    kahoaShowBlendPicker('teamusabundle',price);
   }
-}
-function kahoaShowBlendPicker(productKey,price,priceStr,productName){
-  var existing=document.getElementById('kahoa-blend-picker');
-  if(existing) existing.remove();
-  var modal=document.createElement('div');
-  modal.id='kahoa-blend-picker';
-  modal.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;padding:20px;';
-  modal.innerHTML='<div style="background:#0a0820;border:1px solid rgba(212,168,67,0.3);padding:28px;max-width:400px;width:100%;position:relative;">'
-    +'<button onclick="document.getElementById('kahoa-blend-picker').remove();" style="position:absolute;top:12px;right:16px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:22px;cursor:pointer;">×</button>'
-    +'<p style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(212,168,67,0.7);margin:0 0 6px;font-weight:600;">'+productName+'</p>'
-    +'<h3 style="font-family:Cormorant Garamond,serif;font-size:24px;color:#fff;font-weight:300;margin:0 0 16px;">Choose your coffee</h3>'
-    +'<div id=blend-picker-step1>'
-    +'<p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(212,168,67,0.7);margin:0 0 10px;font-weight:600;">Step 1 of 2 — Choose Your Blend</p>'
-    +'<div style="display:flex;flex-direction:column;gap:10px;">'
-    +'<button onclick="kahoaPickBlend('nyeri')" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(212,168,67,0.2);color:#fff;padding:14px 18px;font-family:Montserrat,sans-serif;font-size:13px;text-align:left;cursor:pointer;">&#9728;&#65039; Nairobi Sunrise &#8212; Light-Medium Roast</button>'
-    +'<button onclick="kahoaPickBlend('kirinyaga')" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(212,168,67,0.2);color:#fff;padding:14px 18px;font-family:Montserrat,sans-serif;font-size:13px;text-align:left;cursor:pointer;">&#127806; Savanna Gold &#8212; Medium Roast</button>'
-    +'<button onclick="kahoaPickBlend('dark')" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(212,168,67,0.2);color:#fff;padding:14px 18px;font-family:Montserrat,sans-serif;font-size:13px;text-align:left;cursor:pointer;">&#11093; Ngong Dark Reserve &#8212; Dark Roast</button>'
-    +'</div></div>'
-    +'<div id=blend-picker-step2 style="display:none;margin-top:16px;">'
-    +'<button onclick="document.getElementById('blend-picker-step2').style.display='none';document.getElementById('blend-picker-step1').style.display='block';" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:12px;cursor:pointer;margin-bottom:12px;padding:0;">&#8592; Back</button>'
-    +'<p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(212,168,67,0.7);margin:0 0 12px;font-weight:600;">Step 2 of 2 &#8212; Choose Your Grind</p>'
-    +'<div style="display:flex;flex-direction:column;gap:10px;">'
-    +'<button onclick="kahoaSelectBundleBlend(window._kahoaPickedBlend,'whole')" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(212,168,67,0.2);color:#fff;padding:14px 18px;font-family:Montserrat,sans-serif;font-size:13px;text-align:left;cursor:pointer;">&#9749; Whole Bean &#8212; Grind at home</button>'
-    +'<button onclick="kahoaSelectBundleBlend(window._kahoaPickedBlend,'ground')" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(212,168,67,0.2);color:#fff;padding:14px 18px;font-family:Montserrat,sans-serif;font-size:13px;text-align:left;cursor:pointer;">&#9881;&#65039; Ground &#8212; Ready to brew</button>'
-    +'</div></div></div>';
-  document.body.appendChild(modal);
-  window._kahoaBundleCtx={productKey:productKey,price:price,priceStr:priceStr,productName:productName};
 }
 function kahoaPickBlend(blendKey){
   window._kahoaPickedBlend=blendKey;
-  document.getElementById('blend-picker-step1').style.display='none';
-  document.getElementById('blend-picker-step2').style.display='block';
+  document.getElementById('kbp-step1').style.display='none';
+  document.getElementById('kbp-step2').style.display='block';
 }
 function kahoaSelectBundleBlend(blendKey,grind){
   var el=document.getElementById('kahoa-blend-picker');
   if(el) el.remove();
-  var blendNames={nyeri:'Nairobi Sunrise',kirinyaga:'Savanna Gold',dark:'Ngong Dark Reserve'};
-  var blendName=blendNames[blendKey]||blendKey;
+  var names={nyeri:'Nairobi Sunrise',kirinyaga:'Savanna Gold',dark:'Ngong Dark Reserve'};
+  var blendName=names[blendKey]||blendKey;
   var grindLabel=grind==='ground'?'Ground':'Whole Bean';
   currentProduct='teamusabundle';
   currentGrind=grind||'whole';
   currentQty=1;
   if(squareProducts&&squareProducts.teamusabundle){
-    squareProducts.teamusabundle.name='Kahoa x USA Kayak Bundle — '+blendName;
-    squareProducts.teamusabundle.detail='Backpack + '+blendName+' ('+grindLabel+') · Ships Aug 15, 2026';
+    squareProducts.teamusabundle.name='Kahoa x USA Kayak Bundle - '+blendName;
+    squareProducts.teamusabundle.detail='Backpack + '+blendName+' ('+grindLabel+') - Ships Aug 15, 2026';
   }
   openSquare('teamusabundle');
+}
+function kahoaShowBlendPicker(productKey,price){
+  var el=document.getElementById('kahoa-blend-picker');
+  if(el) el.remove();
+  var d=document.createElement('div');
+  d.id='kahoa-blend-picker';
+  d.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;';
+  var inner=document.createElement('div');
+  inner.style.cssText='background:#0a0820;border:1px solid rgba(212,168,67,0.3);padding:28px;max-width:400px;width:100%;position:relative;box-sizing:border-box;';
+  var closeBtn=document.createElement('button');
+  closeBtn.innerHTML='&times;';
+  closeBtn.style.cssText='position:absolute;top:12px;right:16px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:22px;cursor:pointer;';
+  closeBtn.onclick=function(){d.remove();};
+  inner.appendChild(closeBtn);
+  var step1=document.createElement('div');
+  step1.id='kbp-step1';
+  var s1title=document.createElement('p');
+  s1title.style.cssText='font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(212,168,67,0.7);margin:0 0 12px;font-weight:600;';
+  s1title.textContent='Step 1 of 2 - Choose Your Blend';
+  step1.appendChild(s1title);
+  [{k:'nyeri',label:'Nairobi Sunrise - Light-Medium'},{k:'kirinyaga',label:'Savanna Gold - Medium Roast'},{k:'dark',label:'Ngong Dark Reserve - Dark Roast'}].forEach(function(b){
+    var btn=document.createElement('button');
+    btn.textContent=b.label;
+    btn.style.cssText='width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(212,168,67,0.2);color:#fff;padding:14px 18px;font-family:Montserrat,sans-serif;font-size:13px;text-align:left;cursor:pointer;margin-bottom:8px;display:block;';
+    btn.onclick=(function(bk){return function(){kahoaPickBlend(bk);};})(b.k);
+    step1.appendChild(btn);
+  });
+  inner.appendChild(step1);
+  var step2=document.createElement('div');
+  step2.id='kbp-step2';
+  step2.style.display='none';
+  var backBtn=document.createElement('button');
+  backBtn.innerHTML='&larr; Back';
+  backBtn.style.cssText='background:none;border:none;color:rgba(255,255,255,0.4);font-size:12px;cursor:pointer;margin-bottom:12px;padding:0;display:block;';
+  backBtn.onclick=function(){step2.style.display='none';step1.style.display='block';};
+  step2.appendChild(backBtn);
+  var s2title=document.createElement('p');
+  s2title.style.cssText='font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(212,168,67,0.7);margin:0 0 12px;font-weight:600;';
+  s2title.textContent='Step 2 of 2 - Choose Your Grind';
+  step2.appendChild(s2title);
+  [{k:'whole',label:'Whole Bean - Grind at home'},{k:'ground',label:'Ground - Ready to brew'}].forEach(function(g){
+    var btn=document.createElement('button');
+    btn.textContent=g.label;
+    btn.style.cssText='width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(212,168,67,0.2);color:#fff;padding:14px 18px;font-family:Montserrat,sans-serif;font-size:13px;text-align:left;cursor:pointer;margin-bottom:8px;display:block;';
+    btn.onclick=(function(gk){return function(){kahoaSelectBundleBlend(window._kahoaPickedBlend,gk);};})(g.k);
+    step2.appendChild(btn);
+  });
+  inner.appendChild(step2);
+  d.appendChild(inner);
+  document.body.appendChild(d);
 }
 </script>
