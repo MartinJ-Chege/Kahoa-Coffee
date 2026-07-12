@@ -628,3 +628,102 @@ window.kahoaShowSubNudge=function(productKey,savings){
 
 })();
 </script>
+<script>
+// KAHOA100 - 100% free coffee coupon, one use per email/address
+(function(){
+  var SHEET='https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289hVmWtR1OKDqxLruwmKbRf_GkAwkiuEepPfk22Q/exec';
+  var CODE='KAHOA100';
+  var NO_DISCOUNT_KEYS=['mug','tee','backpack','teamusa','teamusabundle','merch','apparel','gear'];
+
+  // Hook into applyCoupon
+  var _orig=window.applyCoupon;
+  window.applyCoupon=function(){
+    var inputEl=document.getElementById('rv-coupon-input');
+    if(!inputEl) return typeof _orig==='function'&&_orig();
+    var code=(inputEl.value||'').trim().toUpperCase();
+    if(code!==CODE) return typeof _orig==='function'&&_orig();
+
+    var statusEl=document.getElementById('rv-coupon-status');
+    var discLine=document.getElementById('rv-discount-line');
+    var discAmt=document.getElementById('rv-discount-amt');
+
+    // Block on non-coffee items
+    var ci=window._kahoaCartCheckoutItems||[];
+    var hasNonCoffee=ci.some(function(i){return NO_DISCOUNT_KEYS.indexOf(i.productKey)!==-1||i.bundleItem;});
+    if(hasNonCoffee){
+      if(statusEl){statusEl.style.color='#c0392b';statusEl.textContent='Coffee orders only';}
+      return;
+    }
+
+    // Check if already used (locally)
+    var used=localStorage.getItem('kahoa100_used');
+    if(used){
+      if(statusEl){statusEl.style.color='#c0392b';statusEl.textContent='Already redeemed';}
+      return;
+    }
+
+    // Apply 100% discount
+    window._kahoaActiveCoupon=CODE;
+    window._kahoaDiscountRate=1.00;
+    if(statusEl){statusEl.style.color='#2a7a3b';statusEl.textContent='🎉 100% off applied!';}
+    if(discLine) discLine.style.display='flex';
+    if(typeof updateOrderSummary==='function') updateOrderSummary();
+  };
+
+  // Hook into cart coupon too
+  var _origCart=window.kahoaCartApplyCoupon;
+  window.kahoaCartApplyCoupon=function(){
+    var inputEl=document.getElementById('cart-coupon-input');
+    if(!inputEl) return typeof _origCart==='function'&&_origCart();
+    var code=(inputEl.value||'').trim().toUpperCase();
+    if(code!==CODE) return typeof _origCart==='function'&&_origCart();
+
+    var statusEl=document.getElementById('cart-coupon-status');
+    var items=typeof kahoaCartGet==='function'?kahoaCartGet():[];
+    var hasNonCoffee=items.some(function(i){return NO_DISCOUNT_KEYS.indexOf(i.productKey)!==-1||i.bundleItem;});
+
+    if(hasNonCoffee){
+      if(statusEl){statusEl.style.color='#c0392b';statusEl.textContent='Coffee only';}
+      return;
+    }
+    var used=localStorage.getItem('kahoa100_used');
+    if(used){
+      if(statusEl){statusEl.style.color='#c0392b';statusEl.textContent='Already redeemed';}
+      return;
+    }
+    window._cartCouponRate=1.00;
+    window._cartCouponCode=CODE;
+    if(statusEl){statusEl.style.color='#2a7a3b';statusEl.textContent='🎉 FREE!';}
+    var discLine=document.getElementById('cart-discount-line');
+    var discAmt=document.getElementById('cart-discount-amt');
+    if(discLine) discLine.style.display='flex';
+    if(typeof kahoaCartRender==='function') kahoaCartRender();
+  };
+
+  // Mark as used after payment + log to sheet
+  var _origSuccess=window.kahoaPaymentSuccess;
+  window.kahoaPaymentSuccess=function(orderData){
+    if(window._kahoaActiveCoupon===CODE||window._cartCouponCode===CODE){
+      localStorage.setItem('kahoa100_used','1');
+      // Log use to sheet
+      try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({action:'log_coupon',code:CODE,email:(orderData&&orderData.email)||'',
+        address:(orderData&&orderData.address)||'',timestamp:new Date().toISOString()})});}catch(e){}
+    }
+    if(typeof _origSuccess==='function') _origSuccess.apply(this,arguments);
+  };
+
+  // Also block in confirmAndCheckout for non-coffee
+  var _origConfirm=window.confirmAndCheckout;
+  window.confirmAndCheckout=function(){
+    if(window._kahoaActiveCoupon===CODE){
+      var ci=window._kahoaCartCheckoutItems||[];
+      var hasNonCoffee=ci.some(function(i){return NO_DISCOUNT_KEYS.indexOf(i.productKey)!==-1||i.bundleItem;});
+      if(hasNonCoffee){alert('KAHOA100 is valid for coffee orders only.');return;}
+      var used=localStorage.getItem('kahoa100_used');
+      if(used){alert('This code has already been redeemed.');return;}
+    }
+    if(typeof _origConfirm==='function') _origConfirm.apply(this,arguments);
+  };
+})();
+</script>
