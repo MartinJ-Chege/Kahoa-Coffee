@@ -632,7 +632,7 @@ window.kahoaShowSubNudge=function(productKey,savings){
 // KAHOA100 - 100% free coffee coupon, one use per email/address
 (function(){
   var SHEET='https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289hVmWtR1OKDqxLruwmKbRf_GkAwkiuEepPfk22Q/exec';
-  var CODE='KAHOA100';
+  var CODE='SARE';
   var NO_DISCOUNT_KEYS=['mug','tee','backpack','teamusa','teamusabundle','merch','apparel','gear'];
 
   // Hook into applyCoupon
@@ -656,7 +656,7 @@ window.kahoaShowSubNudge=function(productKey,savings){
     }
 
     // Check if already used (locally)
-    var used=localStorage.getItem('kahoa100_used');
+    var used=localStorage.getItem('kahoa_sare_used');
     if(used){
       if(statusEl){statusEl.style.color='#c0392b';statusEl.textContent='Already redeemed';}
       return;
@@ -686,7 +686,7 @@ window.kahoaShowSubNudge=function(productKey,savings){
       if(statusEl){statusEl.style.color='#c0392b';statusEl.textContent='Coffee only';}
       return;
     }
-    var used=localStorage.getItem('kahoa100_used');
+    var used=localStorage.getItem('kahoa_sare_used');
     if(used){
       if(statusEl){statusEl.style.color='#c0392b';statusEl.textContent='Already redeemed';}
       return;
@@ -703,8 +703,8 @@ window.kahoaShowSubNudge=function(productKey,savings){
   // Mark as used after payment + log to sheet
   var _origSuccess=window.kahoaPaymentSuccess;
   window.kahoaPaymentSuccess=function(orderData){
-    if(window._kahoaActiveCoupon===CODE||window._cartCouponCode===CODE){
-      localStorage.setItem('kahoa100_used','1');
+    if(window._kahoaActiveCoupon==='SARE'||window._cartCouponCode==='SARE'){
+      localStorage.setItem('kahoa_sare_used','1');
       // Log use to sheet
       try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
         body:JSON.stringify({action:'log_coupon',code:CODE,email:(orderData&&orderData.email)||'',
@@ -720,7 +720,7 @@ window.kahoaShowSubNudge=function(productKey,savings){
       var ci=window._kahoaCartCheckoutItems||[];
       var hasNonCoffee=ci.some(function(i){return NO_DISCOUNT_KEYS.indexOf(i.productKey)!==-1||i.bundleItem;});
       if(hasNonCoffee){alert('KAHOA100 is valid for coffee orders only.');return;}
-      var used=localStorage.getItem('kahoa100_used');
+      var used=localStorage.getItem('kahoa_sare_used');
       if(used){alert('This code has already been redeemed.');return;}
     }
     if(typeof _origConfirm==='function') _origConfirm.apply(this,arguments);
