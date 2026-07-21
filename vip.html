@@ -317,22 +317,19 @@ async function vipPay(){
       errEl.textContent='Card error: '+(result.errors?result.errors[0].message:result.status);
       errEl.style.display='block';btn.textContent='Complete Order →';btn.disabled=false;return;
     }
+    var payload={
+      source_id:result.token,
+      verification_token:(result.details&&result.details.verificationToken)||undefined,
+      cart_items:cartItems,
+      shipping:shipping>0?{serviceName:'Standard Shipping',amountCents:Math.round(shipping*100)}:null,
+      buyer:{name:fname+' '+lname,email:email,phone:phone,address:address+', '+city+', '+state+' '+zip}
+    };
     var resp=await fetch(WORKER,{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        source_id:result.token,
-        verification_token:(result.details&&result.details.verificationToken)||undefined,
-        is_cart:true,
-        cart_items:cartItems,
-        shipping:shipping>0?{serviceName:'Standard Shipping',amountCents:Math.round(shipping*100)}:null,
-        buyer:{name:fname+' '+lname,email:email,phone:phone,address:address+', '+city+', '+state+' '+zip},
-        product_name:productSummary,
-        quantity:1,
-        unit_price_cents:Math.round(subtotal*100)
-      })
+      body:JSON.stringify(payload)
     });
     var data=await resp.json();
-    if(!resp.ok||data.errors||!data.payment_id){
+    if(!resp.ok||!data.success){
       errEl.textContent='Payment failed: '+(data.errors?data.errors[0].detail:JSON.stringify(data));
       errEl.style.display='block';btn.textContent='Complete Order →';btn.disabled=false;return;
     }
@@ -342,7 +339,7 @@ async function vipPay(){
     var fullAddr=address+', '+city+', '+state+' '+zip;
     var tp={
       to_email:'info@kahoa.shop',
-      order_id:data.payment_id||'VIP-'+Date.now(),
+      order_id:data.payment_id||data.order_id||'VIP-'+Date.now(),
       order_type:'VIP FRIENDS & FAMILY ORDER',
       customer_name:fname+' '+lname,
       customer_email:email,
