@@ -269,7 +269,7 @@ function vipUpdateModalSummary(){
     '<p style="font-size:11px;">Shipping: '+(shipping===0?'FREE':'$'+shipping.toFixed(2))+'</p>'+
     '<p class=order-total>Total: $'+total.toFixed(2)+'</p>';
 }
-async function vipOpenCheckout(){
+async function vipOpenCheckout(){window._vipCartSnapshot=vipCart.slice();
   if(vipCart.length===0){alert('Add at least one item first.');return;}
   vipUpdateModalSummary();
   document.getElementById('vip-modal').style.display='flex';
@@ -309,8 +309,14 @@ async function vipPay(){
     var subtotal=vipCalcSubtotal();
     var shipping=vipGetShipping();
     var total=subtotal+shipping;
-    var cartItems=vipCart.map(function(i){return{product_name:i.name,grind:i.grindLabel,quantity:i.qty,unit_price_cents:Math.round(i.price*100)};});
-    var productSummary=vipCart.map(function(i){return i.qty+'× '+i.name+' ('+i.grindLabel+')';}).join(', ');
+    // Snapshot cart at payment time in case vipCart got cleared
+    var cartSnapshot=window._vipCartSnapshot||vipCart;
+    if(!cartSnapshot||cartSnapshot.length===0){
+      errEl.textContent='Cart is empty. Please add items and try again.';
+      errEl.style.display='block';btn.textContent='Complete Order →';btn.disabled=false;return;
+    }
+    var cartItems=cartSnapshot.map(function(i){return{product_name:i.name,grind:i.grindLabel,quantity:i.qty,unit_price_cents:Math.round(i.price*100)};});
+    var productSummary=cartSnapshot.map(function(i){return i.qty+'× '+i.name+' ('+i.grindLabel+')';}).join(', ');
     var resp=await fetch(WORKER,{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
