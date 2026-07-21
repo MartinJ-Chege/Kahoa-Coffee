@@ -306,10 +306,7 @@ async function vipPay(){
       errEl.textContent='Card error: '+(result.errors?result.errors[0].message:result.status);
       errEl.style.display='block';btn.textContent='Complete Order →';btn.disabled=false;return;
     }
-    var subtotal=vipCalcSubtotal();
-    var shipping=vipGetShipping();
-    var total=subtotal+shipping;
-    // Snapshot cart at payment time in case vipCart got cleared
+    // Use snapshot saved when checkout opened
     var cartSnapshot=window._vipCartSnapshot||vipCart;
     if(!cartSnapshot||cartSnapshot.length===0){
       errEl.textContent='Cart is empty. Please add items and try again.';
@@ -317,6 +314,10 @@ async function vipPay(){
     }
     var cartItems=cartSnapshot.map(function(i){return{product_name:i.name,grind:i.grindLabel,quantity:i.qty,unit_price_cents:Math.round(i.price*100)};});
     var productSummary=cartSnapshot.map(function(i){return i.qty+'× '+i.name+' ('+i.grindLabel+')';}).join(', ');
+    // Calculate totals from snapshot not vipCart
+    var subtotal=cartSnapshot.reduce(function(s,i){return s+i.price*i.qty;},0);
+    var shipping=vipGetShipping();
+    var total=subtotal+shipping;
     // Worker expects top-level product_name/quantity/unit_price_cents
     // For multi-item cart, send as a combined single line item
     var combinedName=productSummary;
@@ -337,7 +338,7 @@ async function vipPay(){
       })
     });
     var data=await resp.json();
-    if(!resp.ok||data.errors){
+    if(!resp.ok||data.errors||!data.payment_id){
       errEl.textContent='Payment failed: '+(data.errors?data.errors[0].detail:JSON.stringify(data));
       errEl.style.display='block';btn.textContent='Complete Order →';btn.disabled=false;return;
     }
