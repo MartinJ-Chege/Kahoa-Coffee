@@ -301,40 +301,30 @@ async function vipPay(){
   var btn=document.getElementById('vip-pay-btn');
   btn.textContent='Processing...';btn.disabled=true;
   try{
-    var result=await vipCard.tokenize();
-    if(result.status!=='OK'){
-      errEl.textContent='Card error: '+(result.errors?result.errors[0].message:result.status);
-      errEl.style.display='block';btn.textContent='Complete Order →';btn.disabled=false;return;
-    }
     // Use snapshot saved when checkout opened
     var cartSnapshot=window._vipCartSnapshot||vipCart;
     if(!cartSnapshot||cartSnapshot.length===0){
       errEl.textContent='Cart is empty. Please add items and try again.';
       errEl.style.display='block';btn.textContent='Complete Order →';btn.disabled=false;return;
     }
-    var cartItems=cartSnapshot.map(function(i){return{product_name:i.name,grind:i.grindLabel,quantity:i.qty,unit_price_cents:Math.round(i.price*100)};});
-    var productSummary=cartSnapshot.map(function(i){return i.qty+'× '+i.name+' ('+i.grindLabel+')';}).join(', ');
-    // Calculate totals from snapshot not vipCart
     var subtotal=cartSnapshot.reduce(function(s,i){return s+i.price*i.qty;},0);
     var shipping=vipGetShipping();
     var total=subtotal+shipping;
-    // Worker expects top-level product_name/quantity/unit_price_cents
-    // For multi-item cart, send as a combined single line item
-    var combinedName=productSummary;
+    var cartItems=cartSnapshot.map(function(i){return{product_name:i.name,grind:i.grindLabel,quantity:i.qty,unit_price_cents:Math.round(i.price*100)};});
+    var productSummary=cartSnapshot.map(function(i){return i.qty+'x '+i.name+' ('+i.grindLabel+')';}).join(', ');
+    var result=await vipCard.tokenize();
+    if(result.status!=='OK'){
+      errEl.textContent='Card error: '+(result.errors?result.errors[0].message:result.status);
+      errEl.style.display='block';btn.textContent='Complete Order →';btn.disabled=false;return;
+    }
     var resp=await fetch(WORKER,{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         source_id:result.token,
-        amount_cents:Math.round(total*100),
-        currency:'USD',
-        buyer_email:email,
-        note:'VIP Order: '+productSummary,
-        product_name:combinedName,
-        grind:'Mixed (see items)',
-        quantity:1,
-        unit_price_cents:Math.round(subtotal*100),
+        verification_token:result.details&&result.details.verificationToken?result.details.verificationToken:undefined,
         cart_items:cartItems,
-        shipping:shipping>0?{serviceName:'Standard Shipping',amountCents:Math.round(shipping*100)}:null
+        shipping:shipping>0?{serviceName:'Standard Shipping',amountCents:Math.round(shipping*100)}:null,
+        buyer:{name:fname+' '+lname,email:email,phone:phone,address:address+', '+city+', '+state+' '+zip}
       })
     });
     var data=await resp.json();
