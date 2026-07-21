@@ -321,10 +321,14 @@ async function vipPay(){
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         source_id:result.token,
-        verification_token:result.details&&result.details.verificationToken?result.details.verificationToken:undefined,
+        verification_token:(result.details&&result.details.verificationToken)||undefined,
+        is_cart:true,
         cart_items:cartItems,
         shipping:shipping>0?{serviceName:'Standard Shipping',amountCents:Math.round(shipping*100)}:null,
-        buyer:{name:fname+' '+lname,email:email,phone:phone,address:address+', '+city+', '+state+' '+zip}
+        buyer:{name:fname+' '+lname,email:email,phone:phone,address:address+', '+city+', '+state+' '+zip},
+        product_name:productSummary,
+        quantity:1,
+        unit_price_cents:Math.round(subtotal*100)
       })
     });
     var data=await resp.json();
