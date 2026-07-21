@@ -332,7 +332,7 @@ async function vipPay(){
       body:JSON.stringify(payload)
     });
     var data=await resp.json();
-    if(!resp.ok||!data.success){
+    if(!resp.ok||data.error||data.errors||(data.checkout_url&&!data.payment_id&&!data.order_id)){
       errEl.textContent='Payment failed: '+(data.errors?data.errors[0].detail:JSON.stringify(data));
       errEl.style.display='block';btn.textContent='Complete Order →';btn.disabled=false;return;
     }
