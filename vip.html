@@ -320,7 +320,10 @@ async function vipPay(){
     var payload={
       source_id:result.token,
       verification_token:(result.details&&result.details.verificationToken)||undefined,
-      cart_items:cartItems,
+      product_name:productSummary,
+      grind:'Mixed',
+      quantity:1,
+      unit_price_cents:Math.round(subtotal*100),
       shipping:shipping>0?{serviceName:'Standard Shipping',amountCents:Math.round(shipping*100)}:null,
       buyer:{name:fname+' '+lname,email:email,phone:phone,address:address+', '+city+', '+state+' '+zip}
     };
