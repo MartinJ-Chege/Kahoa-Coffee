@@ -5,332 +5,366 @@
 <meta name=robots content="noindex,nofollow">
 <meta name=viewport content="width=device-width,initial-scale=1">
 <title>Kahoa Coffee — VIP Friends & Family</title>
-<meta name=description content="Exclusive Kahoa Coffee pricing for friends and family.">
 <link rel=icon type=image/png href=/kahoalogo.png>
 <link rel=apple-touch-icon href=/kahoalogo.png>
-<link href=https://fonts.googleapis.com rel=preconnect crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@300;400;500;600;700&family=Lora:ital@0;1&display=swap" rel=stylesheet>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@300;400;500;600;700&display=swap" rel=stylesheet>
 <script src=https://web.squarecdn.com/v1/square.js defer></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-:root{--cream:#F9F2E3;--warm-white:#FDF8EF;--coffee-dark:#1C0E06;--coffee-mid:#5A2E1A;--coffee-light:#8B4A26;--caramel:#C07A2A;--gold:#D4A843;--gold-light:#E8C878;--text-dark:#1A0C05;--text-mid:#4A2A14;--text-light:#8B6040;--border:rgba(168,110,60,0.18);}
-html{scroll-behavior:smooth;}
+:root{--gold:#D4A843;--gold-light:#E8C878;--coffee-dark:#1C0E06;--warm-white:#FDF8EF;--text-dark:#1A0C05;--text-mid:#4A2A14;--border:rgba(168,110,60,0.18);}
 body{font-family:'Montserrat',sans-serif;background:var(--coffee-dark);color:#fff;min-height:100vh;}
-.vip-wrap{max-width:560px;margin:0 auto;padding:40px 20px 80px;}
-.vip-logo{text-align:center;margin-bottom:32px;}
-.vip-logo img{height:56px;width:auto;}
-.vip-badge{display:inline-block;background:rgba(212,168,67,0.15);border:1px solid rgba(212,168,67,0.4);color:var(--gold);font-size:10px;letter-spacing:3px;text-transform:uppercase;padding:5px 14px;margin-bottom:16px;}
-h1{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:#fff;line-height:1.2;margin-bottom:8px;}
-.vip-sub{font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:32px;line-height:1.7;}
-.blend-card{background:rgba(255,255,255,0.04);border:1px solid rgba(212,168,67,0.2);padding:20px;margin-bottom:12px;cursor:pointer;transition:border-color .2s,background .2s;}
-.blend-card:hover,.blend-card.selected{border-color:var(--gold);background:rgba(212,168,67,0.08);}
-.blend-card h3{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--gold);margin-bottom:4px;}
-.blend-card p{font-size:11px;color:rgba(255,255,255,0.5);}
-.grind-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0;}
-.grind-btn{background:rgba(255,255,255,0.04);border:1px solid rgba(212,168,67,0.2);color:#fff;padding:14px;font-family:'Montserrat',sans-serif;font-size:12px;cursor:pointer;transition:all .2s;text-align:center;}
-.grind-btn:hover,.grind-btn.selected{border-color:var(--gold);background:rgba(212,168,67,0.08);color:var(--gold);}
-.qty-row{display:flex;align-items:center;gap:16px;margin:20px 0;}
-.qty-btn{background:rgba(255,255,255,0.08);border:1px solid rgba(212,168,67,0.2);color:#fff;width:36px;height:36px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.qty-num{font-size:18px;font-weight:600;min-width:30px;text-align:center;}
-.price-row{background:rgba(212,168,67,0.08);border:1px solid rgba(212,168,67,0.2);padding:16px 20px;margin:20px 0;display:flex;justify-content:space-between;align-items:center;}
-.price-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(212,168,67,0.7);}
-.price-val{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--gold);}
-.vip-btn{width:100%;background:var(--gold);color:var(--coffee-dark);border:none;padding:16px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;margin-top:8px;}
-.vip-btn:hover{background:var(--gold-light);}
-.section-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(212,168,67,0.6);font-weight:600;margin-bottom:12px;}
-.divider{border:none;border-top:1px solid rgba(212,168,67,0.1);margin:28px 0;}
-/* Square modal */
-#vip-square-modal{display:none;position:fixed;inset:0;z-index:9999;background:#0a0502eb;justify-content:center;align-items:flex-start;padding:36px 4%;overflow-y:auto;}
-#vip-square-inner{background:var(--warm-white);max-width:540px;width:100%;margin:0 auto;}
-.sq-modal-head{background:var(--coffee-dark);display:flex;justify-content:space-between;align-items:center;padding:22px 36px;}
-.sq-modal-head img{height:48px;width:auto;}
-.sq-close{background:none;border:none;color:rgba(255,255,255,0.5);font-size:22px;cursor:pointer;}
-.sq-body{padding:28px 36px;}
-.sq-field{margin-bottom:16px;}
-.sq-field label{display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--text-mid);margin-bottom:6px;font-weight:600;}
-.sq-field input{width:100%;border:1px solid var(--border);padding:12px 14px;font-family:'Montserrat',sans-serif;font-size:14px;background:var(--warm-white);color:var(--text-dark);}
-.sq-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.sq-order-summary{background:#f5ede0;padding:16px 20px;margin-bottom:20px;}
-.sq-order-summary p{font-size:13px;color:var(--text-mid);margin-bottom:4px;}
-.sq-order-summary .sq-total{font-size:18px;font-weight:700;color:var(--text-dark);margin-top:8px;}
-#vip-card-container{border:1px solid var(--border);padding:14px;margin-bottom:16px;min-height:44px;background:#fff;}
-#vip-submit-btn{width:100%;background:var(--gold);color:var(--coffee-dark);border:none;padding:15px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;}
+.wrap{max-width:600px;margin:0 auto;padding:32px 16px 80px;}
+.logo{text-align:center;margin-bottom:28px;}
+.logo img{height:52px;width:auto;}
+.hero{text-align:center;margin-bottom:36px;}
+.badge{display:inline-block;background:rgba(212,168,67,0.15);border:1px solid rgba(212,168,67,0.4);color:var(--gold);font-size:10px;letter-spacing:3px;text-transform:uppercase;padding:5px 14px;margin-bottom:14px;}
+h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-height:1.2;margin-bottom:8px;}
+.sub{font-size:12px;color:rgba(255,255,255,0.45);line-height:1.7;}
+.sec-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(212,168,67,0.6);font-weight:600;margin-bottom:12px;}
+/* Product cards */
+.products{display:flex;flex-direction:column;gap:12px;margin-bottom:28px;}
+.prod-card{background:rgba(255,255,255,0.04);border:1px solid rgba(212,168,67,0.15);padding:18px;}
+.prod-name{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--gold);margin-bottom:3px;}
+.prod-detail{font-size:11px;color:rgba(255,255,255,0.45);margin-bottom:14px;}
+.grind-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.grind-btn{background:rgba(255,255,255,0.04);border:1px solid rgba(212,168,67,0.2);color:rgba(255,255,255,0.7);padding:10px 8px;font-family:'Montserrat',sans-serif;font-size:11px;cursor:pointer;transition:all .2s;text-align:center;}
+.grind-btn.active{border-color:var(--gold);background:rgba(212,168,67,0.1);color:var(--gold);}
+.qty-add-row{display:flex;align-items:center;gap:10px;}
+.qty-wrap{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(212,168,67,0.2);padding:6px 12px;}
+.qty-btn{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;width:24px;text-align:center;line-height:1;}
+.qty-num{font-size:14px;font-weight:600;min-width:20px;text-align:center;}
+.add-btn{flex:1;background:var(--gold);color:var(--coffee-dark);border:none;padding:12px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;}
+.add-btn:hover{background:var(--gold-light);}
+/* Cart */
+.cart-section{background:rgba(255,255,255,0.03);border:1px solid rgba(212,168,67,0.15);padding:20px;margin-bottom:24px;}
+.cart-empty{font-size:12px;color:rgba(255,255,255,0.3);text-align:center;padding:20px 0;}
+.cart-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(212,168,67,0.08);}
+.cart-item:last-child{border-bottom:none;}
+.cart-item-name{font-size:12px;color:rgba(255,255,255,0.8);}
+.cart-item-detail{font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;}
+.cart-item-price{font-size:13px;color:var(--gold);font-weight:600;}
+.cart-item-remove{background:none;border:none;color:rgba(255,255,255,0.3);font-size:16px;cursor:pointer;margin-left:10px;}
+.cart-totals{margin-top:14px;padding-top:14px;border-top:1px solid rgba(212,168,67,0.15);}
+.cart-row{display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:6px;}
+.cart-total-row{display:flex;justify-content:space-between;font-size:16px;color:#fff;font-weight:600;margin-top:8px;}
+.checkout-btn{width:100%;background:var(--gold);color:var(--coffee-dark);border:none;padding:15px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;margin-top:16px;}
+.checkout-btn:disabled{opacity:0.4;cursor:not-allowed;}
+/* Modal */
+#vip-modal{display:none;position:fixed;inset:0;z-index:9999;background:rgba(10,5,2,0.95);justify-content:center;align-items:flex-start;padding:24px 16px;overflow-y:auto;}
+.modal-inner{background:var(--warm-white);max-width:520px;width:100%;margin:0 auto;}
+.modal-head{background:var(--coffee-dark);display:flex;justify-content:space-between;align-items:center;padding:18px 24px;}
+.modal-head img{height:40px;width:auto;}
+.modal-close{background:none;border:none;color:rgba(255,255,255,0.5);font-size:22px;cursor:pointer;line-height:1;}
+.modal-body{padding:24px;}
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text-mid);margin-bottom:5px;font-weight:600;}
+.field input{width:100%;border:1px solid var(--border);padding:11px 13px;font-family:'Montserrat',sans-serif;font-size:13px;background:var(--warm-white);color:var(--text-dark);outline:none;}
+.field input:focus{border-color:var(--gold);}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.order-summary{background:#f5ede0;padding:14px 18px;margin-bottom:18px;}
+.order-summary p{font-size:12px;color:var(--text-mid);margin-bottom:3px;}
+.order-total{font-size:17px;font-weight:700;color:var(--text-dark);margin-top:8px;}
+#vip-card-el{border:1px solid var(--border);padding:13px;margin-bottom:14px;background:#fff;min-height:44px;}
+#vip-pay-btn{width:100%;background:var(--gold);color:var(--coffee-dark);border:none;padding:14px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;}
+#vip-err{display:none;color:#c0392b;font-size:12px;padding:10px;background:rgba(192,57,43,0.08);border:1px solid rgba(192,57,43,0.2);margin-bottom:12px;}
+#vip-ship-note{font-size:11px;margin-top:5px;}
+/* Success */
 #vip-success{display:none;text-align:center;padding:40px 20px;}
-#vip-error{display:none;color:#c0392b;font-size:13px;margin-bottom:12px;padding:10px;background:rgba(192,57,43,0.08);border:1px solid rgba(192,57,43,0.2);}
-.zip-row{display:flex;gap:10px;align-items:flex-end;}
-.zip-row input{flex:1;}
-#vip-ship-result{font-size:12px;color:var(--gold);margin-top:6px;}
 </style>
 </head>
 <body>
-<div class=vip-wrap>
-  <div class=vip-logo>
-    <img src=/kahoalogo.png alt="Kahoa Coffee">
-  </div>
-  <div style="text-align:center;margin-bottom:40px;">
-    <span class=vip-badge>Friends &amp; Family</span>
-    <h1>VIP Pricing<br>Just for You</h1>
-    <p class=vip-sub>Premium Kenyan highland coffee at our cost price.<br>Thank you for being part of the Kahoa family.</p>
+<div class=wrap>
+  <div class=logo><img src=/kahoalogo.png alt="Kahoa Coffee"></div>
+  <div class=hero>
+    <div><span class=badge>Friends &amp; Family VIP</span></div>
+    <h1>Your Exclusive<br>Kahoa Pricing</h1>
+    <p class=sub>$15.50/lb whole bean · $17.50/lb ground<br>Mix and match blends and grinds freely.</p>
   </div>
 
-  <!-- Step 1: Choose blend -->
-  <p class=section-label>Step 1 — Choose Your Blend</p>
-  <div class=blend-card id=vip-blend-nyeri onclick="vipPickBlend('nyeri',this)">
-    <h3>Nairobi Sunrise</h3>
-    <p>Light-Medium Roast · Nairobi Highlands, Kenya · Bright, citrusy, smooth</p>
-  </div>
-  <div class=blend-card id=vip-blend-kirinyaga onclick="vipPickBlend('kirinyaga',this)">
-    <h3>Savanna Gold</h3>
-    <p>Medium Roast · Central Kenya Highlands · Balanced, nutty, caramel finish</p>
-  </div>
-  <div class=blend-card id=vip-blend-dark onclick="vipPickBlend('dark',this)">
-    <h3>Ngong Dark Reserve</h3>
-    <p>Dark Roast · Ngong Hills, Kenya · Bold, rich, chocolatey</p>
-  </div>
+  <!-- Products -->
+  <p class=sec-label>Choose Your Coffee</p>
+  <div class=products id=vip-products></div>
 
-  <hr class=divider>
-
-  <!-- Step 2: Grind -->
-  <p class=section-label>Step 2 — Choose Your Grind</p>
-  <div class=grind-row>
-    <button class=grind-btn id=vip-grind-whole onclick="vipPickGrind('whole',this)">☕ Whole Bean<br><span style="font-size:10px;opacity:.6;">$15.50 / lb</span></button>
-    <button class=grind-btn id=vip-grind-ground onclick="vipPickGrind('ground',this)">⚙️ Ground<br><span style="font-size:10px;opacity:.6;">$17.50 / lb (+$2)</span></button>
+  <!-- Cart -->
+  <p class=sec-label>Your Order</p>
+  <div class=cart-section>
+    <div id=vip-cart-items><p class=cart-empty>No items yet — add a blend above.</p></div>
+    <div class=cart-totals id=vip-cart-totals style="display:none;">
+      <div class=cart-row><span>Subtotal</span><span id=vip-subtotal>$0.00</span></div>
+      <div class=cart-row><span>Shipping</span><span id=vip-shipping>Calculated at checkout</span></div>
+      <div class=cart-total-row><span>Total</span><span id=vip-total>$0.00</span></div>
+    </div>
+    <button class=checkout-btn id=vip-checkout-btn onclick=vipOpenCheckout() disabled>Proceed to Checkout →</button>
   </div>
-
-  <hr class=divider>
-
-  <!-- Step 3: Qty -->
-  <p class=section-label>Step 3 — How Many Bags?</p>
-  <div class=qty-row>
-    <button class=qty-btn onclick="vipChangeQty(-1)">−</button>
-    <span class=qty-num id=vip-qty>1</span>
-    <button class=qty-btn onclick="vipChangeQty(1)">+</button>
-    <span style="font-size:12px;color:rgba(255,255,255,0.4);">bags (1 lb each)</span>
-  </div>
-
-  <div class=price-row>
-    <span class=price-label>Total</span>
-    <span class=price-val id=vip-total>$15.50</span>
-  </div>
-
-  <button class=vip-btn onclick="vipCheckout()">Order Now →</button>
-  <p style="font-size:11px;color:rgba(255,255,255,0.3);text-align:center;margin-top:10px;">Roasted fresh · Ships within 3-5 days</p>
 </div>
 
-<!-- Square Checkout Modal -->
-<div id=vip-square-modal>
-  <div id=vip-square-inner>
-    <div class=sq-modal-head>
+<!-- Checkout Modal -->
+<div id=vip-modal>
+  <div class=modal-inner>
+    <div class=modal-head>
       <img src=/kahoalogo.png alt="Kahoa Coffee">
-      <button class=sq-close onclick="document.getElementById('vip-square-modal').style.display='none'">✕</button>
+      <button class=modal-close onclick="document.getElementById('vip-modal').style.display='none'">✕</button>
     </div>
-    <div class=sq-body>
+    <div class=modal-body>
       <div id=vip-success>
         <div style="font-size:48px;margin-bottom:16px;">☕</div>
-        <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--text-dark);margin-bottom:8px;">Order Placed!</h2>
-        <p style="font-size:13px;color:var(--text-mid);margin-bottom:4px;">Confirmation sent to your email.</p>
-        <p style="font-size:13px;color:var(--text-mid);">We'll roast your coffee fresh and ship it within 3-5 days.</p>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--text-dark);margin-bottom:8px;">Order Placed!</h2>
+        <p style="font-size:13px;color:var(--text-mid);line-height:1.7;">Confirmation sent to your email.<br>We'll roast fresh and ship within 3-5 days.</p>
       </div>
       <div id=vip-form>
-        <div class=sq-order-summary id=vip-order-summary></div>
-        <p class=section-label style="color:var(--text-mid);">Your Details</p>
-        <div class=sq-row>
-          <div class=sq-field><label>First Name</label><input id=vip-fname placeholder="Martin"></div>
-          <div class=sq-field><label>Last Name</label><input id=vip-lname placeholder="Chege"></div>
+        <div class=order-summary id=vip-modal-summary></div>
+        <p class=sec-label style="color:var(--text-mid);margin-bottom:12px;">Your Details</p>
+        <div class=two-col>
+          <div class=field><label>First Name</label><input id=vf-fname placeholder="Martin"></div>
+          <div class=field><label>Last Name</label><input id=vf-lname placeholder="Chege"></div>
         </div>
-        <div class=sq-field><label>Email</label><input id=vip-email type=email placeholder="you@email.com"></div>
-        <div class=sq-field><label>Phone</label><input id=vip-phone type=tel placeholder="+1 (512) 000-0000"></div>
-        <div class=sq-field><label>Address</label><input id=vip-address placeholder="123 Main St"></div>
-        <div class=sq-row>
-          <div class=sq-field><label>City</label><input id=vip-city placeholder="Austin"></div>
-          <div class=sq-field><label>State</label><input id=vip-state placeholder="TX"></div>
+        <div class=field><label>Email</label><input id=vf-email type=email placeholder="you@email.com"></div>
+        <div class=field><label>Phone</label><input id=vf-phone type=tel placeholder="+1 512 000 0000"></div>
+        <div class=field><label>Address</label><input id=vf-address placeholder="123 Main St"></div>
+        <div class=two-col>
+          <div class=field><label>City</label><input id=vf-city placeholder="Austin"></div>
+          <div class=field><label>State</label><input id=vf-state placeholder="TX"></div>
         </div>
-        <div class=sq-field>
+        <div class=field>
           <label>ZIP Code</label>
-          <div class=zip-row>
-            <input id=vip-zip placeholder="78701" maxlength=5 oninput="vipCheckZip(this.value)">
-          </div>
-          <div id=vip-ship-result></div>
+          <input id=vf-zip placeholder="78701" maxlength=5 oninput="vipZipCheck(this.value)">
+          <div id=vip-ship-note></div>
         </div>
         <hr style="border:none;border-top:1px solid var(--border);margin:16px 0;">
-        <p class=section-label style="color:var(--text-mid);">Payment</p>
-        <div id=vip-error></div>
-        <div id=vip-card-container></div>
-        <button id=vip-submit-btn onclick="vipSubmitPayment()">Complete Order →</button>
+        <p class=sec-label style="color:var(--text-mid);margin-bottom:12px;">Payment</p>
+        <div id=vip-err></div>
+        <div id=vip-card-el></div>
+        <button id=vip-pay-btn onclick=vipPay()>Complete Order →</button>
       </div>
     </div>
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script>
-var VIP_PRICE_WHOLE=15.50,VIP_PRICE_GROUND=17.50;
-var VIP_FLAT_SHIPPING=7.99;
-var VIP_AUSTIN_ZIPS=['78701','78702','78703','78704','78705','78712','78717','78719','78721','78722','78723','78724','78725','78726','78727','78728','78729','78730','78731','78732','78733','78734','78735','78736','78737','78738','78739','78741','78742','78744','78745','78746','78747','78748','78749','78750','78751','78752','78753','78754','78756','78757','78758','78759'];
+var VIP_WHOLE=15.50,VIP_GROUND=17.50,VIP_SHIP=7.99;
 var SQUARE_APP_ID='sq0idp-khlBwyn6FQYmXDU8zxjAiQ';
-var SQUARE_LOCATION_ID='LMKFJB9XGHXFF';
-var WORKER_URL='https://kahoa-checkoutout.chegekibuthu1.workers.dev/checkout';
-var SHEET_URL='https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289hVmWtR1OKDqxLruwmKbRf_GkAwkiuEepPfk22Q/exec';
-var EMAILJS_SVC='service_wsy9uog',EMAILJS_TMPL='template_8jwdv8c',EMAILJS_KEY='_UGjjDFHgZ98q2wbm';
+var SQUARE_LOC='LMKFJB9XGHXFF';
+var WORKER='https://kahoa-checkoutout.chegekibuthu1.workers.dev/checkout';
+var SHEET='https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289hVmWtR1OKDqxLruwmKbRf_GkAwkiuEepPfk22Q/exec';
+var EJSVC='service_wsy9uog',EJTMPL='template_8jwdv8c',EJKEY='_UGjjDFHgZ98q2wbm';
+var AUSTIN_ZIPS=['78701','78702','78703','78704','78705','78712','78717','78719','78721','78722','78723','78724','78725','78726','78727','78728','78729','78730','78731','78732','78733','78734','78735','78736','78737','78738','78739','78741','78742','78744','78745','78746','78747','78748','78749','78750','78751','78752','78753','78754','78756','78757','78758','78759'];
 
-var vipBlend=null,vipGrind='whole',vipQty=1,vipCard=null,vipPayments=null;
-var vipBlendNames={nyeri:'Nairobi Sunrise',kirinyaga:'Savanna Gold',dark:'Ngong Dark Reserve'};
+var BLENDS=[
+  {key:'nyeri',name:'Nairobi Sunrise',detail:'Light-Medium Roast · Nairobi Highlands · Bright, citrusy, smooth'},
+  {key:'kirinyaga',name:'Savanna Gold',detail:'Medium Roast · Central Kenya Highlands · Balanced, nutty, caramel'},
+  {key:'dark',name:'Ngong Dark Reserve',detail:'Dark Roast · Ngong Hills · Bold, rich, chocolatey'}
+];
 
-function vipPickBlend(key,el){
-  vipBlend=key;
-  document.querySelectorAll('.blend-card').forEach(function(c){c.classList.remove('selected');});
-  el.classList.add('selected');
-  vipUpdateTotal();
+var vipCart=[];
+var vipGrinds={},vipQtys={};
+var vipPayments=null,vipCard=null;
+
+// Build product cards
+BLENDS.forEach(function(b){
+  vipGrinds[b.key]='whole';
+  vipQtys[b.key]=1;
+  var d=document.createElement('div');
+  d.className='prod-card';
+  d.innerHTML=
+    '<div class=prod-name>'+b.name+'</div>'+
+    '<div class=prod-detail>'+b.detail+'</div>'+
+    '<div class=grind-row>'+
+      '<button class="grind-btn active" id="g-whole-'+b.key+'" onclick="vipSetGrind(\''+b.key+'\',\'whole\',this)">Whole Bean<br><span style="opacity:.6;font-size:10px;">$'+VIP_WHOLE.toFixed(2)+'/lb</span></button>'+
+      '<button class="grind-btn" id="g-ground-'+b.key+'" onclick="vipSetGrind(\''+b.key+'\',\'ground\',this)">Ground<br><span style="opacity:.6;font-size:10px;">$'+VIP_GROUND.toFixed(2)+'/lb</span></button>'+
+    '</div>'+
+    '<div class=qty-add-row>'+
+      '<div class=qty-wrap>'+
+        '<button class=qty-btn onclick="vipSetQty(\''+b.key+'\',-1)">−</button>'+
+        '<span class=qty-num id="q-'+b.key+'">1</span>'+
+        '<button class=qty-btn onclick="vipSetQty(\''+b.key+'\',1)">+</button>'+
+      '</div>'+
+      '<button class=add-btn onclick="vipAdd(\''+b.key+'\')">Add to Order →</button>'+
+    '</div>';
+  document.getElementById('vip-products').appendChild(d);
+});
+
+function vipSetGrind(key,grind,el){
+  vipGrinds[key]=grind;
+  document.getElementById('g-whole-'+key).classList.toggle('active',grind==='whole');
+  document.getElementById('g-ground-'+key).classList.toggle('active',grind==='ground');
 }
-function vipPickGrind(g,el){
-  vipGrind=g;
-  document.querySelectorAll('.grind-btn').forEach(function(b){b.classList.remove('selected');});
-  el.classList.add('selected');
-  vipUpdateTotal();
+function vipSetQty(key,d){
+  vipQtys[key]=Math.max(1,Math.min(20,(vipQtys[key]||1)+d));
+  document.getElementById('q-'+key).textContent=vipQtys[key];
 }
-function vipChangeQty(d){
-  vipQty=Math.max(1,Math.min(20,vipQty+d));
-  document.getElementById('vip-qty').textContent=vipQty;
-  vipUpdateTotal();
+function vipAdd(key){
+  var grind=vipGrinds[key]||'whole';
+  var qty=vipQtys[key]||1;
+  var price=grind==='ground'?VIP_GROUND:VIP_WHOLE;
+  var blend=BLENDS.find(function(b){return b.key===key;});
+  // Merge if same blend+grind already in cart
+  var existing=vipCart.find(function(i){return i.key===key&&i.grind===grind;});
+  if(existing){existing.qty+=qty;}
+  else{vipCart.push({key:key,name:blend.name,grind:grind,grindLabel:grind==='ground'?'Ground':'Whole Bean',qty:qty,price:price});}
+  vipRenderCart();
+  // Flash confirmation
+  var btn=document.querySelector('[onclick="vipAdd(\''+key+'\')"]');
+  if(btn){btn.textContent='Added ✓';setTimeout(function(){btn.textContent='Add to Order →';},1500);}
 }
-function vipUpdateTotal(){
-  var price=vipGrind==='ground'?VIP_PRICE_GROUND:VIP_PRICE_WHOLE;
-  document.getElementById('vip-total').textContent='$'+(price*vipQty).toFixed(2);
+function vipRemove(idx){
+  vipCart.splice(idx,1);
+  vipRenderCart();
 }
-function vipIsAustin(zip){return VIP_AUSTIN_ZIPS.indexOf(zip)!==-1;}
-function vipCheckZip(zip){
+function vipRenderCart(){
+  var el=document.getElementById('vip-cart-items');
+  var totalsEl=document.getElementById('vip-cart-totals');
+  var btn=document.getElementById('vip-checkout-btn');
+  if(vipCart.length===0){
+    el.innerHTML='<p class=cart-empty>No items yet — add a blend above.</p>';
+    totalsEl.style.display='none';
+    btn.disabled=true;
+    return;
+  }
+  var html='';
+  var subtotal=0;
+  vipCart.forEach(function(item,i){
+    var lineTotal=item.price*item.qty;
+    subtotal+=lineTotal;
+    html+='<div class=cart-item>'+
+      '<div><div class=cart-item-name>'+item.qty+'× '+item.name+'</div>'+
+      '<div class=cart-item-detail>'+item.grindLabel+' · $'+item.price.toFixed(2)+'/lb</div></div>'+
+      '<div style="display:flex;align-items:center;">'+
+      '<span class=cart-item-price>$'+lineTotal.toFixed(2)+'</span>'+
+      '<button class=cart-item-remove onclick="vipRemove('+i+')">×</button>'+
+      '</div></div>';
+  });
+  el.innerHTML=html;
+  totalsEl.style.display='block';
+  document.getElementById('vip-subtotal').textContent='$'+subtotal.toFixed(2);
+  document.getElementById('vip-shipping').textContent='Calculated at checkout';
+  document.getElementById('vip-total').textContent='$'+subtotal.toFixed(2)+' + shipping';
+  btn.disabled=false;
+}
+function vipIsAustin(zip){return AUSTIN_ZIPS.indexOf(zip)!==-1;}
+function vipGetShipping(){
+  var zip=(document.getElementById('vf-zip').value||'').trim();
+  return vipIsAustin(zip)?0:VIP_SHIP;
+}
+function vipZipCheck(zip){
   if(zip.length===5){
-    var el=document.getElementById('vip-ship-result');
-    el.textContent=vipIsAustin(zip)?'✓ Free local Austin delivery':'+ $'+VIP_FLAT_SHIPPING.toFixed(2)+' shipping';
-    el.style.color=vipIsAustin(zip)?'#2a7a3b':'var(--gold)';
-    vipUpdateOrderSummary();
+    var el=document.getElementById('vip-ship-note');
+    var local=vipIsAustin(zip);
+    el.textContent=local?'✓ Free local Austin delivery':'+ $'+VIP_SHIP.toFixed(2)+' shipping';
+    el.style.color=local?'#2a7a3b':'var(--gold)';
+    vipUpdateModalSummary();
   }
 }
-function vipGetShipping(){
-  var zip=(document.getElementById('vip-zip').value||'').trim();
-  return vipIsAustin(zip)?0:VIP_FLAT_SHIPPING;
+function vipCalcSubtotal(){
+  return vipCart.reduce(function(s,i){return s+i.price*i.qty;},0);
 }
-function vipUpdateOrderSummary(){
-  var price=vipGrind==='ground'?VIP_PRICE_GROUND:VIP_PRICE_WHOLE;
-  var subtotal=price*vipQty;
+function vipUpdateModalSummary(){
+  var subtotal=vipCalcSubtotal();
   var shipping=vipGetShipping();
   var total=subtotal+shipping;
-  var blend=vipBlend?vipBlendNames[vipBlend]:'(blend not selected)';
-  var grindLabel=vipGrind==='ground'?'Ground':'Whole Bean';
-  document.getElementById('vip-order-summary').innerHTML=
-    '<p><strong>'+vipQty+'× '+blend+'</strong> ('+grindLabel+')</p>'+
-    '<p style="font-size:12px;margin-top:4px;">Subtotal: $'+subtotal.toFixed(2)+'</p>'+
-    '<p style="font-size:12px;">Shipping: '+(shipping===0?'FREE':'$'+shipping.toFixed(2))+'</p>'+
-    '<p class=sq-total>Total: $'+total.toFixed(2)+'</p>';
+  var lines=vipCart.map(function(i){return '<p>'+i.qty+'× '+i.name+' ('+i.grindLabel+') — $'+(i.price*i.qty).toFixed(2)+'</p>';}).join('');
+  document.getElementById('vip-modal-summary').innerHTML=
+    lines+
+    '<p style="margin-top:6px;font-size:11px;">Subtotal: $'+subtotal.toFixed(2)+'</p>'+
+    '<p style="font-size:11px;">Shipping: '+(shipping===0?'FREE':'$'+shipping.toFixed(2))+'</p>'+
+    '<p class=order-total>Total: $'+total.toFixed(2)+'</p>';
 }
-async function vipCheckout(){
-  if(!vipBlend){alert('Please choose a blend first.');return;}
-  vipUpdateOrderSummary();
-  document.getElementById('vip-square-modal').style.display='flex';
+async function vipOpenCheckout(){
+  if(vipCart.length===0){alert('Add at least one item first.');return;}
+  vipUpdateModalSummary();
+  document.getElementById('vip-modal').style.display='flex';
   document.getElementById('vip-success').style.display='none';
   document.getElementById('vip-form').style.display='block';
+  document.getElementById('vip-err').style.display='none';
   if(!vipPayments){
     try{
-      vipPayments=Square.payments(SQUARE_APP_ID,SQUARE_LOCATION_ID);
+      vipPayments=Square.payments(SQUARE_APP_ID,SQUARE_LOC);
       vipCard=await vipPayments.card();
-      await vipCard.attach('#vip-card-container');
+      await vipCard.attach('#vip-card-el');
     }catch(e){console.error('Square init:',e);}
   }
 }
-async function vipSubmitPayment(){
-  var fname=document.getElementById('vip-fname').value.trim();
-  var lname=document.getElementById('vip-lname').value.trim();
-  var email=document.getElementById('vip-email').value.trim();
-  var phone=document.getElementById('vip-phone').value.trim();
-  var address=document.getElementById('vip-address').value.trim();
-  var city=document.getElementById('vip-city').value.trim();
-  var state=document.getElementById('vip-state').value.trim();
-  var zip=document.getElementById('vip-zip').value.trim();
-  var errEl=document.getElementById('vip-error');
+async function vipPay(){
+  var fname=document.getElementById('vf-fname').value.trim();
+  var lname=document.getElementById('vf-lname').value.trim();
+  var email=document.getElementById('vf-email').value.trim();
+  var phone=document.getElementById('vf-phone').value.trim();
+  var address=document.getElementById('vf-address').value.trim();
+  var city=document.getElementById('vf-city').value.trim();
+  var state=document.getElementById('vf-state').value.trim();
+  var zip=document.getElementById('vf-zip').value.trim();
+  var errEl=document.getElementById('vip-err');
   errEl.style.display='none';
-  if(!fname||!lname){errEl.textContent='Please enter your name.';errEl.style.display='block';return;}
+  if(!fname||!lname){errEl.textContent='Please enter your full name.';errEl.style.display='block';return;}
   if(!email||!email.includes('@')){errEl.textContent='Please enter a valid email.';errEl.style.display='block';return;}
-  if(!address||!city||!zip){errEl.textContent='Please enter your shipping address.';errEl.style.display='block';return;}
-  var btn=document.getElementById('vip-submit-btn');
+  if(!address||!city||!zip){errEl.textContent='Please enter your full shipping address.';errEl.style.display='block';return;}
+  var btn=document.getElementById('vip-pay-btn');
   btn.textContent='Processing...';btn.disabled=true;
   try{
     var result=await vipCard.tokenize();
     if(result.status!=='OK'){
       errEl.textContent='Card error: '+(result.errors?result.errors[0].message:result.status);
-      errEl.style.display='block';
-      btn.textContent='Complete Order →';btn.disabled=false;
-      return;
+      errEl.style.display='block';btn.textContent='Complete Order →';btn.disabled=false;return;
     }
-    var price=vipGrind==='ground'?VIP_PRICE_GROUND:VIP_PRICE_WHOLE;
-    var subtotal=price*vipQty;
+    var subtotal=vipCalcSubtotal();
     var shipping=vipGetShipping();
     var total=subtotal+shipping;
-    var amountCents=Math.round(total*100);
-    var blend=vipBlendNames[vipBlend];
-    var grindLabel=vipGrind==='ground'?'Ground':'Whole Bean';
-    var productName=blend+' ('+grindLabel+') × '+vipQty;
-    // Charge Square
-    var resp=await fetch(WORKER_URL,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
+    var cartItems=vipCart.map(function(i){return{product_name:i.name,grind:i.grindLabel,quantity:i.qty,unit_price_cents:Math.round(i.price*100)};});
+    var productSummary=vipCart.map(function(i){return i.qty+'× '+i.name+' ('+i.grindLabel+')';}).join(', ');
+    var resp=await fetch(WORKER,{
+      method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         source_id:result.token,
-        amount_cents:amountCents,
+        amount_cents:Math.round(total*100),
         currency:'USD',
         buyer_email:email,
-        note:'VIP Order: '+productName,
-        cart_items:[{product_name:productName,grind:grindLabel,quantity:vipQty,unit_price_cents:Math.round(price*100)}],
+        note:'VIP Order: '+productSummary,
+        cart_items:cartItems,
         shipping:shipping>0?{serviceName:'Standard Shipping',amountCents:Math.round(shipping*100)}:null
       })
     });
     var data=await resp.json();
     if(!resp.ok||data.errors){
       errEl.textContent='Payment failed: '+(data.errors?data.errors[0].detail:JSON.stringify(data));
-      errEl.style.display='block';
-      btn.textContent='Complete Order →';btn.disabled=false;
-      return;
+      errEl.style.display='block';btn.textContent='Complete Order →';btn.disabled=false;return;
     }
     // Success
     document.getElementById('vip-form').style.display='none';
     document.getElementById('vip-success').style.display='block';
-    var orderNum='VIP-'+Date.now();
-    // Email to Kahoa
+    var fullAddr=address+', '+city+', '+state+' '+zip;
     var tp={
       to_email:'info@kahoa.shop',
-      order_id:data.payment_id||orderNum,
+      order_id:data.payment_id||'VIP-'+Date.now(),
       order_type:'VIP FRIENDS & FAMILY ORDER',
       customer_name:fname+' '+lname,
       customer_email:email,
       customer_phone:phone||'',
-      customer_address:address+', '+city+', '+state+' '+zip,
-      product_name:productName,
-      grind:grindLabel,
+      customer_address:fullAddr,
+      product_name:productSummary,
+      grind:'Mixed (see items)',
       price:'$'+total.toFixed(2),
       shipping_method:shipping===0?'FREE local Austin':'Standard Shipping $'+shipping.toFixed(2),
       checkout_url:data.receipt_url||'',
-      notes:'VIP price: $'+price.toFixed(2)+'/lb × '+vipQty+' bags'
+      notes:'VIP pricing: $'+VIP_WHOLE.toFixed(2)+'/lb whole, $'+VIP_GROUND.toFixed(2)+'/lb ground. Items: '+productSummary
     };
     if(typeof emailjs!=='undefined'){
-      emailjs.init(EMAILJS_KEY);
-      emailjs.send(EMAILJS_SVC,EMAILJS_TMPL,tp).catch(function(e){console.error('Email failed',e);});
-      // Customer confirmation
+      emailjs.init(EJKEY);
+      emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error('Email error',e);});
       var custTp=Object.assign({},tp,{to_email:email,order_type:'Your Kahoa Coffee Order Confirmation'});
-      emailjs.send(EMAILJS_SVC,EMAILJS_TMPL,custTp).catch(function(e){console.error('Customer email failed',e);});
+      emailjs.send(EJSVC,EJTMPL,custTp).catch(function(e){console.error('Cust email error',e);});
     }
-    // Log to Sheet
-    try{fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+    try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({
       timestamp:new Date().toISOString(),name:fname+' '+lname,email:email,phone:phone||'',
-      product:productName,grind:grindLabel,total:'$'+total.toFixed(2),coupon:'VIP',
-      address:address+', '+city+', '+state+' '+zip,opted_in:'Yes',source:'kahoa.shop/vip'
+      product:productSummary,grind:'Mixed',total:'$'+total.toFixed(2),coupon:'VIP',
+      address:fullAddr,opted_in:'Yes',source:'kahoa.shop/vip'
     })});}catch(e){}
+    // Clear cart
+    vipCart=[];vipRenderCart();
   }catch(e){
     errEl.textContent='Error: '+e.message;
-    errEl.style.display='block';
-    btn.textContent='Complete Order →';btn.disabled=false;
+    errEl.style.display='block';btn.textContent='Complete Order →';btn.disabled=false;
   }
 }
-// Init grind default
-document.getElementById('vip-grind-whole').classList.add('selected');
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 </body>
 </html>
