@@ -332,8 +332,12 @@ async function vipPay(){
       body:JSON.stringify(payload)
     });
     var data=await resp.json();
-    if(!resp.ok||!data.success){
-      errEl.textContent='Payment failed: '+(data.errors?data.errors[0].detail:JSON.stringify(data));
+    console.log('VIP WORKER RESPONSE:',JSON.stringify(data));
+    // Worker returns success:true and payment_id when card charged.
+    // If it returns checkout_url, the card was NOT charged (link mode).
+    var charged=data.success===true||(data.payment_id&&!data.checkout_url);
+    if(!resp.ok||!charged){
+      errEl.textContent='Payment failed: '+(data.errors?data.errors[0].detail:data.error||JSON.stringify(data));
       errEl.style.display='block';btn.textContent='Complete Order →';btn.disabled=false;return;
     }
     // Success
