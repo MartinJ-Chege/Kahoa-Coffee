@@ -317,6 +317,9 @@ async function vipPay(){
     }
     var cartItems=cartSnapshot.map(function(i){return{product_name:i.name,grind:i.grindLabel,quantity:i.qty,unit_price_cents:Math.round(i.price*100)};});
     var productSummary=cartSnapshot.map(function(i){return i.qty+'× '+i.name+' ('+i.grindLabel+')';}).join(', ');
+    // Worker expects top-level product_name/quantity/unit_price_cents
+    // For multi-item cart, send as a combined single line item
+    var combinedName=productSummary;
     var resp=await fetch(WORKER,{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
@@ -325,6 +328,10 @@ async function vipPay(){
         currency:'USD',
         buyer_email:email,
         note:'VIP Order: '+productSummary,
+        product_name:combinedName,
+        grind:'Mixed (see items)',
+        quantity:1,
+        unit_price_cents:Math.round(subtotal*100),
         cart_items:cartItems,
         shipping:shipping>0?{serviceName:'Standard Shipping',amountCents:Math.round(shipping*100)}:null
       })
