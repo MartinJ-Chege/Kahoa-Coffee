@@ -800,4 +800,41 @@ function kahoaProcessFreeOrder(){
     if(typeof kahoaCartRender==='function') kahoaCartRender();
   }
 }
+</script
+<div id="kahoa-welcome-popup" style="display:none;position:fixed;inset:0;z-index:100000;background:rgba(10,5,2,0.88);align-items:center;justify-content:center;padding:20px;">
+<div style="background:linear-gradient(160deg,#1a0f08,#0f0703);border:1px solid rgba(212,168,67,0.3);max-width:400px;width:100%;padding:36px 30px;position:relative;text-align:center;border-radius:4px;">
+<button onclick="kahoaCloseWelcome()" style="position:absolute;top:12px;right:16px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:22px;cursor:pointer;">×</button>
+<div style="color:#D4A843;font-size:11px;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;">Welcome to Kahoa</div>
+<h2 style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:#fff;line-height:1.2;margin-bottom:10px;">Get 10% Off<br>Your First Bag</h2>
+<p style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.6;margin-bottom:22px;">Join the Kahoa family and we'll send you a code for 10% off premium single-origin Kenyan coffee.</p>
+<div id="kahoa-welcome-form">
+<input id="kahoa-welcome-email" type="email" placeholder="you@email.com" style="width:100%;border:1px solid rgba(212,168,67,0.3);background:rgba(255,255,255,0.05);color:#fff;padding:13px 14px;font-family:Montserrat,sans-serif;font-size:14px;margin-bottom:12px;border-radius:3px;outline:none;box-sizing:border-box;">
+<button onclick="kahoaSubmitWelcome()" style="width:100%;background:#D4A843;color:#1C0E06;border:none;padding:14px;font-family:Montserrat,sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:3px;">Send My Code →</button>
+<p style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:12px;">No spam. Unsubscribe anytime.</p>
+</div>
+<div id="kahoa-welcome-success" style="display:none;">
+<div style="font-size:40px;margin-bottom:12px;">☕</div>
+<h3 style="font-family:'Cormorant Garamond',serif;font-size:24px;color:#D4A843;margin-bottom:8px;">You're in!</h3>
+<p style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.6;">Use code <strong style="color:#D4A843;font-family:monospace;font-size:16px;">WELCOME10</strong> at checkout for 10% off your first order.</p>
+</div>
+</div>
+</div>
+<script>
+function kahoaCloseWelcome(){document.getElementById('kahoa-welcome-popup').style.display='none';try{localStorage.setItem('kahoa_welcome_seen','1');}catch(e){}}
+function kahoaSubmitWelcome(){
+  var email=document.getElementById('kahoa-welcome-email').value.trim();
+  if(!email||!email.includes('@')){alert('Please enter a valid email.');return;}
+  try{fetch('https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289hVmWtR1OKDqxLruwmKbRf_GkAwkiuEepPfk22Q/exec',{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:'(Newsletter Signup)',email:email,phone:'',product:'WELCOME10 signup',grind:'',total:'$0',coupon:'WELCOME10',address:'',opted_in:'Yes',source:'welcome-popup'})});}catch(e){}
+  document.getElementById('kahoa-welcome-form').style.display='none';
+  document.getElementById('kahoa-welcome-success').style.display='block';
+  try{localStorage.setItem('kahoa_welcome_seen','1');}catch(e){}
+}
+(function(){
+  try{if(localStorage.getItem('kahoa_welcome_seen'))return;}catch(e){}
+  setTimeout(function(){
+    var p=document.getElementById('kahoa-welcome-popup');
+    if(p)p.style.display='flex';
+  },8000);
+})();
 </script>
+>
