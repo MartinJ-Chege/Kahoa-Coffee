@@ -817,8 +817,32 @@ function kahoaShowBlendPicker(productKey,price){
 }
 </script>
 <!-- Kahoa Helper Widget -->
-<div id="kahoa-help-btn" onclick="kahoaHelpToggle()" style="position:fixed;bottom:20px;right:20px;z-index:99990;width:58px;height:58px;border-radius:50%;background:#D4A843;box-shadow:0 6px 20px rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .2s;">
-<svg id="kahoa-help-icon" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1C0E06" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+<style>
+@keyframes kahoaBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes kahoaPulseRing{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.8);opacity:0}}
+@keyframes kahoaSteam{0%{opacity:0;transform:translateY(0) scaleX(1)}30%{opacity:.7}100%{opacity:0;transform:translateY(-8px) scaleX(1.4)}}
+@keyframes kahoaTipIn{0%{opacity:0;transform:translateX(10px)}100%{opacity:1;transform:translateX(0)}}
+@keyframes kahoaWiggle{0%,88%,100%{transform:rotate(0)}90%{transform:rotate(-12deg)}93%{transform:rotate(12deg)}96%{transform:rotate(-8deg)}}
+#kahoa-help-btn{animation:kahoaBob 3s ease-in-out infinite;}
+#kahoa-help-btn:hover{animation-play-state:paused;transform:scale(1.1) !important;}
+#kahoa-help-btn .kahoa-ring{position:absolute;inset:0;border-radius:50%;background:#D4A843;animation:kahoaPulseRing 2.2s ease-out infinite;z-index:-1;}
+#kahoa-help-cup{animation:kahoaWiggle 4s ease-in-out infinite;}
+.kahoa-steam{position:absolute;width:2px;height:6px;background:rgba(255,255,255,0.8);border-radius:2px;top:14px;animation:kahoaSteam 1.8s ease-out infinite;}
+#kahoa-help-tip{animation:kahoaTipIn .4s ease both;}
+@keyframes kahoaPanelUp{0%{opacity:0;transform:translateY(20px) scale(0.96)}100%{opacity:1;transform:translateY(0) scale(1)}}
+#kahoa-help-panel.kahoa-open{animation:kahoaPanelUp .32s cubic-bezier(.2,.8,.2,1) both;}
+.kahoa-help-q{transition:background .15s,transform .15s,box-shadow .15s;}
+.kahoa-help-q:hover{transform:translateX(4px);box-shadow:0 3px 12px rgba(212,168,67,0.25);}
+</style>
+<div id="kahoa-help-tip" onclick="kahoaHelpToggle()" style="display:none;position:fixed;bottom:34px;right:88px;z-index:99990;background:#1C0E06;color:#fff;padding:9px 14px;border-radius:20px 20px 4px 20px;font-family:Montserrat,sans-serif;font-size:12px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,0.25);cursor:pointer;white-space:nowrap;">&#9749; Need help? Chat with us!</div>
+<div id="kahoa-help-btn" onclick="kahoaHelpToggle()" style="position:fixed;bottom:20px;right:20px;z-index:99990;width:58px;height:58px;border-radius:50%;background:#D4A843;box-shadow:0 6px 20px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;cursor:pointer;">
+<div class="kahoa-ring"></div>
+<div style="position:relative;">
+<span class="kahoa-steam" style="left:9px;animation-delay:0s;"></span>
+<span class="kahoa-steam" style="left:13px;animation-delay:.5s;"></span>
+<span class="kahoa-steam" style="left:17px;animation-delay:1s;"></span>
+<svg id="kahoa-help-cup" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1C0E06" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>
+</div>
 </div>
 <div id="kahoa-help-panel" style="display:none;position:fixed;bottom:88px;right:20px;z-index:99991;width:340px;max-width:calc(100vw - 40px);background:#fff;border-radius:12px;box-shadow:0 12px 48px rgba(0,0,0,0.28);overflow:hidden;font-family:Montserrat,sans-serif;">
 <div style="background:linear-gradient(135deg,#1C0E06,#3a2415);padding:18px 20px;color:#fff;position:relative;">
@@ -845,8 +869,9 @@ var KAHOA_HELP={
     order:{t:"Order Status & Help",a:"After you order, you'll get a confirmation email with your order number (KH-XXXXXX) and a receipt from Square. If you need help with an existing order or have a question, just email us \u2014 we respond fast!",links:[{t:"Email info@kahoa.shop",u:"mailto:info@kahoa.shop"}]}
   }
 };
-function kahoaHelpToggle(){var p=document.getElementById("kahoa-help-panel"),b=document.getElementById("kahoa-help-btn");if(p.style.display==="none"||!p.style.display){p.style.display="block";b.style.transform="scale(0.9)";kahoaHelpMenu();}else{p.style.display="none";b.style.transform="scale(1)";}}
-function kahoaHelpMenu(){var m=document.getElementById("kahoa-help-menu");var h="";KAHOA_HELP.menu.forEach(function(it){h+='<button onclick="kahoaHelpAnswer(\''+it.k+'\')" style="display:block;width:100%;text-align:left;background:#fff;border:1px solid #e5d5c0;border-radius:8px;padding:12px 14px;margin-bottom:8px;font-family:Montserrat,sans-serif;font-size:13px;color:#1A0C05;cursor:pointer;">'+it.q+'</button>';});m.innerHTML=h;}
+function kahoaHelpToggle(){var p=document.getElementById("kahoa-help-panel"),b=document.getElementById("kahoa-help-btn"),tip=document.getElementById("kahoa-help-tip");if(tip)tip.style.display="none";if(p.style.display==="none"||!p.style.display){p.style.display="block";p.classList.add("kahoa-open");kahoaHelpMenu();}else{p.style.display="none";p.classList.remove("kahoa-open");}}
+(function(){setTimeout(function(){var tip=document.getElementById("kahoa-help-tip"),p=document.getElementById("kahoa-help-panel");if(tip&&(!p||p.style.display!=="block")){tip.style.display="block";setTimeout(function(){if(tip)tip.style.display="none";},6000);}},5000);})();
+function kahoaHelpMenu(){var m=document.getElementById("kahoa-help-menu");var h="";KAHOA_HELP.menu.forEach(function(it){h+='<button class="kahoa-help-q" onclick="kahoaHelpAnswer(\''+it.k+'\')" style="display:block;width:100%;text-align:left;background:#fff;border:1px solid #e5d5c0;border-radius:8px;padding:12px 14px;margin-bottom:8px;font-family:Montserrat,sans-serif;font-size:13px;color:#1A0C05;cursor:pointer;">'+it.q+'</button>';});m.innerHTML=h;}
 function kahoaHelpAnswer(k){var d=KAHOA_HELP.answers[k];if(!d)return;var body=document.getElementById("kahoa-help-body");var h='<p style="font-size:13px;margin:0 0 8px;font-weight:700;color:#C07A2A;">'+d.t+'</p>';h+='<p style="font-size:13px;color:#3a2415;line-height:1.6;margin:0 0 14px;">'+d.a+'</p>';if(d.links){d.links.forEach(function(l){h+='<a href="'+l.u+'" style="display:inline-block;background:#D4A843;color:#1C0E06;text-decoration:none;padding:9px 16px;border-radius:6px;font-size:12px;font-weight:700;margin:0 8px 8px 0;">'+l.t+' \u2192</a>';});}h+='<button onclick="kahoaHelpBack()" style="display:block;background:none;border:none;color:#C07A2A;font-size:12px;cursor:pointer;margin-top:8px;padding:0;">\u2190 Back to menu</button>';body.innerHTML=h;}
 function kahoaHelpBack(){var body=document.getElementById("kahoa-help-body");body.innerHTML='<p style="font-size:13px;color:#5c4530;margin:0 0 14px;line-height:1.5;">What else can I help you with?</p><div id="kahoa-help-menu"></div>';kahoaHelpMenu();}
 </script>
