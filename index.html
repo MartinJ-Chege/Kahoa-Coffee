@@ -497,7 +497,7 @@ kahoaResetIdle();
 (function(){
 
 // ── 1. ABANDONED CART REMINDER ─────────────────────────────────────────────
-var _kahoaAbandonTimer;
+window.kahoaCloseAbandonPop=function(){var p=document.getElementById("kahoa-abandon-popup");if(p)p.remove();};var _kahoaAbandonTimer;
 function kahoaCheckAbandon(){
   var KEY=typeof KAHOA_CART_KEY!=='undefined'?KAHOA_CART_KEY:'kahoa_cart_v1';
   var items=[];try{items=JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){}
@@ -514,8 +514,8 @@ function kahoaCheckAbandon(){
     +'<p style="font-family:Montserrat,sans-serif;font-size:12px;font-weight:700;color:#e8c76a;margin:0 0 3px;letter-spacing:1px;">YOU LEFT SOMETHING BEHIND</p>'
     +'<p style="font-family:Montserrat,sans-serif;font-size:11px;color:rgba(255,255,255,0.7);margin:0;">Your cart is waiting. Complete your order?</p>'
     +'</div>'
-    +'<button onclick="kahoaCartOpen();document.getElementById('kahoa-abandon-popup').remove();" style="background:var(--gold,#D4A843);color:#1C0E06;border:none;padding:8px 14px;font-family:Montserrat,sans-serif;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">View Cart</button>'
-    +'<button onclick="document.getElementById('kahoa-abandon-popup').remove();" style="background:none;border:none;color:rgba(255,255,255,0.3);font-size:18px;cursor:pointer;padding:0 4px;">×</button>';
+    +'<button onclick="kahoaCartOpen();kahoaCloseAbandonPop();" style="background:var(--gold,#D4A843);color:#1C0E06;border:none;padding:8px 14px;font-family:Montserrat,sans-serif;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">View Cart</button>'
+    +'<button onclick="kahoaCloseAbandonPop();" style="background:none;border:none;color:rgba(255,255,255,0.3);font-size:18px;cursor:pointer;padding:0 4px;">×</button>';
   document.body.appendChild(popup);
   setTimeout(function(){if(popup.parentNode)popup.remove();},8000);
 }
@@ -569,7 +569,7 @@ setTimeout(function(){
 },5000);
 
 // ── 3. POST-PURCHASE UPSELL ────────────────────────────────────────────────
-window.kahoaShowUpsell=function(purchasedKey){
+window.kahoaUpsellClose=function(){var m=document.getElementById("kahoa-upsell-modal");if(m)m.remove();};window.kahoaUpsellAdd=function(k){if(typeof kahoaAddToCart==="function")kahoaAddToCart(k,"whole");kahoaUpsellClose();};window.kahoaShowUpsell=function(purchasedKey){
   var upsells={
     nyeri:{key:'kirinyaga',name:'Savanna Gold',price:'$17'},
     kirinyaga:{key:'dark',name:'Ngong Dark Reserve',price:'$21'},
@@ -579,14 +579,14 @@ window.kahoaShowUpsell=function(purchasedKey){
   };
   var u=upsells[purchasedKey]||upsells.nyeri;
   var modal=document.createElement('div');
-  modal.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;padding:20px;';
+  modal.id='kahoa-upsell-modal';modal.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;padding:20px;';
   modal.innerHTML='<div style="background:#1C0E06;border:1px solid rgba(212,168,67,0.3);padding:32px;max-width:400px;width:100%;text-align:center;">'
     +'<p style="font-size:10px;letter-spacing:3px;color:rgba(212,168,67,0.7);text-transform:uppercase;margin:0 0 8px;">One more thing...</p>'
     +'<h3 style="font-family:Cormorant Garamond,serif;font-size:26px;color:#fff;font-weight:300;margin:0 0 10px;">Add '+u.name+' before your order ships?</h3>'
     +'<p style="font-size:13px;color:rgba(255,255,255,0.5);margin:0 0 20px;">Just '+u.price+' — ships in the same box. No extra shipping.</p>'
     +'<div style="display:flex;gap:10px;">'
-    +'<button onclick="kahoaAddToCart(''+u.key+'','whole');this.closest('div').parentElement.parentElement.remove();" style="flex:1;background:var(--gold,#D4A843);color:#1C0E06;border:none;padding:13px;font-family:Montserrat,sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;">Yes, Add It →</button>'
-    +'<button onclick="this.closest('div').parentElement.parentElement.remove();" style="flex:1;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.1);padding:13px;font-family:Montserrat,sans-serif;font-size:11px;cursor:pointer;">No thanks</button>'
+    +'<button onclick="kahoaUpsellAdd(\''+u.key+'\')" style="flex:1;background:var(--gold,#D4A843);color:#1C0E06;border:none;padding:13px;font-family:Montserrat,sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;">Yes, Add It →</button>'
+    +'<button onclick="kahoaUpsellClose()" style="flex:1;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.1);padding:13px;font-family:Montserrat,sans-serif;font-size:11px;cursor:pointer;">No thanks</button>'
     +'</div></div>';
   document.body.appendChild(modal);
 };
