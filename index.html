@@ -180,6 +180,8 @@ function kahoaCartContinueShopping(){kahoaCartClose(),setTimeout(function(){var 
 #kahoa-help-btn .kahoa-ring{position:absolute;inset:0;border-radius:50%;background:#8B0020;animation:kahoaPulseRing 2.2s ease-out infinite;z-index:-1;}
 #kahoa-help-btn img{animation:kahoaSpinIn .5s ease both;}
 #kahoa-help-tip{animation:kahoaTipIn .4s ease both;}
+.ksteam{animation:kahoaSteamRise 2.4s ease-in-out infinite;transform-origin:bottom;}
+@keyframes kahoaSteamRise{0%{opacity:0;transform:translateY(3px) scaleY(.6)}40%{opacity:1}100%{opacity:0;transform:translateY(-4px) scaleY(1.1)}}
 @keyframes kahoaPanelUp{0%{opacity:0;transform:translateY(20px) scale(0.96)}100%{opacity:1;transform:translateY(0) scale(1)}}
 #kahoa-help-panel.kahoa-open{animation:kahoaPanelUp .32s cubic-bezier(.2,.8,.2,1) both;}
 .kahoa-help-q{transition:background .15s,transform .15s,box-shadow .15s;}
@@ -188,7 +190,17 @@ function kahoaCartContinueShopping(){kahoaCartClose(),setTimeout(function(){var 
 <div id="kahoa-help-tip" onclick="kahoaHelpToggle()" style="display:none;position:fixed;bottom:34px;right:88px;z-index:99990;background:#8B0020;color:#fff;padding:9px 14px;border-radius:20px 20px 4px 20px;font-family:Montserrat,sans-serif;font-size:12px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,0.25);cursor:pointer;white-space:nowrap;">Need help? Chat with us!</div>
 <div id="kahoa-help-btn" onclick="kahoaHelpToggle()" style="position:fixed;bottom:20px;right:20px;z-index:99990;width:60px;height:60px;border-radius:50%;background:#8B0020;box-shadow:0 6px 20px rgba(139,0,32,0.45);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;border:2px solid #fff;">
 <div class="kahoa-ring"></div>
-<img src="/kahoalogo.png" alt="Kahoa" style="width:44px;height:44px;object-fit:contain;position:relative;">
+<svg width="40" height="40" viewBox="0 0 48 48" fill="none" style="position:relative;">
+<defs><linearGradient id="kcup" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#f0e6d8"/></linearGradient></defs>
+<path class="ksteam" d="M18 6c-2 2 0 4 0 6" stroke="rgba(255,255,255,0.85)" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+<path class="ksteam" d="M24 4c-2 2.5 0 4.5 0 7" stroke="rgba(255,255,255,0.9)" stroke-width="1.6" stroke-linecap="round" fill="none" style="animation-delay:.5s"/>
+<path class="ksteam" d="M30 6c-2 2 0 4 0 6" stroke="rgba(255,255,255,0.85)" stroke-width="1.6" stroke-linecap="round" fill="none" style="animation-delay:1s"/>
+<ellipse cx="24" cy="42" rx="13" ry="2.4" fill="rgba(255,255,255,0.35)"/>
+<path d="M11 18h22v9a11 11 0 0 1-11 11h0a11 11 0 0 1-11-11z" fill="url(#kcup)"/>
+<path d="M33 20h2.5a4.5 4.5 0 0 1 0 9H33" stroke="#fff" stroke-width="2.4" fill="none"/>
+<ellipse cx="22" cy="18" rx="11" ry="2.6" fill="#6b3410"/>
+<ellipse cx="22" cy="17.4" rx="9" ry="1.8" fill="#8a4a1c"/>
+</svg>
 </div>
 <div id="kahoa-help-panel" style="display:none;position:fixed;bottom:88px;right:20px;z-index:99991;width:340px;max-width:calc(100vw - 40px);background:#fff;border-radius:12px;box-shadow:0 12px 48px rgba(0,0,0,0.28);overflow:hidden;font-family:Montserrat,sans-serif;">
 <div style="background:linear-gradient(135deg,#1C0E06,#3a2415);padding:18px 20px;color:#fff;position:relative;">
