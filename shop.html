@@ -481,7 +481,26 @@ function kahoaHelpMenu(){var m=document.getElementById("kahoa-help-menu");var h=
 function kahoaHelpAnswer(k){var d=KAHOA_HELP.answers[k];if(!d)return;var body=document.getElementById("kahoa-help-body");var h='<p style="font-size:13px;margin:0 0 8px;font-weight:700;color:#8B0020;">'+d.t+'</p>';h+='<p style="font-size:13px;color:#3a2415;line-height:1.6;margin:0 0 14px;">'+d.a+'</p>';if(d.links){d.links.forEach(function(l){h+='<a href="'+l.u+'" style="display:inline-block;background:#8B0020;color:#fff;text-decoration:none;padding:9px 16px;border-radius:6px;font-size:12px;font-weight:700;margin:0 8px 8px 0;">'+l.t+' \u2192</a>';});}h+='<button onclick="kahoaHelpBack()" style="display:block;background:none;border:none;color:#8B0020;font-size:12px;cursor:pointer;margin-top:8px;padding:0;">\u2190 Back to menu</button>';body.innerHTML=h;}
 function kahoaHelpBack(){var body=document.getElementById("kahoa-help-body");body.innerHTML='<p style="font-size:13px;color:#5c4530;margin:0 0 14px;line-height:1.5;">What else can I help you with?</p><div id="kahoa-help-menu"></div>';kahoaHelpMenu();}
 </script>
-</html>
+<script>
+(function(){
+  function kahoaJumpToTrio(){
+    if(location.hash==="#trio"||location.search.indexOf("sale=trio")>-1||location.search.indexOf("laborday")>-1){
+      var coffeeBtn=document.getElementById("tab-btn-coffee");
+      if(coffeeBtn)coffeeBtn.click();
+      setTimeout(function(){
+        var card=document.getElementById("kahoa-trio-card");
+        if(card&&card.style.display!=="none"){card.scrollIntoView({behavior:"smooth",block:"center"});
+          card.style.transition="box-shadow .4s";var orig=card.style.boxShadow;
+          card.style.boxShadow="0 0 0 3px #8B0020,0 8px 28px #140c0559";
+          setTimeout(function(){card.style.boxShadow=orig;},2000);
+        }
+      },600);
+    }
+  }
+  if(document.readyState!=="loading")kahoaJumpToTrio();
+  else document.addEventListener("DOMContentLoaded",kahoaJumpToTrio);
+})();
+</script></html>
 <div id=kahoa-notify-modal style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;padding:20px;"><div style="background:#1a0a04;border:1px solid rgba(212,168,67,0.3);padding:36px;max-width:400px;width:100%;position:relative;"><button onclick="document.getElementById('kahoa-notify-modal').style.display='none'" style="position:absolute;top:12px;right:16px;background:none;border:none;color:rgba(255,255,255,0.5);font-size:20px;cursor:pointer;">✕</button><p style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(212,168,67,0.7);margin-bottom:8px;font-weight:600;">Notify Me</p><h3 id=notify-product-name style="font-family:'Cormorant Garamond',serif;font-size:24px;color:#fff;font-weight:300;margin-bottom:6px;"></h3><p style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:20px;">Be the first to know when this launches.</p><input id=notify-email type=email placeholder="Your email address" style="width:100%;padding:12px 14px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;font-family:Montserrat,sans-serif;font-size:13px;margin-bottom:10px;box-sizing:border-box;outline:none;"><input id=notify-name type=text placeholder="Your name (optional)" style="width:100%;padding:12px 14px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;font-family:Montserrat,sans-serif;font-size:13px;margin-bottom:16px;box-sizing:border-box;outline:none;"><button onclick="kahoaSubmitNotify()" style="width:100%;background:var(--gold);color:var(--coffee-dark);border:none;padding:13px;font-family:Montserrat,sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;">Notify Me When Available</button><p id=notify-msg style="font-size:12px;color:rgba(212,168,67,0.8);margin-top:10px;display:none;text-align:center;"></p></div></div>
 <script>function kahoaOpenNotify(product){var modal=document.getElementById("kahoa-notify-modal");document.getElementById("notify-product-name").textContent=product;document.getElementById("notify-email").value="";document.getElementById("notify-name").value="";document.getElementById("notify-msg").style.display="none";modal.style.display="flex";}function kahoaSubmitNotify(){var email=document.getElementById("notify-email").value.trim();var name=document.getElementById("notify-name").value.trim()||"Friend";var product=document.getElementById("notify-product-name").textContent;if(!email||!email.includes("@")){document.getElementById("notify-email").style.borderColor="#c0392b";return;}var msg=document.getElementById("notify-msg");msg.style.display="block";msg.textContent="Saving...";fetch("https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289hVmWtR1OKDqxLruwmKbRf_GkAwkiuEepPfk22Q/exec",{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:"",product:product+" (Notify Me)",grind:"N/A",total:"Coming Soon",coupon:"",address:"",opted_in:"Yes",source:"kahoa.shop"})}).catch(function(e){console.log(e);});msg.textContent="Got it! We will notify you.";setTimeout(function(){document.getElementById("kahoa-notify-modal").style.display="none";},2000);}</script>
 <div id=kahoa-exit-modal-shop style="display:none;position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,0.88);align-items:center;justify-content:center;padding:20px;">
