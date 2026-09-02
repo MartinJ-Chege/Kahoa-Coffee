@@ -824,16 +824,16 @@ function kahoaShowBlendPicker(productKey,price){
 @keyframes kahoaSpinIn{0%{transform:rotate(-20deg) scale(.9)}100%{transform:rotate(0) scale(1)}}
 #kahoa-help-btn{animation:kahoaBob 3s ease-in-out infinite;}
 #kahoa-help-btn:hover{animation-play-state:paused;transform:scale(1.1) !important;}
-#kahoa-help-btn .kahoa-ring{position:absolute;inset:0;border-radius:50%;background:#BE0027;animation:kahoaPulseRing 2.2s ease-out infinite;z-index:-1;}
+#kahoa-help-btn .kahoa-ring{position:absolute;inset:0;border-radius:50%;background:#8B0020;animation:kahoaPulseRing 2.2s ease-out infinite;z-index:-1;}
 #kahoa-help-btn img{animation:kahoaSpinIn .5s ease both;}
 #kahoa-help-tip{animation:kahoaTipIn .4s ease both;}
 @keyframes kahoaPanelUp{0%{opacity:0;transform:translateY(20px) scale(0.96)}100%{opacity:1;transform:translateY(0) scale(1)}}
 #kahoa-help-panel.kahoa-open{animation:kahoaPanelUp .32s cubic-bezier(.2,.8,.2,1) both;}
 .kahoa-help-q{transition:background .15s,transform .15s,box-shadow .15s;}
-.kahoa-help-q:hover{transform:translateX(4px);box-shadow:0 3px 12px rgba(190,0,39,0.2);border-color:#BE0027 !important;}
+.kahoa-help-q:hover{transform:translateX(4px);box-shadow:0 3px 12px rgba(139,0,32,0.22);border-color:#8B0020 !important;}
 </style>
-<div id="kahoa-help-tip" onclick="kahoaHelpToggle()" style="display:none;position:fixed;bottom:34px;right:88px;z-index:99990;background:#BE0027;color:#fff;padding:9px 14px;border-radius:20px 20px 4px 20px;font-family:Montserrat,sans-serif;font-size:12px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,0.25);cursor:pointer;white-space:nowrap;">Need help? Chat with us!</div>
-<div id="kahoa-help-btn" onclick="kahoaHelpToggle()" style="position:fixed;bottom:20px;right:20px;z-index:99990;width:60px;height:60px;border-radius:50%;background:#BE0027;box-shadow:0 6px 20px rgba(190,0,39,0.4);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;border:2px solid #fff;">
+<div id="kahoa-help-tip" onclick="kahoaHelpToggle()" style="display:none;position:fixed;bottom:34px;right:88px;z-index:99990;background:#8B0020;color:#fff;padding:9px 14px;border-radius:20px 20px 4px 20px;font-family:Montserrat,sans-serif;font-size:12px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,0.25);cursor:pointer;white-space:nowrap;">Need help? Chat with us!</div>
+<div id="kahoa-help-btn" onclick="kahoaHelpToggle()" style="position:fixed;bottom:20px;right:20px;z-index:99990;width:60px;height:60px;border-radius:50%;background:#8B0020;box-shadow:0 6px 20px rgba(139,0,32,0.45);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;border:2px solid #fff;">
 <div class="kahoa-ring"></div>
 <img src="/kahoalogo.png" alt="Kahoa" style="width:44px;height:44px;object-fit:contain;position:relative;">
 </div>
@@ -865,6 +865,6 @@ var KAHOA_HELP={
 function kahoaHelpToggle(){var p=document.getElementById("kahoa-help-panel"),b=document.getElementById("kahoa-help-btn"),tip=document.getElementById("kahoa-help-tip");if(tip)tip.style.display="none";if(p.style.display==="none"||!p.style.display){p.style.display="block";p.classList.add("kahoa-open");kahoaHelpMenu();}else{p.style.display="none";p.classList.remove("kahoa-open");}}
 (function(){setTimeout(function(){var tip=document.getElementById("kahoa-help-tip"),p=document.getElementById("kahoa-help-panel");if(tip&&(!p||p.style.display!=="block")){tip.style.display="block";setTimeout(function(){if(tip)tip.style.display="none";},6000);}},5000);})();
 function kahoaHelpMenu(){var m=document.getElementById("kahoa-help-menu");var h="";KAHOA_HELP.menu.forEach(function(it){h+='<button class="kahoa-help-q" onclick="kahoaHelpAnswer(\''+it.k+'\')" style="display:block;width:100%;text-align:left;background:#fff;border:1px solid #e5d5c0;border-radius:8px;padding:12px 14px;margin-bottom:8px;font-family:Montserrat,sans-serif;font-size:13px;color:#1A0C05;cursor:pointer;">'+it.q+'</button>';});m.innerHTML=h;}
-function kahoaHelpAnswer(k){var d=KAHOA_HELP.answers[k];if(!d)return;var body=document.getElementById("kahoa-help-body");var h='<p style="font-size:13px;margin:0 0 8px;font-weight:700;color:#BE0027;">'+d.t+'</p>';h+='<p style="font-size:13px;color:#3a2415;line-height:1.6;margin:0 0 14px;">'+d.a+'</p>';if(d.links){d.links.forEach(function(l){h+='<a href="'+l.u+'" style="display:inline-block;background:#BE0027;color:#fff;text-decoration:none;padding:9px 16px;border-radius:6px;font-size:12px;font-weight:700;margin:0 8px 8px 0;">'+l.t+' \u2192</a>';});}h+='<button onclick="kahoaHelpBack()" style="display:block;background:none;border:none;color:#BE0027;font-size:12px;cursor:pointer;margin-top:8px;padding:0;">\u2190 Back to menu</button>';body.innerHTML=h;}
+function kahoaHelpAnswer(k){var d=KAHOA_HELP.answers[k];if(!d)return;var body=document.getElementById("kahoa-help-body");var h='<p style="font-size:13px;margin:0 0 8px;font-weight:700;color:#8B0020;">'+d.t+'</p>';h+='<p style="font-size:13px;color:#3a2415;line-height:1.6;margin:0 0 14px;">'+d.a+'</p>';if(d.links){d.links.forEach(function(l){h+='<a href="'+l.u+'" style="display:inline-block;background:#8B0020;color:#fff;text-decoration:none;padding:9px 16px;border-radius:6px;font-size:12px;font-weight:700;margin:0 8px 8px 0;">'+l.t+' \u2192</a>';});}h+='<button onclick="kahoaHelpBack()" style="display:block;background:none;border:none;color:#8B0020;font-size:12px;cursor:pointer;margin-top:8px;padding:0;">\u2190 Back to menu</button>';body.innerHTML=h;}
 function kahoaHelpBack(){var body=document.getElementById("kahoa-help-body");body.innerHTML='<p style="font-size:13px;color:#5c4530;margin:0 0 14px;line-height:1.5;">What else can I help you with?</p><div id="kahoa-help-menu"></div>';kahoaHelpMenu();}
 </script>
