@@ -68,22 +68,30 @@ html,body{overflow-x:clip;width:100%;}</style></style>
 
 <div class=kenya-flag-bar></div>
 <nav class=site-nav id=siteNav><a class=sn-logo href=/><img alt="Kahoa Coffee" src=/kahoa-logo.png style="height:66px;width:auto;object-fit:contain;display:block;"></a><div class=sn-nav-right><a href=/ class=sn-home-link>Home</a><button aria-label="Open cart" onclick="kahoaCartOpen()" onmouseout="this.style.transform='none';this.style.boxShadow='0 3px 12px rgba(20,12,5,.32),0 0 0 1px rgba(232,199,106,.12)'" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 18px rgba(20,12,5,.42),0 0 0 1px rgba(232,199,106,.25)'" style="position:relative;color:#e8c76a;cursor:pointer;background:linear-gradient(135deg,#1a0f08 0%,#3d2817 100%);border:1px solid #e8c76a73;border-radius:50%;justify-content:center;align-items:center;width:34px;height:34px;flex-shrink:0;font-family:Poppins,sans-serif;transition:transform .2s,box-shadow .2s;display:flex;box-shadow:0 3px 12px #140c0552,0 0 0 1px #e8c76a1f;overflow:visible;touch-action:manipulation;" id=kahoa-cart-icon><svg viewbox="0 0 24 24" fill=none height=14 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2.2 width=14><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1=3 x2=21 y1=6 y2=6 /><path d="M16 10a4 4 0 0 1-8 0"/></svg><span style="color:#1a0f08;background:linear-gradient(#e8c76a 0%,#c9a24d 100%);border:1.2px solid #1a0f08;border-radius:7px;justify-content:center;align-items:center;min-width:14px;height:14px;padding:0 3px;font-family:Poppins,sans-serif;font-size:8px;font-weight:700;display:none;position:absolute;top:-3px;right:-3px;box-shadow:0 2px 4px #140c0566" id=kahoa-cart-badge>0</span><span aria-hidden=true id=kahoa-cart-flag-dots style=pointer-events:none;z-index:3;align-items:flex-end;gap:1.5px;display:inline-flex;position:absolute;top:4px;left:50%;transform:translate(-50%)><span style="background:#2d6a2d;border-radius:1.5px 1.5px 1px 1px;width:3px;height:5px;display:block;box-shadow:0 -1px 1px #0000004d"></span><span style="background:#c8102e;border-radius:1.5px 1.5px 1px 1px;width:3px;height:6px;display:block;box-shadow:0 -1px 1px #0000004d"></span><span style="background:#1a1a1a;border-radius:1.5px 1.5px 1px 1px;width:3px;height:4px;display:block;box-shadow:0 -1px 1px #e8c76a66"></span></span></button><button aria-label="Open menu" class=sn-toggle id=snToggle onclick=toggleSideNav() style=position:relative><span></span><span></span><span></span><span class=sn-menu-dot></span></button></div></nav><script>window.kahoaIsMemorialSaleActive=function(){var now=new Date();var start=new Date(2026,8,2,0,0,0);var end=new Date(2026,8,8,0,0,0);return now>=start&&now<end;};</script>
-<style>@keyframes kahoaGlow{0%{box-shadow:0 0 16px rgba(179,25,66,0.7);}33%{box-shadow:0 0 28px rgba(255,255,255,0.6);}66%{box-shadow:0 0 28px rgba(10,36,99,0.8);}100%{box-shadow:0 0 16px rgba(179,25,66,0.7);}}@keyframes kahoaShimmer{0%{left:-60%;}100%{left:120%;}}#kahoa-ld-inner{animation:kahoaGlow 1.6s ease-in-out infinite;}</style><a href="/shop.html?sale=trio" id="kahoa-home-laborday" style="display:none;text-decoration:none;">
-<div id="kahoa-ld-inner" style="background:linear-gradient(90deg,#0A2463 0%,#1a3a7a 20%,#B31942 50%,#1a3a7a 80%,#0A2463 100%);color:#fff;text-align:center;padding:14px 16px;font-family:Montserrat,sans-serif;position:relative;z-index:50;cursor:pointer;overflow:hidden;">
+<style>@keyframes kahoaGlow{0%{box-shadow:0 0 16px rgba(179,25,66,0.7);}33%{box-shadow:0 0 28px rgba(255,255,255,0.6);}66%{box-shadow:0 0 28px rgba(10,36,99,0.8);}100%{box-shadow:0 0 16px rgba(179,25,66,0.7);}}@keyframes kahoaShimmer{0%{left:-60%;}100%{left:120%;}}#kahoa-ld-inner{animation:kahoaGlow 1.6s ease-in-out infinite;}</style><a href="/shop.html" id="kahoa-promo-banner" style="display:none;text-decoration:none;">
+<div id="kahoa-promo-inner" style="background:linear-gradient(90deg,#0A2463 0%,#1a3a7a 20%,#B31942 50%,#1a3a7a 80%,#0A2463 100%);color:#fff;text-align:center;padding:14px 16px;font-family:Montserrat,sans-serif;position:relative;z-index:50;cursor:pointer;overflow:hidden;">
 <div style="position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);animation:kahoaShimmer 3s linear infinite;pointer-events:none;"></div>
 <div style="max-width:920px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;position:relative;">
-<span style="font-size:15px;font-weight:800;letter-spacing:.5px;text-shadow:0 1px 3px rgba(0,0,0,0.3);">🇺🇸 LABOR DAY SALE — 20% OFF THE COFFEE FLIGHT</span>
-<span style="font-size:12px;background:#fff;color:#B31942;padding:5px 14px;border-radius:20px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,0.2);">Shop the Trio →</span>
+<span id="kahoa-promo-main" style="font-size:15px;font-weight:800;letter-spacing:.5px;text-shadow:0 1px 3px rgba(0,0,0,0.3);"></span>
+<span id="kahoa-promo-cta" style="font-size:12px;background:#fff;color:#B31942;padding:5px 14px;border-radius:20px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,0.2);"></span>
 </div>
-<div style="font-size:11px;opacity:0.95;margin-top:4px;position:relative;">All 3 blends for $48 · Use code <strong style="background:rgba(255,255,255,0.2);padding:1px 6px;border-radius:3px;">LABORDAY20</strong> for 20% more off (~$38.40) · Or order bags individually</div>
+<div style="font-size:11px;opacity:0.95;margin-top:4px;position:relative;"><span id="kahoa-promo-sub1"></span><strong style="background:rgba(255,255,255,0.2);padding:1px 6px;border-radius:3px;" id="kahoa-promo-code"></strong><span id="kahoa-promo-sub2"></span></div>
 </div>
 </a>
 <script>
 (function(){
+  function kd(s){return decodeURIComponent(atob(s).split("").map(function(c){return "%"+("00"+c.charCodeAt(0).toString(16)).slice(-2);}).join(""));}
   function initHomeBanner(){
     if(window.kahoaIsMemorialSaleActive&&window.kahoaIsMemorialSaleActive()){
-      var b=document.getElementById("kahoa-home-laborday");
-      if(b)b.style.display="block";
+      var b=document.getElementById("kahoa-promo-banner");
+      if(!b)return;
+      document.getElementById("kahoa-promo-main").textContent=kd("8J+HuvCfh7ggTEFCT1IgREFZIFNBTEUg4oCUIDIwJSBPRkYgVEhFIENPRkZFRSBGTElHSFQ=");
+      document.getElementById("kahoa-promo-cta").textContent=kd("U2hvcCB0aGUgVHJpbyDihpI=");
+      document.getElementById("kahoa-promo-sub1").textContent=kd("QWxsIDMgYmxlbmRzIGZvciAkNDggwrcgVXNlIGNvZGUg");
+      document.getElementById("kahoa-promo-code").textContent=kd("TEFCT1JEQVkyMA==");
+      document.getElementById("kahoa-promo-sub2").textContent=kd("IGZvciAyMCUgbW9yZSBvZmYgKH4kMzguNDApIMK3IE9yIG9yZGVyIGJhZ3MgaW5kaXZpZHVhbGx5");
+      b.href="/shop.html"+kd("P3NhbGU9dHJpbw==");
+      b.style.display="block";
     }
   }
   if(document.readyState!=="loading")initHomeBanner();
