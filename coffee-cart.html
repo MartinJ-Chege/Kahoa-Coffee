@@ -261,7 +261,7 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 <div class="cc-field"><label>Event Location / City *</label><input id="cc-location" type="text" placeholder="e.g. Downtown Austin office"></div>
 <div class="cc-field"><label>Package Interested In *</label><select id="cc-package" required><option value="">Select a package...</option><option>Essentials</option><option>Premium</option><option>Full Experience</option><option>Custom</option></select></div>
 <div class="cc-field"><label>Event Type *</label><select id="cc-event-type" required><option value="">What are we celebrating?</option><option>Corporate Event / Office</option><option>Wedding / Private Celebration</option><option>Conference / Trade Show</option><option>Brand Activation / Product Launch</option><option>Other</option></select></div>
-<div class="cc-field"><label>Tell us about your event *</label><textarea id="cc-message" rows="4" placeholder="A few words on timing, vibe, or anything special we should know..." required></textarea></div>
+<div class="cc-field"><label>Tell us about your event</label><textarea id="cc-message" rows="4" placeholder="Optional — timing, vibe, or anything special we should know..."></textarea></div>
 <button class="cc-submit" onclick="ccSubmit()">Send My Request →</button>
 <p style="font-size:11px;color:rgba(255,255,255,0.35);text-align:center;margin-top:14px;">We'll never share your info. Response within 1 business day.</p>
 </div>
@@ -290,11 +290,10 @@ function ccSubmit(){
       eventType=(document.getElementById("cc-event-type").value||"").trim(),
       message=(document.getElementById("cc-message").value||"").trim();
   if(!fname||!lname||!company||!email||!phone||!location||!date||!guests||!pkg||pkg==="Not specified"||!eventType){alert("Please fill in all required fields (*) so we can give you an accurate quote.");return;}
-  if(message.length<15){alert("Please tell us a bit more about your event (at least a few words) so we can tailor your quote.");return;}
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){alert("Please enter a valid email address.");return;}
   document.getElementById("ccFormWrap").style.display="none";
   document.getElementById("ccSuccess").style.display="block";
-  var ccParams={customer_name:fname+" "+lname,customer_email:email,customer_phone:phone,company:company,event_date:date||"TBD",guest_count:guests?guests+" guests":"TBD",location:location,package:pkg,event_type:eventType,message:message};
+  var ccParams={customer_name:fname+" "+lname,customer_email:email,customer_phone:phone,company:company,event_date:date||"TBD",guest_count:guests?guests+" guests":"TBD",location:location,package:pkg,event_type:eventType,message:message||"None"};
   if(typeof emailjs<"u"){
     emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_CC_BUSINESS_TMPL,ccParams).then(
       function(res){console.log("Coffee cart business email sent:",res.status,res.text);},
