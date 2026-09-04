@@ -293,12 +293,14 @@ function ccSubmit(){
   var notes="EVENT DATE: "+(date||"TBD")+" | GUESTS: "+(guests||"TBD")+" | LOCATION: "+location+" | PACKAGE: "+pkg+" | MESSAGE: "+(message||"None");
   var tp={to_email:"info@kahoa.shop",order_type:"CORPORATE COFFEE CART INQUIRY",customer_name:fname+" "+lname,customer_email:email,customer_phone:phone,customer_address:location,product_name:company,grind:pkg,price:guests?guests+" guests":"TBD",notes:notes,checkout_url:""};
   if(typeof emailjs<"u"){
+    alert("DEBUG: emailjs library loaded. Sending now with service="+EMAILJS_SERVICE_ID+" template="+EMAILJS_ORDER_TMPL);
     emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_ORDER_TMPL,tp).then(
-      function(res){console.log("Coffee cart inquiry email sent:",res.status,res.text);},
-      function(err){console.error("Coffee cart inquiry email FAILED:",err);}
+      function(res){console.log("Coffee cart inquiry email sent:",res.status,res.text);alert("DEBUG: EmailJS SUCCESS - status "+res.status+" "+res.text);},
+      function(err){console.error("Coffee cart inquiry email FAILED:",err);alert("DEBUG: EmailJS FAILED - "+JSON.stringify(err));}
     );
   }else{
     console.error("EmailJS library not loaded - inquiry email not sent.");
+    alert("DEBUG: EmailJS library did NOT load on this page.");
   }
   try{fetch("https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289hVmWtR1OKDqxLruwmKbRf_GkAwkiuEepPfk22Q/exec",{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify({timestamp:new Date().toISOString(),name:fname+" "+lname,email:email,phone:phone,product:"COFFEE CART: "+pkg,grind:"",total:guests?guests+" guests":"TBD",coupon:"",address:location,opted_in:"Inquiry",source:"coffee-cart",company:company,event_date:date,message:message})}).catch(function(err){console.error("Coffee cart Sheet log FAILED:",err);});}catch(e){console.error("Coffee cart Sheet log threw:",e);}
   kahoaTrack("generate_lead",{item_name:"coffee-cart",value:pkg});
