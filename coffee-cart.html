@@ -260,7 +260,8 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 </div>
 <div class="cc-field"><label>Event Location / City *</label><input id="cc-location" type="text" placeholder="e.g. Downtown Austin office"></div>
 <div class="cc-field"><label>Package Interested In *</label><select id="cc-package" required><option value="">Select a package...</option><option>Essentials</option><option>Premium</option><option>Full Experience</option><option>Custom</option></select></div>
-<div class="cc-field"><label>Tell us about your event</label><textarea id="cc-message" rows="4" placeholder="Type of event, timing, any special requests..."></textarea></div>
+<div class="cc-field"><label>Event Type *</label><select id="cc-event-type" required><option value="">What are we celebrating?</option><option>Corporate Event / Office</option><option>Wedding / Private Celebration</option><option>Conference / Trade Show</option><option>Brand Activation / Product Launch</option><option>Other</option></select></div>
+<div class="cc-field"><label>Tell us about your event *</label><textarea id="cc-message" rows="4" placeholder="A few words on timing, vibe, or anything special we should know..." required></textarea></div>
 <button class="cc-submit" onclick="ccSubmit()">Send My Request →</button>
 <p style="font-size:11px;color:rgba(255,255,255,0.35);text-align:center;margin-top:14px;">We'll never share your info. Response within 1 business day.</p>
 </div>
@@ -286,12 +287,14 @@ function ccSubmit(){
       guests=(document.getElementById("cc-guests").value||"").trim(),
       location=(document.getElementById("cc-location").value||"").trim(),
       pkg=(document.getElementById("cc-package").value||"Not specified").trim(),
+      eventType=(document.getElementById("cc-event-type").value||"").trim(),
       message=(document.getElementById("cc-message").value||"").trim();
-  if(!fname||!lname||!company||!email||!phone||!location||!date||!guests||!pkg||pkg==="Not specified"){alert("Please fill in all required fields (*) so we can give you an accurate quote.");return;}
+  if(!fname||!lname||!company||!email||!phone||!location||!date||!guests||!pkg||pkg==="Not specified"||!eventType){alert("Please fill in all required fields (*) so we can give you an accurate quote.");return;}
+  if(message.length<15){alert("Please tell us a bit more about your event (at least a few words) so we can tailor your quote.");return;}
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){alert("Please enter a valid email address.");return;}
   document.getElementById("ccFormWrap").style.display="none";
   document.getElementById("ccSuccess").style.display="block";
-  var ccParams={customer_name:fname+" "+lname,customer_email:email,customer_phone:phone,company:company,event_date:date||"TBD",guest_count:guests?guests+" guests":"TBD",location:location,package:pkg,message:message||"None"};
+  var ccParams={customer_name:fname+" "+lname,customer_email:email,customer_phone:phone,company:company,event_date:date||"TBD",guest_count:guests?guests+" guests":"TBD",location:location,package:pkg,event_type:eventType,message:message};
   if(typeof emailjs<"u"){
     emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_CC_BUSINESS_TMPL,ccParams).then(
       function(res){console.log("Coffee cart business email sent:",res.status,res.text);},
@@ -304,7 +307,7 @@ function ccSubmit(){
   }else{
     console.error("EmailJS library not loaded - inquiry emails not sent.");
   }
-  try{fetch("https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289hVmWtR1OKDqxLruwmKbRf_GkAwkiuEepPfk22Q/exec",{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify({timestamp:new Date().toISOString(),name:fname+" "+lname,email:email,phone:phone,product:"COFFEE CART: "+pkg,grind:"",total:guests?guests+" guests":"TBD",coupon:"",address:location,opted_in:"Inquiry",source:"coffee-cart",company:company,event_date:date,message:message})}).catch(function(err){console.error("Coffee cart Sheet log FAILED:",err);});}catch(e){console.error("Coffee cart Sheet log threw:",e);}
+  try{fetch("https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289hVmWtR1OKDqxLruwmKbRf_GkAwkiuEepPfk22Q/exec",{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify({timestamp:new Date().toISOString(),name:fname+" "+lname,email:email,phone:phone,product:"COFFEE CART: "+pkg,grind:eventType,total:guests?guests+" guests":"TBD",coupon:"",address:location,opted_in:"Inquiry",source:"coffee-cart",company:company,event_date:date,message:message})}).catch(function(err){console.error("Coffee cart Sheet log FAILED:",err);});}catch(e){console.error("Coffee cart Sheet log threw:",e);}
   kahoaTrack("generate_lead",{item_name:"coffee-cart",value:pkg});
 }
 </script>
