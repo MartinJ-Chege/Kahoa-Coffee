@@ -63,8 +63,8 @@ html,body{overflow-x:clip;width:100%;}
 .shop-tab-bar::-webkit-scrollbar{display:none;}
 .shop-tab-btn{flex:1 1 auto;}
 .shop-tab-fade-right{position:absolute;top:0;right:0;bottom:0;width:60px;pointer-events:none;background:linear-gradient(to right,rgba(10,4,2,0),rgba(10,4,2,0.98));z-index:3;}
-.shop-scroll-hint{position:absolute;top:50%;right:10px;transform:translateY(-50%);font-size:13px;font-weight:800;letter-spacing:.5px;color:#fff;background:#8B0020;padding:9px 18px;border-radius:24px;z-index:6;box-shadow:0 4px 16px rgba(139,0,32,0.7),0 0 0 3px rgba(139,0,32,0.25);animation:hintBounce 1.2s ease-in-out infinite,hintGlow 1.8s ease-in-out infinite;pointer-events:none;white-space:nowrap;display:flex;align-items:center;gap:6px;}
-@keyframes hintBounce{0%,100%{transform:translateY(-50%) translateX(0);}50%{transform:translateY(-50%) translateX(8px);}}@keyframes hintGlow{0%,100%{box-shadow:0 4px 16px rgba(139,0,32,0.7),0 0 0 3px rgba(139,0,32,0.25);}50%{box-shadow:0 4px 20px rgba(139,0,32,0.9),0 0 0 7px rgba(139,0,32,0.05);}}@keyframes arrowNudge{0%,100%{transform:translateX(0);}50%{transform:translateX(4px);}}
+.shop-scroll-hint{position:absolute;bottom:100%;right:10px;margin-bottom:10px;font-size:13px;font-weight:800;letter-spacing:.5px;color:#fff;background:#8B0020;padding:9px 18px;border-radius:24px;z-index:6;box-shadow:0 4px 16px rgba(139,0,32,0.7),0 0 0 3px rgba(139,0,32,0.25);animation:hintBounce 1.2s ease-in-out infinite,hintGlow 1.8s ease-in-out infinite;pointer-events:none;white-space:nowrap;display:flex;align-items:center;gap:6px;}
+@keyframes hintBounce{0%,100%{transform:translateX(0);}50%{transform:translateX(8px);}}@keyframes hintGlow{0%,100%{box-shadow:0 4px 16px rgba(139,0,32,0.7),0 0 0 3px rgba(139,0,32,0.25);}50%{box-shadow:0 4px 20px rgba(139,0,32,0.9),0 0 0 7px rgba(139,0,32,0.05);}}@keyframes arrowNudge{0%,100%{transform:translateX(0);}50%{transform:translateX(4px);}}
 @media(min-width:721px){.shop-tab-fade-right,.shop-scroll-hint{display:none;}}
 
 #tab-btn-coffee .tab-icon{color:#C07A2A;}
