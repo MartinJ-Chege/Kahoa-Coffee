@@ -274,7 +274,7 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 
 <script>
 try{emailjs.init({publicKey:"quYV-P5H4GYrFzjOw"});}catch(e){}
-var EMAILJS_SERVICE_ID="service_wsy9uog",EMAILJS_ORDER_TMPL="template_8jwdv8c";
+var EMAILJS_SERVICE_ID="service_wsy9uog",EMAILJS_ORDER_TMPL="template_8jwdv8c",EMAILJS_CC_BUSINESS_TMPL="template_2x9f9bi",EMAILJS_CC_CUSTOMER_TMPL="template_x0vfpk2";
 function ccPick(pkg){var sel=document.getElementById("cc-package");if(sel)sel.value=pkg;document.getElementById("cc-inquire").scrollIntoView({behavior:"smooth"});kahoaTrack("select_item",{item_name:"coffee-cart-"+pkg});}
 function ccSubmit(){
   var fname=(document.getElementById("cc-fname").value||"").trim(),
@@ -291,15 +291,18 @@ function ccSubmit(){
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){alert("Please enter a valid email address.");return;}
   document.getElementById("ccFormWrap").style.display="none";
   document.getElementById("ccSuccess").style.display="block";
-  var notes="EVENT DATE: "+(date||"TBD")+" | GUESTS: "+(guests||"TBD")+" | LOCATION: "+location+" | PACKAGE: "+pkg+" | MESSAGE: "+(message||"None");
-  var tp={to_email:"info@kahoa.shop,chegekibuthu1@gmail.com",order_type:"CORPORATE COFFEE CART INQUIRY",customer_name:fname+" "+lname,customer_email:email,customer_phone:phone,customer_address:location,product_name:company,grind:pkg,price:guests?guests+" guests":"TBD",notes:notes,checkout_url:""};
+  var ccParams={customer_name:fname+" "+lname,customer_email:email,customer_phone:phone,company:company,event_date:date||"TBD",guest_count:guests?guests+" guests":"TBD",location:location,package:pkg,message:message||"None"};
   if(typeof emailjs<"u"){
-    emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_ORDER_TMPL,tp).then(
-      function(res){console.log("Coffee cart inquiry email sent:",res.status,res.text);},
-      function(err){console.error("Coffee cart inquiry email FAILED:",err);}
+    emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_CC_BUSINESS_TMPL,ccParams).then(
+      function(res){console.log("Coffee cart business email sent:",res.status,res.text);},
+      function(err){console.error("Coffee cart business email FAILED:",err);}
+    );
+    emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_CC_CUSTOMER_TMPL,ccParams).then(
+      function(res){console.log("Coffee cart customer email sent:",res.status,res.text);},
+      function(err){console.error("Coffee cart customer email FAILED:",err);}
     );
   }else{
-    console.error("EmailJS library not loaded - inquiry email not sent.");
+    console.error("EmailJS library not loaded - inquiry emails not sent.");
   }
   try{fetch("https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289hVmWtR1OKDqxLruwmKbRf_GkAwkiuEepPfk22Q/exec",{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify({timestamp:new Date().toISOString(),name:fname+" "+lname,email:email,phone:phone,product:"COFFEE CART: "+pkg,grind:"",total:guests?guests+" guests":"TBD",coupon:"",address:location,opted_in:"Inquiry",source:"coffee-cart",company:company,event_date:date,message:message})}).catch(function(err){console.error("Coffee cart Sheet log FAILED:",err);});}catch(e){console.error("Coffee cart Sheet log threw:",e);}
   kahoaTrack("generate_lead",{item_name:"coffee-cart",value:pkg});
