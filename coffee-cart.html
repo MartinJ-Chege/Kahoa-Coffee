@@ -255,11 +255,11 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 <div class="cc-field"><label>Phone *</label><input id="cc-phone" type="tel"></div>
 </div>
 <div class="cc-row">
-<div class="cc-field"><label>Event Date</label><input id="cc-date" type="date"></div>
-<div class="cc-field"><label>Guest Count</label><input id="cc-guests" type="number" placeholder="e.g. 75"></div>
+<div class="cc-field"><label>Event Date *</label><input id="cc-date" type="date" required></div>
+<div class="cc-field"><label>Guest Count *</label><input id="cc-guests" type="number" placeholder="e.g. 75" required></div>
 </div>
 <div class="cc-field"><label>Event Location / City *</label><input id="cc-location" type="text" placeholder="e.g. Downtown Austin office"></div>
-<div class="cc-field"><label>Package Interested In</label><select id="cc-package"><option value="">Not sure yet — help me choose</option><option>Essentials</option><option>Premium</option><option>Full Experience</option><option>Custom</option></select></div>
+<div class="cc-field"><label>Package Interested In *</label><select id="cc-package" required><option value="">Select a package...</option><option>Essentials</option><option>Premium</option><option>Full Experience</option><option>Custom</option></select></div>
 <div class="cc-field"><label>Tell us about your event</label><textarea id="cc-message" rows="4" placeholder="Type of event, timing, any special requests..."></textarea></div>
 <button class="cc-submit" onclick="ccSubmit()">Send My Request →</button>
 <p style="font-size:11px;color:rgba(255,255,255,0.35);text-align:center;margin-top:14px;">We'll never share your info. Response within 1 business day.</p>
@@ -287,7 +287,7 @@ function ccSubmit(){
       location=(document.getElementById("cc-location").value||"").trim(),
       pkg=(document.getElementById("cc-package").value||"Not specified").trim(),
       message=(document.getElementById("cc-message").value||"").trim();
-  if(!fname||!lname||!company||!email||!phone||!location){alert("Please fill in all required fields (*).");return;}
+  if(!fname||!lname||!company||!email||!phone||!location||!date||!guests||!pkg||pkg==="Not specified"){alert("Please fill in all required fields (*) so we can give you an accurate quote.");return;}
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){alert("Please enter a valid email address.");return;}
   document.getElementById("ccFormWrap").style.display="none";
   document.getElementById("ccSuccess").style.display="block";
