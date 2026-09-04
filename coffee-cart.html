@@ -291,7 +291,7 @@ function ccSubmit(){
   document.getElementById("ccFormWrap").style.display="none";
   document.getElementById("ccSuccess").style.display="block";
   var notes="EVENT DATE: "+(date||"TBD")+" | GUESTS: "+(guests||"TBD")+" | LOCATION: "+location+" | PACKAGE: "+pkg+" | MESSAGE: "+(message||"None");
-  var tp={to_email:"info@kahoa.shop",order_type:"CORPORATE COFFEE CART INQUIRY",customer_name:fname+" "+lname,customer_email:email,customer_phone:phone,customer_address:location,product_name:company,grind:pkg,price:guests?guests+" guests":"TBD",notes:notes,checkout_url:""};
+  var tp={to_email:"info@kahoa.shop,chegekibuthu1@gmail.com",order_type:"CORPORATE COFFEE CART INQUIRY",customer_name:fname+" "+lname,customer_email:email,customer_phone:phone,customer_address:location,product_name:company,grind:pkg,price:guests?guests+" guests":"TBD",notes:notes,checkout_url:""};
   if(typeof emailjs<"u"){
     emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_ORDER_TMPL,tp).then(
       function(res){console.log("Coffee cart inquiry email sent:",res.status,res.text);},
