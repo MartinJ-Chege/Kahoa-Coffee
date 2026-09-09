@@ -246,7 +246,7 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 <div class="cc-field"><label>Phone *</label><input id="cc-phone" type="tel"></div>
 </div>
 <div class="cc-row">
-<div class="cc-field"><label>Preferred Start Date *</label><input id="cc-date" type="date" required></div>
+<div class="cc-field"><label>Preferred Start Date *</label><input id="cc-date" type="date" min="2026-10-01" required></div>
 <div class="cc-field"><label>Estimated Kegs / Month *</label><input id="cc-guests" type="number" placeholder="e.g. 4" required></div>
 </div>
 <div class="cc-field"><label>Delivery Address / City *</label><input id="cc-location" type="text" placeholder="e.g. Downtown Austin office"></div>
@@ -283,6 +283,7 @@ function ccSubmit(){
       tapEquipment=(document.getElementById("cc-tap-equipment").value||"").trim(),
       message=(document.getElementById("cc-message").value||"").trim();
   if(!fname||!lname||!company||!email||!phone||!location||!date||!guests||!pkg||pkg==="Not specified"||!eventType||!tapEquipment){alert("Please fill in all required fields (*) so we can give you an accurate quote.");return;}
+  if(date<"2026-10-01"){alert("Our keg program starts October 1st. Please choose a start date on or after Oct 1, 2026.");return;}
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){alert("Please enter a valid email address.");return;}
   document.getElementById("ccFormWrap").style.display="none";
   document.getElementById("ccSuccess").style.display="block";
