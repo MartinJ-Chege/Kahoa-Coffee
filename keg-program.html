@@ -267,7 +267,7 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 
 <script>
 try{emailjs.init({publicKey:"quYV-P5H4GYrFzjOw"});}catch(e){}
-var EMAILJS_SERVICE_ID="service_wsy9uog",EMAILJS_ORDER_TMPL="template_8jwdv8c";
+var EMAILJS_SERVICE_ID="service_wsy9uog",EMAILJS_ORDER_TMPL="template_8jwdv8c",EMAILJS_CC_BUSINESS_TMPL="template_2x9f9bi",EMAILJS_CC_CUSTOMER_TMPL="template_x0vfpk2";
 function ccPick(pkg){var sel=document.getElementById("cc-package");if(sel)sel.value=pkg;document.getElementById("cc-inquire").scrollIntoView({behavior:"smooth"});kahoaTrack("select_item",{item_name:"keg-program-"+pkg});}
 function ccSubmit(){
   var fname=(document.getElementById("cc-fname").value||"").trim(),
@@ -287,14 +287,13 @@ function ccSubmit(){
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){alert("Please enter a valid email address.");return;}
   document.getElementById("ccFormWrap").style.display="none";
   document.getElementById("ccSuccess").style.display="block";
-  var tp={to_email:"info@kahoa.shop",order_type:"KEG PROGRAM INQUIRY",customer_name:fname+" "+lname,customer_email:email,customer_phone:phone,customer_address:location,product_name:company,grind:eventType+" | Tap equipment: "+tapEquipment,price:guests?guests+" kegs/month":"TBD",notes:"Interested in: "+pkg+" | Preferred start: "+(date||"TBD")+" | Message: "+(message||"None"),checkout_url:""};
+  var kegParams={customer_name:fname+" "+lname,customer_email:email,customer_phone:phone,company:company,event_date:date||"TBD",guest_count:guests?guests+" kegs/month":"TBD",location:location,package:pkg,event_type:eventType+" (Tap equipment: "+tapEquipment+")",message:message||"None"};
   if(typeof emailjs<"u"){
-    emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_ORDER_TMPL,tp).then(
+    emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_CC_BUSINESS_TMPL,kegParams).then(
       function(res){console.log("Keg program business email sent:",res.status,res.text);},
       function(err){console.error("Keg program business email FAILED:",err);}
     );
-    var customerTp=Object.assign({},tp,{to_email:email});
-    emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_ORDER_TMPL,customerTp).then(
+    emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_CC_CUSTOMER_TMPL,kegParams).then(
       function(res){console.log("Keg program customer email sent:",res.status,res.text);},
       function(err){console.error("Keg program customer email FAILED:",err);}
     );
