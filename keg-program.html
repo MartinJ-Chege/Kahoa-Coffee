@@ -59,7 +59,7 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 .cc-h2-sub{text-align:center;color:rgba(255,255,255,0.5);font-size:14px;max-width:520px;margin:0 auto 48px;line-height:1.6;}
 .cc-incl{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px;margin-top:40px;}
 .cc-incl-item{text-align:center;padding:20px;}
-.cc-incl-item .cc-ico{font-size:32px;margin-bottom:12px;}
+.cc-incl-item .cc-ico{font-size:32px;margin-bottom:12px;display:flex;justify-content:center;}
 .cc-incl-item h3{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold);margin:0 0 8px;font-weight:600;}
 .cc-incl-item p{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.6;margin:0;font-weight:300;}
 .cc-packages{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;}
@@ -105,19 +105,19 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 <aside class=sn-drawer id=snDrawer><div class=sn-drawer-header><img alt="Kahoa Coffee" class=sn-drawer-logo src=/kahoa-logo.png style="height:52px;width:auto;"><button aria-label=Close class=sn-close onclick=toggleSideNav()>✕</button></div><div style="padding:10px 24px 6px;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(212,168,67,0.4);font-family:Montserrat,sans-serif;font-weight:600">Navigate</div><nav class=sn-links><a class=sn-link href=/ onclick=toggleSideNav()><span class="sn-icon ic-home"><svg viewbox="0 0 24 24" fill=none stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=1.8><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span><span class=sn-label>Home</span></a><a class="sn-link sn-cta" href=/shop.html onclick=toggleSideNav()><span class="sn-icon ic-cart"><svg viewbox="0 0 24 24" fill=none stroke="#F97316" stroke-linecap=round stroke-linejoin=round stroke-width=2><circle cx=9 cy=21 r=1 fill="#F97316"/><circle cx=20 cy=21 r=1 fill="#F97316"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></span><span class=sn-label>Shop Now</span></a><a class="sn-link sn-gold" href=/shop.html#subscribe onclick=toggleSideNav()><span class="sn-icon ic-refresh"><svg viewbox="0 0 24 24" fill=none stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=1.8><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></span><span class=sn-label>Subscribe & Save 12%</span><span class=sn-badge>BEST VALUE</span></a><a class=sn-link href=/sample.html onclick=toggleSideNav()><span class="sn-icon ic-gift"><svg viewbox="0 0 24 24" fill=none stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=1.8><polyline points="20 12 20 22 4 22 4 12"/><rect height=5 width=20 x=2 y=7/><line x1=12 x2=12 y1=22 y2=7/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></span><span class=sn-label>Free Sample</span></a><div class=sn-divider></div><a class=sn-link href=/our-story.html onclick=toggleSideNav()><span class="sn-icon ic-leaf"><svg viewbox="0 0 24 24" fill=none stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=1.8><path d="M17 8C8 10 5.9 16.17 3.82 19.82a1 1 0 0 0 1.76.94C7.34 17.5 9.72 14 17 8z"/><path d="M3.8 19.8C5 13 8 4 22 2c0 0-7 0-11 6"/></svg></span><span class=sn-label>Our Story</span></a><a class=sn-link href=/brew-guide.html onclick=toggleSideNav()><span class="sn-icon ic-book"><svg viewbox="0 0 24 24" fill=none stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=1.8><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span><span class=sn-label>Brew Guide</span></a><div class=sn-divider></div><a class=sn-link href=/reviews.html onclick=toggleSideNav()><span class="sn-icon ic-star"><svg viewbox="0 0 24 24" fill=none stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=1.8><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span><span class=sn-label>Reviews</span></a><a class=sn-link href=/wholesale.html onclick=toggleSideNav()><span class="sn-icon ic-brief"><svg viewbox="0 0 24 24" fill=none stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=1.8><rect height=14 rx=2 ry=2 width=20 x=2 y=7/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></span><span class=sn-label>Wholesale</span></a><a class=sn-link href=/coffee-cart.html onclick=toggleSideNav()><span class="sn-icon ic-cart"><svg viewbox="0 0 24 24" fill=none stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=1.6><path d="M7 3v1.5M11 3v1.5M15 3v1.5"/><path d="M4 6.5h13v5a3.5 3.5 0 0 1-3.5 3.5h-6A3.5 3.5 0 0 1 4 11.5z"/><path d="M17 7.5h1.5a2 2 0 0 1 0 4H17"/><circle cx=8 cy=19.5 r=2/><circle cx=14 cy=19.5 r=2/><path d="M8 15.2v2.3M14 15.2v2.3"/></svg></span><span class=sn-label>Coffee Cart</span></a><a class=sn-link href=/usa-kayak.html onclick=toggleSideNav()><span class="sn-icon ic-team"><svg viewbox="0 0 24 24" fill=none stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=1.8><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx=9 cy=7 r=4/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class=sn-label>USA Kayak Collab</span></a><a rel="noopener noreferrer" class=sn-link href=https://www.instagram.com/kahoacoffee target=_blank><span class="sn-icon ic-insta"><svg viewbox="0 0 24 24" fill=none stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=1.8><rect height=20 rx=5 ry=5 width=20 x=2 y=2/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1=17.5 x2=17.51 y1=6.5 y2=6.5/></svg></span><span class=sn-label>Instagram</span></a><a rel="noopener noreferrer" class=sn-link href=https://www.tiktok.com/@kahoa.coffee target=_blank><span class="sn-icon ic-tiktok"><svg viewbox="0 0 24 24" fill=currentColor width=20 height=20><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.17 8.17 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg></span><span class=sn-label>TikTok</span></a></nav><div class=sn-footer>Rooted in Kenya. Roasted in Texas.</div></aside>
 
 <section class="cc-hero">
-<svg class="cc-hero-art" viewBox="0 0 180 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of a steaming coffee cup on wheels">
-<path class="steam s1" d="M78,64 C73,50 88,44 83,30 C78,16 93,11 89,3" stroke="#FFFFFF" stroke-width="3" fill="none" stroke-linecap="round"/>
-<path class="steam s2" d="M90,64 C85,50 100,44 95,30 C90,16 105,11 101,3" stroke="#CE1126" stroke-width="3" fill="none" stroke-linecap="round"/>
-<path class="steam s3" d="M102,64 C97,50 112,44 107,30 C102,16 117,11 113,3" stroke="#006600" stroke-width="3" fill="none" stroke-linecap="round"/>
-<path d="M120,75 C144,75 144,118 120,118" stroke="#D4A843" stroke-width="4" fill="none" stroke-linecap="round"/>
-<path d="M60,58 C58,92 65,130 72,154 L108,154 C115,130 122,92 120,58 Z" fill="#F9F2E3" stroke="#D4A843" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M70,65 C68,95 72,125 76,148" stroke="#FFFFFF" stroke-opacity="0.4" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-<ellipse cx="90" cy="58" rx="30" ry="7" fill="#3D2817" stroke="#D4A843" stroke-width="2"/>
-<rect x="52" y="152" width="76" height="7" rx="3.5" fill="#C07A2A" stroke="#1C0E06" stroke-width="1"/>
-<circle cx="60" cy="170" r="13" fill="#1C0E06" stroke="#D4A843" stroke-width="2"/>
-<circle cx="120" cy="170" r="13" fill="#1C0E06" stroke="#D4A843" stroke-width="2"/>
-<circle cx="60" cy="170" r="4" fill="#D4A843"/>
-<circle cx="120" cy="170" r="4" fill="#D4A843"/>
+<svg class="cc-hero-art" viewBox="0 0 180 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of a keg in a kegerator">
+<rect x="42" y="88" width="96" height="98" rx="8" fill="#1C0E06" stroke="#D4A843" stroke-width="2.5"/>
+<rect x="50" y="98" width="80" height="34" rx="4" fill="none" stroke="#D4A843" stroke-width="1.5" stroke-opacity="0.5"/>
+<rect x="52" y="180" width="40" height="8" rx="3" fill="#3D2817" stroke="#D4A843" stroke-width="1.5"/>
+<circle cx="128" cy="178" r="3" fill="#D4A843"/>
+<rect x="64" y="58" width="10" height="42" rx="3" fill="#C07A2A" stroke="#1C0E06" stroke-width="1"/>
+<rect x="56" y="50" width="24" height="12" rx="3" fill="#D4A843" stroke="#1C0E06" stroke-width="1.5"/>
+<rect x="74" y="68" width="20" height="6" rx="3" fill="#D4A843"/>
+<circle cx="96" cy="71" r="5" fill="#D4A843" stroke="#1C0E06" stroke-width="1"/>
+<rect x="66" y="96" width="6" height="8" fill="#C07A2A"/>
+<path d="M60,104 C58,116 58,126 61,130 C64,134 92,134 95,130 C98,126 98,116 96,104 Z" fill="#F9F2E3" stroke="#D4A843" stroke-width="2"/>
+<ellipse cx="78" cy="104" rx="18" ry="4.5" fill="#3D2817" stroke="#D4A843" stroke-width="1.5"/>
+<path d="M62,112 L94,112 M61,122 L95,122" stroke="#D4A843" stroke-width="1.2" stroke-opacity="0.5"/>
 </svg>
 <div class="cc-tag">Wholesale Keg Program</div>
 <h1>Cold Brew &amp; Nitro Kegs for Your Business</h1>
@@ -129,8 +129,8 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 <h2 class="cc-h2">How It Works</h2>
 <p class="cc-h2-sub">A simple, recurring supply arrangement — no brewing, no labor on your end.</p>
 <div class="cc-incl">
-<div class="cc-incl-item"><div class="cc-ico">🍺</div><h3>Kegs Delivered Chilled</h3><p>Brewed in-house from our single-origin beans, delivered ready to tap.</p></div>
-<div class="cc-incl-item"><div class="cc-ico">🔌</div><h3>Kegerator Lease</h3><p>No tap system? We'll set you up — free with a standing order, or a low monthly lease.</p></div>
+<div class="cc-incl-item"><div class="cc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#D4A843" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><path d="M8 3h8l1 3v13a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V6z"/><path d="M7 8h10"/><path d="M9 3V1.5M15 3V1.5"/></svg></div><h3>Kegs Delivered Chilled</h3><p>Brewed in-house from our single-origin beans, delivered ready to tap.</p></div>
+<div class="cc-incl-item"><div class="cc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#D4A843" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><rect x="4" y="11" width="16" height="10" rx="1.5"/><path d="M8 11V5M16 11V5"/><rect x="6" y="3" width="4" height="2.5" rx="1"/><rect x="14" y="3" width="4" height="2.5" rx="1"/><circle cx="9" cy="16" r="1"/><circle cx="15" cy="16" r="1"/></svg></div><h3>Kegerator Lease</h3><p>No tap system? We'll set you up — free with a standing order, or a low monthly lease.</p></div>
 <div class="cc-incl-item"><div class="cc-ico">📅</div><h3>Recurring Delivery</h3><p>Weekly or as-needed, scheduled around your actual usage.</p></div>
 <div class="cc-incl-item"><div class="cc-ico">🌱</div><h3>Kahoa Coffee</h3><p>Our single-origin Kenyan beans — the same quality across every keg.</p></div>
 </div>
@@ -253,6 +253,7 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 <div class="cc-field"><label>Interested In *</label><select id="cc-package" required><option value="">Select an option...</option><option>Cold Brew Kegs</option><option>Nitro Cold Brew Kegs</option><option>Both Cold Brew &amp; Nitro</option><option>Half Kegs</option><option>Not sure — send info</option></select></div>
 <div class="cc-field"><label>Business Type *</label><select id="cc-event-type" required><option value="">Select your business type...</option><option>Office / Corporate</option><option>Hotel / Hospitality</option><option>Restaurant</option><option>Cafe / Coffee Shop</option><option>Other</option></select></div>
 <div class="cc-field"><label>Tap Equipment *</label><select id="cc-tap-equipment" required><option value="">Do you have a kegerator?</option><option>Yes, already equipped</option><option>No — interested in free kegerator (2+ kegs/month)</option><option>No — interested in the monthly lease</option><option>Not sure yet</option></select></div>
+<div class="cc-field"><label>Also Interested in Wholesale Coffee Beans?</label><select id="cc-beans-interest"><option value="No">No, kegs only</option><option value="Yes - whole bean">Yes — whole bean</option><option value="Yes - ground">Yes — ground</option><option value="Yes - not sure yet">Yes — not sure which yet</option></select></div>
 <div class="cc-field"><label>Tell us about your business</label><textarea id="cc-message" rows="4" placeholder="Optional — current volume, timing, or anything special we should know..."></textarea></div>
 <button class="cc-submit" onclick="ccSubmit()">Send My Request →</button>
 <p style="font-size:11px;color:rgba(255,255,255,0.35);text-align:center;margin-top:14px;">We'll never share your info. Response within 1 business day.</p>
@@ -267,7 +268,7 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 
 <script>
 try{emailjs.init({publicKey:"quYV-P5H4GYrFzjOw"});}catch(e){}
-var EMAILJS_SERVICE_ID="service_wsy9uog",EMAILJS_ORDER_TMPL="template_8jwdv8c",EMAILJS_CC_BUSINESS_TMPL="template_2x9f9bi",EMAILJS_CC_CUSTOMER_TMPL="template_x0vfpk2";
+var EMAILJS_SERVICE_ID="service_wsy9uog",EMAILJS_KEG_BUSINESS_TMPL="REPLACE_WITH_NEW_BUSINESS_TEMPLATE_ID",EMAILJS_KEG_CUSTOMER_TMPL="template_ym7x0on";
 function ccPick(pkg){var sel=document.getElementById("cc-package");if(sel)sel.value=pkg;document.getElementById("cc-inquire").scrollIntoView({behavior:"smooth"});kahoaTrack("select_item",{item_name:"keg-program-"+pkg});}
 function ccSubmit(){
   var fname=(document.getElementById("cc-fname").value||"").trim(),
@@ -281,26 +282,27 @@ function ccSubmit(){
       pkg=(document.getElementById("cc-package").value||"Not specified").trim(),
       eventType=(document.getElementById("cc-event-type").value||"").trim(),
       tapEquipment=(document.getElementById("cc-tap-equipment").value||"").trim(),
-      message=(document.getElementById("cc-message").value||"").trim();
+      message=(document.getElementById("cc-message").value||"").trim(),
+      beansInterest=(document.getElementById("cc-beans-interest").value||"No").trim();
   if(!fname||!lname||!company||!email||!phone||!location||!date||!guests||!pkg||pkg==="Not specified"||!eventType||!tapEquipment){alert("Please fill in all required fields (*) so we can give you an accurate quote.");return;}
   if(date<"2026-10-01"){alert("Our keg program starts October 1st. Please choose a start date on or after Oct 1, 2026.");return;}
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){alert("Please enter a valid email address.");return;}
   document.getElementById("ccFormWrap").style.display="none";
   document.getElementById("ccSuccess").style.display="block";
-  var kegParams={customer_name:fname+" "+lname,customer_email:email,customer_phone:phone,company:company,event_date:date||"TBD",guest_count:guests?guests+" kegs/month":"TBD",location:location,package:pkg,event_type:eventType+" (Tap equipment: "+tapEquipment+")",message:message||"None"};
+  var kegParams={customer_name:fname+" "+lname,customer_email:email,business_name:company,business_type:eventType,tap_equipment:tapEquipment,event_date:date||"TBD",guest_count:guests?guests+" kegs/month":"TBD",location:location,package:pkg,customer_phone:phone,beans_interest:beansInterest,message:message||"None"};
   if(typeof emailjs<"u"){
-    emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_CC_BUSINESS_TMPL,kegParams).then(
+    emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_KEG_BUSINESS_TMPL,kegParams).then(
       function(res){console.log("Keg program business email sent:",res.status,res.text);},
       function(err){console.error("Keg program business email FAILED:",err);}
     );
-    emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_CC_CUSTOMER_TMPL,kegParams).then(
+    emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_KEG_CUSTOMER_TMPL,kegParams).then(
       function(res){console.log("Keg program customer email sent:",res.status,res.text);},
       function(err){console.error("Keg program customer email FAILED:",err);}
     );
   }else{
     console.error("EmailJS library not loaded - inquiry emails not sent.");
   }
-  try{fetch("https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289hVmWtR1OKDqxLruwmKbRf_GkAwkiuEepPfk22Q/exec",{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify({timestamp:new Date().toISOString(),name:fname+" "+lname,email:email,phone:phone,product:"KEG PROGRAM: "+pkg,grind:eventType+" | Tap: "+tapEquipment,total:guests?guests+" kegs/month":"TBD",coupon:"",address:location,opted_in:"Inquiry",source:"keg-program",company:company,event_date:date,message:message})}).catch(function(err){console.error("Keg program Sheet log FAILED:",err);});}catch(e){console.error("Keg program Sheet log threw:",e);}
+  try{fetch("https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289hVmWtR1OKDqxLruwmKbRf_GkAwkiuEepPfk22Q/exec",{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify({timestamp:new Date().toISOString(),name:fname+" "+lname,email:email,phone:phone,product:"KEG PROGRAM: "+pkg,grind:eventType+" | Tap: "+tapEquipment,total:guests?guests+" kegs/month":"TBD",coupon:"",address:location,opted_in:"Inquiry",source:"keg-program",company:company,event_date:date,message:message,beans_interest:beansInterest})}).catch(function(err){console.error("Keg program Sheet log FAILED:",err);});}catch(e){console.error("Keg program Sheet log threw:",e);}
   kahoaTrack("generate_lead",{item_name:"keg-program",value:pkg});
 }
 </script>
