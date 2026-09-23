@@ -105,21 +105,35 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
   <p class=sub style="margin-bottom:24px;">Same VIP pricing philosophy, extended to kegs. Great for offices, hotels, restaurants, and cafes who want Kahoa on tap instead of by the bag.</p>
 
   <div class=prod-card style="margin-bottom:14px;">
-    <div class=prod-name>Cold Brew Keg</div>
+    <div class=prod-name>Cold Brew Keg <span style="color:var(--gold);float:right;">$125</span></div>
     <div class=prod-detail>Smooth, bold, low-acid. Delivered ready to tap.</div>
   </div>
   <div class=prod-card style="margin-bottom:14px;">
-    <div class=prod-name>Nitro Cold Brew Keg</div>
+    <div class=prod-name>Nitro Cold Brew Keg <span style="color:var(--gold);float:right;">$130</span></div>
     <div class=prod-detail>Cascading, creamy texture straight from the tap.</div>
   </div>
   <div class=prod-card style="margin-bottom:20px;">
-    <div class=prod-name>Kegerator Lease</div>
-    <div class=prod-detail>Included free with a standing 2+ keg/month order, or a low monthly lease with no purchase minimum &mdash; already have your own tap system? Skip the lease and just order kegs.</div>
+    <div class=prod-name>Kegerator Lease <span style="color:var(--gold);float:right;">$50/mo</span></div>
+    <div class=prod-detail>Waived automatically with a standing 2+ keg/month order. Already have your own tap system? Skip the lease and just order kegs.</div>
   </div>
 
-  <a href="mailto:info@kahoa.shop?subject=VIP%20Keg%20Quote%20Request" class=checkout-btn style="display:block;text-align:center;text-decoration:none;">Request a Keg Quote &rarr;</a>
-  <p class=sub style="text-align:center;margin-top:10px;">Pricing is tailored to your volume and delivery needs.</p>
+  <p class=sec-label>Delivery Frequency</p>
+  <select id=vip-keg-freq style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(212,168,67,0.3);color:#fff;padding:12px;font-family:'Montserrat',sans-serif;font-size:13px;margin-bottom:20px;">
+    <option value="Weekly">Weekly</option>
+    <option value="Bi-Weekly" selected>Bi-Weekly</option>
+    <option value="Monthly">Monthly</option>
+  </select>
+
+  <a id=vip-keg-cta href="#" onclick="vipKegRequest();return false;" class=checkout-btn style="display:block;text-align:center;text-decoration:none;">Request Keg Service &rarr;</a>
+  <p class=sub style="text-align:center;margin-top:10px;">Let us know quantities and we'll confirm your delivery schedule.</p>
 </div>
+<script>
+function vipKegRequest(){
+  var freq=document.getElementById('vip-keg-freq').value;
+  var body='Delivery frequency: '+freq+'%0D%0AKegs interested in: (Cold Brew $125 / Nitro $130)%0D%0AKegerator lease needed? (Y/N):';
+  window.location.href='mailto:info@kahoa.shop?subject=VIP%20Keg%20Service%20Request&body='+body;
+}
+</script>
 
 <!-- Checkout Modal -->
 <div id=vip-modal>
