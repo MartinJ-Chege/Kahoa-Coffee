@@ -107,31 +107,111 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
   <div class=prod-card style="margin-bottom:14px;">
     <div class=prod-name>Cold Brew Keg <span style="color:var(--gold);float:right;">$125</span></div>
     <div class=prod-detail>Smooth, bold, low-acid. Delivered ready to tap.</div>
+    <div class=qty-add-row>
+      <div class=qty-wrap>
+        <button class=qty-btn onclick="vipSetKegQty('keg-cold',-1)">&minus;</button>
+        <span class=qty-num id="kq-keg-cold">1</span>
+        <button class=qty-btn onclick="vipSetKegQty('keg-cold',1)">+</button>
+      </div>
+      <button class=add-btn onclick="vipAddKeg('keg-cold')">Add to Order &rarr;</button>
+    </div>
   </div>
   <div class=prod-card style="margin-bottom:14px;">
     <div class=prod-name>Nitro Cold Brew Keg <span style="color:var(--gold);float:right;">$130</span></div>
     <div class=prod-detail>Cascading, creamy texture straight from the tap.</div>
+    <div class=qty-add-row>
+      <div class=qty-wrap>
+        <button class=qty-btn onclick="vipSetKegQty('keg-nitro',-1)">&minus;</button>
+        <span class=qty-num id="kq-keg-nitro">1</span>
+        <button class=qty-btn onclick="vipSetKegQty('keg-nitro',1)">+</button>
+      </div>
+      <button class=add-btn onclick="vipAddKeg('keg-nitro')">Add to Order &rarr;</button>
+    </div>
   </div>
   <div class=prod-card style="margin-bottom:20px;">
     <div class=prod-name>Kegerator Lease <span style="color:var(--gold);float:right;">$50/mo</span></div>
     <div class=prod-detail>Waived automatically with a standing 2+ keg/month order. Already have your own tap system? Skip the lease and just order kegs.</div>
   </div>
 
-  <p class=sec-label>Delivery Frequency</p>
-  <select id=vip-keg-freq style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(212,168,67,0.3);color:#fff;padding:12px;font-family:'Montserrat',sans-serif;font-size:13px;margin-bottom:20px;">
-    <option value="Weekly">Weekly</option>
-    <option value="Bi-Weekly" selected>Bi-Weekly</option>
-    <option value="Monthly">Monthly</option>
-  </select>
+  <p class=sub style="margin-bottom:20px;"><strong style="color:var(--gold);">Delivery frequency</strong> (weekly, bi-weekly, or monthly) is arranged directly with us after your first order &mdash; just mention your preference in the notes at checkout below.</p>
 
-  <a id=vip-keg-cta href="#" onclick="vipKegRequest();return false;" class=checkout-btn style="display:block;text-align:center;text-decoration:none;">Request Keg Service &rarr;</a>
-  <p class=sub style="text-align:center;margin-top:10px;">Let us know quantities and we'll confirm your delivery schedule.</p>
+  <div class=prod-card style="border-color:rgba(212,168,67,0.35);">
+    <div class=prod-name>Kegerator Lease <span style="color:var(--gold);float:right;">$50/mo</span></div>
+    <div class=prod-detail>Waived automatically once you're on a standing 2+ keg/month order &mdash; email us to confirm and we'll cancel this lease charge. Already have your own tap system? No need to sign up below.</div>
+    <div id=vip-lease-form style="margin-top:16px;">
+      <div class=two-col>
+        <div class=field><input type=text id=lf-name placeholder="Full Name"></div>
+        <div class=field><input type=email id=lf-email placeholder="Email"></div>
+      </div>
+      <div class=two-col>
+        <div class=field><input type=tel id=lf-phone placeholder="Phone"></div>
+        <div class=field><input type=text id=lf-address placeholder="Delivery Address"></div>
+      </div>
+      <div id=vip-lease-card-el style="background:#fff;border-radius:4px;padding:4px;margin:12px 0;min-height:44px;"></div>
+      <div id=vip-lease-err style="color:#e06a6a;font-size:12px;margin-bottom:8px;display:none;"></div>
+      <button class=checkout-btn id=vip-lease-btn onclick="vipStartLease()" style="margin-top:4px;">Start Lease Subscription &mdash; $50/mo &rarr;</button>
+      <div id=vip-lease-success style="display:none;text-align:center;padding:16px 0;">
+        <div style="font-size:32px;margin-bottom:8px;">☕</div>
+        <p style="color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:18px;">Lease started! First charge processed today.</p>
+      </div>
+    </div>
+  </div>
 </div>
 <script>
-function vipKegRequest(){
-  var freq=document.getElementById('vip-keg-freq').value;
-  var body='Delivery frequency: '+freq+'%0D%0AKegs interested in: (Cold Brew $125 / Nitro $130)%0D%0AKegerator lease needed? (Y/N):';
-  window.location.href='mailto:info@kahoa.shop?subject=VIP%20Keg%20Service%20Request&body='+body;
+var vipLeasePayments=null,vipLeaseCard=null,vipLeaseCardReady=false;
+async function vipInitLeaseCard(){
+  if(vipLeaseCardReady)return;
+  try{
+    vipLeasePayments=await Square.payments(SQUARE_APP_ID,SQUARE_LOC);
+    vipLeaseCard=await vipLeasePayments.card();
+    await vipLeaseCard.attach('#vip-lease-card-el');
+    vipLeaseCardReady=true;
+  }catch(e){console.error('Lease Square init:',e);}
+}
+vipInitLeaseCard();
+async function vipStartLease(){
+  var name=document.getElementById('lf-name').value.trim();
+  var email=document.getElementById('lf-email').value.trim();
+  var phone=document.getElementById('lf-phone').value.trim();
+  var address=document.getElementById('lf-address').value.trim();
+  var errEl=document.getElementById('vip-lease-err');
+  errEl.style.display='none';
+  if(!name||!email||!address){errEl.textContent='Please fill in name, email, and address.';errEl.style.display='block';return;}
+  if(!vipLeaseCardReady){errEl.textContent='Payment form still loading, try again in a moment.';errEl.style.display='block';return;}
+  var btn=document.getElementById('vip-lease-btn');
+  btn.disabled=true;btn.textContent='Processing...';
+  try{
+    var result=await vipLeaseCard.tokenize();
+    if(result.status!=='OK'){throw new Error(result.errors?.[0]?.message||'Card error');}
+    var payload={
+      source_id:result.token,
+      verification_token:result.details?.verificationToken,
+      product_name:'Kegerator Lease',
+      grind:'Monthly Lease',
+      unit_price_cents:Math.round(LEASE_PRICE*100),
+      shipping:null,
+      buyer:{name:name,email:email,phone:phone,address:address,city:'',state:'',zip:''}
+    };
+    var res=await fetch(WORKER.replace('/charge','/subscription'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    var data=await res.json();
+    if(res.ok&&data.success){
+      document.getElementById('vip-lease-form').querySelectorAll('input,button#vip-lease-btn,#vip-lease-card-el').forEach(function(el){el.style.display='none';});
+      document.getElementById('vip-lease-success').style.display='block';
+      if(typeof emailjs!=='undefined'){
+        emailjs.init(EJKEY);
+        var tp={to_email:'info@kahoa.shop',order_type:'VIP KEGERATOR LEASE STARTED',customer_name:name,customer_email:email,customer_phone:phone,customer_address:address,product_name:'Kegerator Lease',grind:'Monthly',price:'$50.00/mo',notes:'Recurring lease subscription started via VIP page. Square Customer: '+(data.subscription?.customer_id||'')};
+        emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error('Lease email error',e);});
+      }
+      try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:phone,product:'Kegerator Lease (Subscription)',grind:'Monthly',total:'$50.00/mo',coupon:'',address:address,opted_in:'Yes',source:'kahoa.shop/vip-lease'})}).catch(function(){});}catch(e){}
+    }else{
+      throw new Error(data.detail?.errors?.[0]?.detail||data.error||'Please try again.');
+    }
+  }catch(e){
+    errEl.textContent=e.message||'Something went wrong. Please try again.';
+    errEl.style.display='block';
+    console.error('Lease subscription error:',e);
+  }
+  btn.disabled=false;btn.textContent='Start Lease Subscription — $50/mo →';
 }
 </script>
 
@@ -180,6 +260,7 @@ function vipKegRequest(){
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script>
 var VIP_WHOLE=16.50,VIP_GROUND=16.50,VIP_SHIP=7.99;
+var KEG_COLD=125,KEG_NITRO=130,LEASE_PRICE=50;
 var SQUARE_APP_ID='sq0idp-khlBwyn6FQYmXDU8zxjAiQ';
 var SQUARE_LOC='L2M4GT1KDJZPY';
 var WORKER='https://kahoa-checkoutout.chegekibuthu1.workers.dev/charge';
@@ -241,7 +322,7 @@ function vipAdd(key){
   // Merge if same blend+grind already in cart
   var existing=vipCart.find(function(i){return i.key===key&&i.grind===grind;});
   if(existing){existing.qty+=qty;}
-  else{vipCart.push({key:key,name:blend.name,grind:grind,grindLabel:grind==='ground'?'Ground':'Whole Bean',qty:qty,price:price});}
+  else{vipCart.push({key:key,name:blend.name,grind:grind,grindLabel:grind==='ground'?'Ground':'Whole Bean',qty:qty,price:price,unit:'lb'});}
   vipRenderCart();
   // Flash confirmation
   var btn=document.querySelector('[onclick="vipAdd(\''+key+'\')"]');
@@ -250,6 +331,22 @@ function vipAdd(key){
 function vipRemove(idx){
   vipCart.splice(idx,1);
   vipRenderCart();
+}
+var vipKegQtys={'keg-cold':1,'keg-nitro':1};
+function vipSetKegQty(key,d){
+  vipKegQtys[key]=Math.max(1,Math.min(20,(vipKegQtys[key]||1)+d));
+  document.getElementById('kq-'+key).textContent=vipKegQtys[key];
+}
+function vipAddKeg(key){
+  var qty=vipKegQtys[key]||1;
+  var name=key==='keg-cold'?'Cold Brew Keg':'Nitro Cold Brew Keg';
+  var price=key==='keg-cold'?KEG_COLD:KEG_NITRO;
+  var existing=vipCart.find(function(i){return i.key===key;});
+  if(existing){existing.qty+=qty;}
+  else{vipCart.push({key:key,name:name,grind:null,grindLabel:'Keg',qty:qty,price:price,unit:'keg'});}
+  vipRenderCart();
+  var btn=document.querySelector('[onclick=\'vipAddKeg("'+key+'")\']');
+  if(btn){btn.textContent='Added ✓';setTimeout(function(){btn.textContent='Add to Order →';},1500);}
 }
 function vipRenderCart(){
   var el=document.getElementById('vip-cart-items');
@@ -268,7 +365,7 @@ function vipRenderCart(){
     subtotal+=lineTotal;
     html+='<div class=cart-item>'+
       '<div><div class=cart-item-name>'+item.qty+'× '+item.name+'</div>'+
-      '<div class=cart-item-detail>'+item.grindLabel+' · $'+item.price.toFixed(2)+'/lb</div></div>'+
+      '<div class=cart-item-detail>'+item.grindLabel+' · $'+item.price.toFixed(2)+(item.unit==='keg'?'/keg':'/lb')+'</div></div>'+
       '<div style="display:flex;align-items:center;">'+
       '<span class=cart-item-price>$'+lineTotal.toFixed(2)+'</span>'+
       '<button class=cart-item-remove onclick="vipRemove('+i+')">×</button>'+
