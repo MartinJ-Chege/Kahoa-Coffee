@@ -10,6 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@300;400;500;600;700&display=swap" rel=stylesheet>
 <script src=https://web.squarecdn.com/v1/square.js defer></script>
 <style>
+html{scroll-behavior:smooth;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{--gold:#D4A843;--gold-light:#E8C878;--coffee-dark:#1C0E06;--warm-white:#FDF8EF;--text-dark:#1A0C05;--text-mid:#4A2A14;--border:rgba(168,110,60,0.18);}
 body{font-family:'Montserrat',sans-serif;background:var(--coffee-dark);color:#fff;min-height:100vh;}
@@ -81,12 +82,18 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
     <p class=sub>$16.50/lb whole bean · $16.50/lb ground<br>Mix and match blends and grinds freely.</p>
   </div>
 
+  <div style="position:sticky;top:0;z-index:50;display:flex;gap:8px;background:#0d0705;padding:12px 20px;margin:0 -20px 24px;border-bottom:1px solid rgba(212,168,67,0.25);">
+    <a href="#section-coffee" style="flex:1;text-align:center;background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.35);color:var(--gold);text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Coffee</a>
+    <a href="#section-kegs" style="flex:1;text-align:center;background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.35);color:var(--gold);text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Keg Program</a>
+    <a href="/coffee-cart.html" style="flex:1;text-align:center;background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.35);color:var(--gold);text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Mobile Cart</a>
+  </div>
+
   <!-- Products -->
-  <p class=sec-label>Choose Your Coffee</p>
+  <p class=sec-label id="section-coffee">Choose Your Coffee</p>
   <div class=products id=vip-products></div>
 
   <!-- Wholesale Kegs & Kegerator Lease -->
-<div style="max-width:600px;margin:48px auto 0;padding:0 20px;">
+<div id="section-kegs" style="max-width:600px;margin:48px auto 0;padding:0 20px;">
   <p class=sec-label>Also Available</p>
   <h2 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:#fff;margin-bottom:8px;">Wholesale Kegs &amp; Kegerator Lease</h2>
   <p class=sub style="margin-bottom:24px;">Same VIP pricing philosophy, extended to kegs. Great for offices, hotels, restaurants, and cafes who want Kahoa on tap instead of by the bag.</p>
