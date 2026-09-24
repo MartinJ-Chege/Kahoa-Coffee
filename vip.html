@@ -85,12 +85,94 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
   <div style="position:sticky;top:0;z-index:50;display:flex;gap:8px;background:#0d0705;padding:12px 20px;margin:0 -20px 24px;border-bottom:1px solid rgba(212,168,67,0.25);">
     <a href="#section-coffee" style="flex:1;text-align:center;background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.35);color:var(--gold);text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Coffee</a>
     <a href="#section-kegs" style="flex:1;text-align:center;background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.35);color:var(--gold);text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Keg Program</a>
-    <a href="/coffee-cart.html" style="flex:1;text-align:center;background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.35);color:var(--gold);text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Mobile Cart</a>
+    <a href="#section-cart" style="flex:1;text-align:center;background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.35);color:var(--gold);text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Mobile Cart</a>
   </div>
 
   <!-- Products -->
   <p class=sec-label id="section-coffee">Choose Your Coffee</p>
   <div class=products id=vip-products></div>
+
+  <!-- Mobile Coffee Cart Booking -->
+<div id="section-cart" style="max-width:600px;margin:48px auto 0;padding:0 20px;">
+  <p class=sec-label>Also Available</p>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:#fff;margin-bottom:8px;">Mobile Coffee Cart Booking</h2>
+  <p class=sub style="margin-bottom:20px;">Full espresso bar, cold brew, and nitro for your event. Pick a package, add anything extra, and book directly below.</p>
+
+  <div class=two-col>
+    <div class=field><label style="font-size:11px;color:rgba(255,255,255,0.5);">Event Date</label><input type=date id=cb-date></div>
+    <div class=field><label style="font-size:11px;color:rgba(255,255,255,0.5);">Estimated Guest Count</label><input type=number id=cb-guests min=1 value=50 onchange=cbCalc() oninput=cbCalc()></div>
+  </div>
+
+  <p class=sec-label style="margin-top:16px;">Choose Your Package</p>
+  <div id=cb-packages style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+    <div class="prod-card cb-pkg" data-pkg="essentials" onclick="cbSelectPkg('essentials')" style="cursor:pointer;">
+      <div class=prod-name>Essentials <span style="color:var(--gold);float:right;">$650</span></div>
+      <div class=prod-detail>2 hours &middot; up to ~50 guests &middot; 1 barista &middot; drip + cold brew</div>
+    </div>
+    <div class="prod-card cb-pkg" data-pkg="premium" onclick="cbSelectPkg('premium')" style="cursor:pointer;border-color:var(--gold);">
+      <div class=prod-name>Premium &#9733; <span style="color:var(--gold);float:right;">$1,100</span></div>
+      <div class=prod-detail>3 hours &middot; up to ~100 guests &middot; 2 baristas &middot; full espresso bar + nitro</div>
+    </div>
+    <div class="prod-card cb-pkg" data-pkg="full" onclick="cbSelectPkg('full')" style="cursor:pointer;">
+      <div class=prod-name>Full Experience <span style="color:var(--gold);float:right;">$1,850</span></div>
+      <div class=prod-detail>4+ hours &middot; 150+ guests &middot; 2&ndash;3 baristas &middot; co-branded cart &amp; signage</div>
+    </div>
+  </div>
+
+  <p class=sec-label>Add-Ons</p>
+  <div style="display:flex;flex-direction:column;gap:2px;margin-bottom:20px;">
+    <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
+      <span><input type=checkbox id=cb-addon-tea onchange=cbCalc()> Hot Tea &amp; Hot Cocoa</span><span id=cb-price-tea style="color:var(--gold);">+$0.00</span>
+    </label>
+    <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
+      <span><input type=checkbox id=cb-addon-sig onchange=cbCalc()> Custom Signature Drinks</span><span id=cb-price-sig style="color:var(--gold);">+$50.00</span>
+    </label>
+    <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
+      <span><input type=checkbox id=cb-addon-sticker onchange=cbCalc()> Logo Stickers on Cups</span><span id=cb-price-sticker style="color:var(--gold);">+$125.00</span>
+    </label>
+    <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;font-size:13px;color:#fff;">
+      <span><input type=checkbox id=cb-addon-print onchange=cbCalc()> Full Custom-Printed Cups</span><span id=cb-price-print style="color:var(--gold);">+$325.00</span>
+    </label>
+  </div>
+
+  <div class=cart-totals style="display:block;margin-bottom:20px;">
+    <div class=cart-row><span>Package</span><span id=cb-pkg-total>$0.00</span></div>
+    <div class=cart-row><span>Add-ons</span><span id=cb-addon-total>$0.00</span></div>
+    <div class=cart-row style="font-weight:700;border-top:1px solid rgba(212,168,67,0.3);padding-top:8px;"><span>Event Total</span><span id=cb-grand-total>$0.00</span></div>
+  </div>
+
+  <p class=sec-label>Payment</p>
+  <div style="display:flex;gap:10px;margin-bottom:20px;">
+    <label class="prod-card" style="flex:1;cursor:pointer;text-align:center;padding:14px 8px;">
+      <input type=radio name=cb-paytype value=deposit checked onchange=cbCalc()><br>
+      <span style="font-size:13px;color:#fff;">30% Deposit</span><br>
+      <span id=cb-deposit-amt style="color:var(--gold);font-weight:700;">$0.00</span>
+    </label>
+    <label class="prod-card" style="flex:1;cursor:pointer;text-align:center;padding:14px 8px;">
+      <input type=radio name=cb-paytype value=full onchange=cbCalc()><br>
+      <span style="font-size:13px;color:#fff;">Pay 100%</span><br>
+      <span id=cb-full-amt style="color:var(--gold);font-weight:700;">$0.00</span>
+    </label>
+  </div>
+  <p class=sub id=cb-balance-note style="margin-bottom:20px;"></p>
+
+  <div class=two-col>
+    <div class=field><input type=text id=cb-name placeholder="Full Name"></div>
+    <div class=field><input type=email id=cb-email placeholder="Email"></div>
+  </div>
+  <div class=two-col>
+    <div class=field><input type=tel id=cb-phone placeholder="Phone"></div>
+    <div class=field><input type=text id=cb-location placeholder="Event Location / Address"></div>
+  </div>
+
+  <div id=cb-card-el style="background:#fff;border-radius:4px;padding:4px;margin:12px 0;min-height:44px;"></div>
+  <div id=cb-err style="color:#e06a6a;font-size:12px;margin-bottom:8px;display:none;"></div>
+  <button class=checkout-btn id=cb-pay-btn onclick=cbSubmit()>Select a package to continue</button>
+  <div id=cb-success style="display:none;text-align:center;padding:16px 0;">
+    <div style="font-size:32px;margin-bottom:8px;">&#9749;</div>
+    <p style="color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:18px;">Booking request received! We'll confirm your date shortly.</p>
+  </div>
+</div>
 
   <!-- Wholesale Kegs & Kegerator Lease -->
 <div id="section-kegs" style="max-width:600px;margin:48px auto 0;padding:0 20px;">
@@ -268,6 +350,8 @@ async function vipStartLease(){
 <script>
 var VIP_WHOLE=16.50,VIP_GROUND=16.50,VIP_SHIP=7.99;
 var KEG_COLD=125,KEG_NITRO=130,LEASE_PRICE=50;
+var CART_PKG={essentials:650,premium:1100,full:1850};
+var ADDON_TEA=1,ADDON_SIGDRINK=50,ADDON_STICKER_RATE=0.30,ADDON_STICKER_MIN=125,ADDON_PRINT_RATE=0.65,ADDON_PRINT_MIN=325;
 var SQUARE_APP_ID='sq0idp-khlBwyn6FQYmXDU8zxjAiQ';
 var SQUARE_LOC='L2M4GT1KDJZPY';
 var WORKER='https://kahoa-checkoutout.chegekibuthu1.workers.dev/charge';
@@ -338,6 +422,146 @@ function vipAdd(key){
 function vipRemove(idx){
   vipCart.splice(idx,1);
   vipRenderCart();
+}
+var cbSelectedPkg=null;
+function cbSelectPkg(key){
+  cbSelectedPkg=key;
+  document.querySelectorAll('.cb-pkg').forEach(function(el){
+    el.style.borderColor=el.getAttribute('data-pkg')===key?'var(--gold)':(el.getAttribute('data-pkg')==='premium'?'var(--gold)':'rgba(212,168,67,0.15)');
+    el.style.borderWidth=el.getAttribute('data-pkg')===key?'2px':'1px';
+  });
+  cbCalc();
+}
+function cbCalc(){
+  var guests=Math.max(1,parseInt(document.getElementById('cb-guests').value)||1);
+  var pkgPrice=cbSelectedPkg?CART_PKG[cbSelectedPkg]:0;
+
+  var teaOn=document.getElementById('cb-addon-tea').checked;
+  var sigOn=document.getElementById('cb-addon-sig').checked;
+  var stickerOn=document.getElementById('cb-addon-sticker').checked;
+  var printOn=document.getElementById('cb-addon-print').checked;
+
+  var teaPrice=guests*ADDON_TEA;
+  var sigPrice=ADDON_SIGDRINK;
+  var stickerPrice=Math.max(ADDON_STICKER_MIN,guests*ADDON_STICKER_RATE);
+  var printPrice=Math.max(ADDON_PRINT_MIN,guests*ADDON_PRINT_RATE);
+
+  document.getElementById('cb-price-tea').textContent='+$'+teaPrice.toFixed(2);
+  document.getElementById('cb-price-sig').textContent='+$'+sigPrice.toFixed(2);
+  document.getElementById('cb-price-sticker').textContent='+$'+stickerPrice.toFixed(2);
+  document.getElementById('cb-price-print').textContent='+$'+printPrice.toFixed(2);
+
+  var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0);
+  var grandTotal=pkgPrice+addonTotal;
+
+  document.getElementById('cb-pkg-total').textContent='$'+pkgPrice.toFixed(2);
+  document.getElementById('cb-addon-total').textContent='$'+addonTotal.toFixed(2);
+  document.getElementById('cb-grand-total').textContent='$'+grandTotal.toFixed(2);
+
+  var depositAmt=grandTotal*0.30;
+  document.getElementById('cb-deposit-amt').textContent='$'+depositAmt.toFixed(2);
+  document.getElementById('cb-full-amt').textContent='$'+grandTotal.toFixed(2);
+
+  var payType=document.querySelector('input[name=cb-paytype]:checked').value;
+  var balanceNote=document.getElementById('cb-balance-note');
+  if(payType==='deposit'){
+    balanceNote.textContent='Remaining $'+(grandTotal-depositAmt).toFixed(2)+' due 7 days before your event (invoiced separately).';
+  }else{
+    balanceNote.textContent='Paid in full today \u2014 nothing more due before your event.';
+  }
+
+  var btn=document.getElementById('cb-pay-btn');
+  if(!cbSelectedPkg){
+    btn.textContent='Select a package to continue';
+  }else{
+    var chargeNow=payType==='deposit'?depositAmt:grandTotal;
+    btn.textContent='Pay $'+chargeNow.toFixed(2)+' \u2014 Book Now \u2192';
+  }
+}
+var cbPayments=null,cbCard=null,cbCardReady=false;
+async function cbInitCard(){
+  if(cbCardReady)return;
+  try{
+    cbPayments=await Square.payments(SQUARE_APP_ID,SQUARE_LOC);
+    cbCard=await cbPayments.card();
+    await cbCard.attach('#cb-card-el');
+    cbCardReady=true;
+  }catch(e){console.error('Cart booking Square init:',e);}
+}
+cbInitCard();
+async function cbSubmit(){
+  if(!cbSelectedPkg){return;}
+  var name=document.getElementById('cb-name').value.trim();
+  var email=document.getElementById('cb-email').value.trim();
+  var phone=document.getElementById('cb-phone').value.trim();
+  var location=document.getElementById('cb-location').value.trim();
+  var date=document.getElementById('cb-date').value;
+  var guests=Math.max(1,parseInt(document.getElementById('cb-guests').value)||1);
+  var errEl=document.getElementById('cb-err');
+  errEl.style.display='none';
+  if(!name||!email||!location||!date){errEl.textContent='Please fill in your name, email, event date, and location.';errEl.style.display='block';return;}
+  if(!cbCardReady){errEl.textContent='Payment form still loading, try again in a moment.';errEl.style.display='block';return;}
+
+  var pkgPrice=CART_PKG[cbSelectedPkg];
+  var teaOn=document.getElementById('cb-addon-tea').checked;
+  var sigOn=document.getElementById('cb-addon-sig').checked;
+  var stickerOn=document.getElementById('cb-addon-sticker').checked;
+  var printOn=document.getElementById('cb-addon-print').checked;
+  var teaPrice=guests*ADDON_TEA,sigPrice=ADDON_SIGDRINK;
+  var stickerPrice=Math.max(ADDON_STICKER_MIN,guests*ADDON_STICKER_RATE);
+  var printPrice=Math.max(ADDON_PRINT_MIN,guests*ADDON_PRINT_RATE);
+  var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0);
+  var grandTotal=pkgPrice+addonTotal;
+  var payType=document.querySelector('input[name=cb-paytype]:checked').value;
+  var chargeNow=payType==='deposit'?grandTotal*0.30:grandTotal;
+
+  var addonList=[];
+  if(teaOn)addonList.push('Hot Tea & Cocoa ($'+teaPrice.toFixed(2)+')');
+  if(sigOn)addonList.push('Custom Signature Drinks ($'+sigPrice.toFixed(2)+')');
+  if(stickerOn)addonList.push('Logo Stickers ($'+stickerPrice.toFixed(2)+')');
+  if(printOn)addonList.push('Full Custom-Printed Cups ($'+printPrice.toFixed(2)+')');
+  var addonSummary=addonList.length?addonList.join(', '):'None';
+  var pkgName=cbSelectedPkg==='essentials'?'Essentials':cbSelectedPkg==='premium'?'Premium':'Full Experience';
+
+  var btn=document.getElementById('cb-pay-btn');
+  btn.disabled=true;btn.textContent='Processing...';
+  try{
+    var result=await cbCard.tokenize();
+    if(result.status!=='OK'){throw new Error(result.errors?result.errors[0].message:'Card error');}
+    var payload={
+      source_id:result.token,
+      verification_token:(result.details&&result.details.verificationToken)||undefined,
+      product_name:'Coffee Cart Booking \u2014 '+pkgName+' ('+date+', '+guests+' guests)',
+      grind:payType==='deposit'?'30% Deposit':'Paid in Full',
+      quantity:1,
+      unit_price_cents:Math.round(chargeNow*100),
+      shipping:null,
+      buyer:{name:name,email:email,phone:phone,address:location}
+    };
+    var resp=await fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    var data=await resp.json();
+    if(resp.ok&&(data.success||data.payment_id)){
+      document.getElementById('cb-success').style.display='block';
+      btn.style.display='none';
+      if(typeof emailjs!=='undefined'){
+        emailjs.init(EJKEY);
+        var notes='Package: '+pkgName+' ($'+pkgPrice.toFixed(2)+'). Add-ons: '+addonSummary+'. Event total: $'+grandTotal.toFixed(2)+'. Charged today ('+(payType==='deposit'?'30% deposit':'paid in full')+'): $'+chargeNow.toFixed(2)+'. '+(payType==='deposit'?'Balance due 7 days before event: $'+(grandTotal-chargeNow).toFixed(2)+'.':'');
+        var tp={to_email:'info@kahoa.shop',order_type:'VIP COFFEE CART BOOKING',customer_name:name,customer_email:email,customer_phone:phone,customer_address:location,product_name:'Coffee Cart \u2014 '+pkgName,grind:date,price:'$'+chargeNow.toFixed(2)+' charged today',notes:notes};
+        emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error('Cart booking email error',e);});
+        var custTp=Object.assign({},tp,{to_email:email,order_type:'Your Kahoa Coffee Cart Booking'});
+        emailjs.send(EJSVC,EJTMPL,custTp).catch(function(e){console.error('Cust email error',e);});
+      }
+      try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:phone,product:'Coffee Cart Booking \u2014 '+pkgName,grind:date,total:'$'+grandTotal.toFixed(2)+' ('+(payType==='deposit'?'30% deposit paid':'paid in full')+')',coupon:'',address:location,opted_in:'Yes',source:'kahoa.shop/vip-cart'})}).catch(function(){});}catch(e){}
+    }else{
+      throw new Error((data.detail&&data.detail.errors&&data.detail.errors[0]&&data.detail.errors[0].detail)||data.error||'Please try again.');
+    }
+  }catch(e){
+    errEl.textContent=e.message||'Something went wrong. Please try again.';
+    errEl.style.display='block';
+    console.error('Cart booking error:',e);
+  }
+  btn.disabled=false;
+  if(document.getElementById('cb-success').style.display!=='block'){cbCalc();}
 }
 var vipKegQtys={'keg-cold':1,'keg-nitro':1};
 function vipSetKegQty(key,d){
