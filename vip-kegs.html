@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<meta name=robots content="noindex,nofollow">
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Kahoa Coffee — VIP Keg Program</title>
+<link rel=icon type=image/png href=/kahoalogo.png>
+<link rel=apple-touch-icon href=/kahoalogo.png>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@300;400;500;600;700&display=swap" rel=stylesheet>
+<script src=https://web.squarecdn.com/v1/square.js defer></script>
+<style>
+html{scroll-behavior:smooth;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--gold:#D4A843;--gold-light:#E8C878;--coffee-dark:#1C0E06;--warm-white:#FDF8EF;--text-dark:#1A0C05;--text-mid:#4A2A14;--border:rgba(168,110,60,0.18);}
+body{font-family:'Montserrat',sans-serif;background:var(--coffee-dark);color:#fff;min-height:100vh;}
+.wrap{max-width:600px;margin:0 auto;padding:32px 16px 80px;}
+.logo{text-align:center;margin-bottom:28px;}
+.logo img{height:52px;width:auto;}
+.hero{text-align:center;margin-bottom:36px;}
+.badge{display:inline-block;background:rgba(212,168,67,0.15);border:1px solid rgba(212,168,67,0.4);color:var(--gold);font-size:10px;letter-spacing:3px;text-transform:uppercase;padding:5px 14px;margin-bottom:14px;}
+h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-height:1.2;margin-bottom:8px;}
+.sub{font-size:12px;color:rgba(255,255,255,0.45);line-height:1.7;}
+.sec-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(212,168,67,0.6);font-weight:600;margin-bottom:12px;}
+/* Product cards */
+.products{display:flex;flex-direction:column;gap:12px;margin-bottom:28px;}
+.prod-card{background:rgba(255,255,255,0.04);border:1px solid rgba(212,168,67,0.15);padding:18px;}
+.prod-name{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--gold);margin-bottom:3px;}
+.prod-detail{font-size:11px;color:rgba(255,255,255,0.45);margin-bottom:14px;}
+.grind-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.grind-btn{background:rgba(255,255,255,0.04);border:1px solid rgba(212,168,67,0.2);color:rgba(255,255,255,0.7);padding:10px 8px;font-family:'Montserrat',sans-serif;font-size:11px;cursor:pointer;transition:all .2s;text-align:center;}
+.grind-btn.active{border-color:var(--gold);background:rgba(212,168,67,0.1);color:var(--gold);}
+.qty-add-row{display:flex;align-items:center;gap:10px;}
+.qty-wrap{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(212,168,67,0.2);padding:6px 12px;}
+.qty-btn{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;width:24px;text-align:center;line-height:1;}
+.qty-num{font-size:14px;font-weight:600;min-width:20px;text-align:center;}
+.add-btn{flex:1;background:var(--gold);color:var(--coffee-dark);border:none;padding:12px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;}
+.add-btn:hover{background:var(--gold-light);}
+/* Cart */
+.cart-section{background:rgba(255,255,255,0.03);border:1px solid rgba(212,168,67,0.15);padding:20px;margin-bottom:24px;}
+.cart-empty{font-size:12px;color:rgba(255,255,255,0.3);text-align:center;padding:20px 0;}
+.cart-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(212,168,67,0.08);}
+.cart-item:last-child{border-bottom:none;}
+.cart-item-name{font-size:12px;color:rgba(255,255,255,0.8);}
+.cart-item-detail{font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;}
+.cart-item-price{font-size:13px;color:var(--gold);font-weight:600;}
+.cart-item-remove{background:none;border:none;color:rgba(255,255,255,0.3);font-size:16px;cursor:pointer;margin-left:10px;}
+.cart-totals{margin-top:14px;padding-top:14px;border-top:1px solid rgba(212,168,67,0.15);}
+.cart-row{display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:6px;}
+.cart-total-row{display:flex;justify-content:space-between;font-size:16px;color:#fff;font-weight:600;margin-top:8px;}
+.checkout-btn{width:100%;background:var(--gold);color:var(--coffee-dark);border:none;padding:15px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;margin-top:16px;}
+.checkout-btn:disabled{opacity:0.4;cursor:not-allowed;}
+/* Modal */
+#vip-modal{display:none;position:fixed;inset:0;z-index:9999;background:rgba(10,5,2,0.95);justify-content:center;align-items:flex-start;padding:24px 16px;overflow-y:auto;}
+.modal-inner{background:var(--warm-white);max-width:520px;width:100%;margin:0 auto;}
+.modal-head{background:var(--coffee-dark);display:flex;justify-content:space-between;align-items:center;padding:18px 24px;}
+.modal-head img{height:40px;width:auto;}
+.modal-close{background:none;border:none;color:rgba(255,255,255,0.5);font-size:22px;cursor:pointer;line-height:1;}
+.modal-body{padding:24px;}
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text-mid);margin-bottom:5px;font-weight:600;}
+.field input{width:100%;border:1px solid var(--border);padding:11px 13px;font-family:'Montserrat',sans-serif;font-size:13px;background:var(--warm-white);color:var(--text-dark);outline:none;}
+.field input:focus{border-color:var(--gold);}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.order-summary{background:#f5ede0;padding:14px 18px;margin-bottom:18px;}
+.order-summary p{font-size:12px;color:var(--text-mid);margin-bottom:3px;}
+.order-total{font-size:17px;font-weight:700;color:var(--text-dark);margin-top:8px;}
+#vip-card-el{border:1px solid var(--border);padding:13px;margin-bottom:14px;background:#fff;min-height:44px;}
+#vip-pay-btn{width:100%;background:var(--gold);color:var(--coffee-dark);border:none;padding:14px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;}
+#vip-err{display:none;color:#c0392b;font-size:12px;padding:10px;background:rgba(192,57,43,0.08);border:1px solid rgba(192,57,43,0.2);margin-bottom:12px;}
+#vip-ship-note{font-size:11px;margin-top:5px;}
+/* Success */
+#vip-success{display:none;text-align:center;padding:40px 20px;}
+</style>
+</head>
+<body>
+<div class=wrap>
+  <div class=logo><img src=/kahoalogo.png alt="Kahoa Coffee"></div>
+  <div class=hero>
+    <div><span class=badge>VIP / Wholesale</span></div>
+    <h1>Kegs &amp;<br>Kegerator Lease</h1>
+    <p class=sub>5-gallon kegs, on tap, delivered.<br>VIP pricing for offices, hotels, restaurants &amp; cafes.</p>
+  </div>
+
+  <div style="position:sticky;top:0;z-index:50;display:flex;gap:8px;background:#0d0705;padding:12px 20px;margin:0 -20px 24px;border-bottom:1px solid rgba(212,168,67,0.25);">
+    <a href="/vip.html" style="flex:1;text-align:center;background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.35);color:var(--gold);text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Coffee</a>
+    <a href="/vip-kegs.html" style="flex:1;text-align:center;background:rgba(212,168,67,0.25);border:1px solid var(--gold);color:var(--gold);text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Keg Program</a>
+    <a href="/vip-cart.html" style="flex:1;text-align:center;background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.35);color:var(--gold);text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Mobile Cart</a>
+  </div>
+
+  <!-- Wholesale Kegs & Kegerator Lease -->
+<div id="section-kegs" style="max-width:600px;margin:48px auto 0;padding:0 20px;">
+  <p class=sec-label>Also Available</p>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:#fff;margin-bottom:8px;">Wholesale Kegs &amp; Kegerator Lease</h2>
+  <p class=sub style="margin-bottom:24px;">Same VIP pricing philosophy, extended to kegs. Great for offices, hotels, restaurants, and cafes who want Kahoa on tap instead of by the bag.</p>
+
+  <div class=prod-card style="margin-bottom:14px;">
+    <div class=prod-name>Cold Brew Keg <span style="color:var(--gold);float:right;">$125</span></div>
+    <div class=prod-detail>5-gallon keg &middot; Smooth, bold, low-acid. Delivered ready to tap.</div>
+    <div class=qty-add-row>
+      <div class=qty-wrap>
+        <button class=qty-btn onclick="vipSetKegQty('keg-cold',-1)">&minus;</button>
+        <span class=qty-num id="kq-keg-cold">1</span>
+        <button class=qty-btn onclick="vipSetKegQty('keg-cold',1)">+</button>
+      </div>
+      <button class=add-btn onclick="vipAddKeg('keg-cold')">Add to Order &rarr;</button>
+    </div>
+  </div>
+  <div class=prod-card style="margin-bottom:14px;">
+    <div class=prod-name>Nitro Cold Brew Keg <span style="color:var(--gold);float:right;">$130</span></div>
+    <div class=prod-detail>5-gallon keg &middot; Cascading, creamy texture straight from the tap.</div>
+    <div class=qty-add-row>
+      <div class=qty-wrap>
+        <button class=qty-btn onclick="vipSetKegQty('keg-nitro',-1)">&minus;</button>
+        <span class=qty-num id="kq-keg-nitro">1</span>
+        <button class=qty-btn onclick="vipSetKegQty('keg-nitro',1)">+</button>
+      </div>
+      <button class=add-btn onclick="vipAddKeg('keg-nitro')">Add to Order &rarr;</button>
+    </div>
+  </div>
+  <div class=prod-card style="margin-bottom:20px;">
+    <div class=prod-name>Kegerator Lease <span style="color:var(--gold);float:right;">$50/mo</span></div>
+    <div class=prod-detail>Waived automatically with a standing 2+ keg/month order. Already have your own tap system? Skip the lease and just order kegs.</div>
+  </div>
+
+  <p class=sub style="margin-bottom:20px;"><strong style="color:var(--gold);">Delivery frequency</strong> (weekly, bi-weekly, or monthly) is arranged directly with us after your first order &mdash; just mention your preference in the notes at checkout below.</p>
+
+  <div class=prod-card style="border-color:rgba(212,168,67,0.35);">
+    <div class=prod-name>Kegerator Lease <span style="color:var(--gold);float:right;">$50/mo</span></div>
+    <div class=prod-detail>Waived automatically once you're on a standing 2+ keg/month order &mdash; email us to confirm and we'll cancel this lease charge. Already have your own tap system? No need to sign up below.</div>
+    <div id=vip-lease-form style="margin-top:16px;">
+      <div class=two-col>
+        <div class=field><input type=text id=lf-name placeholder="Full Name"></div>
+        <div class=field><input type=email id=lf-email placeholder="Email"></div>
+      </div>
+      <div class=two-col>
+        <div class=field><input type=tel id=lf-phone placeholder="Phone"></div>
+        <div class=field><input type=text id=lf-address placeholder="Delivery Address"></div>
+      </div>
+      <div id=vip-lease-card-el style="background:#fff;border-radius:4px;padding:4px;margin:12px 0;min-height:44px;"></div>
+      <div id=vip-lease-err style="color:#e06a6a;font-size:12px;margin-bottom:8px;display:none;"></div>
+      <button class=checkout-btn id=vip-lease-btn onclick="vipStartLease()" style="margin-top:4px;">Start Lease Subscription &mdash; $50/mo &rarr;</button>
+      <div id=vip-lease-success style="display:none;text-align:center;padding:16px 0;">
+        <div style="font-size:32px;margin-bottom:8px;">☕</div>
+        <p style="color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:18px;">Lease started! First charge processed today.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+var vipLeasePayments=null,vipLeaseCard=null,vipLeaseCardReady=false;
+async function vipInitLeaseCard(){
+  if(vipLeaseCardReady)return;
+  try{
+    vipLeasePayments=await Square.payments(SQUARE_APP_ID,SQUARE_LOC);
+    vipLeaseCard=await vipLeasePayments.card();
+    await vipLeaseCard.attach('#vip-lease-card-el');
+    vipLeaseCardReady=true;
+  }catch(e){console.error('Lease Square init:',e);}
+}
+window.addEventListener('load',function(){vipInitLeaseCard();});
+async function vipStartLease(){
+  var name=document.getElementById('lf-name').value.trim();
+  var email=document.getElementById('lf-email').value.trim();
+  var phone=document.getElementById('lf-phone').value.trim();
+  var address=document.getElementById('lf-address').value.trim();
+  var errEl=document.getElementById('vip-lease-err');
+  errEl.style.display='none';
+  if(!name||!email||!address){errEl.textContent='Please fill in name, email, and address.';errEl.style.display='block';return;}
+  if(!vipLeaseCardReady){await vipInitLeaseCard();if(!vipLeaseCardReady){errEl.textContent='Payment form still loading, please try again in a moment.';errEl.style.display='block';return;}}
+  var btn=document.getElementById('vip-lease-btn');
+  btn.disabled=true;btn.textContent='Processing...';
+  try{
+    var result=await vipLeaseCard.tokenize();
+    if(result.status!=='OK'){throw new Error(result.errors?.[0]?.message||'Card error');}
+    var payload={
+      source_id:result.token,
+      verification_token:result.details?.verificationToken,
+      product_name:'Kegerator Lease',
+      grind:'Monthly Lease',
+      unit_price_cents:Math.round(LEASE_PRICE*100),
+      shipping:null,
+      buyer:{name:name,email:email,phone:phone,address:address,city:'',state:'',zip:''}
+    };
+    var res=await fetch(WORKER.replace('/charge','/subscription'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    var data=await res.json();
+    if(res.ok&&data.success){
+      document.getElementById('vip-lease-form').querySelectorAll('input,button#vip-lease-btn,#vip-lease-card-el').forEach(function(el){el.style.display='none';});
+      document.getElementById('vip-lease-success').style.display='block';
+      if(typeof emailjs!=='undefined'){
+        emailjs.init(EJKEY);
+        var tp={to_email:'info@kahoa.shop',order_type:'VIP KEGERATOR LEASE STARTED',customer_name:name,customer_email:email,customer_phone:phone,customer_address:address,product_name:'Kegerator Lease',grind:'Monthly',price:'$50.00/mo',notes:'Recurring lease subscription started via VIP page. Square Customer: '+(data.subscription?.customer_id||'')};
+        emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error('Lease email error',e);});
+      }
+      try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:phone,product:'Kegerator Lease (Subscription)',grind:'Monthly',total:'$50.00/mo',coupon:'',address:address,opted_in:'Yes',source:'kahoa.shop/vip-lease'})}).catch(function(){});}catch(e){}
+    }else{
+      throw new Error(data.detail?.errors?.[0]?.detail||data.error||'Please try again.');
+    }
+  }catch(e){
+    errEl.textContent=e.message||'Something went wrong. Please try again.';
+    errEl.style.display='block';
+    console.error('Lease subscription error:',e);
+  }
+  btn.disabled=false;btn.textContent='Start Lease Subscription — $50/mo →';
+}
+</script>
+
+<!-- Cart -->
+  <p class=sec-label>Your Order</p>
+  <div class=cart-section>
+    <div id=vip-cart-items><p class=cart-empty>No items yet — add a blend above.</p></div>
+    <div class=cart-totals id=vip-cart-totals style="display:none;">
+      <div class=cart-row><span>Subtotal</span><span id=vip-subtotal>$0.00</span></div>
+      <div class=cart-row><span>Shipping</span><span id=vip-shipping>Calculated at checkout</span></div>
+      <div class=cart-total-row><span>Total</span><span id=vip-total>$0.00</span></div>
+    </div>
+    <button class=checkout-btn id=vip-checkout-btn onclick=vipOpenCheckout() disabled>Proceed to Checkout →</button>
+  </div>
+</div>
+
+<!-- Checkout Modal -->
+<div id=vip-modal>
+  <div class=modal-inner>
+    <div class=modal-head>
+      <img src=/kahoalogo.png alt="Kahoa Coffee">
+      <button class=modal-close onclick="document.getElementById('vip-modal').style.display='none'">✕</button>
+    </div>
+    <div class=modal-body>
+      <div id=vip-success>
+        <div style="font-size:48px;margin-bottom:16px;">☕</div>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--text-dark);margin-bottom:8px;">Order Placed!</h2>
+        <p style="font-size:13px;color:var(--text-mid);line-height:1.7;">Confirmation sent to your email.<br>We'll roast fresh and ship within 3-5 days.</p>
+      </div>
+      <div id=vip-form>
+        <div class=order-summary id=vip-modal-summary></div>
+        <p class=sec-label style="color:var(--text-mid);margin-bottom:12px;">Your Details</p>
+        <div class=two-col>
+          <div class=field><label>First Name</label><input id=vf-fname placeholder="Jane"></div>
+          <div class=field><label>Last Name</label><input id=vf-lname placeholder="Smith"></div>
+        </div>
+        <div class=field><label>Email</label><input id=vf-email type=email placeholder="you@email.com"></div>
+        <div class=field><label>Phone</label><input id=vf-phone type=tel placeholder="+1 512 000 0000"></div>
+        <div class=field><label>Address</label><input id=vf-address placeholder="123 Main St"></div>
+        <div class=two-col>
+          <div class=field><label>City</label><input id=vf-city placeholder="Austin"></div>
+          <div class=field><label>State</label><input id=vf-state placeholder="TX"></div>
+        </div>
+        <div class=field>
+          <label>ZIP Code</label>
+          <input id=vf-zip placeholder="78701" maxlength=5 oninput="vipZipCheck(this.value)">
+          <div id=vip-ship-note></div>
+        </div>
+        <hr style="border:none;border-top:1px solid var(--border);margin:16px 0;">
+        <p class=sec-label style="color:var(--text-mid);margin-bottom:12px;">Payment</p>
+        <div id=vip-err></div>
+        <div id=vip-card-el></div>
+        <button id=vip-pay-btn onclick=vipPay()>Complete Order →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+var KEG_COLD=125,KEG_NITRO=130,LEASE_PRICE=50,VIP_SHIP=7.99;
+var SQUARE_APP_ID='sq0idp-khlBwyn6FQYmXDU8zxjAiQ';
+var SQUARE_LOC='L2M4GT1KDJZPY';
+var WORKER='https://kahoa-checkoutout.chegekibuthu1.workers.dev/charge';
+var SHEET='https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289hVmWtR1OKDqxLruwmKbRf_GkAwkiuEepPfk22Q/exec';
+var EJSVC='service_wsy9uog',EJTMPL='template_8jwdv8c',EJKEY='quYV-P5H4GYrFzjOw';
+var AUSTIN_ZIPS='78701.78702.78703.78704.78705.78712.78717.78719.78721.78722.78723.78724.78725.78726.78727.78728.78729.78730.78731.78732.78733.78734.78735.78736.78737.78738.78739.78741.78742.78744.78745.78746.78747.78748.78749.78750.78751.78752.78753.78754.78756.78757.78758.78759.78653.78660.78664.78665.78681.78613.78626.78627.78628.78633.78640.78610.78621'.split('.');
+
+function vipRemove(idx){
+  vipCart.splice(idx,1);
+  vipRenderCart();
+}
+var vipKegQtys={'keg-cold':1,'keg-nitro':1};
+function vipSetKegQty(key,d){
+  vipKegQtys[key]=Math.max(1,Math.min(20,(vipKegQtys[key]||1)+d));
+  document.getElementById('kq-'+key).textContent=vipKegQtys[key];
+}
+function vipAddKeg(key){
+  var qty=vipKegQtys[key]||1;
+  var name=key==='keg-cold'?'Cold Brew Keg':'Nitro Cold Brew Keg';
+  var price=key==='keg-cold'?KEG_COLD:KEG_NITRO;
+  var existing=vipCart.find(function(i){return i.key===key;});
+  if(existing){existing.qty+=qty;}
+  else{vipCart.push({key:key,name:name,grind:null,grindLabel:'Keg',qty:qty,price:price,unit:'keg'});}
+  vipRenderCart();
+  var btn=document.querySelector('[onclick=\'vipAddKeg("'+key+'")\']');
+  if(btn){btn.textContent='Added ✓';setTimeout(function(){btn.textContent='Add to Order →';},1500);}
+}
+function vipRenderCart(){
+  var el=document.getElementById('vip-cart-items');
+  var totalsEl=document.getElementById('vip-cart-totals');
+  var btn=document.getElementById('vip-checkout-btn');
+  if(vipCart.length===0){
+    el.innerHTML='<p class=cart-empty>No items yet — add a blend above.</p>';
+    totalsEl.style.display='none';
+    btn.disabled=true;
+    return;
+  }
+  var html='';
+  var subtotal=0;
+  vipCart.forEach(function(item,i){
+    var lineTotal=item.price*item.qty;
+    subtotal+=lineTotal;
+    html+='<div class=cart-item>'+
+      '<div><div class=cart-item-name>'+item.qty+'× '+item.name+'</div>'+
+      '<div class=cart-item-detail>'+item.grindLabel+' · $'+item.price.toFixed(2)+(item.unit==='keg'?'/keg':'/lb')+'</div></div>'+
+      '<div style="display:flex;align-items:center;">'+
+      '<span class=cart-item-price>$'+lineTotal.toFixed(2)+'</span>'+
+      '<button class=cart-item-remove onclick="vipRemove('+i+')">×</button>'+
+      '</div></div>';
+  });
+  el.innerHTML=html;
+  totalsEl.style.display='block';
+  document.getElementById('vip-subtotal').textContent='$'+subtotal.toFixed(2);
+  document.getElementById('vip-shipping').textContent='Calculated at checkout';
+  document.getElementById('vip-total').textContent='$'+subtotal.toFixed(2)+' + shipping';
+  btn.disabled=false;
+}
+function vipIsAustin(zip){return AUSTIN_ZIPS.indexOf(zip)!==-1;}
+function vipGetShipping(){
+  var zip=(document.getElementById('vf-zip').value||'').trim();
+  return vipIsAustin(zip)?0:VIP_SHIP;
+}
+function vipZipCheck(zip){
+  if(zip.length===5){
+    var el=document.getElementById('vip-ship-note');
+    var local=vipIsAustin(zip);
+    el.textContent=local?'✓ Free local Austin delivery':'+ $'+VIP_SHIP.toFixed(2)+' shipping';
+    el.style.color=local?'#2a7a3b':'var(--gold)';
+    vipUpdateModalSummary();
+  }
+}
+function vipCalcSubtotal(){
+  return vipCart.reduce(function(s,i){return s+i.price*i.qty;},0);
+}
+function vipUpdateModalSummary(){
+  var subtotal=vipCalcSubtotal();
+  var shipping=vipGetShipping();
+  var total=subtotal+shipping;
+  var lines=vipCart.map(function(i){return '<p>'+i.qty+'× '+i.name+' ('+i.grindLabel+') — $'+(i.price*i.qty).toFixed(2)+'</p>';}).join('');
+  document.getElementById('vip-modal-summary').innerHTML=
+    lines+
+    '<p style="margin-top:6px;font-size:11px;">Subtotal: $'+subtotal.toFixed(2)+'</p>'+
+    '<p style="font-size:11px;">Shipping: '+(shipping===0?'FREE':'$'+shipping.toFixed(2))+'</p>'+
+    '<p class=order-total>Total: $'+total.toFixed(2)+'</p>';
+}
+async function vipOpenCheckout(){window._vipCartSnapshot=vipCart.slice();
+  if(vipCart.length===0){alert('Add at least one item first.');return;}
+  vipUpdateModalSummary();
+  document.getElementById('vip-modal').style.display='flex';
+  document.getElementById('vip-success').style.display='none';
+  document.getElementById('vip-form').style.display='block';
+  document.getElementById('vip-err').style.display='none';
+  if(!vipPayments){
+    try{
+      vipPayments=Square.payments(SQUARE_APP_ID,SQUARE_LOC);
+      vipCard=await vipPayments.card();
+      await vipCard.attach('#vip-card-el');
+    }catch(e){console.error('Square init:',e);}
+  }
+}
+async function vipPay(){
+  var fname=document.getElementById('vf-fname').value.trim();
+  var lname=document.getElementById('vf-lname').value.trim();
+  var email=document.getElementById('vf-email').value.trim();
+  var phone=document.getElementById('vf-phone').value.trim();
+  var address=document.getElementById('vf-address').value.trim();
+  var city=document.getElementById('vf-city').value.trim();
+  var state=document.getElementById('vf-state').value.trim();
+  var zip=document.getElementById('vf-zip').value.trim();
+  var errEl=document.getElementById('vip-err');
+  errEl.style.display='none';
+  if(!fname||!lname){errEl.textContent='Please enter your full name.';errEl.style.display='block';return;}
+  if(!email||!email.includes('@')){errEl.textContent='Please enter a valid email.';errEl.style.display='block';return;}
+  if(!address||!city||!zip){errEl.textContent='Please enter your full shipping address.';errEl.style.display='block';return;}
+  var btn=document.getElementById('vip-pay-btn');
+  btn.textContent='Processing...';btn.disabled=true;
+  try{
+    // Use snapshot saved when checkout opened
+    var cartSnapshot=window._vipCartSnapshot||vipCart;
+    if(!cartSnapshot||cartSnapshot.length===0){
+      errEl.textContent='Cart is empty. Please add items and try again.';
+      errEl.style.display='block';btn.textContent='Complete Order →';btn.disabled=false;return;
+    }
+    var subtotal=cartSnapshot.reduce(function(s,i){return s+i.price*i.qty;},0);
+    var shipping=vipGetShipping();
+    var total=subtotal+shipping;
+    var cartItems=cartSnapshot.map(function(i){return{product_name:i.name,grind:i.grindLabel,quantity:i.qty,unit_price_cents:Math.round(i.price*100)};});
+    var productSummary=cartSnapshot.map(function(i){return i.qty+'x '+i.name+' ('+i.grindLabel+')';}).join(', ');
+    var result=await vipCard.tokenize();
+    if(result.status!=='OK'){
+      errEl.textContent='Card error: '+(result.errors?result.errors[0].message:result.status);
+      errEl.style.display='block';btn.textContent='Complete Order →';btn.disabled=false;return;
+    }
+    var payload={
+      source_id:result.token,
+      verification_token:(result.details&&result.details.verificationToken)||undefined,
+      product_name:productSummary,
+      grind:'Mixed',
+      quantity:1,
+      unit_price_cents:Math.round(subtotal*100),
+      shipping:shipping>0?{serviceName:'Standard Shipping',amountCents:Math.round(shipping*100)}:null,
+      buyer:{name:fname+' '+lname,email:email,phone:phone,address:address+', '+city+', '+state+' '+zip}
+    };
+    var resp=await fetch(WORKER,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    var data=await resp.json();
+    console.log('VIP WORKER RESPONSE:',JSON.stringify(data));
+    // Worker returns success:true and payment_id when card charged.
+    // If it returns checkout_url, the card was NOT charged (link mode).
+    var charged=data.success===true||(data.payment_id&&!data.checkout_url);
+    if(!resp.ok||!charged){
+      errEl.textContent='Payment failed: '+(data.errors?data.errors[0].detail:data.error||JSON.stringify(data));
+      errEl.style.display='block';btn.textContent='Complete Order →';btn.disabled=false;return;
+    }
+    // Success
+    document.getElementById('vip-form').style.display='none';
+    document.getElementById('vip-success').style.display='block';
+    var fullAddr=address+', '+city+', '+state+' '+zip;
+    var tp={
+      to_email:'info@kahoa.shop',
+      order_id:data.payment_id||data.order_id||'VIP-'+Date.now(),
+      order_type:'VIP FRIENDS & FAMILY ORDER',
+      customer_name:fname+' '+lname,
+      customer_email:email,
+      customer_phone:phone||'',
+      customer_address:fullAddr,
+      product_name:productSummary,
+      grind:'Mixed (see items)',
+      price:'$'+total.toFixed(2),
+      shipping_method:shipping===0?'FREE local Austin':'Standard Shipping $'+shipping.toFixed(2),
+      checkout_url:data.receipt_url||'',
+      notes:'VIP Keg Program order. Items: '+productSummary
+    };
+    if(typeof emailjs!=='undefined'){
+      emailjs.init(EJKEY);
+      emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error('Email error',e);});
+      var custTp=Object.assign({},tp,{to_email:email,order_type:'Your Kahoa Coffee Order Confirmation'});
+      emailjs.send(EJSVC,EJTMPL,custTp).catch(function(e){console.error('Cust email error',e);});
+    }
+    try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      timestamp:new Date().toISOString(),name:fname+' '+lname,email:email,phone:phone||'',
+      product:productSummary,grind:'Mixed',total:'$'+total.toFixed(2),coupon:'VIP',
+      address:fullAddr,opted_in:'Yes',source:'kahoa.shop/vip'
+    })});}catch(e){}
+    // Clear cart
+    vipCart=[];vipRenderCart();
+  }catch(e){
+    errEl.textContent='Error: '+e.message;
+    errEl.style.display='block';btn.textContent='Complete Order →';btn.disabled=false;
+  }
+}
+</script>
+</body>
+</html>
