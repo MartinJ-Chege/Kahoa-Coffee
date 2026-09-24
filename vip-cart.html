@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<meta name=robots content="noindex,nofollow">
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Kahoa Coffee — VIP Mobile Cart Booking</title>
+<link rel=icon type=image/png href=/kahoalogo.png>
+<link rel=apple-touch-icon href=/kahoalogo.png>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@300;400;500;600;700&display=swap" rel=stylesheet>
+<script src=https://web.squarecdn.com/v1/square.js defer></script>
+<style>
+html{scroll-behavior:smooth;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--gold:#D4A843;--gold-light:#E8C878;--coffee-dark:#1C0E06;--warm-white:#FDF8EF;--text-dark:#1A0C05;--text-mid:#4A2A14;--border:rgba(168,110,60,0.18);}
+body{font-family:'Montserrat',sans-serif;background:var(--coffee-dark);color:#fff;min-height:100vh;}
+.wrap{max-width:600px;margin:0 auto;padding:32px 16px 80px;}
+.logo{text-align:center;margin-bottom:28px;}
+.logo img{height:52px;width:auto;}
+.hero{text-align:center;margin-bottom:36px;}
+.badge{display:inline-block;background:rgba(212,168,67,0.15);border:1px solid rgba(212,168,67,0.4);color:var(--gold);font-size:10px;letter-spacing:3px;text-transform:uppercase;padding:5px 14px;margin-bottom:14px;}
+h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-height:1.2;margin-bottom:8px;}
+.sub{font-size:12px;color:rgba(255,255,255,0.45);line-height:1.7;}
+.sec-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(212,168,67,0.6);font-weight:600;margin-bottom:12px;}
+/* Product cards */
+.products{display:flex;flex-direction:column;gap:12px;margin-bottom:28px;}
+.prod-card{background:rgba(255,255,255,0.04);border:1px solid rgba(212,168,67,0.15);padding:18px;}
+.prod-name{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--gold);margin-bottom:3px;}
+.prod-detail{font-size:11px;color:rgba(255,255,255,0.45);margin-bottom:14px;}
+.grind-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.grind-btn{background:rgba(255,255,255,0.04);border:1px solid rgba(212,168,67,0.2);color:rgba(255,255,255,0.7);padding:10px 8px;font-family:'Montserrat',sans-serif;font-size:11px;cursor:pointer;transition:all .2s;text-align:center;}
+.grind-btn.active{border-color:var(--gold);background:rgba(212,168,67,0.1);color:var(--gold);}
+.qty-add-row{display:flex;align-items:center;gap:10px;}
+.qty-wrap{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(212,168,67,0.2);padding:6px 12px;}
+.qty-btn{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;width:24px;text-align:center;line-height:1;}
+.qty-num{font-size:14px;font-weight:600;min-width:20px;text-align:center;}
+.add-btn{flex:1;background:var(--gold);color:var(--coffee-dark);border:none;padding:12px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;}
+.add-btn:hover{background:var(--gold-light);}
+/* Cart */
+.cart-section{background:rgba(255,255,255,0.03);border:1px solid rgba(212,168,67,0.15);padding:20px;margin-bottom:24px;}
+.cart-empty{font-size:12px;color:rgba(255,255,255,0.3);text-align:center;padding:20px 0;}
+.cart-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(212,168,67,0.08);}
+.cart-item:last-child{border-bottom:none;}
+.cart-item-name{font-size:12px;color:rgba(255,255,255,0.8);}
+.cart-item-detail{font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;}
+.cart-item-price{font-size:13px;color:var(--gold);font-weight:600;}
+.cart-item-remove{background:none;border:none;color:rgba(255,255,255,0.3);font-size:16px;cursor:pointer;margin-left:10px;}
+.cart-totals{margin-top:14px;padding-top:14px;border-top:1px solid rgba(212,168,67,0.15);}
+.cart-row{display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:6px;}
+.cart-total-row{display:flex;justify-content:space-between;font-size:16px;color:#fff;font-weight:600;margin-top:8px;}
+.checkout-btn{width:100%;background:var(--gold);color:var(--coffee-dark);border:none;padding:15px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;margin-top:16px;}
+.checkout-btn:disabled{opacity:0.4;cursor:not-allowed;}
+/* Modal */
+#vip-modal{display:none;position:fixed;inset:0;z-index:9999;background:rgba(10,5,2,0.95);justify-content:center;align-items:flex-start;padding:24px 16px;overflow-y:auto;}
+.modal-inner{background:var(--warm-white);max-width:520px;width:100%;margin:0 auto;}
+.modal-head{background:var(--coffee-dark);display:flex;justify-content:space-between;align-items:center;padding:18px 24px;}
+.modal-head img{height:40px;width:auto;}
+.modal-close{background:none;border:none;color:rgba(255,255,255,0.5);font-size:22px;cursor:pointer;line-height:1;}
+.modal-body{padding:24px;}
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text-mid);margin-bottom:5px;font-weight:600;}
+.field input{width:100%;border:1px solid var(--border);padding:11px 13px;font-family:'Montserrat',sans-serif;font-size:13px;background:var(--warm-white);color:var(--text-dark);outline:none;}
+.field input:focus{border-color:var(--gold);}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.order-summary{background:#f5ede0;padding:14px 18px;margin-bottom:18px;}
+.order-summary p{font-size:12px;color:var(--text-mid);margin-bottom:3px;}
+.order-total{font-size:17px;font-weight:700;color:var(--text-dark);margin-top:8px;}
+#vip-card-el{border:1px solid var(--border);padding:13px;margin-bottom:14px;background:#fff;min-height:44px;}
+#vip-pay-btn{width:100%;background:var(--gold);color:var(--coffee-dark);border:none;padding:14px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;}
+#vip-err{display:none;color:#c0392b;font-size:12px;padding:10px;background:rgba(192,57,43,0.08);border:1px solid rgba(192,57,43,0.2);margin-bottom:12px;}
+#vip-ship-note{font-size:11px;margin-top:5px;}
+/* Success */
+#vip-success{display:none;text-align:center;padding:40px 20px;}
+</style>
+</head>
+<body>
+<div class=wrap>
+  <div class=logo><img src=/kahoalogo.png alt="Kahoa Coffee"></div>
+  <div class=hero>
+    <div><span class=badge>VIP / Wholesale</span></div>
+    <h1>Book The<br>Coffee Cart</h1>
+    <p class=sub>Full espresso bar, cold brew &amp; nitro for your event.<br>Pick a package, add extras, and book directly below.</p>
+  </div>
+
+  <div style="position:sticky;top:0;z-index:50;display:flex;gap:8px;background:#0d0705;padding:12px 20px;margin:0 -20px 24px;border-bottom:1px solid rgba(212,168,67,0.25);">
+    <a href="/vip.html" style="flex:1;text-align:center;background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.35);color:var(--gold);text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Coffee</a>
+    <a href="/vip-kegs.html" style="flex:1;text-align:center;background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.35);color:var(--gold);text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Keg Program</a>
+    <a href="/vip-cart.html" style="flex:1;text-align:center;background:rgba(212,168,67,0.25);border:1px solid var(--gold);color:var(--gold);text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Mobile Cart</a>
+  </div>
+
+  <!-- Mobile Coffee Cart Booking -->
+<div id="section-cart" style="max-width:600px;margin:48px auto 0;padding:0 20px;">
+  <p class=sec-label>Also Available</p>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:#fff;margin-bottom:8px;">Mobile Coffee Cart Booking</h2>
+  <p class=sub style="margin-bottom:20px;">Full espresso bar, cold brew, and nitro for your event. Pick a package, add anything extra, and book directly below.</p>
+
+  <div class=two-col>
+    <div class=field><label style="font-size:11px;color:rgba(255,255,255,0.5);">Event Date</label><input type=date id=cb-date></div>
+    <div class=field><label style="font-size:11px;color:rgba(255,255,255,0.5);">Start Time</label><input type=time id=cb-time></div>
+  </div>
+  <div class=two-col>
+    <div class=field><label style="font-size:11px;color:rgba(255,255,255,0.5);">Estimated Guest Count</label><input type=number id=cb-guests min=1 value=50 onchange=cbCalc() oninput=cbCalc()></div>
+    <div class=field></div>
+  </div>
+
+  <p class=sec-label style="margin-top:16px;">Choose Your Package</p>
+  <div id=cb-packages style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+    <div class="prod-card cb-pkg" data-pkg="essentials" onclick="cbSelectPkg('essentials')" style="cursor:pointer;">
+      <div class=prod-name>Essentials <span style="color:var(--gold);float:right;">$650</span></div>
+      <div class=prod-detail>2 hours &middot; up to ~50 guests &middot; 1 barista &middot; drip + cold brew</div>
+    </div>
+    <div class="prod-card cb-pkg" data-pkg="premium" onclick="cbSelectPkg('premium')" style="cursor:pointer;border-color:var(--gold);">
+      <div class=prod-name>Premium &#9733; <span style="color:var(--gold);float:right;">$1,100</span></div>
+      <div class=prod-detail>3 hours &middot; up to ~100 guests &middot; 2 baristas &middot; full espresso bar + nitro</div>
+    </div>
+    <div class="prod-card cb-pkg" data-pkg="full" onclick="cbSelectPkg('full')" style="cursor:pointer;">
+      <div class=prod-name>Full Experience <span style="color:var(--gold);float:right;">$1,850</span></div>
+      <div class=prod-detail>4+ hours &middot; 150+ guests &middot; 2&ndash;3 baristas &middot; co-branded cart &amp; signage</div>
+    </div>
+  </div>
+
+  <p class=sec-label>Add-Ons</p>
+  <div style="display:flex;flex-direction:column;gap:2px;margin-bottom:20px;">
+    <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
+      <span><input type=checkbox id=cb-addon-tea onchange=cbCalc()> Hot Tea &amp; Hot Cocoa</span><span id=cb-price-tea style="color:var(--gold);">+$0.00</span>
+    </label>
+    <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
+      <span><input type=checkbox id=cb-addon-sig onchange=cbCalc()> Custom Signature Drinks</span><span id=cb-price-sig style="color:var(--gold);">+$50.00</span>
+    </label>
+    <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
+      <span><input type=checkbox id=cb-addon-sticker onchange=cbCalc()> Logo Stickers on Cups</span><span id=cb-price-sticker style="color:var(--gold);">+$125.00</span>
+    </label>
+    <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;font-size:13px;color:#fff;">
+      <span><input type=checkbox id=cb-addon-print onchange=cbCalc()> Full Custom-Printed Cups</span><span id=cb-price-print style="color:var(--gold);">+$325.00</span>
+    </label>
+  </div>
+
+  <div class=cart-totals style="display:block;margin-bottom:20px;">
+    <div class=cart-row><span>Package</span><span id=cb-pkg-total>$0.00</span></div>
+    <div class=cart-row><span>Add-ons</span><span id=cb-addon-total>$0.00</span></div>
+    <div class=cart-row><span>Sales Tax (8.25%)</span><span id=cb-tax-total>$0.00</span></div>
+    <div class=cart-row style="font-weight:700;border-top:1px solid rgba(212,168,67,0.3);padding-top:8px;"><span>Event Total</span><span id=cb-grand-total>$0.00</span></div>
+  </div>
+
+  <p class=sec-label>Payment</p>
+  <div style="display:flex;gap:10px;margin-bottom:20px;">
+    <label class="prod-card" style="flex:1;cursor:pointer;text-align:center;padding:14px 8px;">
+      <input type=radio name=cb-paytype value=deposit checked onchange=cbCalc()><br>
+      <span style="font-size:13px;color:#fff;">30% Deposit</span><br>
+      <span id=cb-deposit-amt style="color:var(--gold);font-weight:700;">$0.00</span>
+    </label>
+    <label class="prod-card" style="flex:1;cursor:pointer;text-align:center;padding:14px 8px;">
+      <input type=radio name=cb-paytype value=full onchange=cbCalc()><br>
+      <span style="font-size:13px;color:#fff;">Pay 100%</span><br>
+      <span id=cb-full-amt style="color:var(--gold);font-weight:700;">$0.00</span>
+    </label>
+  </div>
+  <p class=sub id=cb-balance-note style="margin-bottom:20px;"></p>
+
+  <div class=two-col>
+    <div class=field><input type=text id=cb-name placeholder="Full Name"></div>
+    <div class=field><input type=email id=cb-email placeholder="Email"></div>
+  </div>
+  <div class=two-col>
+    <div class=field><input type=tel id=cb-phone placeholder="Phone"></div>
+    <div class=field><input type=text id=cb-location placeholder="Event Location / Address"></div>
+  </div>
+
+  <p class=sec-label style="margin-top:16px;">Sign &amp; Authorize</p>
+  <div class=field style="margin-bottom:10px;">
+    <label style="font-size:11px;color:rgba(255,255,255,0.5);">Type your full name as signature</label>
+    <input type=text id=cb-signature placeholder="Your full legal name">
+  </div>
+  <label style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:rgba(255,255,255,0.6);line-height:1.6;margin-bottom:10px;">
+    <input type=checkbox id=cb-agree-terms style="margin-top:2px;">
+    <span>I agree to the Coffee Cart Service Agreement, including payment terms and cancellation policy.</span>
+  </label>
+  <label style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:rgba(255,255,255,0.6);line-height:1.6;margin-bottom:16px;">
+    <input type=checkbox id=cb-agree-overage style="margin-top:2px;">
+    <span>I authorize Kahoa Coffee to charge this card for overage fees ($7/guest beyond a 15% headcount buffer) and overtime ($125/hour) if incurred, per Section 5 of the Service Agreement.</span>
+  </label>
+
+  <div id=cb-card-el style="background:#fff;border-radius:4px;padding:4px;margin:12px 0;min-height:44px;"></div>
+  <div id=cb-err style="color:#e06a6a;font-size:12px;margin-bottom:8px;display:none;"></div>
+  <button class=checkout-btn id=cb-pay-btn onclick=cbSubmit()>Select a package to continue</button>
+  <div id=cb-success style="display:none;text-align:center;padding:16px 0;">
+    <div style="font-size:32px;margin-bottom:8px;">&#9749;</div>
+    <p style="color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:18px;">Booking request received! We'll confirm your date shortly.</p>
+  </div>
+</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+var CART_PKG={essentials:650,premium:1100,full:1850};
+var ADDON_TEA=1,ADDON_SIGDRINK=50,ADDON_STICKER_RATE=0.30,ADDON_STICKER_MIN=125,ADDON_PRINT_RATE=0.65,ADDON_PRINT_MIN=325;
+var CB_TAX_RATE=0.0825;
+var SQUARE_APP_ID='sq0idp-khlBwyn6FQYmXDU8zxjAiQ';
+var SQUARE_LOC='L2M4GT1KDJZPY';
+var WORKER='https://kahoa-checkoutout.chegekibuthu1.workers.dev/charge';
+var SHEET='https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289hVmWtR1OKDqxLruwmKbRf_GkAwkiuEepPfk22Q/exec';
+var EJSVC='service_wsy9uog',EJTMPL='template_8jwdv8c',EJKEY='quYV-P5H4GYrFzjOw';
+var AUSTIN_ZIPS='78701.78702.78703.78704.78705.78712.78717.78719.78721.78722.78723.78724.78725.78726.78727.78728.78729.78730.78731.78732.78733.78734.78735.78736.78737.78738.78739.78741.78742.78744.78745.78746.78747.78748.78749.78750.78751.78752.78753.78754.78756.78757.78758.78759.78653.78660.78664.78665.78681.78613.78626.78627.78628.78633.78640.78610.78621'.split('.');
+
+var cbSelectedPkg=null;
+function cbSelectPkg(key){
+  cbSelectedPkg=key;
+  document.querySelectorAll('.cb-pkg').forEach(function(el){
+    el.style.borderColor=el.getAttribute('data-pkg')===key?'var(--gold)':(el.getAttribute('data-pkg')==='premium'?'var(--gold)':'rgba(212,168,67,0.15)');
+    el.style.borderWidth=el.getAttribute('data-pkg')===key?'2px':'1px';
+  });
+  cbCalc();
+}
+function cbCalc(){
+  var guests=Math.max(1,parseInt(document.getElementById('cb-guests').value)||1);
+  var pkgPrice=cbSelectedPkg?CART_PKG[cbSelectedPkg]:0;
+
+  var teaOn=document.getElementById('cb-addon-tea').checked;
+  var sigOn=document.getElementById('cb-addon-sig').checked;
+  var stickerOn=document.getElementById('cb-addon-sticker').checked;
+  var printOn=document.getElementById('cb-addon-print').checked;
+
+  var teaPrice=guests*ADDON_TEA;
+  var sigPrice=ADDON_SIGDRINK;
+  var stickerPrice=Math.max(ADDON_STICKER_MIN,guests*ADDON_STICKER_RATE);
+  var printPrice=Math.max(ADDON_PRINT_MIN,guests*ADDON_PRINT_RATE);
+
+  document.getElementById('cb-price-tea').textContent='+$'+teaPrice.toFixed(2);
+  document.getElementById('cb-price-sig').textContent='+$'+sigPrice.toFixed(2);
+  document.getElementById('cb-price-sticker').textContent='+$'+stickerPrice.toFixed(2);
+  document.getElementById('cb-price-print').textContent='+$'+printPrice.toFixed(2);
+
+  var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0);
+  var preTax=pkgPrice+addonTotal;
+  var taxTotal=preTax*CB_TAX_RATE;
+  var grandTotal=preTax+taxTotal;
+
+  document.getElementById('cb-pkg-total').textContent='$'+pkgPrice.toFixed(2);
+  document.getElementById('cb-addon-total').textContent='$'+addonTotal.toFixed(2);
+  document.getElementById('cb-tax-total').textContent='$'+taxTotal.toFixed(2);
+  document.getElementById('cb-grand-total').textContent='$'+grandTotal.toFixed(2);
+
+  var depositAmt=grandTotal*0.30;
+  document.getElementById('cb-deposit-amt').textContent='$'+depositAmt.toFixed(2);
+  document.getElementById('cb-full-amt').textContent='$'+grandTotal.toFixed(2);
+
+  var payType=document.querySelector('input[name=cb-paytype]:checked').value;
+  var balanceNote=document.getElementById('cb-balance-note');
+  if(payType==='deposit'){
+    balanceNote.textContent='Remaining $'+(grandTotal-depositAmt).toFixed(2)+' due 7 days before your event (invoiced separately).';
+  }else{
+    balanceNote.textContent='Paid in full today \u2014 nothing more due before your event.';
+  }
+
+  var btn=document.getElementById('cb-pay-btn');
+  if(!cbSelectedPkg){
+    btn.textContent='Select a package to continue';
+  }else{
+    var chargeNow=payType==='deposit'?depositAmt:grandTotal;
+    btn.textContent='Pay $'+chargeNow.toFixed(2)+' \u2014 Book Now \u2192';
+  }
+}
+var cbPayments=null,cbCard=null,cbCardReady=false;
+async function cbInitCard(){
+  if(cbCardReady)return;
+  try{
+    cbPayments=await Square.payments(SQUARE_APP_ID,SQUARE_LOC);
+    cbCard=await cbPayments.card();
+    await cbCard.attach('#cb-card-el');
+    cbCardReady=true;
+  }catch(e){console.error('Cart booking Square init:',e);}
+}
+window.addEventListener('load',function(){cbInitCard();});
+async function cbSubmit(){
+  if(!cbSelectedPkg){return;}
+  var name=document.getElementById('cb-name').value.trim();
+  var email=document.getElementById('cb-email').value.trim();
+  var phone=document.getElementById('cb-phone').value.trim();
+  var location=document.getElementById('cb-location').value.trim();
+  var date=document.getElementById('cb-date').value;
+  var time=document.getElementById('cb-time').value;
+  var guests=Math.max(1,parseInt(document.getElementById('cb-guests').value)||1);
+  var signature=document.getElementById('cb-signature').value.trim();
+  var agreedTerms=document.getElementById('cb-agree-terms').checked;
+  var agreedOverage=document.getElementById('cb-agree-overage').checked;
+  var errEl=document.getElementById('cb-err');
+  errEl.style.display='none';
+  if(!name||!email||!location||!date||!time){errEl.textContent='Please fill in your name, email, event date, start time, and location.';errEl.style.display='block';return;}
+  if(!signature){errEl.textContent='Please type your full name as your signature.';errEl.style.display='block';return;}
+  if(!agreedTerms||!agreedOverage){errEl.textContent='Please check both agreement boxes to continue.';errEl.style.display='block';return;}
+  if(!cbCardReady){await cbInitCard();if(!cbCardReady){errEl.textContent='Payment form still loading, please try again in a moment.';errEl.style.display='block';return;}}
+
+  var pkgPrice=CART_PKG[cbSelectedPkg];
+  var teaOn=document.getElementById('cb-addon-tea').checked;
+  var sigOn=document.getElementById('cb-addon-sig').checked;
+  var stickerOn=document.getElementById('cb-addon-sticker').checked;
+  var printOn=document.getElementById('cb-addon-print').checked;
+  var teaPrice=guests*ADDON_TEA,sigPrice=ADDON_SIGDRINK;
+  var stickerPrice=Math.max(ADDON_STICKER_MIN,guests*ADDON_STICKER_RATE);
+  var printPrice=Math.max(ADDON_PRINT_MIN,guests*ADDON_PRINT_RATE);
+  var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0);
+  var preTax=pkgPrice+addonTotal;
+  var taxTotal=preTax*CB_TAX_RATE;
+  var grandTotal=preTax+taxTotal;
+  var payType=document.querySelector('input[name=cb-paytype]:checked').value;
+  var chargeNow=payType==='deposit'?grandTotal*0.30:grandTotal;
+
+  var addonList=[];
+  if(teaOn)addonList.push('Hot Tea & Cocoa ($'+teaPrice.toFixed(2)+')');
+  if(sigOn)addonList.push('Custom Signature Drinks ($'+sigPrice.toFixed(2)+')');
+  if(stickerOn)addonList.push('Logo Stickers ($'+stickerPrice.toFixed(2)+')');
+  if(printOn)addonList.push('Full Custom-Printed Cups ($'+printPrice.toFixed(2)+')');
+  var addonSummary=addonList.length?addonList.join(', '):'None';
+  var pkgName=cbSelectedPkg==='essentials'?'Essentials':cbSelectedPkg==='premium'?'Premium':'Full Experience';
+
+  var btn=document.getElementById('cb-pay-btn');
+  btn.disabled=true;btn.textContent='Processing...';
+  try{
+    var result=await cbCard.tokenize();
+    if(result.status!=='OK'){throw new Error(result.errors?result.errors[0].message:'Card error');}
+    var payload={
+      source_id:result.token,
+      verification_token:(result.details&&result.details.verificationToken)||undefined,
+      product_name:'Coffee Cart Booking \u2014 '+pkgName+' ('+date+' '+time+', '+guests+' guests)',
+      grind:payType==='deposit'?'30% Deposit':'Paid in Full',
+      quantity:1,
+      unit_price_cents:Math.round(chargeNow*100),
+      shipping:null,
+      buyer:{name:name,email:email,phone:phone,address:location}
+    };
+    var resp=await fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    var data=await resp.json();
+    if(resp.ok&&(data.success||data.payment_id)){
+      document.getElementById('cb-success').style.display='block';
+      btn.style.display='none';
+      if(typeof emailjs!=='undefined'){
+        emailjs.init(EJKEY);
+        var notes='Package: '+pkgName+' ($'+pkgPrice.toFixed(2)+'). Add-ons: '+addonSummary+'. Subtotal: $'+preTax.toFixed(2)+'. Tax (8.25%): $'+taxTotal.toFixed(2)+'. Event total: $'+grandTotal.toFixed(2)+'. Charged today ('+(payType==='deposit'?'30% deposit':'paid in full')+'): $'+chargeNow.toFixed(2)+'. '+(payType==='deposit'?'Balance due 7 days before event: $'+(grandTotal-chargeNow).toFixed(2)+'.':'')+' Event time: '+time+'. Signed: '+signature+'. Overage/overtime authorization: '+(agreedOverage?'YES':'NO')+'.';
+        var tp={to_email:'info@kahoa.shop',order_type:'VIP COFFEE CART BOOKING',customer_name:name,customer_email:email,customer_phone:phone,customer_address:location,product_name:'Coffee Cart \u2014 '+pkgName,grind:date+' '+time,price:'$'+chargeNow.toFixed(2)+' charged today',notes:notes};
+        emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error('Cart booking email error',e);});
+        var custTp=Object.assign({},tp,{to_email:email,order_type:'Your Kahoa Coffee Cart Booking'});
+        emailjs.send(EJSVC,EJTMPL,custTp).catch(function(e){console.error('Cust email error',e);});
+      }
+      try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:phone,product:'Coffee Cart Booking \u2014 '+pkgName,grind:date,total:'$'+grandTotal.toFixed(2)+' ('+(payType==='deposit'?'30% deposit paid':'paid in full')+')',coupon:'',address:location,opted_in:'Yes',source:'kahoa.shop/vip-cart'})}).catch(function(){});}catch(e){}
+    }else{
+      throw new Error((data.detail&&data.detail.errors&&data.detail.errors[0]&&data.detail.errors[0].detail)||data.error||'Please try again.');
+    }
+  }catch(e){
+    errEl.textContent=e.message||'Something went wrong. Please try again.';
+    errEl.style.display='block';
+    console.error('Cart booking error:',e);
+  }
+  btn.disabled=false;
+  if(document.getElementById('cb-success').style.display!=='block'){cbCalc();}
+}
+</script>
+</body>
+</html>
