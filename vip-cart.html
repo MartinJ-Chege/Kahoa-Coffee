@@ -151,7 +151,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
     </label>
     <label class="prod-card" style="flex:1;cursor:pointer;text-align:center;padding:14px 8px;">
       <input type=radio name=cb-paytype value=full onchange=cbCalc()><br>
-      <span style="font-size:13px;color:#fff;">Pay 100%</span><br>
+      <span style="font-size:13px;color:#fff;">Pay 100% <span style="color:var(--gold);">(Save 5%)</span></span><br>
       <span id=cb-full-amt style="color:var(--gold);font-weight:700;">$0.00</span>
     </label>
   </div>
@@ -194,6 +194,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
 var CART_PKG={essentials:650,premium:1100,full:1850};
 var ADDON_TEA=1,ADDON_SIGDRINK=50,ADDON_STICKER_RATE=0.30,ADDON_STICKER_MIN=125,ADDON_PRINT_RATE=0.65,ADDON_PRINT_MIN=325;
 var CB_TAX_RATE=0.0825;
+var CB_FULLPAY_DISCOUNT=0.05;
 var SQUARE_APP_ID='sq0idp-khlBwyn6FQYmXDU8zxjAiQ';
 var SQUARE_LOC='L2M4GT1KDJZPY';
 var WORKER='https://kahoa-checkoutout.chegekibuthu1.workers.dev/charge';
@@ -240,22 +241,23 @@ function cbCalc(){
   document.getElementById('cb-grand-total').textContent='$'+grandTotal.toFixed(2);
 
   var depositAmt=grandTotal*0.30;
+  var fullPayAmt=grandTotal*(1-CB_FULLPAY_DISCOUNT);
   document.getElementById('cb-deposit-amt').textContent='$'+depositAmt.toFixed(2);
-  document.getElementById('cb-full-amt').textContent='$'+grandTotal.toFixed(2);
+  document.getElementById('cb-full-amt').textContent='$'+fullPayAmt.toFixed(2);
 
   var payType=document.querySelector('input[name=cb-paytype]:checked').value;
   var balanceNote=document.getElementById('cb-balance-note');
   if(payType==='deposit'){
     balanceNote.textContent='Remaining $'+(grandTotal-depositAmt).toFixed(2)+' due 7 days before your event (invoiced separately).';
   }else{
-    balanceNote.textContent='Paid in full today \u2014 nothing more due before your event.';
+    balanceNote.textContent='Paid in full today \u2014 you save $'+(grandTotal-fullPayAmt).toFixed(2)+', nothing more due before your event.';
   }
 
   var btn=document.getElementById('cb-pay-btn');
   if(!cbSelectedPkg){
     btn.textContent='Select a package to continue';
   }else{
-    var chargeNow=payType==='deposit'?depositAmt:grandTotal;
+    var chargeNow=payType==='deposit'?depositAmt:fullPayAmt;
     btn.textContent='Pay $'+chargeNow.toFixed(2)+' \u2014 Book Now \u2192';
   }
 }
@@ -302,7 +304,7 @@ async function cbSubmit(){
   var taxTotal=preTax*CB_TAX_RATE;
   var grandTotal=preTax+taxTotal;
   var payType=document.querySelector('input[name=cb-paytype]:checked').value;
-  var chargeNow=payType==='deposit'?grandTotal*0.30:grandTotal;
+  var chargeNow=payType==='deposit'?grandTotal*0.30:grandTotal*(1-CB_FULLPAY_DISCOUNT);
 
   var addonList=[];
   if(teaOn)addonList.push('Hot Tea & Cocoa ($'+teaPrice.toFixed(2)+')');
@@ -334,7 +336,7 @@ async function cbSubmit(){
       btn.style.display='none';
       if(typeof emailjs!=='undefined'){
         emailjs.init(EJKEY);
-        var notes='Package: '+pkgName+' ($'+pkgPrice.toFixed(2)+'). Add-ons: '+addonSummary+'. Subtotal: $'+preTax.toFixed(2)+'. Tax (8.25%): $'+taxTotal.toFixed(2)+'. Event total: $'+grandTotal.toFixed(2)+'. Charged today ('+(payType==='deposit'?'30% deposit':'paid in full')+'): $'+chargeNow.toFixed(2)+'. '+(payType==='deposit'?'Balance due 7 days before event: $'+(grandTotal-chargeNow).toFixed(2)+'.':'')+' Event time: '+time+'. Signed: '+signature+'. Overage/overtime authorization: '+(agreedOverage?'YES':'NO')+'.';
+        var notes='Package: '+pkgName+' ($'+pkgPrice.toFixed(2)+'). Add-ons: '+addonSummary+'. Subtotal: $'+preTax.toFixed(2)+'. Tax (8.25%): $'+taxTotal.toFixed(2)+'. Event total: $'+grandTotal.toFixed(2)+'. Charged today ('+(payType==='deposit'?'30% deposit':'paid in full, 5% discount applied')+'): $'+chargeNow.toFixed(2)+'. '+(payType==='deposit'?'Balance due 7 days before event: $'+(grandTotal-chargeNow).toFixed(2)+'.':'Discount savings: $'+(grandTotal-chargeNow).toFixed(2)+'.')+' Event time: '+time+'. Signed: '+signature+'. Overage/overtime authorization: '+(agreedOverage?'YES':'NO')+'.';
         var tp={to_email:'info@kahoa.shop',order_type:'VIP COFFEE CART BOOKING',customer_name:name,customer_email:email,customer_phone:phone,customer_address:location,product_name:'Coffee Cart \u2014 '+pkgName,grind:date+' '+time,price:'$'+chargeNow.toFixed(2)+' charged today',notes:notes};
         emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error('Cart booking email error',e);});
         var custTp=Object.assign({},tp,{to_email:email,order_type:'Your Kahoa Coffee Cart Booking'});
