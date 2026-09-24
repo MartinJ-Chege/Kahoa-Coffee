@@ -262,7 +262,7 @@ async function vipStartLease(){
 
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script>
-var KEG_COLD=125,KEG_NITRO=130,LEASE_PRICE=50,VIP_SHIP=7.99;
+var KEG_COLD=125,KEG_NITRO=130,LEASE_PRICE=50;
 var SQUARE_APP_ID='sq0idp-khlBwyn6FQYmXDU8zxjAiQ';
 var SQUARE_LOC='L2M4GT1KDJZPY';
 var WORKER='https://kahoa-checkoutout.chegekibuthu1.workers.dev/charge';
@@ -322,15 +322,14 @@ function vipRenderCart(){
 }
 function vipIsAustin(zip){return AUSTIN_ZIPS.indexOf(zip)!==-1;}
 function vipGetShipping(){
-  var zip=(document.getElementById('vf-zip').value||'').trim();
-  return vipIsAustin(zip)?0:VIP_SHIP;
+  return 0;
 }
 function vipZipCheck(zip){
   if(zip.length===5){
     var el=document.getElementById('vip-ship-note');
     var local=vipIsAustin(zip);
-    el.textContent=local?'✓ Free local Austin delivery':'+ $'+VIP_SHIP.toFixed(2)+' shipping';
-    el.style.color=local?'#2a7a3b':'var(--gold)';
+    el.textContent=local?'✓ Austin delivery included':'✕ Kegs are only available for Austin-area delivery';
+    el.style.color=local?'#2a7a3b':'#e06a6a';
     vipUpdateModalSummary();
   }
 }
@@ -376,6 +375,7 @@ async function vipPay(){
   errEl.style.display='none';
   if(!fname||!lname){errEl.textContent='Please enter your full name.';errEl.style.display='block';return;}
   if(!email||!email.includes('@')){errEl.textContent='Please enter a valid email.';errEl.style.display='block';return;}
+  if(zip&&zip.length===5&&!vipIsAustin(zip)){errEl.textContent='Sorry, kegs are only available for Austin-area delivery. Please use an Austin ZIP code.';errEl.style.display='block';return;}
   if(!address||!city||!zip){errEl.textContent='Please enter your full shipping address.';errEl.style.display='block';return;}
   var btn=document.getElementById('vip-pay-btn');
   btn.textContent='Processing...';btn.disabled=true;
