@@ -263,7 +263,7 @@ async function vipInitLeaseCard(){
     vipLeaseCardReady=true;
   }catch(e){console.error('Lease Square init:',e);}
 }
-vipInitLeaseCard();
+window.addEventListener('load',function(){vipInitLeaseCard();});
 async function vipStartLease(){
   var name=document.getElementById('lf-name').value.trim();
   var email=document.getElementById('lf-email').value.trim();
@@ -272,7 +272,7 @@ async function vipStartLease(){
   var errEl=document.getElementById('vip-lease-err');
   errEl.style.display='none';
   if(!name||!email||!address){errEl.textContent='Please fill in name, email, and address.';errEl.style.display='block';return;}
-  if(!vipLeaseCardReady){errEl.textContent='Payment form still loading, try again in a moment.';errEl.style.display='block';return;}
+  if(!vipLeaseCardReady){await vipInitLeaseCard();if(!vipLeaseCardReady){errEl.textContent='Payment form still loading, please try again in a moment.';errEl.style.display='block';return;}}
   var btn=document.getElementById('vip-lease-btn');
   btn.disabled=true;btn.textContent='Processing...';
   try{
@@ -511,7 +511,7 @@ async function cbInitCard(){
     cbCardReady=true;
   }catch(e){console.error('Cart booking Square init:',e);}
 }
-cbInitCard();
+window.addEventListener('load',function(){cbInitCard();});
 async function cbSubmit(){
   if(!cbSelectedPkg){return;}
   var name=document.getElementById('cb-name').value.trim();
@@ -529,7 +529,7 @@ async function cbSubmit(){
   if(!name||!email||!location||!date||!time){errEl.textContent='Please fill in your name, email, event date, start time, and location.';errEl.style.display='block';return;}
   if(!signature){errEl.textContent='Please type your full name as your signature.';errEl.style.display='block';return;}
   if(!agreedTerms||!agreedOverage){errEl.textContent='Please check both agreement boxes to continue.';errEl.style.display='block';return;}
-  if(!cbCardReady){errEl.textContent='Payment form still loading, try again in a moment.';errEl.style.display='block';return;}
+  if(!cbCardReady){await cbInitCard();if(!cbCardReady){errEl.textContent='Payment form still loading, please try again in a moment.';errEl.style.display='block';return;}}
 
   var pkgPrice=CART_PKG[cbSelectedPkg];
   var teaOn=document.getElementById('cb-addon-tea').checked;
