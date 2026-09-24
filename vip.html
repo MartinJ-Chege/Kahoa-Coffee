@@ -92,7 +92,20 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
   <p class=sec-label id="section-coffee">Choose Your Coffee</p>
   <div class=products id=vip-products></div>
 
-  <!-- Checkout Modal -->
+  <!-- Cart -->
+  <p class=sec-label>Your Order</p>
+  <div class=cart-section>
+    <div id=vip-cart-items><p class=cart-empty>No items yet — add a blend above.</p></div>
+    <div class=cart-totals id=vip-cart-totals style="display:none;">
+      <div class=cart-row><span>Subtotal</span><span id=vip-subtotal>$0.00</span></div>
+      <div class=cart-row><span>Shipping</span><span id=vip-shipping>Calculated at checkout</span></div>
+      <div class=cart-total-row><span>Total</span><span id=vip-total>$0.00</span></div>
+    </div>
+    <button class=checkout-btn id=vip-checkout-btn onclick=vipOpenCheckout() disabled>Proceed to Checkout →</button>
+  </div>
+</div>
+
+<!-- Checkout Modal -->
 <div id=vip-modal>
   <div class=modal-inner>
     <div class=modal-head>
