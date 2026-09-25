@@ -123,7 +123,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
     <div class=prod-detail>Waived automatically with a standing 2+ keg/month order. Already have your own tap system? Skip the lease and just order kegs.</div>
   </div>
 
-  <p class=sub style="margin-bottom:20px;"><strong style="color:var(--gold);">Delivery frequency</strong> (weekly, bi-weekly, or monthly) is arranged directly with us after your first order &mdash; just mention your preference in the notes at checkout below.</p>
+  <p class=sub style="margin-bottom:20px;"><strong style="color:var(--gold);">Delivery frequency</strong> (one-time, weekly, bi-weekly, or monthly) &mdash; pick it at checkout below.</p>
 
   <div class=prod-card style="border-color:rgba(212,168,67,0.35);">
     <div class=prod-name>Kegerator Lease <span style="color:var(--gold);float:right;">$50/mo</span></div>
@@ -250,6 +250,15 @@ async function vipStartLease(){
           <input id=vf-zip placeholder="78701" maxlength=5 oninput="vipZipCheck(this.value)">
           <div id=vip-ship-note></div>
         </div>
+        <div class=field>
+          <label>Delivery Frequency</label>
+          <select id=vf-frequency style="width:100%;padding:10px;border:1px solid var(--border);border-radius:4px;font-family:'Montserrat',sans-serif;font-size:13px;">
+            <option value="One-time">One-time delivery</option>
+            <option value="Weekly">Weekly</option>
+            <option value="Bi-weekly">Bi-weekly</option>
+            <option value="Monthly">Monthly</option>
+          </select>
+        </div>
         <hr style="border:none;border-top:1px solid var(--border);margin:16px 0;">
         <p class=sec-label style="color:var(--text-mid);margin-bottom:12px;">Payment</p>
         <div id=vip-err></div>
@@ -373,6 +382,7 @@ async function vipPay(){
   var city=document.getElementById('vf-city').value.trim();
   var state=document.getElementById('vf-state').value.trim();
   var zip=document.getElementById('vf-zip').value.trim();
+  var frequency=document.getElementById('vf-frequency').value;
   var errEl=document.getElementById('vip-err');
   errEl.style.display='none';
   if(!fname||!lname){errEl.textContent='Please enter your full name.';errEl.style.display='block';return;}
@@ -438,7 +448,7 @@ async function vipPay(){
       price:'$'+total.toFixed(2),
       shipping_method:shipping===0?'FREE local Austin':'Standard Shipping $'+shipping.toFixed(2),
       checkout_url:data.receipt_url||'',
-      notes:'VIP Keg Program order. Items: '+productSummary
+      notes:'VIP Keg Program order. Items: '+productSummary+'. Delivery frequency: '+frequency
     };
     if(typeof emailjs!=='undefined'){
       emailjs.init(EJKEY);
@@ -449,7 +459,7 @@ async function vipPay(){
     try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({
       timestamp:new Date().toISOString(),name:fname+' '+lname,email:email,phone:phone||'',
       product:productSummary,grind:'Mixed',total:'$'+total.toFixed(2),coupon:'VIP',
-      address:fullAddr,opted_in:'Yes',source:'kahoa.shop/vip'
+      address:fullAddr,opted_in:'Yes',source:'kahoa.shop/vip',delivery_frequency:frequency
     })});}catch(e){}
     // Clear cart
     vipCart=[];vipRenderCart();
