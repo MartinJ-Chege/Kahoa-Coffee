@@ -115,7 +115,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
     </div>
     <div class="prod-card cb-pkg" data-pkg="full" onclick="cbSelectPkg('full')" style="cursor:pointer;">
       <div class=prod-name>Full Experience <span style="color:var(--gold);float:right;">$1,850</span></div>
-      <div class=prod-detail>4+ hours &middot; 150+ guests &middot; 2&ndash;3 baristas &middot; co-branded cart &amp; signage</div>
+      <div class=prod-detail>4+ hours &middot; 150+ guests &middot; 2&ndash;3 baristas &middot; co-branded cart &amp; signage &middot; latte art printer included</div>
     </div>
   </div>
 
@@ -133,11 +133,14 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
     <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
       <span><input type=checkbox id=cb-addon-print onchange=cbCalc()> Full Custom-Printed Cups</span><span id=cb-price-print style="color:var(--gold);">+$325.00</span>
     </label>
-    <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;font-size:13px;color:#fff;">
+    <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
       <span><input type=checkbox id=cb-addon-dj onchange=cbCalc()> Event DJ (speaker, mixer, wireless mic)</span><span id=cb-price-dj style="color:var(--gold);">+$0.00</span>
     </label>
+    <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;font-size:13px;color:#fff;" id=cb-latte-row>
+      <span><input type=checkbox id=cb-addon-latte onchange=cbCalc()> Latte Art Printer (logo/photo on foam)</span><span id=cb-price-latte style="color:var(--gold);">+$175.00</span>
+    </label>
   </div>
-  <p class=sub style="font-size:11px;margin-top:-14px;margin-bottom:20px;">DJ pricing scales with your package &mdash; select a package above to see the price. Booking confirmed with our partner DJ within 24 hrs.</p>
+  <p class=sub style="font-size:11px;margin-top:-14px;margin-bottom:20px;">DJ pricing scales with your package &mdash; select a package above to see the price. Booking confirmed with our partner DJ within 24 hrs. Latte Art Printer is included free with Full Experience.</p>
 
   <div class=cart-totals style="display:block;margin-bottom:20px;">
     <div class=cart-row><span>Package</span><span id=cb-pkg-total>$0.00</span></div>
@@ -198,6 +201,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
 var CART_PKG={essentials:650,premium:1100,full:1850};
 var ADDON_TEA=1,ADDON_SIGDRINK=50,ADDON_STICKER_RATE=0.30,ADDON_STICKER_MIN=125,ADDON_PRINT_RATE=0.65,ADDON_PRINT_MIN=325;
 var DJ_PRICE={essentials:550,premium:650,full:750};
+var ADDON_LATTE=175;
 var CB_TAX_RATE=0.0825;
 var CB_FULLPAY_DISCOUNT=0.05;
 var SQUARE_APP_ID='sq0idp-khlBwyn6FQYmXDU8zxjAiQ';
@@ -226,11 +230,25 @@ function cbCalc(){
   var printOn=document.getElementById('cb-addon-print').checked;
   var djOn=document.getElementById('cb-addon-dj').checked;
 
+  var latteIncluded=cbSelectedPkg==='full';
+  var latteCb=document.getElementById('cb-addon-latte');
+  var lattePriceEl=document.getElementById('cb-price-latte');
+  if(latteIncluded){
+    latteCb.checked=true;latteCb.disabled=true;latteCb.dataset.autoChecked='1';
+    lattePriceEl.textContent='Included ✓';lattePriceEl.style.color='#2a7a3b';
+  }else{
+    latteCb.disabled=false;
+    if(latteCb.dataset.autoChecked==='1'){latteCb.checked=false;delete latteCb.dataset.autoChecked;}
+    lattePriceEl.textContent='+$'+ADDON_LATTE.toFixed(2);lattePriceEl.style.color='var(--gold)';
+  }
+  var latteOn=latteCb.checked;
+
   var teaPrice=guests*ADDON_TEA;
   var sigPrice=ADDON_SIGDRINK;
   var stickerPrice=Math.max(ADDON_STICKER_MIN,guests*ADDON_STICKER_RATE);
   var printPrice=Math.max(ADDON_PRINT_MIN,guests*ADDON_PRINT_RATE);
   var djPrice=cbSelectedPkg?DJ_PRICE[cbSelectedPkg]:0;
+  var lattePrice=latteIncluded?0:ADDON_LATTE;
 
   document.getElementById('cb-price-tea').textContent='+$'+teaPrice.toFixed(2);
   document.getElementById('cb-price-sig').textContent='+$'+sigPrice.toFixed(2);
@@ -238,7 +256,7 @@ function cbCalc(){
   document.getElementById('cb-price-print').textContent='+$'+printPrice.toFixed(2);
   document.getElementById('cb-price-dj').textContent='+$'+djPrice.toFixed(2);
 
-  var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0);
+  var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0)+(latteOn?lattePrice:0);
   var preTax=pkgPrice+addonTotal;
   var taxTotal=preTax*CB_TAX_RATE;
   var grandTotal=preTax+taxTotal;
@@ -305,11 +323,14 @@ async function cbSubmit(){
   var stickerOn=document.getElementById('cb-addon-sticker').checked;
   var printOn=document.getElementById('cb-addon-print').checked;
   var djOn=document.getElementById('cb-addon-dj').checked;
+  var latteIncluded=cbSelectedPkg==='full';
+  var latteOn=document.getElementById('cb-addon-latte').checked;
   var teaPrice=guests*ADDON_TEA,sigPrice=ADDON_SIGDRINK;
   var stickerPrice=Math.max(ADDON_STICKER_MIN,guests*ADDON_STICKER_RATE);
   var printPrice=Math.max(ADDON_PRINT_MIN,guests*ADDON_PRINT_RATE);
   var djPrice=DJ_PRICE[cbSelectedPkg];
-  var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0);
+  var lattePrice=latteIncluded?0:ADDON_LATTE;
+  var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0)+(latteOn?lattePrice:0);
   var preTax=pkgPrice+addonTotal;
   var taxTotal=preTax*CB_TAX_RATE;
   var grandTotal=preTax+taxTotal;
@@ -322,6 +343,7 @@ async function cbSubmit(){
   if(stickerOn)addonList.push('Logo Stickers ($'+stickerPrice.toFixed(2)+')');
   if(printOn)addonList.push('Full Custom-Printed Cups ($'+printPrice.toFixed(2)+')');
   if(djOn)addonList.push('Event DJ ($'+djPrice.toFixed(2)+')');
+  if(latteOn)addonList.push(latteIncluded?'Latte Art Printer (Included with Full Experience)':'Latte Art Printer ($'+lattePrice.toFixed(2)+')');
   var addonSummary=addonList.length?addonList.join(', '):'None';
   var pkgName=cbSelectedPkg==='essentials'?'Essentials':cbSelectedPkg==='premium'?'Premium':'Full Experience';
 
