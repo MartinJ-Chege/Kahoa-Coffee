@@ -95,7 +95,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
   <p class=sub style="margin-bottom:24px;">Same VIP pricing philosophy, extended to kegs. Great for offices, hotels, restaurants, and cafes who want Kahoa on tap instead of by the bag.</p>
 
   <div class=prod-card style="margin-bottom:14px;">
-    <div class=prod-name>Kifaru Still Keg <span style="color:var(--gold);float:right;">$125</span></div>
+    <div class=prod-name>Kifaru Still Cold Brew Keg <span style="color:var(--gold);float:right;">$125</span></div>
     <div class=prod-detail>5-gallon keg &middot; Smooth, bold, low-acid. Delivered ready to tap.</div>
     <div class=qty-add-row>
       <div class=qty-wrap>
@@ -107,7 +107,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
     </div>
   </div>
   <div class=prod-card style="margin-bottom:14px;">
-    <div class=prod-name>Kifaru Nitro Keg <span style="color:var(--gold);float:right;">$130</span></div>
+    <div class=prod-name>Kifaru Nitro Cold Brew Keg <span style="color:var(--gold);float:right;">$130</span></div>
     <div class=prod-detail>5-gallon keg &middot; Cascading, creamy texture straight from the tap.</div>
     <div class=qty-add-row>
       <div class=qty-wrap>
@@ -292,7 +292,7 @@ function vipSetKegQty(key,d){
 }
 function vipAddKeg(key){
   var qty=vipKegQtys[key]||1;
-  var name=key==='keg-cold'?'Kifaru Still Keg':'Kifaru Nitro Keg';
+  var name=key==='keg-cold'?'Kifaru Still Cold Brew Keg':'Kifaru Nitro Cold Brew Keg';
   var price=key==='keg-cold'?KEG_COLD:KEG_NITRO;
   var existing=vipCart.find(function(i){return i.key===key;});
   if(existing){existing.qty+=qty;}
