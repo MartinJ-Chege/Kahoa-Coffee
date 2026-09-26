@@ -299,7 +299,12 @@ async function cbInitCard(){
 }
 window.addEventListener('load',function(){cbInitCard();});
 async function cbSubmit(){
-  if(!cbSelectedPkg){return;}
+  if(!cbSelectedPkg){
+    var pkgErrEl=document.getElementById('cb-err');
+    pkgErrEl.textContent='Please choose a package above before booking.';
+    pkgErrEl.style.display='block';
+    return;
+  }
   var name=document.getElementById('cb-name').value.trim();
   var email=document.getElementById('cb-email').value.trim();
   var phone=document.getElementById('cb-phone').value.trim();
