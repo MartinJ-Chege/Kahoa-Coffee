@@ -59,7 +59,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
 .modal-body{padding:24px;}
 .field{margin-bottom:14px;}
 .field label{display:block;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text-mid);margin-bottom:5px;font-weight:600;}
-.field input{width:100%;border:1px solid var(--border);padding:11px 13px;font-family:'Montserrat',sans-serif;font-size:13px;background:var(--warm-white);color:var(--text-dark);outline:none;}
+.field input,.field select{width:100%;border:1px solid var(--border);padding:11px 13px;font-family:'Montserrat',sans-serif;font-size:13px;background:var(--warm-white);color:var(--text-dark);outline:none;}
 .field input:focus{border-color:var(--gold);}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .order-summary{background:#f5ede0;padding:14px 18px;margin-bottom:18px;}
@@ -107,7 +107,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
   <div id=cb-packages style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
     <div class="prod-card cb-pkg" data-pkg="essentials" onclick="cbSelectPkg('essentials')" style="cursor:pointer;">
       <div class=prod-name>Essentials <span style="color:var(--gold);float:right;">$650</span></div>
-      <div class=prod-detail>2 hours &middot; up to ~50 guests &middot; 1 barista &middot; drip + <span style="color:#4a90d9;">Kifaru Classic Cold Brew</span></div>
+      <div class=prod-detail>2 hours &middot; up to ~50 guests &middot; 1 barista &middot; drip + <span style="color:#4a90d9;">Kifaru Classic or Spice Cold Brew</span></div>
     </div>
     <div class="prod-card cb-pkg" data-pkg="premium" onclick="cbSelectPkg('premium')" style="cursor:pointer;border-color:var(--gold);">
       <div class=prod-name>Premium &#9733; <span style="color:var(--gold);float:right;">$1,100</span></div>
@@ -118,6 +118,15 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
       <div class=prod-detail>4+ hours &middot; 150+ guests &middot; 2&ndash;3 baristas &middot; co-branded cart &amp; signage &middot; latte art printer included</div>
     </div>
   </div>
+
+  <p class=sec-label>Cold Brew Flavor</p>
+  <div class=field style="margin-bottom:20px;">
+    <select id=cb-flavor>
+      <option value="Kifaru Classic Cold Brew">Kifaru Classic &mdash; smooth, original</option>
+      <option value="Kifaru Spice Cold Brew">Kifaru Spice &mdash; ginger, cardamom, clove &amp; vanilla bean</option>
+    </select>
+  </div>
+  <p class=sub style="font-size:11px;margin-top:-14px;margin-bottom:20px;">Premium &amp; Full Experience also pour Kifaru Nitro (Draft) on tap alongside your still cold brew flavor above.</p>
 
   <p class=sec-label>Add-Ons</p>
   <div style="display:flex;flex-direction:column;gap:2px;margin-bottom:20px;">
@@ -312,6 +321,7 @@ async function cbSubmit(){
   var date=document.getElementById('cb-date').value;
   var time=document.getElementById('cb-time').value;
   var guests=Math.max(1,parseInt(document.getElementById('cb-guests').value)||1);
+  var flavorChoice=document.getElementById('cb-flavor').value;
   var signature=document.getElementById('cb-signature').value.trim();
   var agreedTerms=document.getElementById('cb-agree-terms').checked;
   var agreedOverage=document.getElementById('cb-agree-overage').checked;
@@ -374,13 +384,13 @@ async function cbSubmit(){
       btn.style.display='none';
       if(typeof emailjs!=='undefined'){
         emailjs.init(EJKEY);
-        var notes='Package: '+pkgName+' ($'+pkgPrice.toFixed(2)+'). Add-ons: '+addonSummary+'. Subtotal: $'+preTax.toFixed(2)+'. Tax (8.25%): $'+taxTotal.toFixed(2)+'. Event total: $'+grandTotal.toFixed(2)+'. Charged today ('+(payType==='deposit'?'30% deposit':'paid in full, 5% discount applied')+'): $'+chargeNow.toFixed(2)+'. '+(payType==='deposit'?'Balance due 7 days before event: $'+(grandTotal-chargeNow).toFixed(2)+'.':'Discount savings: $'+(grandTotal-chargeNow).toFixed(2)+'.')+' Event time: '+time+'. Signed: '+signature+'. Overage/overtime authorization: '+(agreedOverage?'YES':'NO')+'.';
+        var notes='Package: '+pkgName+' ($'+pkgPrice.toFixed(2)+'). Cold Brew Flavor: '+flavorChoice+'. Add-ons: '+addonSummary+'. Subtotal: $'+preTax.toFixed(2)+'. Tax (8.25%): $'+taxTotal.toFixed(2)+'. Event total: $'+grandTotal.toFixed(2)+'. Charged today ('+(payType==='deposit'?'30% deposit':'paid in full, 5% discount applied')+'): $'+chargeNow.toFixed(2)+'. '+(payType==='deposit'?'Balance due 7 days before event: $'+(grandTotal-chargeNow).toFixed(2)+'.':'Discount savings: $'+(grandTotal-chargeNow).toFixed(2)+'.')+' Event time: '+time+'. Signed: '+signature+'. Overage/overtime authorization: '+(agreedOverage?'YES':'NO')+'.';
         var tp={to_email:'info@kahoa.shop',order_type:'VIP COFFEE CART BOOKING',customer_name:name,customer_email:email,customer_phone:phone,customer_address:location,product_name:'Coffee Cart \u2014 '+pkgName,grind:date+' '+time,price:'$'+chargeNow.toFixed(2)+' charged today',notes:notes};
         emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error('Cart booking email error',e);});
         var custTp=Object.assign({},tp,{to_email:email,order_type:'Your Kahoa Coffee Cart Booking'});
         emailjs.send(EJSVC,EJTMPL,custTp).catch(function(e){console.error('Cust email error',e);});
       }
-      try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:phone,product:'Coffee Cart Booking \u2014 '+pkgName,grind:date,total:'$'+grandTotal.toFixed(2)+' ('+(payType==='deposit'?'30% deposit paid':'paid in full')+')',coupon:'',address:location,opted_in:'Yes',source:'kahoa.shop/vip-cart'})}).catch(function(){});}catch(e){}
+      try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:phone,product:'Coffee Cart Booking \u2014 '+pkgName+' ('+flavorChoice+')',grind:date,total:'$'+grandTotal.toFixed(2)+' ('+(payType==='deposit'?'30% deposit paid':'paid in full')+')',coupon:'',address:location,opted_in:'Yes',source:'kahoa.shop/vip-cart'})}).catch(function(){});}catch(e){}
     }else{
       throw new Error((data.detail&&data.detail.errors&&data.detail.errors[0]&&data.detail.errors[0].detail)||data.error||'Please try again.');
     }

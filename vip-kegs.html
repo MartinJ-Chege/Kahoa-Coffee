@@ -118,6 +118,18 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
       <button class=add-btn onclick="vipAddKeg('keg-nitro')">Add to Order &rarr;</button>
     </div>
   </div>
+  <div class=prod-card style="margin-bottom:14px;">
+    <div class=prod-name style="color:#4a90d9;">Kifaru Spice Cold Brew Keg <span style="color:#4a90d9;float:right;">$140</span></div>
+    <div class=prod-detail>5-gallon keg &middot; Ginger, cardamom, clove &amp; vanilla bean. Delivered ready to tap.</div>
+    <div class=qty-add-row>
+      <div class=qty-wrap>
+        <button class=qty-btn onclick="vipSetKegQty('keg-spice',-1)">&minus;</button>
+        <span class=qty-num id="kq-keg-spice">1</span>
+        <button class=qty-btn onclick="vipSetKegQty('keg-spice',1)">+</button>
+      </div>
+      <button class=add-btn onclick="vipAddKeg('keg-spice')">Add to Order &rarr;</button>
+    </div>
+  </div>
   <div class=prod-card style="margin-bottom:20px;">
     <div class=prod-name>Kegerator Lease <span style="color:var(--gold);float:right;">$50/mo</span></div>
     <div class=prod-detail>Waived automatically with a standing 2+ keg/month order. Already have your own tap system? Skip the lease and just order kegs.</div>
@@ -271,7 +283,8 @@ async function vipStartLease(){
 
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script>
-var KEG_COLD=125,KEG_NITRO=130,LEASE_PRICE=50;
+var KEG_COLD=125,KEG_NITRO=130,KEG_SPICE=140,LEASE_PRICE=50;
+var KEG_INFO={'keg-cold':{name:'Kifaru Classic Cold Brew Keg',price:KEG_COLD},'keg-nitro':{name:'Kifaru Nitro (Draft) Cold Brew Keg',price:KEG_NITRO},'keg-spice':{name:'Kifaru Spice Cold Brew Keg',price:KEG_SPICE}};
 var vipCart=[];
 var vipPayments=null,vipCard=null;
 var SQUARE_APP_ID='sq0idp-khlBwyn6FQYmXDU8zxjAiQ';
@@ -285,15 +298,15 @@ function vipRemove(idx){
   vipCart.splice(idx,1);
   vipRenderCart();
 }
-var vipKegQtys={'keg-cold':1,'keg-nitro':1};
+var vipKegQtys={'keg-cold':1,'keg-nitro':1,'keg-spice':1};
 function vipSetKegQty(key,d){
   vipKegQtys[key]=Math.max(1,Math.min(20,(vipKegQtys[key]||1)+d));
   document.getElementById('kq-'+key).textContent=vipKegQtys[key];
 }
 function vipAddKeg(key){
   var qty=vipKegQtys[key]||1;
-  var name=key==='keg-cold'?'Kifaru Classic Cold Brew Keg':'Kifaru Nitro (Draft) Cold Brew Keg';
-  var price=key==='keg-cold'?KEG_COLD:KEG_NITRO;
+  var name=(KEG_INFO[key]||{}).name||key;
+  var price=(KEG_INFO[key]||{}).price||0;
   var existing=vipCart.find(function(i){return i.key===key;});
   if(existing){existing.qty+=qty;}
   else{vipCart.push({key:key,name:name,grind:null,grindLabel:'Keg',qty:qty,price:price,unit:'keg'});}
