@@ -115,7 +115,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
     </div>
     <div class="prod-card cb-pkg" data-pkg="full" onclick="cbSelectPkg('full')" style="cursor:pointer;">
       <div class=prod-name>Full Experience <span style="color:var(--gold);float:right;">$1,850</span></div>
-      <div class=prod-detail>4+ hours &middot; 150+ guests &middot; 2&ndash;3 baristas &middot; co-branded cart &amp; signage &middot; custom signature drinks, full custom-printed cups &amp; latte art printer included</div>
+      <div class=prod-detail>4+ hours &middot; 150+ guests &middot; 2&ndash;3 baristas &middot; co-branded cart &amp; signage &middot; custom signature drinks &amp; latte art printer included</div>
     </div>
   </div>
 
@@ -149,7 +149,8 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
       <span><input type=checkbox id=cb-addon-latte onchange=cbCalc()> Latte Art Printer (photos, logos, monograms &amp; messages on every cup)</span><span id=cb-price-latte style="color:var(--gold);">+$175.00</span>
     </label>
   </div>
-  <p class=sub style="font-size:11px;margin-top:-14px;margin-bottom:20px;">DJ pricing scales with your package &mdash; select a package above to see the price. Booking confirmed with our partner DJ within 24 hrs. Latte Art Printer turns any cup into a keepsake &mdash; couple's initials or a first dance photo for weddings, a company logo for corporate events, "Happy Birthday" or a baby's name for celebrations, team colors and mascots for game days. Custom Signature Drinks, Full Custom-Printed Cups, and the Latte Art Printer are all included free with Full Experience.</p>
+  <p id=cb-branding-leadtime style="font-size:11px;color:var(--gold);margin:-6px 0 10px;display:none;"></p>
+  <p class=sub style="font-size:11px;margin-top:-2px;margin-bottom:20px;">DJ pricing scales with your package &mdash; select a package above to see the price. Booking confirmed with our partner DJ within 24 hrs. Latte Art Printer turns any cup into a keepsake &mdash; couple's initials or a first dance photo for weddings, a company logo for corporate events, "Happy Birthday" or a baby's name for celebrations, team colors and mascots for game days. Custom Signature Drinks and the Latte Art Printer are included free with Full Experience. Logo Stickers and Full Custom-Printed Cups are custom branding made specifically for your event &mdash; billed separately and paid in full at booking, before your standard service deposit.</p>
 
   <div class=cart-totals style="display:block;margin-bottom:20px;">
     <div class=cart-row><span>Package</span><span id=cb-pkg-total>$0.00</span></div>
@@ -265,28 +266,19 @@ function cbCalc(){
   }
   sigOn=sigCb.checked;
 
-  var printIncluded=cbSelectedPkg==='full';
   var printCb=document.getElementById('cb-addon-print');
-  var printPriceEl=document.getElementById('cb-price-print');
-  if(printIncluded){
-    printCb.checked=true;printCb.disabled=true;printCb.dataset.autoChecked='1';
-    printPriceEl.textContent='Included ✓';printPriceEl.style.color='#2a7a3b';
-  }else{
-    printCb.disabled=false;
-    if(printCb.dataset.autoChecked==='1'){printCb.checked=false;delete printCb.dataset.autoChecked;}
-  }
   printOn=printCb.checked;
 
   var teaPrice=guests*ADDON_TEA;
   var sigPrice=sigIncluded?0:ADDON_SIGDRINK;
   var stickerPrice=Math.max(ADDON_STICKER_MIN,guests*ADDON_STICKER_RATE);
-  var printPrice=printIncluded?0:Math.max(ADDON_PRINT_MIN,guests*ADDON_PRINT_RATE);
+  var printPrice=Math.max(ADDON_PRINT_MIN,guests*ADDON_PRINT_RATE);
   var djPrice=cbSelectedPkg?DJ_PRICE[cbSelectedPkg]:0;
   var lattePrice=latteIncluded?0:ADDON_LATTE;
 
   document.getElementById('cb-price-tea').textContent='+$'+teaPrice.toFixed(2);
   document.getElementById('cb-price-sticker').textContent='+$'+stickerPrice.toFixed(2);
-  if(!printIncluded)printPriceEl.textContent='+$'+printPrice.toFixed(2);
+  document.getElementById('cb-price-print').textContent='+$'+printPrice.toFixed(2);
   document.getElementById('cb-price-dj').textContent='+$'+djPrice.toFixed(2);
 
   var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0)+(latteOn?lattePrice:0);
@@ -299,17 +291,38 @@ function cbCalc(){
   document.getElementById('cb-tax-total').textContent='$'+taxTotal.toFixed(2);
   document.getElementById('cb-grand-total').textContent='$'+grandTotal.toFixed(2);
 
-  var depositAmt=grandTotal*0.30;
-  var fullPayAmt=grandTotal*(1-CB_FULLPAY_DISCOUNT);
+  var brandingPreTax=(stickerOn?stickerPrice:0)+(printOn?printPrice:0);
+  var brandingTax=brandingPreTax*CB_TAX_RATE;
+  var brandingChargeNow=brandingPreTax+brandingTax;
+  var servicePreTax=preTax-brandingPreTax;
+  var serviceTax=servicePreTax*CB_TAX_RATE;
+  var serviceTotal=servicePreTax+serviceTax;
+
+  var depositAmt=serviceTotal*0.30+brandingChargeNow;
+  var fullPayAmt=serviceTotal*(1-CB_FULLPAY_DISCOUNT)+brandingChargeNow;
   document.getElementById('cb-deposit-amt').textContent='$'+depositAmt.toFixed(2);
   document.getElementById('cb-full-amt').textContent='$'+fullPayAmt.toFixed(2);
 
   var payType=document.querySelector('input[name=cb-paytype]:checked').value;
   var balanceNote=document.getElementById('cb-balance-note');
+  var brandingNote=brandingPreTax>0?' Custom branding ($'+brandingChargeNow.toFixed(2)+') is billed in full today, separate from your service deposit \u2014 it\u2019s produced specifically for your event.':'';
   if(payType==='deposit'){
-    balanceNote.textContent='Remaining $'+(grandTotal-depositAmt).toFixed(2)+' due 7 days before your event (invoiced separately).';
+    balanceNote.textContent='Remaining $'+(grandTotal-depositAmt).toFixed(2)+' due 7 days before your event (invoiced separately).'+brandingNote;
   }else{
-    balanceNote.textContent='Paid in full today \u2014 you save $'+(grandTotal-fullPayAmt).toFixed(2)+', nothing more due before your event.';
+    balanceNote.textContent='Paid in full today \u2014 you save $'+(serviceTotal-serviceTotal*(1-CB_FULLPAY_DISCOUNT)).toFixed(2)+' on service, nothing more due before your event.'+brandingNote;
+  }
+
+  var leadTimeNote=document.getElementById('cb-branding-leadtime');
+  if(leadTimeNote){
+    if(printOn){
+      leadTimeNote.textContent='Full Custom-Printed Cups need 21 business days (3 weeks) lead time \u2014 book early if this matters for your date.';
+      leadTimeNote.style.display='block';
+    }else if(stickerOn){
+      leadTimeNote.textContent='Logo Stickers need 10 business days lead time \u2014 book early if this matters for your date.';
+      leadTimeNote.style.display='block';
+    }else{
+      leadTimeNote.style.display='none';
+    }
   }
 
   var btn=document.getElementById('cb-pay-btn');
@@ -365,10 +378,9 @@ async function cbSubmit(){
   var latteIncluded=cbSelectedPkg==='full';
   var latteOn=document.getElementById('cb-addon-latte').checked;
   var sigIncluded=cbSelectedPkg==='full';
-  var printIncluded=cbSelectedPkg==='full';
   var teaPrice=guests*ADDON_TEA,sigPrice=sigIncluded?0:ADDON_SIGDRINK;
   var stickerPrice=Math.max(ADDON_STICKER_MIN,guests*ADDON_STICKER_RATE);
-  var printPrice=printIncluded?0:Math.max(ADDON_PRINT_MIN,guests*ADDON_PRINT_RATE);
+  var printPrice=Math.max(ADDON_PRINT_MIN,guests*ADDON_PRINT_RATE);
   var djPrice=DJ_PRICE[cbSelectedPkg];
   var lattePrice=latteIncluded?0:ADDON_LATTE;
   var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0)+(latteOn?lattePrice:0);
@@ -376,13 +388,17 @@ async function cbSubmit(){
   var taxTotal=preTax*CB_TAX_RATE;
   var grandTotal=preTax+taxTotal;
   var payType=document.querySelector('input[name=cb-paytype]:checked').value;
-  var chargeNow=payType==='deposit'?grandTotal*0.30:grandTotal*(1-CB_FULLPAY_DISCOUNT);
+  var brandingPreTax=(stickerOn?stickerPrice:0)+(printOn?printPrice:0);
+  var brandingChargeNow=brandingPreTax+brandingPreTax*CB_TAX_RATE;
+  var servicePreTax=preTax-brandingPreTax;
+  var serviceTotal=servicePreTax+servicePreTax*CB_TAX_RATE;
+  var chargeNow=(payType==='deposit'?serviceTotal*0.30:serviceTotal*(1-CB_FULLPAY_DISCOUNT))+brandingChargeNow;
 
   var addonList=[];
   if(teaOn)addonList.push('Hot Tea & Cocoa ($'+teaPrice.toFixed(2)+')');
   if(sigOn)addonList.push(sigIncluded?'Custom Signature Drinks (Included with Full Experience)':'Custom Signature Drinks ($'+sigPrice.toFixed(2)+')');
-  if(stickerOn)addonList.push('Logo Stickers ($'+stickerPrice.toFixed(2)+')');
-  if(printOn)addonList.push(printIncluded?'Full Custom-Printed Cups (Included with Full Experience)':'Full Custom-Printed Cups ($'+printPrice.toFixed(2)+')');
+  if(stickerOn)addonList.push('Logo Stickers ($'+stickerPrice.toFixed(2)+', billed in full at booking)');
+  if(printOn)addonList.push('Full Custom-Printed Cups ($'+printPrice.toFixed(2)+', billed in full at booking)');
   if(djOn)addonList.push('Event DJ ($'+djPrice.toFixed(2)+')');
   if(latteOn)addonList.push(latteIncluded?'Latte Art Printer (Included with Full Experience)':'Latte Art Printer ($'+lattePrice.toFixed(2)+')');
   var addonSummary=addonList.length?addonList.join(', '):'None';
