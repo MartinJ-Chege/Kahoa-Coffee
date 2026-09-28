@@ -115,7 +115,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
     </div>
     <div class="prod-card cb-pkg" data-pkg="full" onclick="cbSelectPkg('full')" style="cursor:pointer;">
       <div class=prod-name>Full Experience <span style="color:var(--gold);float:right;">$1,850</span></div>
-      <div class=prod-detail>4+ hours &middot; 150+ guests &middot; 2&ndash;3 baristas &middot; co-branded cart &amp; signage &middot; latte art printer included</div>
+      <div class=prod-detail>4+ hours &middot; 150+ guests &middot; 2&ndash;3 baristas &middot; co-branded cart &amp; signage &middot; custom signature drinks, full custom-printed cups &amp; latte art printer included</div>
     </div>
   </div>
 
@@ -139,7 +139,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
     <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
       <span><input type=checkbox id=cb-addon-sticker onchange=cbCalc()> Logo Stickers on Cups</span><span id=cb-price-sticker style="color:var(--gold);">+$125.00</span>
     </label>
-    <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
+    <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;" id=cb-print-row>
       <span><input type=checkbox id=cb-addon-print onchange=cbCalc()> Full Custom-Printed Cups</span><span id=cb-price-print style="color:var(--gold);">+$325.00</span>
     </label>
     <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
@@ -149,7 +149,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
       <span><input type=checkbox id=cb-addon-latte onchange=cbCalc()> Latte Art Printer (photos, logos, monograms &amp; messages on every cup)</span><span id=cb-price-latte style="color:var(--gold);">+$175.00</span>
     </label>
   </div>
-  <p class=sub style="font-size:11px;margin-top:-14px;margin-bottom:20px;">DJ pricing scales with your package &mdash; select a package above to see the price. Booking confirmed with our partner DJ within 24 hrs. Latte Art Printer turns any cup into a keepsake &mdash; couple's initials or a first dance photo for weddings, a company logo for corporate events, "Happy Birthday" or a baby's name for celebrations, team colors and mascots for game days. Included free with Full Experience.</p>
+  <p class=sub style="font-size:11px;margin-top:-14px;margin-bottom:20px;">DJ pricing scales with your package &mdash; select a package above to see the price. Booking confirmed with our partner DJ within 24 hrs. Latte Art Printer turns any cup into a keepsake &mdash; couple's initials or a first dance photo for weddings, a company logo for corporate events, "Happy Birthday" or a baby's name for celebrations, team colors and mascots for game days. Custom Signature Drinks, Full Custom-Printed Cups, and the Latte Art Printer are all included free with Full Experience.</p>
 
   <div class=cart-totals style="display:block;margin-bottom:20px;">
     <div class=cart-row><span>Package</span><span id=cb-pkg-total>$0.00</span></div>
@@ -252,17 +252,41 @@ function cbCalc(){
   }
   var latteOn=latteCb.checked;
 
+  var sigIncluded=cbSelectedPkg==='full';
+  var sigCb=document.getElementById('cb-addon-sig');
+  var sigPriceEl=document.getElementById('cb-price-sig');
+  if(sigIncluded){
+    sigCb.checked=true;sigCb.disabled=true;sigCb.dataset.autoChecked='1';
+    sigPriceEl.textContent='Included ✓';sigPriceEl.style.color='#2a7a3b';
+  }else{
+    sigCb.disabled=false;
+    if(sigCb.dataset.autoChecked==='1'){sigCb.checked=false;delete sigCb.dataset.autoChecked;}
+    sigPriceEl.textContent='+$'+ADDON_SIGDRINK.toFixed(2);sigPriceEl.style.color='var(--gold)';
+  }
+  sigOn=sigCb.checked;
+
+  var printIncluded=cbSelectedPkg==='full';
+  var printCb=document.getElementById('cb-addon-print');
+  var printPriceEl=document.getElementById('cb-price-print');
+  if(printIncluded){
+    printCb.checked=true;printCb.disabled=true;printCb.dataset.autoChecked='1';
+    printPriceEl.textContent='Included ✓';printPriceEl.style.color='#2a7a3b';
+  }else{
+    printCb.disabled=false;
+    if(printCb.dataset.autoChecked==='1'){printCb.checked=false;delete printCb.dataset.autoChecked;}
+  }
+  printOn=printCb.checked;
+
   var teaPrice=guests*ADDON_TEA;
-  var sigPrice=ADDON_SIGDRINK;
+  var sigPrice=sigIncluded?0:ADDON_SIGDRINK;
   var stickerPrice=Math.max(ADDON_STICKER_MIN,guests*ADDON_STICKER_RATE);
-  var printPrice=Math.max(ADDON_PRINT_MIN,guests*ADDON_PRINT_RATE);
+  var printPrice=printIncluded?0:Math.max(ADDON_PRINT_MIN,guests*ADDON_PRINT_RATE);
   var djPrice=cbSelectedPkg?DJ_PRICE[cbSelectedPkg]:0;
   var lattePrice=latteIncluded?0:ADDON_LATTE;
 
   document.getElementById('cb-price-tea').textContent='+$'+teaPrice.toFixed(2);
-  document.getElementById('cb-price-sig').textContent='+$'+sigPrice.toFixed(2);
   document.getElementById('cb-price-sticker').textContent='+$'+stickerPrice.toFixed(2);
-  document.getElementById('cb-price-print').textContent='+$'+printPrice.toFixed(2);
+  if(!printIncluded)printPriceEl.textContent='+$'+printPrice.toFixed(2);
   document.getElementById('cb-price-dj').textContent='+$'+djPrice.toFixed(2);
 
   var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0)+(latteOn?lattePrice:0);
@@ -340,9 +364,11 @@ async function cbSubmit(){
   var djOn=document.getElementById('cb-addon-dj').checked;
   var latteIncluded=cbSelectedPkg==='full';
   var latteOn=document.getElementById('cb-addon-latte').checked;
-  var teaPrice=guests*ADDON_TEA,sigPrice=ADDON_SIGDRINK;
+  var sigIncluded=cbSelectedPkg==='full';
+  var printIncluded=cbSelectedPkg==='full';
+  var teaPrice=guests*ADDON_TEA,sigPrice=sigIncluded?0:ADDON_SIGDRINK;
   var stickerPrice=Math.max(ADDON_STICKER_MIN,guests*ADDON_STICKER_RATE);
-  var printPrice=Math.max(ADDON_PRINT_MIN,guests*ADDON_PRINT_RATE);
+  var printPrice=printIncluded?0:Math.max(ADDON_PRINT_MIN,guests*ADDON_PRINT_RATE);
   var djPrice=DJ_PRICE[cbSelectedPkg];
   var lattePrice=latteIncluded?0:ADDON_LATTE;
   var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0)+(latteOn?lattePrice:0);
@@ -354,9 +380,9 @@ async function cbSubmit(){
 
   var addonList=[];
   if(teaOn)addonList.push('Hot Tea & Cocoa ($'+teaPrice.toFixed(2)+')');
-  if(sigOn)addonList.push('Custom Signature Drinks ($'+sigPrice.toFixed(2)+')');
+  if(sigOn)addonList.push(sigIncluded?'Custom Signature Drinks (Included with Full Experience)':'Custom Signature Drinks ($'+sigPrice.toFixed(2)+')');
   if(stickerOn)addonList.push('Logo Stickers ($'+stickerPrice.toFixed(2)+')');
-  if(printOn)addonList.push('Full Custom-Printed Cups ($'+printPrice.toFixed(2)+')');
+  if(printOn)addonList.push(printIncluded?'Full Custom-Printed Cups (Included with Full Experience)':'Full Custom-Printed Cups ($'+printPrice.toFixed(2)+')');
   if(djOn)addonList.push('Event DJ ($'+djPrice.toFixed(2)+')');
   if(latteOn)addonList.push(latteIncluded?'Latte Art Printer (Included with Full Experience)':'Latte Art Printer ($'+lattePrice.toFixed(2)+')');
   var addonSummary=addonList.length?addonList.join(', '):'None';
