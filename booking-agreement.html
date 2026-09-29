@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<meta name=robots content="noindex,nofollow">
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Kahoa Coffee — Booking Agreement</title>
+<link rel=icon type=image/png href=/kahoalogo.png>
+<link rel=apple-touch-icon href=/kahoalogo.png>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@300;400;500;600;700&display=swap" rel=stylesheet>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+html{scroll-behavior:smooth;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--gold:#D4A843;--gold-light:#E8C878;--coffee-dark:#1C0E06;--warm-white:#FDF8EF;--text-dark:#1A0C05;--text-mid:#4A2A14;--border:rgba(168,110,60,0.18);--keg:#4a90d9;}
+body{font-family:'Montserrat',sans-serif;background:var(--coffee-dark);color:#fff;min-height:100vh;}
+.wrap{max-width:640px;margin:0 auto;padding:32px 16px 80px;}
+.logo{text-align:center;margin-bottom:28px;}
+.logo img{height:52px;width:auto;}
+.hero{text-align:center;margin-bottom:28px;}
+.badge{display:inline-block;background:rgba(212,168,67,0.15);border:1px solid rgba(212,168,67,0.4);color:var(--gold);font-size:10px;letter-spacing:3px;text-transform:uppercase;padding:5px 14px;margin-bottom:14px;}
+h1{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;line-height:1.2;margin-bottom:8px;}
+.sub{font-size:12px;color:rgba(255,255,255,0.45);line-height:1.7;}
+.sec-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(212,168,67,0.6);font-weight:600;margin-bottom:12px;}
+.toggle-row{display:flex;gap:8px;margin-bottom:24px;}
+.toggle-btn{flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(212,168,67,0.25);color:rgba(255,255,255,0.6);padding:12px 8px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:4px;}
+.toggle-btn.active{border-color:var(--gold);background:rgba(212,168,67,0.14);color:var(--gold);}
+.toggle-btn.keg-active{border-color:var(--keg);background:rgba(74,144,217,0.16);color:var(--keg);}
+.card{background:rgba(255,255,255,0.03);border:1px solid rgba(212,168,67,0.15);padding:20px;margin-bottom:20px;}
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:5px;font-weight:600;}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--border);padding:11px 13px;font-family:'Montserrat',sans-serif;font-size:13px;background:rgba(255,255,255,0.04);color:#fff;outline:none;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold);}
+.field textarea{resize:vertical;min-height:60px;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.terms-box{max-height:340px;overflow-y:auto;background:rgba(0,0,0,0.25);border:1px solid rgba(212,168,67,0.12);padding:16px 18px;font-size:12px;line-height:1.75;color:rgba(255,255,255,0.72);margin-bottom:18px;}
+.terms-box h3{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold);font-weight:600;margin:16px 0 6px;}
+.terms-box h3:first-child{margin-top:0;}
+.terms-box p{margin-bottom:4px;}
+.agree-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:18px;font-size:12px;color:rgba(255,255,255,0.75);line-height:1.6;}
+.agree-row input{margin-top:3px;flex-shrink:0;}
+.sign-btn{width:100%;background:var(--gold);color:var(--coffee-dark);border:none;padding:15px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;}
+.sign-btn:disabled{opacity:0.4;cursor:not-allowed;}
+#ba-err{display:none;color:#e8a0a0;font-size:12px;padding:10px;background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.3);margin-bottom:14px;}
+#ba-success{display:none;text-align:center;padding:40px 20px;}
+#ba-success h2{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--gold);font-weight:400;margin-bottom:12px;}
+#ba-success p{font-size:13px;color:rgba(255,255,255,0.6);line-height:1.7;margin-bottom:18px;}
+#ba-continue{display:inline-block;background:var(--gold);color:var(--coffee-dark);text-decoration:none;padding:14px 28px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+</style>
+</head>
+<body>
+<div class=wrap>
+  <div class=logo><img src=/kahoalogo.png alt="Kahoa Coffee"></div>
+  <div class=hero>
+    <div><span class=badge>Booking Agreement</span></div>
+    <h1>Sign Your<br>Booking Agreement</h1>
+    <p class=sub>A quick digital agreement between you and Kahoa Coffee, covering deposits, timing, and what's included — so we're both on the same page before payment.<br>You'll get a signed copy in your email.</p>
+  </div>
+
+  <div style="position:sticky;top:0;z-index:50;display:flex;gap:8px;background:#0d0705;padding:12px 20px;margin:0 -20px 24px;border-bottom:1px solid rgba(212,168,67,0.25);">
+    <a href="/vip.html" style="flex:1;text-align:center;background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.35);color:var(--gold);text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Coffee</a>
+    <a href="/vip-kegs.html" style="flex:1;text-align:center;background:rgba(74,144,217,0.14);border:1px solid #4a90d9;color:#4a90d9;text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Keg Program</a>
+    <a href="/vip-cart.html" style="flex:1;text-align:center;background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.35);color:var(--gold);text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Mobile Cart</a>
+    <a href="/booking-agreement.html" style="flex:1;text-align:center;background:rgba(212,168,67,0.25);border:1px solid var(--gold);color:var(--gold);text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Agreement</a>
+  </div>
+
+  <form id=ba-form>
+  <div class=card>
+    <div class=sec-label>Which Service</div>
+    <div class=toggle-row>
+      <button type=button class="toggle-btn active" id=ba-tab-cart onclick="baSetService('cart')">Mobile Coffee Cart</button>
+      <button type=button class=toggle-btn id=ba-tab-keg onclick="baSetService('keg')">Keg Program</button>
+    </div>
+
+    <div class=sec-label>Event Details</div>
+    <div class=field><label>Your Full Name (Client) *</label><input id=ba-name required placeholder="e.g. Jane Doe"></div>
+    <div class=two-col>
+      <div class=field><label>Email *</label><input id=ba-email type=email required placeholder="you@email.com"></div>
+      <div class=field><label>Phone</label><input id=ba-phone placeholder="(512) 555-1234"></div>
+    </div>
+    <div class=two-col>
+      <div class=field><label>Event Date *</label><input id=ba-date type=date required></div>
+      <div class=field><label id=ba-count-label>Guest Count *</label><input id=ba-count type=number required placeholder="e.g. 175"></div>
+    </div>
+    <div class=field><label>Event Location *</label><input id=ba-location required placeholder="Venue name & city"></div>
+    <div class=field><label id=ba-order-label>Package / Order Details *</label><textarea id=ba-order required placeholder="e.g. Full Experience package, custom signature drinks, latte art printer"></textarea></div>
+    <div class=field><label>Total Quoted Price</label><input id=ba-price placeholder="e.g. $2,002.63"></div>
+  </div>
+
+  <div class=card>
+    <div class=sec-label>Terms of Service</div>
+    <div class=terms-box id=ba-terms-cart>
+      <h3>Payment</h3>
+      <p>A 30% deposit is due at booking to hold your date, with the balance due 7 days before your event. Paying in full at booking earns a 5% discount on the service portion.</p>
+      <p>Custom branding items (logo stickers, full custom-printed cups) are billed in full at booking, separate from and in addition to the deposit, since they are produced specifically for your event and cannot be reused. Full Custom-Printed Cups require 21 business days' lead time; Logo Stickers require 10 business days.</p>
+      <h3>Overtime</h3>
+      <p>Service beyond the hours included in your package is billed at $150 per additional hour, charged after the event.</p>
+      <h3>Guest Count</h3>
+      <p>Final guest count is due 7 days before your event. Increases after that point may incur additional staffing or product costs, quoted separately.</p>
+      <h3>Cancellation &amp; Rescheduling</h3>
+      <p>Deposits are non-refundable. Cancelling more than 30 days before your event forfeits the deposit only. Cancelling within 30 days incurs 50% of the remaining balance; within 7 days or a no-show incurs the full balance. One free reschedule is available with 14+ days' notice, subject to availability. Branding items already in production are non-refundable regardless of timing.</p>
+      <h3>Venue &amp; Setup</h3>
+      <p>Client is responsible for providing a suitable, level setup space with access to a standard power outlet within 25 ft, and any permits required by the venue or city. Kahoa Coffee may adjust or pause outdoor service for severe weather or safety, with no refund for time missed due to conditions outside our control.</p>
+      <h3>Liability</h3>
+      <p>Kahoa Coffee carries general liability insurance for on-site event service.</p>
+    </div>
+    <div class=terms-box id=ba-terms-keg style=display:none>
+      <h3>Payment</h3>
+      <p>A 30% deposit is due at booking to hold your date, with the balance due 7 days before your event. Paying in full at booking earns a 5% discount.</p>
+      <h3>Equipment</h3>
+      <p>The kegerator and all serving equipment remain the property of Kahoa Coffee. Client is responsible for the equipment while it is in their possession; lost or damaged equipment is billed at replacement cost. Kegs and kegerator lease are billed for the agreed rental period, with pickup date set at booking.</p>
+      <h3>Guest / Keg Count</h3>
+      <p>Final keg count and guest estimate are due 7 days before your event. Additional kegs needed on the day are billed separately, subject to availability.</p>
+      <h3>Cancellation &amp; Rescheduling</h3>
+      <p>Deposits are non-refundable. Cancelling more than 30 days before your event forfeits the deposit only. Cancelling within 30 days incurs 50% of the remaining balance; within 7 days or a no-show incurs the full balance. One free reschedule is available with 14+ days' notice, subject to availability.</p>
+      <h3>Venue &amp; Setup</h3>
+      <p>Client is responsible for providing a suitable, level, and accessible space for delivery, pickup, and safe operation of the equipment, and any permits required by the venue or city.</p>
+      <h3>Liability</h3>
+      <p>Kahoa Coffee carries general liability insurance for on-site event service.</p>
+    </div>
+    <p style="font-size:10px;color:rgba(255,255,255,0.35);margin-bottom:16px;">This is a digital operating agreement between you and Kahoa Coffee to guide our booking and event-day process — it is not intended as a substitute for a lawyer-drafted contract.</p>
+    <div class=agree-row>
+      <input type=checkbox id=ba-agree required>
+      <label for=ba-agree>I have read and agree to the terms above, and I understand that typing my name below serves as my signature.</label>
+    </div>
+    <div class=field><label>Type Your Full Name To Sign *</label><input id=ba-signature required placeholder="Type your full legal name"></div>
+    <div id=ba-err></div>
+    <button type=submit class=sign-btn id=ba-submit>Sign Agreement</button>
+  </div>
+  </form>
+
+  <div id=ba-success>
+    <h2>Signed &amp; Sent</h2>
+    <p>Thanks — a copy of your signed agreement has been emailed to you. We've got it on file and will follow up with your payment link.</p>
+    <a id=ba-continue href="/vip-cart.html">Continue to Payment</a>
+  </div>
+</div>
+
+<script>
+var EMAILJS_SERVICE_ID="service_wsy9uog";
+var EMAILJS_BA_BUSINESS_TMPL="template_ba_business";
+var EMAILJS_BA_CUSTOMER_TMPL="template_ba_customer";
+window.addEventListener("load",function(){if(typeof emailjs!=="undefined"){emailjs.init({publicKey:"quYV-P5H4GYrFzjOw"});}});
+
+var baService="cart";
+function baSetService(s){
+  baService=s;
+  document.getElementById("ba-tab-cart").className="toggle-btn"+(s==="cart"?" active":"");
+  document.getElementById("ba-tab-keg").className="toggle-btn"+(s==="keg"?" keg-active":"");
+  document.getElementById("ba-terms-cart").style.display=s==="cart"?"block":"none";
+  document.getElementById("ba-terms-keg").style.display=s==="keg"?"block":"none";
+  document.getElementById("ba-count-label").textContent=s==="cart"?"Guest Count *":"Estimated Guest Count *";
+  document.getElementById("ba-order-label").textContent=s==="cart"?"Package / Order Details *":"Kegs & Equipment Ordered *";
+  document.getElementById("ba-order").placeholder=s==="cart"?"e.g. Full Experience package, custom signature drinks, latte art printer":"e.g. 2x Kifaru Classic Cold Brew Keg, 1x Kegerator Lease";
+  document.getElementById("ba-continue").href=s==="cart"?"/vip-cart.html":"/vip-kegs.html";
+}
+
+document.getElementById("ba-form").addEventListener("submit",function(e){
+  e.preventDefault();
+  var errEl=document.getElementById("ba-err");
+  errEl.style.display="none";
+  var name=document.getElementById("ba-name").value.trim();
+  var email=document.getElementById("ba-email").value.trim();
+  var phone=document.getElementById("ba-phone").value.trim();
+  var date=document.getElementById("ba-date").value;
+  var count=document.getElementById("ba-count").value.trim();
+  var location=document.getElementById("ba-location").value.trim();
+  var order=document.getElementById("ba-order").value.trim();
+  var price=document.getElementById("ba-price").value.trim();
+  var agree=document.getElementById("ba-agree").checked;
+  var signature=document.getElementById("ba-signature").value.trim();
+
+  if(!name||!email||!date||!count||!location||!order||!signature){
+    errEl.textContent="Please fill in all required fields marked with *.";
+    errEl.style.display="block";
+    return;
+  }
+  if(!agree){
+    errEl.textContent="Please check the box confirming you agree to the terms.";
+    errEl.style.display="block";
+    return;
+  }
+  if(signature.toLowerCase()!==name.toLowerCase()){
+    errEl.textContent="Your signature should match the full name you entered above.";
+    errEl.style.display="block";
+    return;
+  }
+
+  var signedAt=new Date().toLocaleString("en-US",{timeZone:"America/Chicago",dateStyle:"long",timeStyle:"short"})+" CT";
+  var serviceLabel=baService==="cart"?"Mobile Coffee Cart":"Keg Program";
+  var termsText=document.getElementById(baService==="cart"?"ba-terms-cart":"ba-terms-keg").innerText;
+
+  var baParams={
+    customer_name:name,
+    customer_email:email,
+    customer_phone:phone||"Not provided",
+    service_type:serviceLabel,
+    event_date:date,
+    guest_count:count,
+    location:location,
+    order_details:order,
+    quoted_price:price||"TBD",
+    signature:signature,
+    signed_at:signedAt,
+    terms_text:termsText,
+    to_email:email
+  };
+
+  var submitBtn=document.getElementById("ba-submit");
+  submitBtn.disabled=true;
+  submitBtn.textContent="Signing...";
+
+  var sendPromises=[];
+  if(typeof emailjs!=="undefined"){
+    sendPromises.push(emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_BA_BUSINESS_TMPL,baParams).catch(function(e){console.error("Agreement business email failed",e);}));
+    sendPromises.push(emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_BA_CUSTOMER_TMPL,baParams).catch(function(e){console.error("Agreement customer email failed",e);}));
+  }
+
+  try{
+    fetch("https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289hVmWtR1OKDqxLruwmKbRf_GkAwkiuEepPfk22Q/exec",{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:phone,product:"BOOKING AGREEMENT: "+serviceLabel,grind:"",total:count?count+" guests":"TBD",coupon:"",address:location,opted_in:"Signed",source:"booking-agreement",company:"",event_date:date,message:order+" | Signed as: "+signature+" | "+signedAt})}).catch(function(err){console.error("Agreement Sheet log FAILED:",err);});
+  }catch(e){console.error("Agreement Sheet log threw:",e);}
+
+  Promise.all(sendPromises).finally(function(){
+    document.getElementById("ba-form").style.display="none";
+    document.getElementById("ba-success").style.display="block";
+    window.scrollTo(0,0);
+  });
+});
+</script>
+</body>
+</html>
