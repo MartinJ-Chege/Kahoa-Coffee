@@ -119,6 +119,18 @@ h1{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;line-he
       <p>Kahoa Coffee carries general liability insurance for on-site event service.</p>
     </div>
     <p style="font-size:10px;color:rgba(255,255,255,0.35);margin-bottom:16px;">This is a digital operating agreement between you and Kahoa Coffee to guide our booking and event-day process — it is not intended as a substitute for a lawyer-drafted contract.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:20px;">
+      <div style="padding:14px 16px 14px 0;border-top:1px solid rgba(212,168,67,0.4);">
+        <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;margin:0 0 4px;color:#fff;" id=ba-kahoa-sig>Martin Kibuthu</p>
+        <p style="font-size:10px;color:rgba(255,255,255,0.4);margin:0;">Kahoa Coffee &middot; Signed <span id=ba-kahoa-date></span></p>
+      </div>
+      <div style="padding:14px 0 14px 16px;border-top:1px solid rgba(255,255,255,0.15);" id=ba-client-sig-col>
+        <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;margin:0 0 4px;color:rgba(255,255,255,0.25);" id=ba-client-sig-preview>Your signature</p>
+        <p style="font-size:10px;color:rgba(255,255,255,0.3);margin:0;">Client &middot; Not yet signed</p>
+      </div>
+    </div>
+
     <div class=agree-row>
       <input type=checkbox id=ba-agree required>
       <label for=ba-agree>I have read and agree to the terms above, and I understand that typing my name below serves as my signature.</label>
@@ -142,6 +154,24 @@ var EMAILJS_BA_TMPL="template_ba_signed";
 var KAHOA_SIGNATORY="Martin Kibuthu";
 var KAHOA_BUSINESS_EMAIL="info@kahoa.shop";
 window.addEventListener("load",function(){if(typeof emailjs!=="undefined"){emailjs.init({publicKey:"quYV-P5H4GYrFzjOw"});}});
+
+document.getElementById("ba-kahoa-date").textContent=new Date().toLocaleDateString("en-US",{timeZone:"America/Chicago",dateStyle:"long"});
+document.getElementById("ba-signature").addEventListener("input",function(){
+  var v=this.value.trim();
+  var preview=document.getElementById("ba-client-sig-preview");
+  var dateLabel=document.getElementById("ba-client-sig-col").querySelector("p:last-child");
+  if(v){
+    preview.textContent=v;
+    preview.style.color="#fff";
+    dateLabel.innerHTML="Client &middot; Signed "+new Date().toLocaleDateString("en-US",{timeZone:"America/Chicago",dateStyle:"long"});
+    dateLabel.style.color="rgba(255,255,255,0.4)";
+  }else{
+    preview.textContent="Your signature";
+    preview.style.color="rgba(255,255,255,0.25)";
+    dateLabel.innerHTML="Client &middot; Not yet signed";
+    dateLabel.style.color="rgba(255,255,255,0.3)";
+  }
+});
 
 var baService="cart";
 function baSetService(s){
