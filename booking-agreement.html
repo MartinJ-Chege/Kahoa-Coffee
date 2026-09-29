@@ -138,8 +138,9 @@ h1{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;line-he
 
 <script>
 var EMAILJS_SERVICE_ID="service_wsy9uog";
-var EMAILJS_BA_BUSINESS_TMPL="template_ba_business";
-var EMAILJS_BA_CUSTOMER_TMPL="template_ba_customer";
+var EMAILJS_BA_TMPL="template_ba_signed";
+var KAHOA_SIGNATORY="Martin Kibuthu";
+var KAHOA_BUSINESS_EMAIL="info@kahoa.shop";
 window.addEventListener("load",function(){if(typeof emailjs!=="undefined"){emailjs.init({publicKey:"quYV-P5H4GYrFzjOw"});}});
 
 var baService="cart";
@@ -186,7 +187,9 @@ document.getElementById("ba-form").addEventListener("submit",function(e){
     return;
   }
 
-  var signedAt=new Date().toLocaleString("en-US",{timeZone:"America/Chicago",dateStyle:"long",timeStyle:"short"})+" CT";
+  var now=new Date();
+  var signedAt=now.toLocaleString("en-US",{timeZone:"America/Chicago",dateStyle:"long",timeStyle:"short"})+" CT";
+  var signedDateOnly=now.toLocaleDateString("en-US",{timeZone:"America/Chicago",dateStyle:"long"});
   var serviceLabel=baService==="cart"?"Mobile Coffee Cart":"Keg Program";
   var termsText=document.getElementById(baService==="cart"?"ba-terms-cart":"ba-terms-keg").innerText;
 
@@ -202,6 +205,8 @@ document.getElementById("ba-form").addEventListener("submit",function(e){
     quoted_price:price||"TBD",
     signature:signature,
     signed_at:signedAt,
+    kahoa_signature:KAHOA_SIGNATORY,
+    kahoa_signed_date:signedDateOnly,
     terms_text:termsText,
     to_email:email
   };
@@ -212,8 +217,10 @@ document.getElementById("ba-form").addEventListener("submit",function(e){
 
   var sendPromises=[];
   if(typeof emailjs!=="undefined"){
-    sendPromises.push(emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_BA_BUSINESS_TMPL,baParams).catch(function(e){console.error("Agreement business email failed",e);}));
-    sendPromises.push(emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_BA_CUSTOMER_TMPL,baParams).catch(function(e){console.error("Agreement customer email failed",e);}));
+    var customerParams=Object.assign({},baParams,{to_email:email});
+    var businessParams=Object.assign({},baParams,{to_email:KAHOA_BUSINESS_EMAIL});
+    sendPromises.push(emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_BA_TMPL,customerParams).catch(function(e){console.error("Agreement customer email failed",e);}));
+    sendPromises.push(emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_BA_TMPL,businessParams).catch(function(e){console.error("Agreement business email failed",e);}));
   }
 
   try{
