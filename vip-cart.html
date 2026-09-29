@@ -86,11 +86,6 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
     <a href="/vip.html" style="flex:1;text-align:center;background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.35);color:var(--gold);text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Coffee</a>
     <a href="/vip-kegs.html" style="flex:1;text-align:center;background:rgba(74,144,217,0.14);border:1px solid rgba(74,144,217,0.4);color:#4a90d9;text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Keg Program</a>
     <a href="/vip-cart.html" style="flex:1;text-align:center;background:rgba(212,168,67,0.25);border:1px solid var(--gold);color:var(--gold);text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Mobile Cart</a>
-    <a href="/booking-agreement.html" style="flex:1;text-align:center;background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.35);color:var(--gold);text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Agreement</a>
-  </div>
-
-  <div style="background:rgba(212,168,67,0.08);border:1px solid rgba(212,168,67,0.3);padding:14px 16px;margin-bottom:24px;font-size:12px;color:rgba(255,255,255,0.75);line-height:1.6;">
-    Haven't signed your booking agreement yet? <a href="/booking-agreement.html" style="color:var(--gold);font-weight:600;">Sign it here first</a> — it only takes a minute and locks in the terms before you pay.
   </div>
 
   <!-- Mobile Coffee Cart Booking -->
@@ -188,21 +183,15 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
     <div class=field><input type=text id=cb-location placeholder="Event Location / Address"></div>
   </div>
 
-  <p class=sec-label style="margin-top:16px;">Sign &amp; Authorize</p>
-  <div class=field style="margin-bottom:10px;">
-    <label style="font-size:11px;color:rgba(255,255,255,0.5);">Type your full name as signature</label>
-    <input type=text id=cb-signature placeholder="Your full legal name">
+  <p class=sec-label style="margin-top:16px;">Service Agreement</p>
+  <div id=cb-agreement-box style="border:1px solid rgba(212,168,67,0.3);background:rgba(212,168,67,0.06);padding:14px 16px;margin-bottom:16px;font-size:12px;line-height:1.6;color:rgba(255,255,255,0.75);">Next step: review and sign your Service Agreement. Your booking details fill in automatically &mdash; you only type your name &mdash; then you'll come right back here to pay.</div>
+  <div id=cb-pay-section style="display:none;">
+    <label style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:rgba(255,255,255,0.6);line-height:1.6;margin-bottom:16px;">
+      <input type=checkbox id=cb-agree-overage style="margin-top:2px;">
+      <span>I authorize Kahoa Coffee to charge this card for overage fees ($7/guest beyond a 15% headcount buffer) and overtime ($140/hour) if incurred, per the Service Agreement.</span>
+    </label>
+    <div id=cb-card-el style="background:#fff;border-radius:4px;padding:4px;margin:12px 0;min-height:44px;"></div>
   </div>
-  <label style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:rgba(255,255,255,0.6);line-height:1.6;margin-bottom:10px;">
-    <input type=checkbox id=cb-agree-terms style="margin-top:2px;">
-    <span>I agree to the Coffee Cart Service Agreement, including payment terms and cancellation policy.</span>
-  </label>
-  <label style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:rgba(255,255,255,0.6);line-height:1.6;margin-bottom:16px;">
-    <input type=checkbox id=cb-agree-overage style="margin-top:2px;">
-    <span>I authorize Kahoa Coffee to charge this card for overage fees ($7/guest beyond a 15% headcount buffer) and overtime ($140/hour) if incurred, per Section 5 of the Service Agreement.</span>
-  </label>
-
-  <div id=cb-card-el style="background:#fff;border-radius:4px;padding:4px;margin:12px 0;min-height:44px;"></div>
   <div id=cb-err style="color:#e06a6a;font-size:12px;margin-bottom:8px;display:none;"></div>
   <button class=checkout-btn id=cb-pay-btn onclick=cbSubmit()>Select a package to continue</button>
   <div id=cb-success style="display:none;text-align:center;padding:16px 0;">
@@ -227,6 +216,98 @@ var EJSVC='service_wsy9uog',EJTMPL='template_8jwdv8c',EJKEY='quYV-P5H4GYrFzjOw';
 var AUSTIN_ZIPS='78701.78702.78703.78704.78705.78712.78717.78719.78721.78722.78723.78724.78725.78726.78727.78728.78729.78730.78731.78732.78733.78734.78735.78736.78737.78738.78739.78741.78742.78744.78745.78746.78747.78748.78749.78750.78751.78752.78753.78754.78756.78757.78758.78759.78653.78660.78664.78665.78681.78613.78626.78627.78628.78633.78640.78610.78621'.split('.');
 
 var cbSelectedPkg=null;
+var BA_DRAFT_KEY='kahoa_ba_draft_cart',BA_SIGNED_KEY='kahoa_ba_signed_cart';
+var BA_DEFAULT_MSG='Next step: review and sign your Service Agreement. Your booking details fill in automatically — you only type your name — then you’ll come right back here to pay.';
+var CB_ADDON_IDS={tea:'cb-addon-tea',sig:'cb-addon-sig',sticker:'cb-addon-sticker',print:'cb-addon-print',dj:'cb-addon-dj',latte:'cb-addon-latte'};
+var CB_ADDON_NAMES={tea:'Hot Tea & Hot Cocoa',sig:'Custom Signature Drinks',sticker:'Logo Stickers on Cups',print:'Full Custom-Printed Cups',dj:'Event DJ',latte:'Latte Art Printer'};
+function baLoad(k){try{var s=sessionStorage.getItem(k);return s?JSON.parse(s):null;}catch(e){return null;}}
+function baSave(k,v){try{sessionStorage.setItem(k,JSON.stringify(v));return true;}catch(e){return false;}}
+function baClear(){try{sessionStorage.removeItem(BA_DRAFT_KEY);sessionStorage.removeItem(BA_SIGNED_KEY);}catch(e){}}
+function cbEsc(s){return String(s).replace(/[&<>"']/g,function(m){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});}
+function cbVal(id){var el=document.getElementById(id);return el?el.value.trim():'';}
+function cbOrderFields(){
+  var addons={};
+  Object.keys(CB_ADDON_IDS).forEach(function(k){addons[k]=document.getElementById(CB_ADDON_IDS[k]).checked;});
+  return {pkg:cbSelectedPkg,date:cbVal('cb-date'),time:cbVal('cb-time'),guests:Math.max(1,parseInt(document.getElementById('cb-guests').value)||1),flavor:cbVal('cb-flavor'),location:cbVal('cb-location'),addons:addons};
+}
+function cbOrderKey(){return JSON.stringify(cbOrderFields());}
+function cbSignedRecord(){var s=baLoad(BA_SIGNED_KEY);return(s&&cbSelectedPkg&&s.key===cbOrderKey())?s:null;}
+function cbUpdateAgreementUI(){
+  var box=document.getElementById('cb-agreement-box'),sec=document.getElementById('cb-pay-section');
+  if(!box||!sec)return;
+  var rec=cbSignedRecord();
+  if(rec){
+    box.style.borderColor='rgba(42,122,59,0.6)';box.style.background='rgba(42,122,59,0.1)';
+    box.innerHTML='<strong style="color:#5bc27a;">&#10003; Agreement signed</strong> by '+cbEsc(rec.signature)+' on '+cbEsc(rec.signedDate)+'. A copy was emailed to you. Add your card below to finish booking.';
+    sec.style.display='block';
+    cbInitCard();
+  }else{
+    sec.style.display='none';
+    box.style.borderColor='rgba(212,168,67,0.3)';box.style.background='rgba(212,168,67,0.06)';
+    box.textContent=baLoad(BA_SIGNED_KEY)?'You changed your booking after signing, so the agreement needs a quick re-sign. Your details fill in again automatically.':BA_DEFAULT_MSG;
+  }
+}
+function cbTimeLabel(t){
+  var p=(t||'').split(':');if(p.length<2)return t||'';
+  var h=+p[0],m=p[1],ap=h>=12?'PM':'AM';h=h%12||12;return h+':'+m+' '+ap;
+}
+function cbDateLong(d){
+  var p=(d||'').split('-');if(p.length!==3)return d||'';
+  return new Date(+p[0],+p[1]-1,+p[2]).toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+}
+function cbGoSign(){
+  var f=cbOrderFields();
+  var payType=document.querySelector('input[name=cb-paytype]:checked').value;
+  var pkgName=f.pkg==='essentials'?'Essentials':f.pkg==='premium'?'Premium':'Full Experience';
+  var txt=function(id){return document.getElementById(id).textContent;};
+  var lines=[
+    ['Package',pkgName+' — $'+CART_PKG[f.pkg].toFixed(2)],
+    ['Event date',cbDateLong(f.date)],
+    ['Start time',cbTimeLabel(f.time)],
+    ['Estimated guests',String(f.guests)],
+    ['Location',f.location],
+    ['Cold brew flavor',f.flavor]
+  ];
+  var any=false;
+  Object.keys(CB_ADDON_IDS).forEach(function(k){
+    if(f.addons[k]){any=true;lines.push([CB_ADDON_NAMES[k],txt('cb-price-'+k).replace(/^\+/,'')]);}
+  });
+  if(!any)lines.push(['Add-ons','None']);
+  var totals=[
+    ['Package',txt('cb-pkg-total')],
+    ['Add-ons',txt('cb-addon-total')],
+    ['Sales tax (8.25%)',txt('cb-tax-total')],
+    ['Event total',txt('cb-grand-total')],
+    [payType==='deposit'?'Due today (30% deposit + any custom branding)':'Due today (paid in full, 5% off service)',txt(payType==='deposit'?'cb-deposit-amt':'cb-full-amt')]
+  ];
+  var draft={service:'cart',key:cbOrderKey(),returnUrl:'/vip-cart.html',
+    order:Object.assign({},f,{dateLong:cbDateLong(f.date),timeLabel:cbTimeLabel(f.time),paytype:payType}),
+    client:{name:cbVal('cb-name'),email:cbVal('cb-email'),phone:cbVal('cb-phone')},
+    summary:{lines:lines,totals:totals,note:txt('cb-balance-note'),highlightLast:true,eventTotal:txt('cb-grand-total')},
+    savedAt:Date.now()};
+  if(!baSave(BA_DRAFT_KEY,draft)){
+    var errEl=document.getElementById('cb-err');
+    errEl.textContent='Your browser blocked saving your booking for the agreement step. Please try a regular (non-private) window.';
+    errEl.style.display='block';
+    return;
+  }
+  window.location.href='/booking-agreement.html?service=cart';
+}
+function cbRestoreDraft(){
+  var d=baLoad(BA_DRAFT_KEY);
+  if(!d||!d.order)return;
+  var o=d.order,c=d.client||{};
+  var set=function(id,v){var el=document.getElementById(id);if(el&&v!==undefined&&v!==null)el.value=v;};
+  set('cb-date',o.date);set('cb-time',o.time);set('cb-guests',o.guests);set('cb-flavor',o.flavor);set('cb-location',o.location);
+  set('cb-name',c.name);set('cb-email',c.email);set('cb-phone',c.phone);
+  if(o.paytype){var r=document.querySelector('input[name=cb-paytype][value='+o.paytype+']');if(r)r.checked=true;}
+  if(o.pkg)cbSelectPkg(o.pkg);
+  Object.keys(CB_ADDON_IDS).forEach(function(k){
+    var el=document.getElementById(CB_ADDON_IDS[k]);
+    if(el&&!el.disabled&&o.addons)el.checked=!!o.addons[k];
+  });
+  cbCalc();
+}
 function cbSelectPkg(key){
   cbSelectedPkg=key;
   document.querySelectorAll('.cb-pkg').forEach(function(el){
@@ -333,22 +414,34 @@ function cbCalc(){
   var btn=document.getElementById('cb-pay-btn');
   if(!cbSelectedPkg){
     btn.textContent='Select a package to continue';
+  }else if(!cbSignedRecord()){
+    btn.textContent='Review & Sign Agreement \u2192';
   }else{
     var chargeNow=payType==='deposit'?depositAmt:fullPayAmt;
     btn.textContent='Pay $'+chargeNow.toFixed(2)+' \u2014 Book Now \u2192';
   }
+  cbUpdateAgreementUI();
 }
-var cbPayments=null,cbCard=null,cbCardReady=false;
+var cbPayments=null,cbCard=null,cbCardReady=false,cbCardStarting=false;
 async function cbInitCard(){
-  if(cbCardReady)return;
+  if(cbCardReady||cbCardStarting)return;
+  cbCardStarting=true;
   try{
     cbPayments=await Square.payments(SQUARE_APP_ID,SQUARE_LOC);
     cbCard=await cbPayments.card();
     await cbCard.attach('#cb-card-el');
     cbCardReady=true;
   }catch(e){console.error('Cart booking Square init:',e);}
+  cbCardStarting=false;
 }
-window.addEventListener('load',function(){cbInitCard();});
+window.addEventListener('load',function(){
+  ['cb-date','cb-time','cb-location','cb-flavor'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el){el.addEventListener('input',cbCalc);el.addEventListener('change',cbCalc);}
+  });
+  cbRestoreDraft();
+  cbCalc();
+});
 async function cbSubmit(){
   if(!cbSelectedPkg){
     var pkgErrEl=document.getElementById('cb-err');
@@ -364,14 +457,14 @@ async function cbSubmit(){
   var time=document.getElementById('cb-time').value;
   var guests=Math.max(1,parseInt(document.getElementById('cb-guests').value)||1);
   var flavorChoice=document.getElementById('cb-flavor').value;
-  var signature=document.getElementById('cb-signature').value.trim();
-  var agreedTerms=document.getElementById('cb-agree-terms').checked;
   var agreedOverage=document.getElementById('cb-agree-overage').checked;
   var errEl=document.getElementById('cb-err');
   errEl.style.display='none';
   if(!name||!email||!location||!date||!time){errEl.textContent='Please fill in your name, email, event date, start time, and location.';errEl.style.display='block';return;}
-  if(!signature){errEl.textContent='Please type your full name as your signature.';errEl.style.display='block';return;}
-  if(!agreedTerms||!agreedOverage){errEl.textContent='Please check both agreement boxes to continue.';errEl.style.display='block';return;}
+  var signedRec=cbSignedRecord();
+  if(!signedRec){cbGoSign();return;}
+  var signature=signedRec.signature;
+  if(!agreedOverage){errEl.textContent='Please check the authorization box to continue.';errEl.style.display='block';return;}
   if(!cbCardReady){await cbInitCard();if(!cbCardReady){errEl.textContent='Payment form still loading, please try again in a moment.';errEl.style.display='block';return;}}
 
   var pkgPrice=CART_PKG[cbSelectedPkg];
@@ -429,6 +522,7 @@ async function cbSubmit(){
     if(resp.ok&&(data.success||data.payment_id)){
       document.getElementById('cb-success').style.display='block';
       btn.style.display='none';
+      baClear();
       if(typeof emailjs!=='undefined'){
         emailjs.init(EJKEY);
         var notes='Package: '+pkgName+' ($'+pkgPrice.toFixed(2)+'). Cold Brew Flavor: '+flavorChoice+'. Add-ons: '+addonSummary+'. Subtotal: $'+preTax.toFixed(2)+'. Tax (8.25%): $'+taxTotal.toFixed(2)+'. Event total: $'+grandTotal.toFixed(2)+'. Charged today ('+(payType==='deposit'?'30% deposit':'paid in full, 5% discount applied')+'): $'+chargeNow.toFixed(2)+'. '+(payType==='deposit'?'Balance due 7 days before event: $'+(grandTotal-chargeNow).toFixed(2)+'.':'Discount savings: $'+(grandTotal-chargeNow).toFixed(2)+'.')+' Event time: '+time+'. Signed: '+signature+'. Overage/overtime authorization: '+(agreedOverage?'YES':'NO')+'.';

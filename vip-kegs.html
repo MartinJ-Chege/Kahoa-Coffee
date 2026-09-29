@@ -86,11 +86,6 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
     <a href="/vip.html" style="flex:1;text-align:center;background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.35);color:var(--gold);text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Coffee</a>
     <a href="/vip-kegs.html" style="flex:1;text-align:center;background:rgba(74,144,217,0.28);border:1px solid #4a90d9;color:#4a90d9;text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Keg Program</a>
     <a href="/vip-cart.html" style="flex:1;text-align:center;background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.35);color:var(--gold);text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Mobile Cart</a>
-    <a href="/booking-agreement.html" style="flex:1;text-align:center;background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.35);color:var(--gold);text-decoration:none;padding:10px 6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;border-radius:4px;">Agreement</a>
-  </div>
-
-  <div style="background:rgba(74,144,217,0.1);border:1px solid rgba(74,144,217,0.35);padding:14px 16px;margin-bottom:24px;font-size:12px;color:rgba(255,255,255,0.75);line-height:1.6;">
-    Haven't signed your booking agreement yet? <a href="/booking-agreement.html" style="color:#4a90d9;font-weight:600;">Sign it here first</a> — it only takes a minute and locks in the terms before you pay.
   </div>
 
   <!-- Wholesale Kegs & Kegerator Lease -->
@@ -165,17 +160,58 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
   </div>
 </div>
 <script>
-var vipLeasePayments=null,vipLeaseCard=null,vipLeaseCardReady=false;
+var KEG_DRAFT_KEY='kahoa_ba_draft_keg',KEG_SIGNED_KEY='kahoa_ba_signed_keg';
+function baLoad(k){try{var s=sessionStorage.getItem(k);return s?JSON.parse(s):null;}catch(e){return null;}}
+function baSave(k,v){try{sessionStorage.setItem(k,JSON.stringify(v));return true;}catch(e){return false;}}
+function kegClearAgreement(){try{sessionStorage.removeItem(KEG_DRAFT_KEY);sessionStorage.removeItem(KEG_SIGNED_KEY);}catch(e){}}
+function kegSignedRecord(){var s=baLoad(KEG_SIGNED_KEY);return(s&&s.key==='keg')?s:null;}
+function kegVal(id){var el=document.getElementById(id);return el?el.value.trim():'';}
+function kegGoSign(context){
+  var prev=baLoad(KEG_DRAFT_KEY)||{};
+  var prefill=Object.assign({},prev.prefill||{});
+  var form=prev.form?Object.assign({},prev.form):undefined;
+  if(kegVal('lf-name')||kegVal('lf-email')||kegVal('lf-address')){
+    var parts=kegVal('lf-name').split(/\s+/).filter(Boolean);
+    if(parts.length){prefill.first=parts[0];prefill.last=parts.slice(1).join(' ');}
+    if(kegVal('lf-email'))prefill.email=kegVal('lf-email');
+    if(kegVal('lf-phone'))prefill.phone=kegVal('lf-phone');
+    if(kegVal('lf-address'))prefill.address=kegVal('lf-address');
+    if(form){delete form.first;delete form.last;}
+  }
+  if(form&&context==='lease')form.kegerator='lease';
+  var draft={service:'keg',key:'keg',context:context,returnUrl:'/vip-kegs.html',cart:(typeof vipCart!=='undefined'?vipCart:[]),prefill:prefill,form:form,savedAt:Date.now()};
+  if(!baSave(KEG_DRAFT_KEY,draft)){
+    var errEl=document.getElementById(context==='lease'?'vip-lease-err':'vip-err');
+    if(errEl){errEl.textContent='Your browser blocked saving your order for the agreement step. Please try a regular (non-private) window.';errEl.style.display='block';}
+    return;
+  }
+  window.location.href='/booking-agreement.html?service=keg';
+}
+function kegUpdateLeaseUI(){
+  var card=document.getElementById('vip-lease-card-el'),btn=document.getElementById('vip-lease-btn');
+  if(!card||!btn)return;
+  if(kegSignedRecord()){
+    card.style.display='';
+    btn.innerHTML='Start Lease Subscription &mdash; $50/mo &rarr;';
+    vipInitLeaseCard();
+  }else{
+    card.style.display='none';
+    btn.innerHTML='Review &amp; Sign Agreement &rarr;';
+  }
+}
+var vipLeasePayments=null,vipLeaseCard=null,vipLeaseCardReady=false,vipLeaseCardStarting=false;
 async function vipInitLeaseCard(){
-  if(vipLeaseCardReady)return;
+  if(vipLeaseCardReady||vipLeaseCardStarting)return;
+  vipLeaseCardStarting=true;
   try{
     vipLeasePayments=await Square.payments(SQUARE_APP_ID,SQUARE_LOC);
     vipLeaseCard=await vipLeasePayments.card();
     await vipLeaseCard.attach('#vip-lease-card-el');
     vipLeaseCardReady=true;
   }catch(e){console.error('Lease Square init:',e);}
+  vipLeaseCardStarting=false;
 }
-window.addEventListener('load',function(){vipInitLeaseCard();});
+window.addEventListener('load',function(){kegUpdateLeaseUI();});
 async function vipStartLease(){
   var name=document.getElementById('lf-name').value.trim();
   var email=document.getElementById('lf-email').value.trim();
@@ -184,6 +220,7 @@ async function vipStartLease(){
   var errEl=document.getElementById('vip-lease-err');
   errEl.style.display='none';
   if(!name||!email||!address){errEl.textContent='Please fill in name, email, and address.';errEl.style.display='block';return;}
+  if(!kegSignedRecord()){kegGoSign('lease');return;}
   if(!vipLeaseCardReady){await vipInitLeaseCard();if(!vipLeaseCardReady){errEl.textContent='Payment form still loading, please try again in a moment.';errEl.style.display='block';return;}}
   var btn=document.getElementById('vip-lease-btn');
   btn.disabled=true;btn.textContent='Processing...';
@@ -204,6 +241,7 @@ async function vipStartLease(){
     if(res.ok&&data.success){
       document.getElementById('vip-lease-form').querySelectorAll('input,button#vip-lease-btn,#vip-lease-card-el').forEach(function(el){el.style.display='none';});
       document.getElementById('vip-lease-success').style.display='block';
+      kegClearAgreement();
       if(typeof emailjs!=='undefined'){
         emailjs.init(EJKEY);
         var tp={to_email:'info@kahoa.shop',order_type:'VIP KEGERATOR LEASE STARTED',customer_name:name,customer_email:email,customer_phone:phone,customer_address:address,product_name:'Kegerator Lease',grind:'Monthly',price:'$50.00/mo',notes:'Recurring lease subscription started via VIP page. Square Customer: '+(data.subscription?.customer_id||'')};
@@ -376,7 +414,12 @@ function vipUpdateModalSummary(){
     '<p style="font-size:11px;">Shipping: '+(shipping===0?'FREE':'$'+shipping.toFixed(2))+'</p>'+
     '<p class=order-total>Total: $'+total.toFixed(2)+'</p>';
 }
-async function vipOpenCheckout(){window._vipCartSnapshot=vipCart.slice();
+function vipOpenCheckout(){
+  if(vipCart.length===0){alert('Add at least one item first.');return;}
+  if(!kegSignedRecord()){kegGoSign('order');return;}
+  return vipOpenCheckoutReal();
+}
+async function vipOpenCheckoutReal(){window._vipCartSnapshot=vipCart.slice();
   if(vipCart.length===0){alert('Add at least one item first.');return;}
   vipUpdateModalSummary();
   document.getElementById('vip-modal').style.display='flex';
@@ -481,11 +524,31 @@ async function vipPay(){
     })});}catch(e){}
     // Clear cart
     vipCart=[];vipRenderCart();
+    kegClearAgreement();
   }catch(e){
     errEl.textContent='Error: '+e.message;
     errEl.style.display='block';btn.textContent='Complete Order →';btn.disabled=false;
   }
 }
+function kegRestoreFromAgreement(){
+  var d=baLoad(KEG_DRAFT_KEY);
+  if(!d||!d.savedAt||Date.now()-d.savedAt>60*60*1000)return;
+  var next=new URLSearchParams(location.search).get('next');
+  if(d.cart&&d.cart.length&&!vipCart.length){vipCart=d.cart;vipRenderCart();}
+  var p=d.form||d.prefill||{};
+  var set=function(id,v){var el=document.getElementById(id);if(el&&v)el.value=v;};
+  set('vf-fname',p.first);set('vf-lname',p.last);set('vf-email',p.email);set('vf-phone',p.phone);
+  set('vf-address',p.address);set('vf-city',p.city);set('vf-state',p.state);set('vf-zip',p.zip);
+  if(p.freq){var fq=document.getElementById('vf-frequency');if(fq)fq.value=p.freq;}
+  if(p.zip&&p.zip.length===5)vipZipCheck(p.zip);
+  set('lf-name',((p.first||'')+' '+(p.last||'')).trim());set('lf-email',p.email);set('lf-phone',p.phone);
+  set('lf-address',p.address?(p.address+(p.city?', '+p.city+', '+(p.state||'TX')+' '+(p.zip||''):'')):'');
+  if(kegSignedRecord()){
+    if(next==='order'&&vipCart.length){vipOpenCheckoutReal();}
+    else if(next==='lease'){var lf=document.getElementById('vip-lease-form');if(lf)lf.scrollIntoView({block:'center'});}
+  }
+}
+window.addEventListener('load',kegRestoreFromAgreement);
 </script>
 </body>
 </html>
