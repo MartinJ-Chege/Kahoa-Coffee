@@ -246,6 +246,8 @@ async function vipStartLease(){
         emailjs.init(EJKEY);
         var tp={to_email:'info@kahoa.shop',order_type:'VIP KEGERATOR LEASE STARTED',customer_name:name,customer_email:email,customer_phone:phone,customer_address:address,product_name:'Kegerator Lease',grind:'Monthly',price:'$50.00/mo',notes:'Recurring lease subscription started via VIP page. Square Customer: '+(data.subscription?.customer_id||'')};
         emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error('Lease email error',e);});
+        var leaseCust=Object.assign({},tp,{to_email:email,order_type:'Your Kahoa Kegerator Lease Confirmation',notes:'Your monthly kegerator lease ($50.00/mo) is active. Questions or need to make a change? Reply to this email or write info@kahoa.shop. Terms are in the Service Agreement you signed.'});
+        emailjs.send(EJSVC,EJTMPL,leaseCust).catch(function(e){console.error('Lease cust email error',e);});
       }
       try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:phone,product:'Kegerator Lease (Subscription)',grind:'Monthly',total:'$50.00/mo',coupon:'',address:address,opted_in:'Yes',source:'kahoa.shop/vip-lease'})}).catch(function(){});}catch(e){}
     }else{

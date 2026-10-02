@@ -526,7 +526,7 @@ async function cbSubmit(){
       if(typeof emailjs!=='undefined'){
         emailjs.init(EJKEY);
         var notes='Package: '+pkgName+' ($'+pkgPrice.toFixed(2)+'). Cold Brew Flavor: '+flavorChoice+'. Add-ons: '+addonSummary+'. Subtotal: $'+preTax.toFixed(2)+'. Tax (8.25%): $'+taxTotal.toFixed(2)+'. Event total: $'+grandTotal.toFixed(2)+'. Charged today ('+(payType==='deposit'?'30% deposit':'paid in full, 5% discount applied')+'): $'+chargeNow.toFixed(2)+'. '+(payType==='deposit'?'Balance due 7 days before event: $'+(grandTotal-chargeNow).toFixed(2)+'.':'Discount savings: $'+(grandTotal-chargeNow).toFixed(2)+'.')+' Event time: '+time+'. Signed: '+signature+'. Overage/overtime authorization: '+(agreedOverage?'YES':'NO')+'.';
-        var tp={to_email:'info@kahoa.shop',order_type:'VIP COFFEE CART BOOKING',customer_name:name,customer_email:email,customer_phone:phone,customer_address:location,product_name:'Coffee Cart \u2014 '+pkgName,grind:date+' '+time,price:'$'+chargeNow.toFixed(2)+' charged today',notes:notes};
+        var tp={to_email:'info@kahoa.shop',checkout_url:data.receipt_url||'',order_type:'VIP COFFEE CART BOOKING',customer_name:name,customer_email:email,customer_phone:phone,customer_address:location,product_name:'Coffee Cart \u2014 '+pkgName,grind:date+' '+time,price:'$'+chargeNow.toFixed(2)+' charged today',notes:notes};
         emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error('Cart booking email error',e);});
         var custTp=Object.assign({},tp,{to_email:email,order_type:'Your Kahoa Coffee Cart Booking'});
         emailjs.send(EJSVC,EJTMPL,custTp).catch(function(e){console.error('Cust email error',e);});
