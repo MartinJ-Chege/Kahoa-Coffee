@@ -31,7 +31,7 @@ if(txt.includes("Shop Now"))kahoaTrack("click",{button:"shop_now_nav"});
 if(txt.includes("Free Sample"))kahoaTrack("click",{button:"free_sample"});
 if(txt.includes("Subscribe"))kahoaTrack("click",{button:"subscribe_save"});
 if(txt.includes("Wholesale"))kahoaTrack("click",{button:"wholesale_inquiry"});
-if(txt.includes("Pre-Order"))kahoaTrack("click",{button:"preorder_teamusa"});
+if(txt.includes("Pre-Order")||(btn.getAttribute("onclick")||"").indexOf("kahoaPreOrder")!==-1)kahoaTrack("click",{button:"preorder_teamusa"});
 if(txt.includes("Notify Me"))kahoaTrack("click",{button:"notify_me",product:document.getElementById("notify-product-name")?document.getElementById("notify-product-name").textContent:""});
 });
 })();

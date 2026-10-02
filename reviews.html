@@ -31,7 +31,7 @@ if(txt.includes("Shop Now"))kahoaTrack("click",{button:"shop_now_nav"});
 if(txt.includes("Free Sample"))kahoaTrack("click",{button:"free_sample"});
 if(txt.includes("Subscribe"))kahoaTrack("click",{button:"subscribe_save"});
 if(txt.includes("Wholesale"))kahoaTrack("click",{button:"wholesale_inquiry"});
-if(txt.includes("Pre-Order"))kahoaTrack("click",{button:"preorder_teamusa"});
+if(txt.includes("Pre-Order")||(btn.getAttribute("onclick")||"").indexOf("kahoaPreOrder")!==-1)kahoaTrack("click",{button:"preorder_teamusa"});
 if(txt.includes("Notify Me"))kahoaTrack("click",{button:"notify_me",product:document.getElementById("notify-product-name")?document.getElementById("notify-product-name").textContent:""});
 });
 })();
@@ -207,6 +207,7 @@ var KAHOA_HELP={
   }
 };
 var KAHOA_SEARCH_INDEX=[
+{t:'Coffee, Cold Brew & Nitro for Your Office',k:'office workplace work break room company corporate team employees coffee cold brew nitro kegs on tap service',a:'For your office we can do a keg program with Kifaru Classic, Nitro (Draft) or Spice cold brew delivered chilled and ready to tap (with a kegerator lease if you do not have taps), wholesale coffee beans, or the Kahoa Coffee Cart for office events. Request a quote and we will tailor it to your team.',u:'/keg-program.html'},
 {t:'Returns, Refunds & Order Problems',k:'return returns refund refunds replace replacement damaged wrong missing problem issue complaint',a:'If something is wrong with your order, email info@kahoa.shop with your order number and we will help. For coffee cart deposits and cancellations, see the coffee cart payment terms.',u:'mailto:info@kahoa.shop'},
 {t:'Sourcing & Organic Questions',k:'organic certified certification fair trade direct trade sourcing source farm farms origin where grown',a:'Our coffee is direct trade and single origin, sourced from Nyeri, Kirinyaga and the Central Highlands of Kenya. For questions about organic or other certifications, email info@kahoa.shop.',u:'/our-story.html'},
 {t:'What is Kifaru?',k:'what is kifaru line brand',a:'Kifaru is our cold brew line, made from our single-origin Kenyan coffee: Kifaru Classic, Kifaru Nitro (Draft) and Kifaru Spice.',u:'/shop.html'},
@@ -239,7 +240,7 @@ var KAHOA_SEARCH_INDEX=[
 {t:'Free Sample Program',k:'free sample try trial request taste blend',a:'Request a free sample to try a Kahoa blend before committing to a full bag. Just cover shipping, and we\'ll send a taste of your chosen blend.',u:'/sample.html'},
 {t:'Order Status & Help',k:'order status help confirmation email receipt tracking',a:'After you order, you\'ll get a confirmation email with your order number (KH-XXXXXX) and a receipt from Square. If you need help with an existing order, just email us — we respond fast.',u:'mailto:info@kahoa.shop'},
 {t:'Merch & Apparel',k:'merch apron polo backpack shirt tee apparel branded',a:'Kahoa merch includes a Kenyan Kitenge-accented apron, an embroidered polo, and a limited-edition Stealth Elite Bag co-designed with the USA Kayak Polo Women\'s National Team.',u:'/shop.html'},
-{t:'USA Kayak Polo Collab',k:'usa kayak polo team sponsor collab stealth elite bag',a:'Kahoa is proud to support the USA Kayak Polo Women\'s National Team, including a co-designed Stealth Elite Bag collab.',u:'/usa-kayak.html'},
+{t:'USA Kayak Polo Collab',k:'usa kayak polo team sponsor collab stealth elite bag',a:'Kahoa is proud to support the USA Kayak Polo Women\'s National Team, who represented the USA at the World Championships in Duisburg, Germany. Our co-designed Stealth Elite Bag is still available.',u:'/usa-kayak.html'},
 {t:'Green Beans / Home Roasting',k:'green beans unroasted home roast raw',a:'Kahoa offers unroasted green beans for home roasting, sourced from the same Kenyan farms as our roasted blends.',u:'/shop.html'},
 {t:'Our Story',k:'story origin kenya founder martin family farm highlands',a:'Kahoa was founded by Martin Kibuthu, whose family has grown coffee in the Kenyan highlands for generations. Every bag connects that origin to Austin, Texas.',u:'/our-story.html'},
 {t:'Where We\'re Located',k:'location located where address based austin texas roastery',a:'Kahoa is based and roasted fresh in Austin, Texas, with beans sourced direct from the Kenyan highlands. We ship coffee nationwide, with free local delivery in the Austin area.',u:'/our-story.html'}
