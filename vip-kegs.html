@@ -139,7 +139,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
 
   <div class=prod-card style="border-color:rgba(212,168,67,0.35);">
     <div class=prod-name>Kegerator Lease <span style="color:var(--gold);float:right;">$50/mo</span></div>
-    <div class=prod-detail>Waived automatically once you're on a standing 2+ keg/month order &mdash; email us to confirm and we'll cancel this lease charge. Already have your own tap system? No need to sign up below.<br><br>A refundable $250 equipment deposit applies, and it is waived once you're on a standing 2+ keg/month order. We'll email you a payment link for the deposit after you start the lease.</div>
+    <div class=prod-detail>Waived automatically once you're on a standing 2+ keg/month order &mdash; email us to confirm and we'll cancel this lease charge. Already have your own tap system? No need to sign up below.<br><br>A refundable $200 equipment deposit applies, and it is waived once you're on a standing 2+ keg/month order. We'll email you a payment link for the deposit after you start the lease.</div>
     <div id=vip-lease-form style="margin-top:16px;">
       <div class=two-col>
         <div class=field><input type=text id=lf-name placeholder="Full Name"></div>
@@ -244,9 +244,9 @@ async function vipStartLease(){
       kegClearAgreement();
       if(typeof emailjs!=='undefined'){
         emailjs.init(EJKEY);
-        var tp={to_email:'info@kahoa.shop',order_type:'VIP KEGERATOR LEASE STARTED',customer_name:name,customer_email:email,customer_phone:phone,customer_address:address,product_name:'Kegerator Lease',grind:'Monthly',price:'$50.00/mo',notes:'ACTION: email the customer a $250 refundable deposit payment link, unless they are on a standing 2+ kegs/month order. Recurring lease subscription started via VIP page. Square Customer: '+(data.subscription?.customer_id||'')};
+        var tp={to_email:'info@kahoa.shop',order_type:'VIP KEGERATOR LEASE STARTED',customer_name:name,customer_email:email,customer_phone:phone,customer_address:address,product_name:'Kegerator Lease',grind:'Monthly',price:'$50.00/mo',notes:'ACTION: email the customer a $200 refundable deposit payment link, unless they are on a standing 2+ kegs/month order. Recurring lease subscription started via VIP page. Square Customer: '+(data.subscription?.customer_id||'')};
         emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error('Lease email error',e);});
-        var leaseCust=Object.assign({},tp,{to_email:email,order_type:'Your Kahoa Kegerator Lease Confirmation',notes:'Your monthly kegerator lease ($50.00/mo) is active. A refundable $250 equipment deposit applies (waived once you are on a standing 2+ kegs/month order), and we will email you a payment link for it. Questions or need to make a change? Reply to this email or write info@kahoa.shop. Terms are in the Service Agreement you signed.'});
+        var leaseCust=Object.assign({},tp,{to_email:email,order_type:'Your Kahoa Kegerator Lease Confirmation',notes:'Your monthly kegerator lease ($50.00/mo) is active. A refundable $200 equipment deposit applies (waived once you are on a standing 2+ kegs/month order), and we will email you a payment link for it. Questions or need to make a change? Reply to this email or write info@kahoa.shop. Terms are in the Service Agreement you signed.'});
         emailjs.send(EJSVC,EJTMPL,leaseCust).catch(function(e){console.error('Lease cust email error',e);});
       }
       try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:phone,product:'Kegerator Lease (Subscription)',grind:'Monthly',total:'$50.00/mo',coupon:'',address:address,opted_in:'Yes',source:'kahoa.shop/vip-lease'})}).catch(function(){});}catch(e){}
@@ -290,7 +290,7 @@ async function vipStartLease(){
       </div>
       <div id=vip-form>
         <div class=order-summary id=vip-modal-summary></div>
-        <div style="margin:-4px 0 14px;"><label style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--text-mid);line-height:1.5;cursor:pointer;"><input type=checkbox id=vf-has-deposit onchange="vipUpdateModalSummary()" style="width:auto;margin-top:3px;"><span>I already have a keg deposit on file with Kahoa Coffee</span></label><p style="font-size:11px;color:var(--text-light);margin:6px 0 0 24px;line-height:1.5;">A refundable $100 deposit per keg is charged on your first order only, and returned when the empty kegs come back.</p></div>
+        <div style="margin:-4px 0 14px;"><label style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--text-mid);line-height:1.5;cursor:pointer;"><input type=checkbox id=vf-has-deposit onchange="vipUpdateModalSummary()" style="width:auto;margin-top:3px;"><span>I already have a keg deposit on file with Kahoa Coffee</span></label><p style="font-size:11px;color:var(--text-light);margin:6px 0 0 24px;line-height:1.5;">A refundable $50 deposit per keg is charged on your first order only, and returned when the empty kegs come back.</p></div>
         <p class=sec-label style="color:var(--text-mid);margin-bottom:12px;">Your Details</p>
         <div class=two-col>
           <div class=field><label>First Name</label><input id=vf-fname placeholder="Jane"></div>
@@ -329,7 +329,7 @@ async function vipStartLease(){
 
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script>
-var KEG_COLD=125,KEG_NITRO=130,KEG_SPICE=140,LEASE_PRICE=50;var KEG_DEPOSIT=100,KEGERATOR_DEPOSIT=250;
+var KEG_COLD=125,KEG_NITRO=130,KEG_SPICE=140,LEASE_PRICE=50;var KEG_DEPOSIT=50,KEGERATOR_DEPOSIT=200;
 function vipKegCount(items){return items.reduce(function(s,i){return s+(i.unit==='keg'?i.qty:0);},0);}
 function vipDepositWaived(){var cb=document.getElementById('vf-has-deposit');return !!(cb&&cb.checked);}
 function vipGetDeposit(items){return vipDepositWaived()?0:vipKegCount(items)*KEG_DEPOSIT;}
