@@ -85,6 +85,8 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 .cc-form{max-width:640px;margin:0 auto;background:rgba(255,255,255,0.03);border:1px solid rgba(212,168,67,0.2);border-radius:14px;padding:44px 40px;box-shadow:0 24px 60px rgba(0,0,0,0.35);}
 .cc-form label{display:block;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin:0 0 8px;font-weight:600;}
 .cc-field{margin-bottom:22px;}
+#cc-taps label{display:flex;gap:8px;align-items:center;justify-content:flex-start;margin:0;color:rgba(255,255,255,0.8);}
+#cc-taps input{width:auto;padding:0;margin:0;flex:none;}
 .cc-form input,.cc-form select,.cc-form textarea{width:100%;padding:13px 16px;background:#faf4e8;border:1px solid rgba(168,110,60,0.25);border-radius:6px;font-family:Montserrat,sans-serif;font-size:14px;color:var(--text-dark);outline:none;transition:border-color .2s ease,box-shadow .2s ease,background .2s ease;}
 .cc-form input::placeholder,.cc-form textarea::placeholder{color:rgba(107,74,43,0.45);}
 .cc-form input:focus,.cc-form select:focus,.cc-form textarea:focus{border-color:var(--gold);background:#fff;box-shadow:0 0 0 3px rgba(212,168,67,0.18);}
@@ -173,10 +175,11 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 <li style="font-size:13px;color:rgba(255,255,255,0.7);padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.06);">Iced Americano</li>
 <li style="font-size:13px;color:rgba(255,255,255,0.7);padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.06);">Iced Mocha</li>
 <li style="font-size:13px;color:#6BA3C7;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-weight:600;">Kifaru Classic (Cold Brew)</li>
-<li style="font-size:13px;color:#6BA3C7;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-weight:600;">Kifaru Nitro (Draft) &mdash; Nitrogen-Infused &#9733;</li>
-<li style="font-size:13px;color:#6BA3C7;padding:5px 0;">Kifaru Spice Cold Brew <span style="font-size:11px;color:rgba(255,255,255,0.4);">— vanilla bean, ginger, cardamom, clove &amp; cinnamon stick, spiced the way Kenya takes its chai</span></li>
+<li style="font-size:13px;color:#6BA3C7;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-weight:600;">Kifaru Classic Nitro (Draft) &mdash; Nitrogen-Infused &#9733;</li>
+<li style="font-size:13px;color:#6BA3C7;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.06);">Kifaru Spice Cold Brew <span style="font-size:11px;color:rgba(255,255,255,0.4);">— vanilla bean, ginger, cardamom, clove &amp; cinnamon stick, spiced the way Kenya takes its chai</span></li>
+<li style="font-size:13px;color:#6BA3C7;padding:5px 0;font-weight:600;">Kifaru Spice Nitro (Draft) <span style="font-size:11px;color:rgba(255,255,255,0.4);font-weight:400;">— the same spiced recipe, nitrogen-infused</span></li>
 </ul>
-<p style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:10px;">🚰 Our cart's tap tower has 2 taps, so you choose which 2 of these three we pour at your event. Nitro runs its own nitrogen line for that signature cascading pour.</p>
+<p style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:10px;">🚰 Our cart's tap tower has 2 taps, so you choose any 2 of these 4 (Classic or Spice, cold or nitro) for your event. Nitro runs its own nitrogen line for that signature cascading pour.</p>
 </div>
 
 <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(212,168,67,0.2);border-radius:6px;padding:26px;">
@@ -224,7 +227,7 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 <li>3 hours of service</li>
 <li>Up to ~100 drinks</li>
 <li>2 baristas</li>
-<li>Full espresso bar + <span style="color:#6BA3C7;font-weight:600;">Kifaru Cold Brew on tap: you pick 2 of Classic, Spice &amp; Nitro (Draft)</span></li>
+<li>Full espresso bar + <span style="color:#6BA3C7;font-weight:600;">Kifaru Cold Brew on tap: you pick 2 of 4 (Classic or Spice, cold or nitro)</span></li>
 <li>Custom menu cards</li>
 <li>Setup & cleanup included</li>
 <li>Latte Art Printer available <small style="opacity:.7">(+$175)</small></li>
@@ -238,7 +241,7 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 <li>4+ hours of service</li>
 <li>Unlimited drinks</li>
 <li>2–3 baristas</li>
-<li>Full espresso + <span style="color:#6BA3C7;font-weight:600;">Kifaru Cold Brew on tap: you pick 2 of Classic, Spice &amp; Nitro (Draft)</span></li>
+<li>Full espresso + <span style="color:#6BA3C7;font-weight:600;">Kifaru Cold Brew on tap: you pick 2 of 4 (Classic or Spice, cold or nitro)</span></li>
 <li>Co-branded cart & signage</li>
 <li>Custom menu + specialty drinks</li>
 <li>Setup & cleanup included</li>
@@ -285,6 +288,7 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 <div class="cc-field"><label>Event Location / City *</label><input id="cc-location" type="text" placeholder="e.g. Downtown Austin office"></div>
 <div class="cc-field"><label>Package Interested In *</label><select id="cc-package" required><option value="">Select a package...</option><option>Essentials</option><option>Premium</option><option>Full Experience</option><option>Custom</option></select></div>
 <div class="cc-field"><label>Event Type *</label><select id="cc-event-type" required><option value="">What are we celebrating?</option><option>Corporate Event / Office</option><option>Wedding / Private Celebration</option><option>Conference / Trade Show</option><option>Brand Activation / Product Launch</option><option>Other</option></select></div>
+<div class="cc-field"><label>Your 2 taps (cold brew &amp; nitro, optional)</label><div id="cc-taps" style="display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;font-size:13px;color:rgba(255,255,255,0.75);"><label style="font-weight:400;text-transform:none;letter-spacing:0;font-size:13px;"><input type="checkbox" value="Classic Cold Brew"> Classic Cold Brew</label><label style="font-weight:400;text-transform:none;letter-spacing:0;font-size:13px;"><input type="checkbox" value="Classic Nitro"> Classic Nitro</label><label style="font-weight:400;text-transform:none;letter-spacing:0;font-size:13px;"><input type="checkbox" value="Spice Cold Brew"> Spice Cold Brew</label><label style="font-weight:400;text-transform:none;letter-spacing:0;font-size:13px;"><input type="checkbox" value="Spice Nitro"> Spice Nitro</label></div><p style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:6px;">Our cart has 2 taps. Pick up to 2 (Premium &amp; Full Experience).</p></div>
 <div class="cc-field"><label>Tell us about your event</label><textarea id="cc-message" rows="4" placeholder="Optional — timing, vibe, or anything special we should know..."></textarea></div>
 <button class="cc-submit" onclick="ccSubmit()">Send My Request →</button>
 <p style="font-size:11px;color:rgba(255,255,255,0.35);text-align:center;margin-top:14px;">We'll never share your info. Response within 1 business day.</p>
@@ -313,6 +317,9 @@ function ccSubmit(){
       pkg=(document.getElementById("cc-package").value||"Not specified").trim(),
       eventType=(document.getElementById("cc-event-type").value||"").trim(),
       message=(document.getElementById("cc-message").value||"").trim();
+  var taps=[].slice.call(document.querySelectorAll("#cc-taps input:checked")).map(function(c){return c.value;});
+  if(taps.length>2){alert("Our cart has 2 taps, so please choose up to 2 cold brews or nitros.");return;}
+  if(taps.length)message=(message?message+" | ":"")+"Taps requested: "+taps.join(" + ");
   if(!fname||!lname||!company||!email||!phone||!location||!date||!guests||!pkg||pkg==="Not specified"||!eventType){alert("Please fill in all required fields (*) so we can give you an accurate quote.");return;}
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){alert("Please enter a valid email address.");return;}
   document.getElementById("ccFormWrap").style.display="none";
