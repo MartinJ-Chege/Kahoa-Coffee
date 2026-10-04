@@ -330,7 +330,7 @@ window.applyCoupon=function(){
   var statusEl=document.getElementById('rv-coupon-status');
 
   // Check static codes first (STORYZAJABA, storyzajaba)
-  var staticCodes=['STORYZAJABA','STORYZAJABA'];
+  var staticCodes=['STORYZAJABA','WELCOME10','UBER254'];
   if(staticCodes.indexOf(code)!==-1){
     if(typeof _origApplyCoupon==='function') _origApplyCoupon();
     return;
@@ -348,11 +348,11 @@ window.applyCoupon=function(){
 
   fetch(KAHOA_SHEET_URL+'?action=validate_referral&code='+encodeURIComponent(code)+'&email='+encodeURIComponent(customerEmail),{method:'GET',mode:'cors'}).then(function(r){return r.json();}).then(function(data){
     if(data.valid){
-      // Apply 10% discount
-      window._kahoaActiveCoupon=code;
-      window._kahoaDiscountRate=0.10;
-      if(statusEl){statusEl.style.color='#2a7a3b';statusEl.textContent='✓ 10% off applied';}
-      if(typeof updateOrderSummary==='function') updateOrderSummary();
+      // Sheet approved this referral code: register it locally and reuse the original applier so
+      // the review total, discount line and payment amount all update (not just the status text).
+      if(window.KAHOA_COUPON_CODES) window.KAHOA_COUPON_CODES[code.toLowerCase()]=0.10;
+      if(typeof _origApplyCoupon==='function') _origApplyCoupon();
+      else {window._kahoaActiveCoupon=code;window._kahoaDiscountRate=0.10;if(statusEl){statusEl.style.color='#2a7a3b';statusEl.textContent='✓ 10% off applied';}}
     } else {
       window._kahoaActiveCoupon=null;
       window._kahoaDiscountRate=0;
