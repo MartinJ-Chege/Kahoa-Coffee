@@ -119,6 +119,16 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
     </div>
   </div>
 
+  <p class=sec-label>Service Style</p>
+  <div class=field style="margin-bottom:6px;">
+    <select id=cb-style>
+      <option value="Espresso Bar">Espresso Bar &mdash; lattes, cappuccinos &amp; more (best for 75+ guests)</option>
+      <option value="Pour-Over Reserve">Pour-Over Reserve &mdash; hand-poured Kenyan single-origin (best for up to ~50 guests)</option>
+      <option value="Both (Espresso Bar + Pour-Over Reserve)">Both &mdash; espresso bar plus a pour-over moment</option>
+    </select>
+  </div>
+  <p class=sub id=cb-style-note style="font-size:11px;margin-bottom:20px;">The latte art printer works with the espresso bar.</p>
+
   <p class=sec-label>Cold Brew Flavor</p>
   <div class=field style="margin-bottom:20px;">
     <select id=cb-flavor>
@@ -228,7 +238,7 @@ function cbVal(id){var el=document.getElementById(id);return el?el.value.trim():
 function cbOrderFields(){
   var addons={};
   Object.keys(CB_ADDON_IDS).forEach(function(k){addons[k]=document.getElementById(CB_ADDON_IDS[k]).checked;});
-  return {pkg:cbSelectedPkg,date:cbVal('cb-date'),time:cbVal('cb-time'),guests:Math.max(1,parseInt(document.getElementById('cb-guests').value)||1),flavor:cbVal('cb-flavor'),location:cbVal('cb-location'),addons:addons};
+  return {pkg:cbSelectedPkg,date:cbVal('cb-date'),time:cbVal('cb-time'),guests:Math.max(1,parseInt(document.getElementById('cb-guests').value)||1),flavor:cbVal('cb-flavor'),style:cbVal('cb-style'),location:cbVal('cb-location'),addons:addons};
 }
 function cbOrderKey(){return JSON.stringify(cbOrderFields());}
 function cbSignedRecord(){var s=baLoad(BA_SIGNED_KEY);return(s&&cbSelectedPkg&&s.key===cbOrderKey())?s:null;}
@@ -266,6 +276,7 @@ function cbGoSign(){
     ['Start time',cbTimeLabel(f.time)],
     ['Estimated guests',String(f.guests)],
     ['Location',f.location],
+    ['Service style',f.style],
     ['Cold brew flavor',f.flavor]
   ];
   var any=false;
@@ -298,7 +309,7 @@ function cbRestoreDraft(){
   if(!d||!d.order)return;
   var o=d.order,c=d.client||{};
   var set=function(id,v){var el=document.getElementById(id);if(el&&v!==undefined&&v!==null)el.value=v;};
-  set('cb-date',o.date);set('cb-time',o.time);set('cb-guests',o.guests);set('cb-flavor',o.flavor);set('cb-location',o.location);
+  set('cb-date',o.date);set('cb-time',o.time);set('cb-guests',o.guests);set('cb-flavor',o.flavor);set('cb-style',o.style);set('cb-location',o.location);
   set('cb-name',c.name);set('cb-email',c.email);set('cb-phone',c.phone);
   if(o.paytype){var r=document.querySelector('input[name=cb-paytype][value='+o.paytype+']');if(r)r.checked=true;}
   if(o.pkg)cbSelectPkg(o.pkg);
@@ -317,6 +328,8 @@ function cbSelectPkg(key){
   cbCalc();
 }
 function cbCalc(){
+  var _sn=document.getElementById('cb-style-note'),_sv=cbVal('cb-style');
+  if(_sn)_sn.textContent=_sv==='Pour-Over Reserve'?'Pour-over is made one cup at a time, so it suits smaller guest counts. The latte art printer needs the espresso bar.':_sv.indexOf('Both')===0?'Espresso bar for the crowd plus a pour-over moment for your head table and special guests.':'The latte art printer works with the espresso bar.';
   var guests=Math.max(1,parseInt(document.getElementById('cb-guests').value)||1);
   var pkgPrice=cbSelectedPkg?CART_PKG[cbSelectedPkg]:0;
 
@@ -435,7 +448,7 @@ async function cbInitCard(){
   cbCardStarting=false;
 }
 window.addEventListener('load',function(){
-  ['cb-date','cb-time','cb-location','cb-flavor'].forEach(function(id){
+  ['cb-date','cb-time','cb-location','cb-flavor','cb-style'].forEach(function(id){
     var el=document.getElementById(id);
     if(el){el.addEventListener('input',cbCalc);el.addEventListener('change',cbCalc);}
   });
@@ -457,10 +470,12 @@ async function cbSubmit(){
   var time=document.getElementById('cb-time').value;
   var guests=Math.max(1,parseInt(document.getElementById('cb-guests').value)||1);
   var flavorChoice=document.getElementById('cb-flavor').value;
+  var styleChoice=(document.getElementById('cb-style')||{}).value||'Espresso Bar';
   var agreedOverage=document.getElementById('cb-agree-overage').checked;
   var errEl=document.getElementById('cb-err');
   errEl.style.display='none';
   if(!name||!email||!location||!date||!time){errEl.textContent='Please fill in your name, email, event date, start time, and location.';errEl.style.display='block';return;}
+  if(styleChoice==='Pour-Over Reserve'&&document.getElementById('cb-addon-latte').checked){errEl.textContent='The latte art printer needs the espresso bar. Choose Espresso Bar or Both, or remove the printer.';errEl.style.display='block';return;}
   var signedRec=cbSignedRecord();
   if(!signedRec){cbGoSign();return;}
   var signature=signedRec.signature;
@@ -525,13 +540,13 @@ async function cbSubmit(){
       baClear();
       if(typeof emailjs!=='undefined'){
         emailjs.init(EJKEY);
-        var notes='Package: '+pkgName+' ($'+pkgPrice.toFixed(2)+'). Cold Brew Flavor: '+flavorChoice+'. Add-ons: '+addonSummary+'. Subtotal: $'+preTax.toFixed(2)+'. Tax (8.25%): $'+taxTotal.toFixed(2)+'. Event total: $'+grandTotal.toFixed(2)+'. Charged today ('+(payType==='deposit'?'30% deposit':'paid in full, 5% discount applied')+'): $'+chargeNow.toFixed(2)+'. '+(payType==='deposit'?'Balance due 7 days before event: $'+(grandTotal-chargeNow).toFixed(2)+'.':'Discount savings: $'+(grandTotal-chargeNow).toFixed(2)+'.')+' Event time: '+time+'. Signed: '+signature+'. Overage/overtime authorization: '+(agreedOverage?'YES':'NO')+'.';
+        var notes='Package: '+pkgName+' ($'+pkgPrice.toFixed(2)+'). Service Style: '+styleChoice+'. Cold Brew Flavor: '+flavorChoice+'. Add-ons: '+addonSummary+'. Subtotal: $'+preTax.toFixed(2)+'. Tax (8.25%): $'+taxTotal.toFixed(2)+'. Event total: $'+grandTotal.toFixed(2)+'. Charged today ('+(payType==='deposit'?'30% deposit':'paid in full, 5% discount applied')+'): $'+chargeNow.toFixed(2)+'. '+(payType==='deposit'?'Balance due 7 days before event: $'+(grandTotal-chargeNow).toFixed(2)+'.':'Discount savings: $'+(grandTotal-chargeNow).toFixed(2)+'.')+' Event time: '+time+'. Signed: '+signature+'. Overage/overtime authorization: '+(agreedOverage?'YES':'NO')+'.';
         var tp={to_email:'info@kahoa.shop',checkout_url:data.receipt_url||'',order_type:'VIP COFFEE CART BOOKING',customer_name:name,customer_email:email,customer_phone:phone,customer_address:location,product_name:'Coffee Cart \u2014 '+pkgName,grind:date+' '+time,price:'$'+chargeNow.toFixed(2)+' charged today',notes:notes};
         emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error('Cart booking email error',e);});
         var custTp=Object.assign({},tp,{to_email:email,order_type:'Your Kahoa Coffee Cart Booking'});
         emailjs.send(EJSVC,EJTMPL,custTp).catch(function(e){console.error('Cust email error',e);});
       }
-      try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:phone,product:'Coffee Cart Booking \u2014 '+pkgName+' ('+flavorChoice+')',grind:date,total:'$'+grandTotal.toFixed(2)+' ('+(payType==='deposit'?'30% deposit paid':'paid in full')+')',coupon:'',address:location,opted_in:'Yes',source:'kahoa.shop/vip-cart'})}).catch(function(){});}catch(e){}
+      try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:phone,product:'Coffee Cart Booking \u2014 '+pkgName+' ('+styleChoice+'; '+flavorChoice+')',grind:date,total:'$'+grandTotal.toFixed(2)+' ('+(payType==='deposit'?'30% deposit paid':'paid in full')+')',coupon:'',address:location,opted_in:'Yes',source:'kahoa.shop/vip-cart'})}).catch(function(){});}catch(e){}
     }else{
       throw new Error((data.detail&&data.detail.errors&&data.detail.errors[0]&&data.detail.errors[0].detail)||data.error||'Please try again.');
     }
