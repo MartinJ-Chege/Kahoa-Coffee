@@ -95,7 +95,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
   <p class=sub style="margin-bottom:24px;">Same VIP pricing philosophy, extended to kegs. Great for offices, hotels, restaurants, and cafes who want Kahoa on tap instead of by the bag.</p>
 
   <div class=prod-card style="margin-bottom:14px;">
-    <div class=prod-name style="color:#4a90d9;">Kifaru Classic Cold Brew Keg <span style="color:#4a90d9;float:right;">$125</span></div>
+    <div class=prod-name style="color:#4a90d9;">Kifaru Classic Cold Brew Keg <span style="color:#4a90d9;float:right;">$125 <span style="font-size:10px;font-weight:400;opacity:.7;">+ tax</span></span></div>
     <div class=prod-detail>5-gallon keg &middot; Smooth, bold, low-acid. Delivered ready to tap.</div>
     <div class=qty-add-row>
       <div class=qty-wrap>
@@ -107,7 +107,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
     </div>
   </div>
   <div class=prod-card style="margin-bottom:14px;">
-    <div class=prod-name style="color:#4a90d9;">Kifaru Nitro (Draft) Cold Brew Keg <span style="color:#4a90d9;float:right;">$130</span></div>
+    <div class=prod-name style="color:#4a90d9;">Kifaru Nitro (Draft) Cold Brew Keg <span style="color:#4a90d9;float:right;">$130 <span style="font-size:10px;font-weight:400;opacity:.7;">+ tax</span></span></div>
     <div class=prod-detail>5-gallon keg &middot; Cascading, creamy texture straight from the tap.</div>
     <div class=qty-add-row>
       <div class=qty-wrap>
@@ -119,7 +119,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
     </div>
   </div>
   <div class=prod-card style="margin-bottom:14px;">
-    <div class=prod-name style="color:#4a90d9;">Kifaru Spice Cold Brew Keg <span style="color:#4a90d9;float:right;">$140</span></div>
+    <div class=prod-name style="color:#4a90d9;">Kifaru Spice Cold Brew Keg <span style="color:#4a90d9;float:right;">$140 <span style="font-size:10px;font-weight:400;opacity:.7;">+ tax</span></span></div>
     <div class=prod-detail>5-gallon keg &middot; Vanilla bean, ginger, cardamom, clove &amp; cinnamon stick — spiced the way Kenya takes its chai.</div>
     <div class=qty-add-row>
       <div class=qty-wrap>
@@ -333,7 +333,7 @@ async function vipStartLease(){
 
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script>
-var KEG_COLD=125,KEG_NITRO=130,KEG_SPICE=140,LEASE_PRICE=50;var KEG_DEPOSIT=50,KEGERATOR_DEPOSIT=200;
+var KEG_COLD=125,KEG_NITRO=130,KEG_SPICE=140,LEASE_PRICE=50;var KEG_DEPOSIT=50,KEGERATOR_DEPOSIT=200;var KEG_TAX_RATE=0.0825;function vipTax(sub){return Math.round(sub*KEG_TAX_RATE*100)/100;}
 function vipKegCount(items){return items.reduce(function(s,i){return s+(i.unit==='keg'?i.qty:0);},0);}
 function vipDepositWaived(){var cb=document.getElementById('vf-has-deposit');return !!(cb&&cb.checked);}
 function vipGetDeposit(items){return vipDepositWaived()?0:vipKegCount(items)*KEG_DEPOSIT;}
@@ -394,7 +394,7 @@ function vipRenderCart(){
   totalsEl.style.display='block';
   document.getElementById('vip-subtotal').textContent='$'+subtotal.toFixed(2);
   document.getElementById('vip-shipping').textContent='Calculated at checkout';
-  document.getElementById('vip-total').textContent='$'+subtotal.toFixed(2)+' + shipping';
+  document.getElementById('vip-total').textContent='$'+subtotal.toFixed(2)+' + 8.25% sales tax';
   btn.disabled=false;
 }
 function vipIsAustin(zip){return AUSTIN_ZIPS.indexOf(zip)!==-1;}
@@ -417,12 +417,12 @@ function vipUpdateModalSummary(){
   var subtotal=vipCalcSubtotal();
   var shipping=vipGetShipping();
   var deposit=vipGetDeposit(vipCart);
-  var total=subtotal+shipping+deposit;
+  var tax=vipTax(subtotal);var total=subtotal+shipping+tax+deposit;
   var lines=vipCart.map(function(i){return '<p>'+i.qty+'× '+i.name+' ('+i.grindLabel+') — $'+(i.price*i.qty).toFixed(2)+'</p>';}).join('');
   document.getElementById('vip-modal-summary').innerHTML=
     lines+
     '<p style="margin-top:6px;font-size:11px;">Subtotal: $'+subtotal.toFixed(2)+'</p>'+
-    '<p style="font-size:11px;">Shipping: '+(shipping===0?'FREE':'$'+shipping.toFixed(2))+'</p>'+
+    '<p style="font-size:11px;">Shipping: '+(shipping===0?'FREE':'$'+shipping.toFixed(2))+'</p>'+ '<p style="font-size:11px;">Sales tax (8.25%): $'+tax.toFixed(2)+'</p>'+
     (deposit>0?'<p style="font-size:11px;">Refundable keg deposit ('+vipKegCount(vipCart)+' &times; $'+KEG_DEPOSIT+'): $'+deposit.toFixed(2)+'</p>':'')+
     '<p class=order-total>Total: $'+total.toFixed(2)+'</p>';
 }
@@ -474,10 +474,10 @@ async function vipPay(){
     var subtotal=cartSnapshot.reduce(function(s,i){return s+i.price*i.qty;},0);
     var shipping=vipGetShipping();
     var deposit=vipGetDeposit(cartSnapshot);
-    var total=subtotal+shipping+deposit;
+    var tax=vipTax(subtotal);var total=subtotal+shipping+tax+deposit;
     var cartItems=cartSnapshot.map(function(i){return{product_name:i.name,grind:i.grindLabel,quantity:i.qty,unit_price_cents:Math.round(i.price*100)};});
     var productSummary=cartSnapshot.map(function(i){return i.qty+'x '+i.name+' ('+i.grindLabel+')';}).join(', ');
-    var depositNote=deposit>0?' + refundable keg deposit ($'+deposit.toFixed(2)+')':'';
+    var depositNote=' + 8.25% sales tax ($'+tax.toFixed(2)+')'+(deposit>0?' + refundable keg deposit ($'+deposit.toFixed(2)+')':'');
     var result=await vipCard.tokenize();
     if(result.status!=='OK'){
       errEl.textContent='Card error: '+(result.errors?result.errors[0].message:result.status);
@@ -489,7 +489,7 @@ async function vipPay(){
       product_name:productSummary+depositNote,
       grind:'Mixed',
       quantity:1,
-      unit_price_cents:Math.round((subtotal+deposit)*100),
+      unit_price_cents:Math.round((subtotal+tax+deposit)*100),
       shipping:shipping>0?{serviceName:'Standard Shipping',amountCents:Math.round(shipping*100)}:null,
       buyer:{name:fname+' '+lname,email:email,phone:phone,address:address+', '+city+', '+state+' '+zip}
     };
