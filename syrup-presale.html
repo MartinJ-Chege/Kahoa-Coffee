@@ -54,7 +54,7 @@ button.pay:disabled{opacity:.6;cursor:default}
   <h1>Mombasa Wildflower<br>Honey &amp; Cardamom Coffee Syrup</h1>
   <p class="lead">Texas wildflower honey and cardamom, inspired by the spiced coffee traditions of Kenya's Swahili coast. Stir it into coffee, lattes and cold brew. Made in small batches in Austin.</p>
   <div class="img"><img src="/syrup-front.jpg" alt="Mombasa Wildflower Honey and Cardamom Coffee Syrup bottle"></div>
-  <div class="price">$18 <small>/ 12 oz bottle &middot; plus 8.25% sales tax</small></div>
+  <div class="price">$18 <small>/ 12 oz bottle &middot; plus 8.25% sales tax (Texas orders)</small></div>
   <ul class="facts">
     <li>Pre-orders open November 1. Deliveries start November 16</li>
     <li>Free delivery in the Austin area. Shipped anywhere in the US for a flat rate, free over $80</li>
@@ -82,7 +82,7 @@ button.pay:disabled{opacity:.6;cursor:default}
     <label>Card</label><div id="card"></div>
     <div class="sum">
       <div><span>Syrup <span id="s-q">1</span> &times; $18</span><span id="s-sub">$18.00</span></div>
-      <div><span>Sales tax (8.25%)</span><span id="s-tax">$1.49</span></div>
+      <div><span>Sales tax (8.25%, Texas orders)</span><span id="s-tax">$1.49</span></div>
       <div><span id="s-dl">Delivery</span><span id="s-ship">Free</span></div>
       <div class="t"><span>Total</span><span id="s-tot">$19.49</span></div>
     </div>
@@ -114,7 +114,7 @@ function money(n){return '$'+n.toFixed(2)}
 function round2(n){return Math.round(n*100)/100}
 function isTX(z){var n=+z.slice(0,3);return z.length===5&&((n>=750&&n<=799)||n===733||n===885)}
 function shipFor(q,sub,z){if(z.length!==5)return{amt:0,label:'Enter ZIP'};if(AUSTIN_ZIPS.indexOf(z)>=0)return{amt:0,label:'Free'};if(sub>=80)return{amt:0,label:'Free'};var a=9.99+3*(q-1);return{amt:a,label:money(a)}}
-function calc(){var q=+$('f-qty').value,z=$('f-zip').value.trim(),sub=PRICE*q,tax=round2(sub*TAX),sh=shipFor(q,sub,z);$('s-q').textContent=q;$('s-sub').textContent=money(sub);$('s-tax').textContent=money(tax);$('s-ship').textContent=sh.label;$('s-dl').textContent=(AUSTIN_ZIPS.indexOf(z)>=0?'Local delivery':'Shipping');$('s-tot').textContent=money(sub+tax+sh.amt);return{q:q,sub:sub,tax:tax,ship:sh.amt,total:round2(sub+tax+sh.amt)}}
+function calc(){var q=+$('f-qty').value,z=$('f-zip').value.trim(),sub=PRICE*q,tax=(z.length!==5||isTX(z))?round2(sub*TAX):0,sh=shipFor(q,sub,z);$('s-q').textContent=q;$('s-sub').textContent=money(sub);$('s-tax').textContent=money(tax);$('s-ship').textContent=sh.label;$('s-dl').textContent=(AUSTIN_ZIPS.indexOf(z)>=0?'Local delivery':'Shipping');$('s-tot').textContent=money(sub+tax+sh.amt);return{q:q,sub:sub,tax:tax,ship:sh.amt,total:round2(sub+tax+sh.amt)}}
 function wait(){var e=$('w-email').value.trim();if(!e||e.indexOf('@')<1){$('w-msg').textContent='Please enter a valid email.';return}
   try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:'Friend',email:e,phone:'',product:'Mombasa Wildflower Syrup (Pre-sale reminder)',grind:'N/A',total:'Coming Soon',coupon:'',address:'',opted_in:'Yes',source:'kahoa.shop/syrup-presale'})})}catch(x){}
   $('w-msg').textContent='Got it. We will email you at '+e+' on November 1.'}
