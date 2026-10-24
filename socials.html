@@ -376,16 +376,17 @@ setTimeout(function(){
 
 // ── 2. SOCIAL PROOF TICKER ─────────────────────────────────────────────────
 var _kahoaProofs=[
-  {name:'James',city:'Austin',product:'Savanna Gold',time:'2 min ago'},
-  {name:'Amara',city:'Houston',product:'Nairobi Sunrise',time:'5 min ago'},
-  {name:'David',city:'Dallas',product:'Try All Three Bundle',time:'8 min ago'},
-  {name:'Sarah',city:'Austin',product:'Ngong Dark Reserve',time:'12 min ago'},
-  {name:'Michael',city:'San Antonio',product:'Savanna Gold',time:'15 min ago'},
-  {name:'Zoe',city:'Austin',product:'Nairobi Sunrise',time:'just now'},
-  {name:'Kevin',city:'New York',product:'Try All Three Bundle',time:'3 min ago'},
-  {name:'Fatima',city:'Chicago',product:'Ngong Dark Reserve',time:'7 min ago'},
-  {name:'Lucas',city:'Austin',product:'Savanna Gold',time:'11 min ago'},
-  {name:'Priya',city:'Seattle',product:'Nairobi Sunrise',time:'18 min ago'},
+{name:'Chris',product:'all three blends',time:'July'},
+{name:'Clement',product:'Savanna Gold',time:'July'},
+{name:'Matthew',product:'Nairobi Sunrise',time:'July'},
+{name:'Yvonne',product:'Nairobi Sunrise',time:'August'},
+{name:'Alisha',product:'Savanna Gold',time:'August'},
+{name:'Brandy',product:'Nairobi Sunrise',time:'August'},
+{name:'Karan',product:'Ngong Dark Reserve',time:'August'},
+{name:'Katie',product:'Nairobi Sunrise',time:'August'},
+{name:'Robert',product:'Ngong Dark Reserve',time:'August'},
+{name:'Scott',product:'Savanna Gold',time:'August'},
+{name:'Rhys',product:'all three blends',time:'September'}
 ];
 var _kahoaProofIdx=0,_kahoaProofEl=null;
 function kahoaShowProof(){
@@ -399,8 +400,8 @@ function kahoaShowProof(){
   _kahoaProofIdx++;
   _kahoaProofEl.innerHTML='<div style="display:flex;align-items:center;gap:10px;">'
     +'<span style="font-size:22px;">☕</span>'
-    +'<div><p style="font-family:Montserrat,sans-serif;font-size:11px;font-weight:700;color:#e8c76a;margin:0;">'+p.name+' from '+p.city+'</p>'
-    +'<p style="font-family:Montserrat,sans-serif;font-size:10px;color:rgba(255,255,255,0.6);margin:2px 0 0;">just ordered '+p.product+'</p></div>'
+    +'<div><p style="font-family:Montserrat,sans-serif;font-size:11px;font-weight:700;color:#e8c76a;margin:0;">'+p.name+'</p>'
+    +'<p style="font-family:Montserrat,sans-serif;font-size:10px;color:rgba(255,255,255,0.6);margin:2px 0 0;">ordered '+p.product+'</p></div>'
     +'<span style="font-family:Montserrat,sans-serif;font-size:9px;color:rgba(255,255,255,0.3);margin-left:auto;">'+p.time+'</span>'
     +'</div>';
   _kahoaProofEl.style.display='block';
