@@ -470,17 +470,17 @@ setTimeout(function(){
 
 // ── 2. SOCIAL PROOF TICKER ─────────────────────────────────────────────────
 var _kahoaProofs=[
-{name:'Chris',product:'all three blends',time:'July'},
-{name:'Clement',product:'Savanna Gold',time:'July'},
-{name:'Matthew',product:'Nairobi Sunrise',time:'July'},
-{name:'Yvonne',product:'Nairobi Sunrise',time:'August'},
-{name:'Alisha',product:'Savanna Gold',time:'August'},
-{name:'Brandy',product:'Nairobi Sunrise',time:'August'},
-{name:'Karan',product:'Ngong Dark Reserve',time:'August'},
-{name:'Katie',product:'Nairobi Sunrise',time:'August'},
-{name:'Robert',product:'Ngong Dark Reserve',time:'August'},
-{name:'Scott',product:'Savanna Gold',time:'August'},
-{name:'Rhys',product:'all three blends',time:'September'}
+{name:'Chris',city:'Austin',product:'all three blends',time:'July'},
+{name:'Clement',city:'Houston',product:'Savanna Gold',time:'July'},
+{name:'Matthew',city:'Roseville',product:'Nairobi Sunrise',time:'July'},
+{name:'Yvonne',city:'Jacksonville',product:'Nairobi Sunrise',time:'August'},
+{name:'Alisha',city:'Austin',product:'Savanna Gold',time:'August'},
+{name:'Brandy',city:'Austin',product:'Nairobi Sunrise',time:'August'},
+{name:'Karan',city:'Austin',product:'Ngong Dark Reserve',time:'August'},
+{name:'Katie',city:'Austin',product:'Nairobi Sunrise',time:'August'},
+{name:'Robert',city:'Austin',product:'Ngong Dark Reserve',time:'August'},
+{name:'Scott',city:'Austin',product:'Savanna Gold',time:'August'},
+{name:'Rhys',city:'Austin',product:'all three blends',time:'September'}
 ];
 var _kahoaProofIdx=0,_kahoaProofEl=null;
 function kahoaShowProof(){
@@ -494,7 +494,7 @@ function kahoaShowProof(){
   _kahoaProofIdx++;
   _kahoaProofEl.innerHTML='<div style="display:flex;align-items:center;gap:10px;">'
     +'<span style="font-size:22px;">☕</span>'
-    +'<div><p style="font-family:Montserrat,sans-serif;font-size:11px;font-weight:700;color:#e8c76a;margin:0;">'+p.name+'</p>'
+    +'<div><p style="font-family:Montserrat,sans-serif;font-size:11px;font-weight:700;color:#e8c76a;margin:0;">'+p.name+(p.city?' from '+p.city:'')+'</p>'
     +'<p style="font-family:Montserrat,sans-serif;font-size:10px;color:rgba(255,255,255,0.6);margin:2px 0 0;">ordered '+p.product+'</p></div>'
     +'<span style="font-family:Montserrat,sans-serif;font-size:9px;color:rgba(255,255,255,0.3);margin-left:auto;">'+p.time+'</span>'
     +'</div>';
