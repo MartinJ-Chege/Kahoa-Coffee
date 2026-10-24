@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Mombasa Wildflower Honey &amp; Cardamom Coffee Syrup | Pre-Sale | Kahoa Coffee</title>
-<meta name="description" content="Pre-order Mombasa Wildflower, Kahoa's Texas wildflower honey and cardamom coffee syrup inspired by Kenya's Swahili coast. Pre-sale opens November 1. Austin-area delivery.">
+<meta name="description" content="Pre-order Mombasa Wildflower, Kahoa's Texas wildflower honey and cardamom coffee syrup inspired by Kenya's Swahili coast. Pre-sale opens November 1, shipping from November 16.">
 <link rel="canonical" href="https://kahoa.shop/syrup-presale.html">
 <link rel="icon" type="image/png" href="/kahoalogo.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -54,10 +54,10 @@ button.pay:disabled{opacity:.6;cursor:default}
   <h1>Mombasa Wildflower<br>Honey &amp; Cardamom Coffee Syrup</h1>
   <p class="lead">Texas wildflower honey and cardamom, inspired by the spiced coffee traditions of Kenya's Swahili coast. Stir it into coffee, lattes and cold brew. Made in small batches in Austin.</p>
   <div class="img"><img src="/syrup-front.jpg" alt="Mombasa Wildflower Honey and Cardamom Coffee Syrup bottle"></div>
-  <div class="price">$18 <small>/ 12 oz bottle &middot; plus 8.25% sales tax</small></div>
+  <div class="price">$18 <small>/ 12 oz bottle &middot; plus sales tax in Texas</small></div>
   <ul class="facts">
     <li>Pre-orders open November 1. Deliveries start November 16</li>
-    <li>Free Austin-area delivery, we bring it to your door</li>
+    <li>Free delivery in the Austin area. Shipped anywhere in the US for a flat rate, free over $80</li>
     <li>Great gift: pairs with any Kahoa blend</li>
   </ul>
 
@@ -75,20 +75,20 @@ button.pay:disabled{opacity:.6;cursor:default}
     <div class="row"><div><label>First name</label><input id="f-first" autocomplete="given-name"></div><div><label>Last name</label><input id="f-last" autocomplete="family-name"></div></div>
     <label>Email</label><input id="f-email" type="email" autocomplete="email">
     <label>Phone</label><input id="f-phone" type="tel" autocomplete="tel">
-    <label>Delivery address (Austin area)</label><input id="f-addr" autocomplete="address-line1">
-    <div class="row"><div><label>City</label><input id="f-city" autocomplete="address-level2"></div><div><label>ZIP</label><input id="f-zip" inputmode="numeric" maxlength="5" autocomplete="postal-code"></div></div>
+    <label>Delivery address</label><input id="f-addr" autocomplete="address-line1">
+    <div class="row"><div><label>City</label><input id="f-city" autocomplete="address-level2"></div><div><label>State</label><input id="f-state" maxlength="2" value="TX" autocomplete="address-level1" style="text-transform:uppercase"></div></div><label>ZIP</label><input id="f-zip" inputmode="numeric" maxlength="5" autocomplete="postal-code" oninput="calc()">
     <label>Bottles</label>
     <select id="f-qty" onchange="calc()"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select>
     <label>Card</label><div id="card"></div>
     <div class="sum">
       <div><span>Syrup <span id="s-q">1</span> &times; $18</span><span id="s-sub">$18.00</span></div>
-      <div><span>Sales tax (8.25%)</span><span id="s-tax">$1.49</span></div>
-      <div><span>Delivery</span><span>Free</span></div>
+      <div><span>Sales tax (8.25%, Texas orders)</span><span id="s-tax">$1.49</span></div>
+      <div><span id="s-dl">Delivery</span><span id="s-ship">Free</span></div>
       <div class="t"><span>Total</span><span id="s-tot">$19.49</span></div>
     </div>
     <div class="err" id="err"></div>
     <button class="pay" id="pay" onclick="pay()">Pre-order now</button>
-    <p class="note">You're charged today. Deliveries start November 16 and go out in the order orders come in. We'll email you before yours arrives. Delivery is Austin-area only, so please use an Austin-area ZIP.</p>
+    <p class="note">You're charged today. Deliveries start November 16 and go out in the order orders come in. We'll email you before yours arrives. Austin-area orders are hand-delivered. Everywhere else ships by standard shipping.</p>
   </div>
 
   <div class="box" id="ok">
@@ -112,7 +112,9 @@ var payments=null,card=null;
 function $(id){return document.getElementById(id)}
 function money(n){return '$'+n.toFixed(2)}
 function round2(n){return Math.round(n*100)/100}
-function calc(){var q=+$('f-qty').value,sub=PRICE*q,tax=round2(sub*TAX);$('s-q').textContent=q;$('s-sub').textContent=money(sub);$('s-tax').textContent=money(tax);$('s-tot').textContent=money(sub+tax);return{q:q,sub:sub,tax:tax,total:round2(sub+tax)}}
+function isTX(z){var n=+z.slice(0,3);return z.length===5&&((n>=750&&n<=799)||n===733||n===885)}
+function shipFor(q,sub,z){if(z.length!==5)return{amt:0,label:'Enter ZIP'};if(AUSTIN_ZIPS.indexOf(z)>=0)return{amt:0,label:'Free'};if(sub>=80)return{amt:0,label:'Free'};var a=9.99+3*(q-1);return{amt:a,label:money(a)}}
+function calc(){var q=+$('f-qty').value,z=$('f-zip').value.trim(),sub=PRICE*q,tax=isTX(z)||z.length!==5?round2(sub*TAX):0,sh=shipFor(q,sub,z);$('s-q').textContent=q;$('s-sub').textContent=money(sub);$('s-tax').textContent=money(tax);$('s-ship').textContent=sh.label;$('s-dl').textContent=(AUSTIN_ZIPS.indexOf(z)>=0?'Local delivery':'Shipping');$('s-tot').textContent=money(sub+tax+sh.amt);return{q:q,sub:sub,tax:tax,ship:sh.amt,total:round2(sub+tax+sh.amt)}}
 function wait(){var e=$('w-email').value.trim();if(!e||e.indexOf('@')<1){$('w-msg').textContent='Please enter a valid email.';return}
   try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:'Friend',email:e,phone:'',product:'Mombasa Wildflower Syrup (Pre-sale reminder)',grind:'N/A',total:'Coming Soon',coupon:'',address:'',opted_in:'Yes',source:'kahoa.shop/syrup-presale'})})}catch(x){}
   $('w-msg').textContent='Got it. We will email you at '+e+' on November 1.'}
@@ -120,30 +122,29 @@ async function initSquare(){
   try{payments=Square.payments(SQUARE_APP_ID,SQUARE_LOC);card=await payments.card();await card.attach('#card')}catch(e){console.error('Square init',e);$('err').textContent='Payment form could not load. Please refresh the page.';$('err').style.display='block'}}
 async function pay(){
   var first=$('f-first').value.trim(),last=$('f-last').value.trim(),email=$('f-email').value.trim(),phone=$('f-phone').value.trim(),
-      addr=$('f-addr').value.trim(),city=$('f-city').value.trim(),zip=$('f-zip').value.trim(),err=$('err');
+      addr=$('f-addr').value.trim(),city=$('f-city').value.trim(),st=$('f-state').value.trim().toUpperCase(),zip=$('f-zip').value.trim(),err=$('err');
   err.style.display='none';
   function bad(m){err.textContent=m;err.style.display='block'}
   if(!first||!last)return bad('Please enter your full name.');
   if(email.indexOf('@')<1)return bad('Please enter a valid email.');
   if(!phone)return bad('Please add a phone number for delivery.');
-  if(!addr||!city||zip.length!==5)return bad('Please enter your full delivery address.');
-  if(AUSTIN_ZIPS.indexOf(zip)<0)return bad('Sorry, delivery is Austin-area only for now. Please use an Austin-area ZIP.');
+  if(!addr||!city||st.length!==2||zip.length!==5)return bad('Please enter your full delivery address.');
   if(!card)return bad('Payment form is still loading. Please try again in a moment.');
   var c=calc(),btn=$('pay');btn.disabled=true;btn.textContent='Processing...';
   try{
     var r=await card.tokenize();
     if(r.status!=='OK'){bad('Card error: '+(r.errors&&r.errors[0]?r.errors[0].message:r.status));btn.disabled=false;btn.textContent='Pre-order now';return}
-    var name=first+' '+last,full=addr+', '+city+', TX '+zip;
-    var summary=c.q+'x Mombasa Wildflower Honey & Cardamom Coffee Syrup 12 oz (PRE-ORDER) + 8.25% sales tax ($'+c.tax.toFixed(2)+')';
+    var name=first+' '+last,full=addr+', '+city+', '+st+' '+zip;var local=AUSTIN_ZIPS.indexOf(zip)>=0;
+    var summary=c.q+'x Mombasa Wildflower Honey & Cardamom Coffee Syrup 12 oz (PRE-ORDER) + sales tax ($'+c.tax.toFixed(2)+')'+(local?' [LOCAL DELIVERY]':' [SHIP]');
     var res=await fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
       source_id:r.token,verification_token:(r.details&&r.details.verificationToken)||undefined,
-      product_name:summary,grind:'N/A',quantity:1,unit_price_cents:Math.round(c.total*100),shipping:null,
+      product_name:summary,grind:'N/A',quantity:1,unit_price_cents:Math.round((c.sub+c.tax)*100),shipping:c.ship>0?{serviceName:'Standard Shipping',amountCents:Math.round(c.ship*100)}:null,
       buyer:{name:name,email:email,phone:phone,address:full}})});
     var d=await res.json();
     var charged=d.success===true||(d.payment_id&&!d.checkout_url);
     if(!res.ok||!charged){bad('Payment failed: '+(d.errors&&d.errors[0]?d.errors[0].detail:(d.error||'please try again')));btn.disabled=false;btn.textContent='Pre-order now';return}
     $('form').style.display='none';$('ok').style.display='block';window.scrollTo(0,0);
-    var tp={to_email:'info@kahoa.shop',order_id:d.payment_id||d.order_id||('SYRUP-'+Date.now()),order_type:'SYRUP PRE-ORDER',customer_name:name,customer_email:email,customer_phone:phone,customer_address:full,product_name:summary,grind:'N/A',price:money(c.total),shipping_method:'Free Austin-area delivery',checkout_url:d.receipt_url||'',notes:'Mombasa Wildflower syrup pre-sale. Deliveries start Nov 16, in order received. Email the customer before delivery.'};
+    var tp={to_email:'info@kahoa.shop',order_id:d.payment_id||d.order_id||('SYRUP-'+Date.now()),order_type:'SYRUP PRE-ORDER',customer_name:name,customer_email:email,customer_phone:phone,customer_address:full,product_name:summary,grind:'N/A',price:money(c.total),shipping_method:local?'Free Austin-area delivery':'Standard Shipping '+money(c.ship),checkout_url:d.receipt_url||'',notes:'Mombasa Wildflower syrup pre-sale. Fulfillment starts Nov 16, in order received. '+(local?'Hand-deliver':'Ship')+' Email the customer before it goes out.'};
     if(typeof emailjs!=='undefined'){emailjs.init(EJKEY);emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error(e)});
       emailjs.send(EJSVC,EJTMPL,Object.assign({},tp,{to_email:email,order_type:'Your Kahoa Coffee Pre-Order Confirmation'})).catch(function(e){console.error(e)})}
     try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:phone,product:summary,grind:'N/A',total:money(c.total),coupon:'',address:full,opted_in:'Yes',source:'kahoa.shop/syrup-presale'})})}catch(x){}
