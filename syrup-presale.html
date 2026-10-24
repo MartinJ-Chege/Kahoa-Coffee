@@ -56,7 +56,7 @@ button.pay:disabled{opacity:.6;cursor:default}
   <div class="img"><img src="/syrup-front.jpg" alt="Mombasa Wildflower Honey and Cardamom Coffee Syrup bottle"></div>
   <div class="price">$18 <small>/ 12 oz bottle &middot; plus 8.25% sales tax</small></div>
   <ul class="facts">
-    <li>Pre-orders are made in the order they come in</li>
+    <li>Pre-orders open November 1. Deliveries start November 16</li>
     <li>Free Austin-area delivery, we bring it to your door</li>
     <li>Great gift: pairs with any Kahoa blend</li>
   </ul>
@@ -88,12 +88,12 @@ button.pay:disabled{opacity:.6;cursor:default}
     </div>
     <div class="err" id="err"></div>
     <button class="pay" id="pay" onclick="pay()">Pre-order now</button>
-    <p class="note">You're charged today. We'll email you a delivery date. Delivery is Austin-area only, so please use an Austin-area ZIP.</p>
+    <p class="note">You're charged today. Deliveries start November 16 and go out in the order orders come in. We'll email you before yours arrives. Delivery is Austin-area only, so please use an Austin-area ZIP.</p>
   </div>
 
   <div class="box" id="ok">
     <h2>You're in. Thank you!</h2>
-    <p style="font-size:14px;line-height:1.8;color:rgba(255,255,255,.7);font-weight:300">Your pre-order is confirmed and a receipt is on its way to your email. We'll message you with your delivery date.</p>
+    <p style="font-size:14px;line-height:1.8;color:rgba(255,255,255,.7);font-weight:300">Your pre-order is confirmed and a receipt is on its way to your email. Deliveries start November 16, and we'll email you before yours arrives.</p>
     <p style="margin-top:18px"><a href="/shop.html" style="color:var(--gold)">Back to the shop</a></p>
   </div>
 </div>
@@ -143,7 +143,7 @@ async function pay(){
     var charged=d.success===true||(d.payment_id&&!d.checkout_url);
     if(!res.ok||!charged){bad('Payment failed: '+(d.errors&&d.errors[0]?d.errors[0].detail:(d.error||'please try again')));btn.disabled=false;btn.textContent='Pre-order now';return}
     $('form').style.display='none';$('ok').style.display='block';window.scrollTo(0,0);
-    var tp={to_email:'info@kahoa.shop',order_id:d.payment_id||d.order_id||('SYRUP-'+Date.now()),order_type:'SYRUP PRE-ORDER',customer_name:name,customer_email:email,customer_phone:phone,customer_address:full,product_name:summary,grind:'N/A',price:money(c.total),shipping_method:'Free Austin-area delivery',checkout_url:d.receipt_url||'',notes:'Mombasa Wildflower syrup pre-sale. Hand-deliver and email the customer a delivery date.'};
+    var tp={to_email:'info@kahoa.shop',order_id:d.payment_id||d.order_id||('SYRUP-'+Date.now()),order_type:'SYRUP PRE-ORDER',customer_name:name,customer_email:email,customer_phone:phone,customer_address:full,product_name:summary,grind:'N/A',price:money(c.total),shipping_method:'Free Austin-area delivery',checkout_url:d.receipt_url||'',notes:'Mombasa Wildflower syrup pre-sale. Deliveries start Nov 16, in order received. Email the customer before delivery.'};
     if(typeof emailjs!=='undefined'){emailjs.init(EJKEY);emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error(e)});
       emailjs.send(EJSVC,EJTMPL,Object.assign({},tp,{to_email:email,order_type:'Your Kahoa Coffee Pre-Order Confirmation'})).catch(function(e){console.error(e)})}
     try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:phone,product:summary,grind:'N/A',total:money(c.total),coupon:'',address:full,opted_in:'Yes',source:'kahoa.shop/syrup-presale'})})}catch(x){}
