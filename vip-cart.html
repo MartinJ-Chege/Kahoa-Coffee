@@ -106,7 +106,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
   <p class=sec-label style="margin-top:16px;">Choose Your Package</p>
   <div id=cb-packages style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
     <div class="prod-card cb-pkg" data-pkg="essentials" onclick="cbSelectPkg('essentials')" style="cursor:pointer;">
-      <div class=prod-name>Essentials <span style="color:var(--gold);float:right;">$650</span></div>
+      <div class=prod-name>Essentials <span style="color:var(--gold);float:right;">$750</span></div>
       <div class=prod-detail>2 hours &middot; up to ~50 guests &middot; 1 barista &middot; drip + <span style="color:#4a90d9;">Kifaru Spice Cold Brew</span> &middot; 1 signature drink included</div>
     </div>
     <div class="prod-card cb-pkg" data-pkg="premium" onclick="cbSelectPkg('premium')" style="cursor:pointer;border-color:var(--gold);">
@@ -221,7 +221,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
 
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script>
-var CART_PKG={essentials:650,premium:1100,full:1850};var SIG_INCLUDED={essentials:1,premium:2,full:3},SIG_EXTRA=50;function cbMenuExtra(){var n=document.querySelectorAll('.cb-drink:checked').length;var inc=cbSelectedPkg?SIG_INCLUDED[cbSelectedPkg]:0;return {n:n,inc:inc,extra:cbSelectedPkg?Math.max(0,n-inc):0};}
+var CART_PKG={essentials:750,premium:1100,full:1850};var SIG_INCLUDED={essentials:1,premium:2,full:3},SIG_EXTRA=50;function cbMenuExtra(){var n=document.querySelectorAll('.cb-drink:checked').length;var inc=cbSelectedPkg?SIG_INCLUDED[cbSelectedPkg]:0;return {n:n,inc:inc,extra:cbSelectedPkg?Math.max(0,n-inc):0};}
 var ADDON_TEA=1,ADDON_SIGDRINK=50,ADDON_STICKER_RATE=0.30,ADDON_STICKER_MIN=125,ADDON_PRINT_RATE=0.65,ADDON_PRINT_MIN=325;
 var DJ_PRICE={essentials:550,premium:650,full:750};
 var ADDON_LATTE=175;
