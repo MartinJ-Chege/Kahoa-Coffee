@@ -99,8 +99,8 @@ html,body{overflow-x:clip;width:100%;}</style></style>
 <p style="font-size:15px;color:rgba(255,255,255,0.55);line-height:1.85;font-weight:300;margin-bottom:8px;">Nairobi Sunrise + Savanna Gold + Ngong Dark Reserve</p>
 <p style="font-size:13px;color:rgba(212,168,67,0.7);margin-bottom:28px;font-style:italic;">One bag of each — discover your favourite Kenyan highland roast.</p>
 <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:28px;flex-wrap:wrap;">
-<span style="font-family:'Cormorant Garamond',serif;font-size:22px;color:rgba(255,255,255,0.35);text-decoration:line-through;">$57</span>
-<span style="font-family:'Cormorant Garamond',serif;font-size:42px;color:var(--gold);font-weight:600;">$48</span>
+<span style="font-family:'Cormorant Garamond',serif;font-size:22px;color:rgba(255,255,255,0.35);text-decoration:line-through;">$60</span>
+<span style="font-family:'Cormorant Garamond',serif;font-size:42px;color:var(--gold);font-weight:600;">$51</span>
 <span style="background:#2a7a3b;color:#fff;font-size:11px;font-weight:700;letter-spacing:2px;padding:6px 12px;font-family:Montserrat,sans-serif;">SAVE $9</span>
 </div>
 <button onclick="kahoaAddTrioBundle()" id=kahoa-trio-bundle-btn style="background:var(--gold);color:var(--coffee-dark);border:none;padding:16px 48px;font-family:Montserrat,sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;">Add Bundle to Cart →</button>
@@ -404,7 +404,7 @@ function kahoaAddTrioBundle(){
   try{items=JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){}
   items=items.filter(function(i){return['nyeri','kirinyaga','dark'].indexOf(i.productKey)===-1;});
   [{k:'nyeri',n:'Nairobi Sunrise Signature Blend'},{k:'kirinyaga',n:'Savanna Gold Signature Blend'},{k:'dark',n:'Ngong Dark Reserve Signature Blend'}].forEach(function(p){
-    items.push({productKey:p.k,productName:p.n,grind:'whole',grindLabel:'Whole Bean',unitPrice:16,qty:1,bundleItem:true});
+    items.push({productKey:p.k,productName:p.n,grind:'whole',grindLabel:'Whole Bean',unitPrice:17,qty:1,bundleItem:true});
   });
   localStorage.setItem(KEY,JSON.stringify(items));
   // Open cart directly - no function dependency
@@ -414,7 +414,7 @@ function kahoaAddTrioBundle(){
   if(dr) dr.style.cssText='z-index:10001;background:#faf4e8;flex-direction:column;width:100%;max-width:440px;height:100vh;position:fixed;top:0;right:0;display:flex;box-shadow:-12px 0 48px #140c0552';
   // Render cart content
   if(typeof kahoaCartRender==='function') kahoaCartRender();
-  if(btn){btn.textContent='Added ✓ $48';setTimeout(function(){btn.textContent='Add Bundle to Cart →';},2500);}
+  if(btn){btn.textContent='Added ✓ $51';setTimeout(function(){btn.textContent='Add Bundle to Cart →';},2500);}
 }
 </script>
 <script>
@@ -555,11 +555,11 @@ function kahoaAddTrioBundle(){
   try{items=JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){}
   items=items.filter(function(i){return['nyeri','kirinyaga','dark'].indexOf(i.productKey)===-1;});
   [{k:'nyeri',n:'Nairobi Sunrise Signature Blend'},{k:'kirinyaga',n:'Savanna Gold Signature Blend'},{k:'dark',n:'Ngong Dark Reserve Signature Blend'}].forEach(function(p){
-    items.push({productKey:p.k,productName:p.n,grind:'whole',grindLabel:'Whole Bean',unitPrice:16,qty:1,bundleItem:true});
+    items.push({productKey:p.k,productName:p.n,grind:'whole',grindLabel:'Whole Bean',unitPrice:17,qty:1,bundleItem:true});
   });
   localStorage.setItem(KEY,JSON.stringify(items));
   if(typeof kahoaCartOpen==='function') kahoaCartOpen();
-  if(btn){btn.textContent='Added ✓ $48';setTimeout(function(){btn.textContent='Add Bundle to Cart →';},2500);}
+  if(btn){btn.textContent='Added ✓ $51';setTimeout(function(){btn.textContent='Add Bundle to Cart →';},2500);}
 }
 </script>
 <script>
