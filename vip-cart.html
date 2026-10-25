@@ -129,15 +129,25 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
   </div>
   <p class=sub id=cb-style-note style="font-size:11px;margin-bottom:20px;">The latte art printer works with the espresso bar.</p>
 
-  <p class=sec-label>Cold Brew Flavor</p>
-  <div class=field style="margin-bottom:20px;">
-    <select id=cb-flavor>
-      <option value="Kifaru Spice Cold Brew">Kifaru Spice &mdash; vanilla bean, ginger, cardamom, clove &amp; cinnamon stick</option>
-    </select>
-  </div>
-  <p class=sub style="font-size:11px;margin-top:-14px;margin-bottom:20px;">Kifaru Spice is spiced the way Kenya takes its chai — for a cup that runs a little closer to home. Premium &amp; Full Experience also pour Kifaru Nitro (nitrogen-infused) from the cart's tap tower, alongside your still cold brew flavor above.</p>
+  <p class=sec-label>Cold Brew on Tap</p>
+ <div style="display:flex;flex-direction:column;gap:2px;margin-bottom:8px;">
+ <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox  id=cb-tap-cold checked onchange=cbTapsSync()> <span>Kifaru Spice Cold Brew <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; vanilla bean, ginger, cardamom, clove &amp; cinnamon stick</span></span></label>
+ <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox  id=cb-tap-nitro onchange=cbTapsSync()> <span>Kifaru Spice Nitro <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; the same recipe, nitrogen-infused (Premium &amp; Full Experience)</span></span></label>
+ </div>
+ <input type=hidden id=cb-flavor value="Kifaru Spice Cold Brew">
+ <p class=sub style="font-size:11px;margin-bottom:20px;">Our cart has 2 taps. Choose one or both. Kifaru Spice is spiced the way Kenya takes its chai, for a cup that runs a little closer to home.</p>
 
-  <p class=sec-label>Add-Ons</p>
+ <p class=sec-label>Signature Drinks (optional)</p>
+ <div style="display:flex;flex-direction:column;gap:2px;margin-bottom:8px;">
+ <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox class=cb-drink  value="Mombasa Wildflower Latte"> <span>Mombasa Wildflower Latte <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; honey &amp; cardamom, hot or iced</span></span></label>
+ <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox class=cb-drink  value="Kifaru Spice with Cold Foam"> <span>Kifaru Spice with Cold Foam <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; spiced cold foam on top</span></span></label>
+ <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox class=cb-drink  value="Kahawa Tamu"> <span>Kahawa Tamu <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; Kenyan-style iced milk coffee, strong &amp; sweet</span></span></label>
+ <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox class=cb-drink  value="Barafu Pour-Over"> <span>Barafu Pour-Over <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; pour-over brewed onto ice</span></span></label>
+ <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox class=cb-drink  value="Rift Valley Fizz"> <span>Rift Valley Fizz <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; espresso over Topo Chico with an orange peel</span></span></label>
+ </div>
+ <p class=sub style="font-size:11px;margin-bottom:20px;">Pick the ones you would like on your menu. We will confirm the final menu with you before the event.</p>
+
+ <p class=sec-label>Add-Ons</p>
   <div style="display:flex;flex-direction:column;gap:2px;margin-bottom:20px;">
     <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
       <span><input type=checkbox id=cb-addon-tea onchange=cbCalc()> Hot Tea &amp; Hot Cocoa</span><span id=cb-price-tea style="color:var(--gold);">+$0.00</span>
@@ -234,10 +244,10 @@ function baSave(k,v){try{sessionStorage.setItem(k,JSON.stringify(v));return true
 function baClear(){try{sessionStorage.removeItem(BA_DRAFT_KEY);sessionStorage.removeItem(BA_SIGNED_KEY);}catch(e){}}
 function cbEsc(s){return String(s).replace(/[&<>"']/g,function(m){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});}
 function cbVal(id){var el=document.getElementById(id);return el?el.value.trim():'';}
-function cbOrderFields(){
+function cbDrinks(){return Array.prototype.slice.call(document.querySelectorAll('.cb-drink:checked')).map(function(e){return e.value;}).join(', ');} function cbTapsSync(){var c=document.getElementById('cb-tap-cold'),n=document.getElementById('cb-tap-nitro'),h=document.getElementById('cb-flavor');if(!c||!n||!h)return;if(!c.checked&&!n.checked){c.checked=true;}var v=[];if(c.checked)v.push('Kifaru Spice Cold Brew');if(n.checked)v.push('Kifaru Spice Nitro');h.value=v.join(' + ');h.dispatchEvent(new Event('input'));} function cbOrderFields(){
   var addons={};
   Object.keys(CB_ADDON_IDS).forEach(function(k){addons[k]=document.getElementById(CB_ADDON_IDS[k]).checked;});
-  return {pkg:cbSelectedPkg,date:cbVal('cb-date'),time:cbVal('cb-time'),guests:Math.max(1,parseInt(document.getElementById('cb-guests').value)||1),flavor:cbVal('cb-flavor'),style:cbVal('cb-style'),location:cbVal('cb-location'),addons:addons};
+  return {pkg:cbSelectedPkg,date:cbVal('cb-date'),time:cbVal('cb-time'),guests:Math.max(1,parseInt(document.getElementById('cb-guests').value)||1),flavor:cbVal('cb-flavor'),drinks:cbDrinks(),style:cbVal('cb-style'),location:cbVal('cb-location'),addons:addons};
 }
 function cbOrderKey(){return JSON.stringify(cbOrderFields());}
 function cbSignedRecord(){var s=baLoad(BA_SIGNED_KEY);return(s&&cbSelectedPkg&&s.key===cbOrderKey())?s:null;}
@@ -276,7 +286,8 @@ function cbGoSign(){
     ['Estimated guests',String(f.guests)],
     ['Location',f.location],
     ['Service style',f.style],
-    ['Cold brew flavor',f.flavor]
+    ['Cold brew on tap',f.flavor],
+    ['Signature drinks',f.drinks||'None selected']
   ];
   var any=false;
   Object.keys(CB_ADDON_IDS).forEach(function(k){
@@ -308,7 +319,7 @@ function cbRestoreDraft(){
   if(!d||!d.order)return;
   var o=d.order,c=d.client||{};
   var set=function(id,v){var el=document.getElementById(id);if(el&&v!==undefined&&v!==null)el.value=v;};
-  set('cb-date',o.date);set('cb-time',o.time);set('cb-guests',o.guests);set('cb-flavor',o.flavor);set('cb-style',o.style);set('cb-location',o.location);
+  set('cb-date',o.date);set('cb-time',o.time);set('cb-guests',o.guests);set('cb-flavor',o.flavor);(function(){var fl=o.flavor||'';var c=document.getElementById('cb-tap-cold'),n=document.getElementById('cb-tap-nitro');if(c)c.checked=fl.indexOf('Cold Brew')!==-1||fl.indexOf('Nitro')===-1;if(n)n.checked=fl.indexOf('Nitro')!==-1;var dl=(o.drinks||'').split(', ');document.querySelectorAll('.cb-drink').forEach(function(e){e.checked=dl.indexOf(e.value)!==-1;});})();set('cb-style',o.style);set('cb-location',o.location);
   set('cb-name',c.name);set('cb-email',c.email);set('cb-phone',c.phone);
   if(o.paytype){var r=document.querySelector('input[name=cb-paytype][value='+o.paytype+']');if(r)r.checked=true;}
   if(o.pkg)cbSelectPkg(o.pkg);
@@ -468,7 +479,7 @@ async function cbSubmit(){
   var date=document.getElementById('cb-date').value;
   var time=document.getElementById('cb-time').value;
   var guests=Math.max(1,parseInt(document.getElementById('cb-guests').value)||1);
-  var flavorChoice=document.getElementById('cb-flavor').value;
+  var flavorChoice=document.getElementById('cb-flavor').value;var drinkChoice=cbDrinks();
   var styleChoice=(document.getElementById('cb-style')||{}).value||'Espresso Bar';
   var agreedOverage=document.getElementById('cb-agree-overage').checked;
   var errEl=document.getElementById('cb-err');
@@ -539,7 +550,7 @@ async function cbSubmit(){
       baClear();
       if(typeof emailjs!=='undefined'){
         emailjs.init(EJKEY);
-        var notes='Package: '+pkgName+' ($'+pkgPrice.toFixed(2)+'). Service Style: '+styleChoice+'. Cold Brew Flavor: '+flavorChoice+'. Add-ons: '+addonSummary+'. Subtotal: $'+preTax.toFixed(2)+'. Tax (8.25%): $'+taxTotal.toFixed(2)+'. Event total: $'+grandTotal.toFixed(2)+'. Charged today ('+(payType==='deposit'?'30% deposit':'paid in full, 5% discount applied')+'): $'+chargeNow.toFixed(2)+'. '+(payType==='deposit'?'Balance due 7 days before event: $'+(grandTotal-chargeNow).toFixed(2)+'.':'Discount savings: $'+(grandTotal-chargeNow).toFixed(2)+'.')+' Event time: '+time+'. Signed: '+signature+'. Overage/overtime authorization: '+(agreedOverage?'YES':'NO')+'.';
+        var notes='Package: '+pkgName+' ($'+pkgPrice.toFixed(2)+'). Service Style: '+styleChoice+'. Cold Brew on Tap: '+flavorChoice+'. Signature Drinks: '+(drinkChoice||'None selected')+'. Add-ons: '+addonSummary+'. Subtotal: $'+preTax.toFixed(2)+'. Tax (8.25%): $'+taxTotal.toFixed(2)+'. Event total: $'+grandTotal.toFixed(2)+'. Charged today ('+(payType==='deposit'?'30% deposit':'paid in full, 5% discount applied')+'): $'+chargeNow.toFixed(2)+'. '+(payType==='deposit'?'Balance due 7 days before event: $'+(grandTotal-chargeNow).toFixed(2)+'.':'Discount savings: $'+(grandTotal-chargeNow).toFixed(2)+'.')+' Event time: '+time+'. Signed: '+signature+'. Overage/overtime authorization: '+(agreedOverage?'YES':'NO')+'.';
         var tp={to_email:'info@kahoa.shop',checkout_url:data.receipt_url||'',order_type:'VIP COFFEE CART BOOKING',customer_name:name,customer_email:email,customer_phone:phone,customer_address:location,product_name:'Coffee Cart \u2014 '+pkgName,grind:date+' '+time,price:'$'+chargeNow.toFixed(2)+' charged today',notes:notes};
         emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error('Cart booking email error',e);});
         var custTp=Object.assign({},tp,{to_email:email,order_type:'Your Kahoa Coffee Cart Booking'});
