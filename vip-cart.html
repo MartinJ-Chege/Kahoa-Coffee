@@ -107,15 +107,15 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
   <div id=cb-packages style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
     <div class="prod-card cb-pkg" data-pkg="essentials" onclick="cbSelectPkg('essentials')" style="cursor:pointer;">
       <div class=prod-name>Essentials <span style="color:var(--gold);float:right;">$650</span></div>
-      <div class=prod-detail>2 hours &middot; up to ~50 guests &middot; 1 barista &middot; drip + <span style="color:#4a90d9;">Kifaru Spice Cold Brew</span></div>
+      <div class=prod-detail>2 hours &middot; up to ~50 guests &middot; 1 barista &middot; drip + <span style="color:#4a90d9;">Kifaru Spice Cold Brew</span> &middot; 1 signature drink included</div>
     </div>
     <div class="prod-card cb-pkg" data-pkg="premium" onclick="cbSelectPkg('premium')" style="cursor:pointer;border-color:var(--gold);">
       <div class=prod-name>Premium &#9733; <span style="color:var(--gold);float:right;">$1,100</span></div>
-      <div class=prod-detail>3 hours &middot; up to ~100 guests &middot; 2 baristas &middot; full espresso bar + <span style="color:#4a90d9;">Kifaru Spice Nitro</span></div>
+      <div class=prod-detail>3 hours &middot; up to ~100 guests &middot; 2 baristas &middot; full espresso bar + <span style="color:#4a90d9;">Kifaru Spice Nitro</span> &middot; 2 signature drinks included</div>
     </div>
     <div class="prod-card cb-pkg" data-pkg="full" onclick="cbSelectPkg('full')" style="cursor:pointer;">
       <div class=prod-name>Full Experience <span style="color:var(--gold);float:right;">$1,850</span></div>
-      <div class=prod-detail>4+ hours &middot; 150+ guests &middot; 2&ndash;3 baristas &middot; co-branded cart &amp; signage &middot; custom signature drinks &amp; latte art printer included</div>
+      <div class=prod-detail>4+ hours &middot; 150+ guests &middot; 2&ndash;3 baristas &middot; co-branded cart &amp; signage &middot; custom signature drinks &amp; latte art printer included &middot; 3 signature drinks included</div>
     </div>
   </div>
 
@@ -139,13 +139,13 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
 
  <p class=sec-label>Signature Drinks (optional)</p>
  <div style="display:flex;flex-direction:column;gap:2px;margin-bottom:8px;">
- <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox class=cb-drink  value="Mombasa Wildflower Latte"> <span>Mombasa Wildflower Latte <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; honey &amp; cardamom, hot or iced</span></span></label>
- <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox class=cb-drink  value="Kifaru Spice with Cold Foam"> <span>Kifaru Spice with Cold Foam <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; spiced cold foam on top</span></span></label>
- <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox class=cb-drink  value="Kahawa Tamu"> <span>Kahawa Tamu <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; Kenyan-style iced milk coffee, strong &amp; sweet</span></span></label>
- <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox class=cb-drink  value="Barafu Pour-Over"> <span>Barafu Pour-Over <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; pour-over brewed onto ice</span></span></label>
- <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox class=cb-drink  value="Rift Valley Fizz"> <span>Rift Valley Fizz <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; espresso over Topo Chico with an orange peel</span></span></label>
+ <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox class=cb-drink onchange=cbCalc()  value="Mombasa Wildflower Latte"> <span>Mombasa Wildflower Latte <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; honey &amp; cardamom, hot or iced</span></span></label>
+ <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox class=cb-drink onchange=cbCalc()  value="Kifaru Spice with Cold Foam"> <span>Kifaru Spice with Cold Foam <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; spiced cold foam on top</span></span></label>
+ <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox class=cb-drink onchange=cbCalc()  value="Kahawa Tamu"> <span>Kahawa Tamu <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; Kenyan-style iced milk coffee, strong &amp; sweet</span></span></label>
+ <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox class=cb-drink onchange=cbCalc()  value="Barafu Pour-Over"> <span>Barafu Pour-Over <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; pour-over brewed onto ice</span></span></label>
+ <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox class=cb-drink onchange=cbCalc()  value="Rift Valley Fizz"> <span>Rift Valley Fizz <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; espresso over Topo Chico with an orange peel</span></span></label>
  </div>
- <p class=sub style="font-size:11px;margin-bottom:20px;">Pick the ones you would like on your menu. We will confirm the final menu with you before the event.</p>
+ <p class=sub id=cb-drinks-note style="font-size:11px;margin-bottom:20px;">Pick the ones you would like on your menu. Your package includes a set number, and each extra is $50. We will confirm the final menu with you before the event.</p>
 
  <p class=sec-label>Add-Ons</p>
   <div style="display:flex;flex-direction:column;gap:2px;margin-bottom:20px;">
@@ -221,7 +221,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
 
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script>
-var CART_PKG={essentials:650,premium:1100,full:1850};
+var CART_PKG={essentials:650,premium:1100,full:1850};var SIG_INCLUDED={essentials:1,premium:2,full:3},SIG_EXTRA=50;function cbMenuExtra(){var n=document.querySelectorAll('.cb-drink:checked').length;var inc=cbSelectedPkg?SIG_INCLUDED[cbSelectedPkg]:0;return {n:n,inc:inc,extra:cbSelectedPkg?Math.max(0,n-inc):0};}
 var ADDON_TEA=1,ADDON_SIGDRINK=50,ADDON_STICKER_RATE=0.30,ADDON_STICKER_MIN=125,ADDON_PRINT_RATE=0.65,ADDON_PRINT_MIN=325;
 var DJ_PRICE={essentials:550,premium:650,full:750};
 var ADDON_LATTE=175;
@@ -293,7 +293,8 @@ function cbGoSign(){
   Object.keys(CB_ADDON_IDS).forEach(function(k){
     if(f.addons[k]){any=true;lines.push([CB_ADDON_NAMES[k],txt('cb-price-'+k).replace(/^\+/,'')]);}
   });
-  if(!any)lines.push(['Add-ons','None']);
+  var _gm=cbMenuExtra();if(_gm.extra>0){any=true;lines.push(['Extra signature drinks ('+_gm.extra+' x $'+SIG_EXTRA.toFixed(2)+')','$'+(_gm.extra*SIG_EXTRA).toFixed(2)]);}
+ if(!any)lines.push(['Add-ons','None']);
   var totals=[
     ['Package',txt('cb-pkg-total')],
     ['Add-ons',txt('cb-addon-total')],
@@ -390,7 +391,8 @@ function cbCalc(){
   document.getElementById('cb-price-print').textContent='+$'+printPrice.toFixed(2);
   document.getElementById('cb-price-dj').textContent='+$'+djPrice.toFixed(2);
 
-  var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0)+(latteOn?lattePrice:0);
+  var _me=cbMenuExtra(),menuExtraPrice=_me.extra*SIG_EXTRA;var _nt=document.getElementById('cb-drinks-note');if(_nt)_nt.textContent=!cbSelectedPkg?'Pick the ones you would like on your menu. Choose a package above to see how many are included. Each extra drink is $50. We will confirm the final menu with you before the event.':'Your package includes '+_me.inc+' signature drink'+(_me.inc===1?'':'s')+'. You have picked '+_me.n+(_me.extra>0?', so '+_me.extra+' extra x $50 = $'+menuExtraPrice.toFixed(2)+' is added to your total.':'.')+' Each extra drink is $50. We will confirm the final menu with you before the event.';
+ var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0)+(latteOn?lattePrice:0)+menuExtraPrice;
   var preTax=pkgPrice+addonTotal;
   var taxTotal=preTax*CB_TAX_RATE;
   var grandTotal=preTax+taxTotal;
@@ -506,7 +508,8 @@ async function cbSubmit(){
   var printPrice=Math.max(ADDON_PRINT_MIN,guests*ADDON_PRINT_RATE);
   var djPrice=DJ_PRICE[cbSelectedPkg];
   var lattePrice=latteIncluded?0:ADDON_LATTE;
-  var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0)+(latteOn?lattePrice:0);
+  var _me=cbMenuExtra(),menuExtraPrice=_me.extra*SIG_EXTRA;
+ var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0)+(latteOn?lattePrice:0)+menuExtraPrice;
   var preTax=pkgPrice+addonTotal;
   var taxTotal=preTax*CB_TAX_RATE;
   var grandTotal=preTax+taxTotal;
@@ -524,7 +527,8 @@ async function cbSubmit(){
   if(printOn)addonList.push('Full Custom-Printed Cups ($'+printPrice.toFixed(2)+', billed in full at booking)');
   if(djOn)addonList.push('Event DJ ($'+djPrice.toFixed(2)+')');
   if(latteOn)addonList.push(latteIncluded?'Latte Art Printer (Included with Full Experience)':'Latte Art Printer ($'+lattePrice.toFixed(2)+')');
-  var addonSummary=addonList.length?addonList.join(', '):'None';
+  if(menuExtraPrice>0)addonList.push('Extra signature drinks ('+_me.extra+' x $'+SIG_EXTRA.toFixed(2)+' = $'+menuExtraPrice.toFixed(2)+')');
+ var addonSummary=addonList.length?addonList.join(', '):'None';
   var pkgName=cbSelectedPkg==='essentials'?'Essentials':cbSelectedPkg==='premium'?'Premium':'Full Experience';
 
   var btn=document.getElementById('cb-pay-btn');
