@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kahoa Coffee Gift Cards | Gift Bundles | Kahoa Coffee</title>
+<meta name="description" content="Give Kahoa. Pick a gift bundle of Kenyan single-origin coffee and Mombasa Wildflower honey and cardamom syrup. You get a gift code instantly to send to anyone.">
+<link rel="canonical" href="https://kahoa.shop/gift-cards.html">
+<link rel="icon" type="image/png" href="/kahoalogo.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://web.squarecdn.com/v1/square.js" defer></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#D4A843;--gold-light:#E8C878;--dark:#1C0E06}
+body{font-family:'Montserrat',sans-serif;background:var(--dark);color:#fff;min-height:100vh}
+.wrap{max-width:880px;margin:0 auto;padding:28px 16px 80px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px}
+.top img{height:64px;width:auto}
+.top a.back{color:rgba(255,255,255,.6);font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none}
+.badge{display:inline-block;border:1px solid rgba(212,168,67,.45);background:rgba(212,168,67,.12);color:var(--gold);font-size:10px;letter-spacing:3px;text-transform:uppercase;padding:5px 14px;margin-bottom:14px}
+h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:36px;line-height:1.15;margin-bottom:10px}
+.lead{font-size:14px;line-height:1.8;color:rgba(255,255,255,.6);font-weight:300;margin-bottom:24px;max-width:620px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:26px}
+.b{background:#1a0a04;border:1px solid rgba(212,168,67,.2);cursor:pointer;display:flex;flex-direction:column;text-align:left;color:#fff;font-family:inherit;padding:0;transition:border-color .15s,transform .15s}
+.b:hover{border-color:rgba(212,168,67,.6)}
+.b.on{border-color:var(--gold);box-shadow:0 0 0 2px rgba(212,168,67,.35)}
+.b .im{background:#0b0502;height:130px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.b .im img{width:100%;height:100%;object-fit:contain;display:block}
+.b .tx{padding:12px 12px 14px;display:flex;flex-direction:column;flex:1}
+.b h3{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;line-height:1.15;margin-bottom:5px}
+.b .c{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--gold-light);margin-bottom:8px;line-height:1.5}
+.b .p{margin-top:auto;font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--gold);font-weight:600}
+.b .p small{display:block;font-family:'Montserrat',sans-serif;font-size:9px;color:rgba(255,255,255,.45);font-weight:400;letter-spacing:.3px}
+.box{background:rgba(255,255,255,.04);border:1px solid rgba(212,168,67,.18);padding:20px;margin-bottom:18px}
+.box h2{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:26px;margin-bottom:4px}
+label{display:block;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(212,168,67,.7);margin:12px 0 5px;font-weight:600}
+input,textarea{width:100%;padding:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);color:#fff;font-family:inherit;font-size:14px}
+textarea{resize:vertical;min-height:70px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#card{margin-top:6px;min-height:90px;background:#fff;padding:6px}
+.sum{font-size:13px;color:rgba(255,255,255,.75);line-height:2;margin-top:14px}
+.sum div{display:flex;justify-content:space-between;gap:12px}
+.sum .t{border-top:1px solid rgba(255,255,255,.2);margin-top:6px;padding-top:6px;color:#fff;font-weight:600;font-size:15px}
+button.pay{width:100%;margin-top:16px;background:var(--gold);color:var(--dark);border:0;padding:16px;font-family:inherit;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
+button.pay:disabled{opacity:.6;cursor:default}
+.ghost{display:inline-block;text-decoration:none;background:none;border:1px solid var(--gold);color:var(--gold);padding:12px 16px;font-family:inherit;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;margin:6px 6px 0 0}
+.err{display:none;background:rgba(192,57,43,.2);border:1px solid #c0392b;color:#ffb3a8;padding:10px;font-size:13px;margin-top:12px}
+.note{font-size:11px;color:rgba(255,255,255,.4);line-height:1.7;margin-top:10px}
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 24px;font-size:12px;color:rgba(255,255,255,.7)}
+.how span{border:1px solid rgba(212,168,67,.2);padding:10px 12px;line-height:1.5}
+.how b{color:var(--gold);margin-right:6px}
+#ok{display:none;text-align:center;padding:30px 14px}
+#ok h2{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:32px;margin-bottom:8px}
+.code{display:inline-block;margin:16px 0 8px;padding:16px 22px;border:2px dashed var(--gold);background:rgba(212,168,67,.08);font-family:'Montserrat',monospace;font-size:26px;letter-spacing:4px;font-weight:700;color:var(--gold-light);word-break:break-all}
+.msgbox{text-align:left;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);padding:14px;font-size:13px;line-height:1.7;color:rgba(255,255,255,.85);white-space:pre-wrap;margin-top:14px}
+@media(max-width:820px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.how{grid-template-columns:1fr}}
+@media(max-width:480px){h1{font-size:30px}.b .im{height:110px}.code{font-size:20px;letter-spacing:2px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a href="/"><img src="/kahoa-logo.png" alt="Kahoa Coffee"></a><a class="back" href="/shop.html#gifts">&larr; Shop</a></div>
+
+  <div id="pick">
+    <span class="badge">Gift Cards</span>
+    <h1>Give Kahoa</h1>
+    <p class="lead">Pick a bundle and pay once. We give you a gift code right away. Send it to anyone, and they choose their own blends and where it ships.</p>
+    <div class="how"><span><b>1</b>Pick a bundle below</span><span><b>2</b>Pay and get your gift code instantly</span><span><b>3</b>Send the code. They redeem it online</span></div>
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <div class="box" id="form" style="display:none">
+    <h2 id="f-title">Your gift</h2>
+    <p class="note" style="margin:0 0 6px" id="f-sub"></p>
+    <div class="row"><div><label>Your first name</label><input id="f-first" autocomplete="given-name"></div><div><label>Your last name</label><input id="f-last" autocomplete="family-name"></div></div>
+    <label>Your email (we send your code here)</label><input id="f-email" type="email" autocomplete="email">
+    <label>Who is it for? (optional)</label><input id="f-to" placeholder="Their name">
+    <label>Personal message (optional)</label><textarea id="f-msg" maxlength="240" placeholder="Happy birthday! Enjoy the coffee."></textarea>
+    <label>Card</label><div id="card"></div>
+    <div class="sum">
+      <div><span id="s-name">Gift bundle</span><span id="s-price">$0.00</span></div>
+      <div><span>Shipping to your recipient</span><span id="s-ship">Included</span></div>
+      <div class="t"><span>Total</span><span id="s-tot">$0.00</span></div>
+    </div>
+    <div class="err" id="err"></div>
+    <button class="pay" id="pay" onclick="pay()">Buy gift card</button>
+    <p class="note">No sales tax is charged on gift cards. The gift code doesn't expire. Your recipient picks their coffee blends and enters a shipping address when they redeem, and we ship it. The code works one time.</p>
+  </div>
+
+  <div class="box" id="ok">
+    <h2>Your gift code is ready</h2>
+    <p style="font-size:14px;line-height:1.8;color:rgba(255,255,255,.7);font-weight:300">We also emailed it to <b id="o-email"></b>. Save it or send it right now.</p>
+    <div class="code" id="o-code">KAHOA</div>
+    <div class="note" style="margin-top:0" id="o-what"></div>
+    <div style="margin-top:14px">
+      <button class="ghost" onclick="copyText('o-code','Code copied')">Copy code</button>
+      <button class="ghost" onclick="copyText('o-msg','Message copied')">Copy message</button>
+      <a id="o-mail" class="ghost" style="display:inline-block;text-decoration:none" href="#">Send by email</a>
+    </div>
+    <div class="msgbox" id="o-msg"></div>
+    <div class="note" id="o-flash"></div>
+    <p style="margin-top:20px"><a href="/shop.html" style="color:var(--gold)">Back to the shop</a></p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+var SQUARE_APP_ID='sq0idp-khlBwyn6FQYmXDU8zxjAiQ',SQUARE_LOC='L2M4GT1KDJZPY';
+var WORKER='https://kahoa-checkoutout.chegekibuthu1.workers.dev/charge';
+var SHEET='https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289hVmWtR1OKDqxLruwmKbRf_GkAwkiuEepPfk22Q/exec';
+var EJSVC='service_wsy9uog',EJTMPL='template_8jwdv8c',EJKEY='quYV-P5H4GYrFzjOw';
+var SHIP_FEE=7.99,SHIP_FREE_AT=50;
+// code = 2-letter bundle prefix. Keep in sync with gift-redeem.html
+var BUNDLES=[
+ {id:'collection',k:'CO',name:'The Kahoa Collection',c:3,s:2,price:86,list:96},
+ {id:'full-taste',k:'FT',name:'The Full Taste',c:3,s:1,price:70,list:78},
+ {id:'pair-plus',k:'PP',name:'Pair + Syrup',c:2,s:1,price:52,list:58},
+ {id:'starter',k:'ST',name:'The Starter',c:1,s:1,price:34,list:38},
+ {id:'trio',k:'TR',name:'Coffee Trio',c:3,s:0,price:54,list:60},
+ {id:'coffee-pair',k:'CP',name:'Coffee Pair',c:2,s:0,price:36,list:40},
+ {id:'syrup-duo',k:'SD',name:'Syrup Duo',c:0,s:2,price:32,list:36},
+ {id:'syrup',k:'SY',name:'Single Syrup',c:0,s:1,price:18,list:18}
+];
+function contents(b){var a=[];if(b.c)a.push(b.c+(b.c>1?' coffees':' coffee'));if(b.s)a.push(b.s+(b.s>1?' syrups':' syrup'));return a.join(' + ')}
+var IMG={collection:'gift-collection','full-taste':'gift-full-taste','pair-plus':'gift-pair-plus',starter:'gift-starter',trio:'gift-trio','coffee-pair':'gift-coffee-pair','syrup-duo':'gift-syrup-duo',syrup:'gift-syrup'};
+var cur=null,payments=null,card=null,squareReady=false;
+function $(id){return document.getElementById(id)}
+function money(n){return '$'+n.toFixed(2)}
+function ship(b){return b.price>=SHIP_FREE_AT?0:SHIP_FEE}
+function total(b){return Math.round((b.price+ship(b))*100)/100}
+function render(){
+  var h='';BUNDLES.forEach(function(b){
+    h+='<button type="button" class="b" id="b-'+b.id+'" onclick="choose(\''+b.id+'\')"><div class="im"><img src="/'+IMG[b.id]+'.jpg" alt="'+b.name+' gift bundle" loading="lazy"></div><div class="tx"><h3>'+b.name+'</h3><div class="c">'+contents(b)+'</div><div class="p">'+money(b.price)+'<small>'+(ship(b)?'+ '+money(SHIP_FEE)+' shipping':'Shipping included')+'</small></div></div></button>';});
+  $('grid').innerHTML=h;
+}
+function choose(id){
+  cur=BUNDLES.filter(function(b){return b.id===id})[0];if(!cur)return;
+  BUNDLES.forEach(function(b){$('b-'+b.id).classList.toggle('on',b.id===id)});
+  $('form').style.display='block';
+  $('f-title').textContent=cur.name;
+  $('f-sub').textContent=contents(cur)+(cur.c?'. Your recipient picks the blends.':'. ')+(cur.list>cur.price?' You save '+money(cur.list-cur.price)+' vs. buying separately.':'');
+  $('s-name').textContent=cur.name+' ('+contents(cur)+')';
+  $('s-price').textContent=money(cur.price);
+  $('s-ship').textContent=ship(cur)?money(ship(cur)):'Included';
+  $('s-tot').textContent=money(total(cur));
+  if(history.replaceState)history.replaceState(null,'','?b='+id);
+  $('form').scrollIntoView({behavior:'smooth',block:'start'});
+  if(!squareReady){squareReady=true;initSquare()}
+}
+async function initSquare(){
+  try{
+    for(var i=0;i<50&&typeof Square==='undefined';i++)await new Promise(function(r){setTimeout(r,200)});
+    payments=Square.payments(SQUARE_APP_ID,SQUARE_LOC);card=await payments.card();await card.attach('#card')
+  }catch(e){console.error('Square init',e);$('err').textContent='Payment form could not load. Please refresh the page.';$('err').style.display='block'}
+}
+var ALPHA='ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+function makeCode(k){var a=new Uint8Array(6);(window.crypto||window.msCrypto).getRandomValues(a);var s='';for(var i=0;i<6;i++)s+=ALPHA[a[i]%ALPHA.length];return 'KAHOA-'+k+'-'+s}
+async function pay(){
+  var first=$('f-first').value.trim(),last=$('f-last').value.trim(),email=$('f-email').value.trim(),err=$('err');
+  err.style.display='none';function bad(m){err.textContent=m;err.style.display='block'}
+  if(!cur)return bad('Please pick a bundle first.');
+  if(!first||!last)return bad('Please enter your full name.');
+  if(email.indexOf('@')<1)return bad('Please enter a valid email so we can send your code.');
+  if(!card)return bad('Payment form is still loading. Please try again in a moment.');
+  var btn=$('pay');btn.disabled=true;btn.textContent='Processing...';
+  var b=cur,amt=total(b);
+  try{
+    var r=await card.tokenize();
+    if(r.status!=='OK'){bad('Card error: '+(r.errors&&r.errors[0]?r.errors[0].message:r.status));btn.disabled=false;btn.textContent='Buy gift card';return}
+    var name=first+' '+last;
+    var summary='GIFT CARD: '+b.name+' ('+contents(b)+')';
+    var res=await fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      source_id:r.token,verification_token:(r.details&&r.details.verificationToken)||undefined,
+      product_name:summary,grind:'N/A',quantity:1,unit_price_cents:Math.round(b.price*100),shipping:ship(b)>0?{serviceName:'Gift shipping',amountCents:Math.round(ship(b)*100)}:null,
+      buyer:{name:name,email:email,phone:'',address:'Gift card (digital delivery)'}})});
+    var d=await res.json();
+    var charged=d.success===true||(d.payment_id&&!d.checkout_url);
+    if(!res.ok||!charged){bad('Payment failed: '+(d.errors&&d.errors[0]?d.errors[0].detail:(d.error||'please try again')));btn.disabled=false;btn.textContent='Buy gift card';return}
+    // paid: only now do we create the code
+    var code=makeCode(b.k),to=$('f-to').value.trim(),note=$('f-msg').value.trim();
+    var share=(to?'Hi '+to+',\n\n':'Hi,\n\n')+first+' sent you a Kahoa Coffee gift: '+b.name+' ('+contents(b)+').'+(note?'\n\n"'+note+'"':'')+'\n\nYour gift code: '+code+'\n\nRedeem it at https://kahoa.shop/gift-redeem.html\nYou pick your blends and where it ships.';
+    $('form').style.display='none';$('pick').style.display='none';$('ok').style.display='block';window.scrollTo(0,0);
+    $('o-email').textContent=email;$('o-code').textContent=code;$('o-what').textContent=b.name+' ('+contents(b)+')';$('o-msg').textContent=share;
+    $('o-mail').href='mailto:?subject='+encodeURIComponent('A Kahoa Coffee gift for you')+'&body='+encodeURIComponent(share);
+    var tp={to_email:'info@kahoa.shop',order_id:d.payment_id||d.order_id||('GIFT-'+Date.now()),order_type:'GIFT CARD PURCHASED',customer_name:name,customer_email:email,customer_phone:'',customer_address:'Digital gift card',product_name:summary+' | CODE: '+code,grind:'N/A',price:money(amt),shipping_method:'Gift shipping '+(ship(b)?money(ship(b)):'included'),checkout_url:d.receipt_url||'',notes:'Gift code '+code+' for '+b.name+'. Recipient: '+(to||'not given')+'. Message: '+(note||'none')+'. Code is redeemed at kahoa.shop/gift-redeem.html and shows up in the sheet as a GIFT REDEMPTION row. Mark it used there.'};
+    if(typeof emailjs!=='undefined'){emailjs.init(EJKEY);
+      emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error(e)});
+      emailjs.send(EJSVC,EJTMPL,Object.assign({},tp,{to_email:email,order_type:'Your Kahoa Gift Card Code',customer_address:'Send this code to your recipient',notes:'Your gift code is '+code+' ('+b.name+'). Send it to your recipient. They redeem it at https://kahoa.shop/gift-redeem.html and choose their blends and shipping address. The code works one time and does not expire.'})).catch(function(e){console.error(e)})}
+    try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:'',product:'GIFT CARD SOLD: '+b.name+' ('+contents(b)+')'+(to?' for '+to:''),grind:'N/A',total:money(amt),coupon:code,address:'',opted_in:'Yes',source:'kahoa.shop/gift-card'})})}catch(x){}
+  }catch(e){bad('Error: '+e.message);btn.disabled=false;btn.textContent='Buy gift card'}
+}
+function copyText(id,msg){var t=$(id).textContent;function done(){$('o-flash').textContent=msg}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,function(){fallback()})}else fallback();
+  function fallback(){var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done()}catch(e){$('o-flash').textContent='Press and hold to copy.'}document.body.removeChild(ta)}}
+render();
+(function(){var m=location.search.match(/[?&]b=([a-z-]+)/);if(m&&BUNDLES.some(function(b){return b.id===m[1]}))choose(m[1])})();
+</script>
+</body>
+</html>
