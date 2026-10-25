@@ -77,6 +77,7 @@ button.pay:disabled{opacity:.6;cursor:default}
     <label>Your email (we send your code here)</label><input id="f-email" type="email" autocomplete="email">
     <label>Who is it for? (optional)</label><input id="f-to" placeholder="Their name">
     <label>Personal message (optional)</label><textarea id="f-msg" maxlength="240" placeholder="Happy birthday! Enjoy the coffee."></textarea>
+    <p class="note" style="margin:6px 0 14px">&#9997;&#65039; Your message is handwritten by us on a card and included in the box for your recipient, so it feels personal.</p>
     <label>Card</label><div id="card"></div>
     <div class="sum">
       <div><span id="s-name">Gift bundle</span><span id="s-price">$0.00</span></div>
@@ -185,7 +186,7 @@ async function pay(){
     $('form').style.display='none';$('pick').style.display='none';$('ok').style.display='block';window.scrollTo(0,0);
     $('o-email').textContent=email;$('o-code').textContent=code;$('o-what').textContent=b.name+' ('+contents(b)+')';$('o-msg').textContent=share;
     $('o-mail').href='mailto:?subject='+encodeURIComponent('A Kahoa Coffee gift for you')+'&body='+encodeURIComponent(share);
-    var tp={to_email:'info@kahoa.shop',order_id:d.payment_id||d.order_id||('GIFT-'+Date.now()),order_type:'GIFT CARD PURCHASED',customer_name:name,customer_email:email,customer_phone:'',customer_address:'Digital gift card',product_name:summary+' | CODE: '+code,grind:'N/A',price:money(amt),shipping_method:'Gift shipping included',checkout_url:d.receipt_url||'',notes:(registered?'Code registered: it works once, automatically. ':'WARNING: code was NOT registered with the gift server. Add it by hand or the redeem page will run in manual mode for it. ')+'Gift code '+code+' for '+b.name+'. Recipient: '+(to||'not given')+'. Message: '+(note||'none')+'.'};
+    var tp={to_email:'info@kahoa.shop',order_id:d.payment_id||d.order_id||('GIFT-'+Date.now()),order_type:'GIFT CARD PURCHASED',customer_name:name,customer_email:email,customer_phone:'',customer_address:'Digital gift card',product_name:summary+' | CODE: '+code,grind:'N/A',price:money(amt),shipping_method:'Gift shipping included',checkout_url:d.receipt_url||'',notes:(registered?'Code registered: it works once, automatically. ':'WARNING: code was NOT registered with the gift server. Add it by hand or the redeem page will run in manual mode for it. ')+'Gift code '+code+' for '+b.name+'. Recipient: '+(to||'not given')+'. Message (HANDWRITE THIS ON A CARD AND PUT IT IN THE BOX): '+(note||'none')+'.'};
     if(typeof emailjs!=='undefined'){emailjs.init(EJKEY);
       emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error(e)});
       emailjs.send(EJSVC,EJTMPL,Object.assign({},tp,{to_email:email,order_type:'Your Kahoa Gift Card Code',customer_address:'Send this code to your recipient',notes:'Your gift code is '+code+' ('+b.name+'). Send it to your recipient. They redeem it at https://kahoa.shop/gift-redeem.html and choose their blends and shipping address. The code works one time and does not expire.'})).catch(function(e){console.error(e)})}
