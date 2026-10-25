@@ -292,7 +292,7 @@ window.kahoaLaborDayActive=window.kahoaIsMemorialSaleActive;
 <div style="max-width:600px;margin:0 auto;">
 <p style="font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(212,168,67,0.7);margin-bottom:12px;font-weight:600;">Share the Love</p>
 <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(26px,4vw,44px);font-weight:300;color:#fff;margin-bottom:12px;">Give 10% · Get 10%</h2>
-<p style="font-size:15px;color:rgba(255,255,255,0.55);line-height:1.85;font-weight:300;margin-bottom:28px;">Share Kahoa with a friend. They get 10% off their first order. You get 10% off your next one. Just tell them to mention your name at checkout.</p>
+<p style="font-size:15px;color:rgba(255,255,255,0.55);line-height:1.85;font-weight:300;margin-bottom:28px;">Share Kahoa with a friend and they get 10% off their first order. The moment they order with your code, we email you 10% off your next one, automatically. Grab your code below and pass it on. That is how the Kahoa family grows.</p>
 <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
 <a href="#" onclick="kahoaOpenReferral();return false;" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.08);border:1px solid rgba(212,168,67,0.2);color:var(--gold);padding:13px 24px;font-family:Montserrat,sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-decoration:none;">Get My Referral Code</a>
 <a href="#" onclick="kahoaShareTikTok();return false;" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.08);border:1px solid rgba(212,168,67,0.2);color:var(--gold);padding:13px 24px;font-family:Montserrat,sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-decoration:none;">Share on TikTok</a>
@@ -585,7 +585,7 @@ function kahoaHelpSearch(){var input=document.getElementById("kahoa-help-search"
           <div style="background:rgba(212,168,67,0.12);border:1px dashed rgba(212,168,67,0.4);padding:16px;margin-bottom:16px;">
             <p id=kahoa-ref-code style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);font-weight:600;letter-spacing:4px;margin:0;"></p>
           </div>
-          <p style="font-size:12px;color:rgba(255,255,255,0.45);margin:0 0 16px;line-height:1.6;">Share this code with friends. When they use it at checkout, they get 10% off. Email <strong style="color:var(--gold);">info@kahoa.shop</strong> with your code to claim your 10% off next order.</p>
+          <p style="font-size:12px;color:rgba(255,255,255,0.45);margin:0 0 16px;line-height:1.6;">Share this code with a friend. When they use it at checkout, they get 10% off their first order, and we will email you your own 10% code automatically. Each code works one time, so you can always make a new one.</p>
           <div style="display:flex;gap:10px;">
             <button onclick="kahoaCopyRef()" id=kahoa-ref-copy style="flex:1;background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:11px;font-family:Montserrat,sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;">Copy Code</button>
             <button onclick="kahoaShareTikTok()" style="flex:1;background:rgba(212,168,67,0.12);color:var(--gold);border:1px solid rgba(212,168,67,0.2);padding:11px;font-family:Montserrat,sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;">Share TikTok</button>
@@ -673,8 +673,7 @@ var KAHOA_SHEET_URL='https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk
 window.kahoaValidateReferral=function(code, email, callback){
   fetch(KAHOA_SHEET_URL,{
     method:'POST',
-    mode:'no-cors',
-    headers:{'Content-Type':'application/json'},
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
     body:JSON.stringify({action:'validate_referral',code:code.toUpperCase().trim(),email:email||''})
   }).then(function(r){return r.json();}).then(function(data){
     callback(data);
@@ -688,8 +687,7 @@ window.kahoaValidateReferral=function(code, email, callback){
 window.kahoaRegisterReferral=function(name, email, code){
   fetch(KAHOA_SHEET_URL,{
     method:'POST',
-    mode:'no-cors',
-    headers:{'Content-Type':'application/json'},
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
     body:JSON.stringify({action:'register_referral',name:name,email:email,code:code})
   }).catch(function(){});
 };
@@ -698,8 +696,7 @@ window.kahoaRegisterReferral=function(name, email, code){
 window.kahoaRedeemReferral=function(code, usedByEmail){
   fetch(KAHOA_SHEET_URL,{
     method:'POST',
-    mode:'no-cors',
-    headers:{'Content-Type':'application/json'},
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
     body:JSON.stringify({action:'redeem_referral',code:code,used_by:usedByEmail})
   }).catch(function(){});
 };
@@ -720,7 +717,7 @@ window.kahoaGenerateReferral=function(){
   // Register with Sheet (handles duplicates with suffix)
   fetch(KAHOA_SHEET_URL,{
     method:'POST',
-    headers:{'Content-Type':'application/json'},
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
     body:JSON.stringify({action:'register_referral',name:name,email:email,code:code})
   }).then(function(r){return r.json();}).then(function(data){
     var finalCode=data.code||code;
@@ -764,7 +761,7 @@ window.applyCoupon=function(){
 
   fetch(KAHOA_SHEET_URL,{
     method:'POST',
-    headers:{'Content-Type':'application/json'},
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
     body:JSON.stringify({action:'validate_referral',code:code,email:customerEmail})
   }).then(function(r){return r.json();}).then(function(data){
     if(data.valid){
@@ -776,7 +773,7 @@ window.applyCoupon=function(){
     } else {
       window._kahoaActiveCoupon=null;
       window._kahoaDiscountRate=0;
-      var msg=data.reason==='already_used'?'Code already used':data.reason==='self_use'?'You cannot use your own code':'Invalid code';
+      var msg=data.reason==='already_used'?'Code already used':data.reason==='self_use'?'You cannot use your own code':data.reason==='need_email'?'Enter your email first, then apply':data.reason==='not_yours'?'This code is for a different email':'Invalid code';
       if(statusEl){statusEl.style.color='#c0392b';statusEl.textContent=msg;}
     }
   }).catch(function(){

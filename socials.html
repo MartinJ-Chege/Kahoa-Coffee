@@ -201,8 +201,7 @@ var KAHOA_SHEET_URL='https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk
 window.kahoaValidateReferral=function(code, email, callback){
   fetch(KAHOA_SHEET_URL,{
     method:'POST',
-    mode:'no-cors',
-    headers:{'Content-Type':'application/json'},
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
     body:JSON.stringify({action:'validate_referral',code:code.toUpperCase().trim(),email:email||''})
   }).then(function(r){return r.json();}).then(function(data){
     callback(data);
@@ -216,8 +215,7 @@ window.kahoaValidateReferral=function(code, email, callback){
 window.kahoaRegisterReferral=function(name, email, code){
   fetch(KAHOA_SHEET_URL,{
     method:'POST',
-    mode:'no-cors',
-    headers:{'Content-Type':'application/json'},
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
     body:JSON.stringify({action:'register_referral',name:name,email:email,code:code})
   }).catch(function(){});
 };
@@ -226,8 +224,7 @@ window.kahoaRegisterReferral=function(name, email, code){
 window.kahoaRedeemReferral=function(code, usedByEmail){
   fetch(KAHOA_SHEET_URL,{
     method:'POST',
-    mode:'no-cors',
-    headers:{'Content-Type':'application/json'},
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
     body:JSON.stringify({action:'redeem_referral',code:code,used_by:usedByEmail})
   }).catch(function(){});
 };
@@ -248,8 +245,7 @@ window.kahoaGenerateReferral=function(){
   // Register with Sheet (handles duplicates with suffix)
   fetch(KAHOA_SHEET_URL,{
     method:'POST',
-    mode:'no-cors',
-    headers:{'Content-Type':'application/json'},
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
     body:JSON.stringify({action:'register_referral',name:name,email:email,code:code})
   }).then(function(r){return r.json();}).then(function(data){
     var finalCode=data.code||code;
@@ -301,7 +297,7 @@ window.applyCoupon=function(){
     } else {
       window._kahoaActiveCoupon=null;
       window._kahoaDiscountRate=0;
-      var msg=data.reason==='already_used'?'Code already used':data.reason==='self_use'?'You cannot use your own code':'Invalid code';
+      var msg=data.reason==='already_used'?'Code already used':data.reason==='self_use'?'You cannot use your own code':data.reason==='need_email'?'Enter your email first, then apply':data.reason==='not_yours'?'This code is for a different email':'Invalid code';
       if(statusEl){statusEl.style.color='#c0392b';statusEl.textContent=msg;}
     }
   }).catch(function(){
