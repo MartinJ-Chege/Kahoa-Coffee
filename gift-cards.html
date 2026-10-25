@@ -110,28 +110,28 @@ var SQUARE_APP_ID='sq0idp-khlBwyn6FQYmXDU8zxjAiQ',SQUARE_LOC='L2M4GT1KDJZPY';
 var WORKER='https://kahoa-checkoutout.chegekibuthu1.workers.dev/charge';
 var SHEET='https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289hVmWtR1OKDqxLruwmKbRf_GkAwkiuEepPfk22Q/exec';
 var EJSVC='service_wsy9uog',EJTMPL='template_8jwdv8c',EJKEY='quYV-P5H4GYrFzjOw';
-var SHIP_FEE=7.99,SHIP_FREE_AT=50;
+var WORKER_BASE='https://kahoa-checkoutout.chegekibuthu1.workers.dev';
 // code = 2-letter bundle prefix. Keep in sync with gift-redeem.html
 var BUNDLES=[
  {id:'collection',k:'CO',name:'The Kahoa Collection',c:3,s:2,price:86,list:96},
  {id:'full-taste',k:'FT',name:'The Full Taste',c:3,s:1,price:70,list:78},
  {id:'pair-plus',k:'PP',name:'Pair + Syrup',c:2,s:1,price:52,list:58},
- {id:'starter',k:'ST',name:'The Starter',c:1,s:1,price:34,list:38},
+ {id:'starter',k:'ST',name:'The Starter',c:1,s:1,price:40,list:38},
  {id:'trio',k:'TR',name:'Coffee Trio',c:3,s:0,price:54,list:60},
- {id:'coffee-pair',k:'CP',name:'Coffee Pair',c:2,s:0,price:36,list:40},
- {id:'syrup-duo',k:'SD',name:'Syrup Duo',c:0,s:2,price:32,list:36},
- {id:'syrup',k:'SY',name:'Single Syrup',c:0,s:1,price:18,list:18}
+ {id:'coffee-pair',k:'CP',name:'Coffee Pair',c:2,s:0,price:42,list:40},
+ {id:'syrup-duo',k:'SD',name:'Syrup Duo',c:0,s:2,price:38,list:36},
+ {id:'syrup',k:'SY',name:'Single Syrup',c:0,s:1,price:24,list:18}
 ];
 function contents(b){var a=[];if(b.c)a.push(b.c+(b.c>1?' coffees':' coffee'));if(b.s)a.push(b.s+(b.s>1?' syrups':' syrup'));return a.join(' + ')}
 var IMG={collection:'gift-collection','full-taste':'gift-full-taste','pair-plus':'gift-pair-plus',starter:'gift-starter',trio:'gift-trio','coffee-pair':'gift-coffee-pair','syrup-duo':'gift-syrup-duo',syrup:'gift-syrup'};
 var cur=null,payments=null,card=null,squareReady=false;
 function $(id){return document.getElementById(id)}
 function money(n){return '$'+n.toFixed(2)}
-function ship(b){return b.price>=SHIP_FREE_AT?0:SHIP_FEE}
+function ship(b){return 0}
 function total(b){return Math.round((b.price+ship(b))*100)/100}
 function render(){
   var h='';BUNDLES.forEach(function(b){
-    h+='<button type="button" class="b" id="b-'+b.id+'" onclick="choose(\''+b.id+'\')"><div class="im"><img src="/'+IMG[b.id]+'.jpg" alt="'+b.name+' gift bundle" loading="lazy"></div><div class="tx"><h3>'+b.name+'</h3><div class="c">'+contents(b)+'</div><div class="p">'+money(b.price)+'<small>'+(ship(b)?'+ '+money(SHIP_FEE)+' shipping':'Shipping included')+'</small></div></div></button>';});
+    h+='<button type="button" class="b" id="b-'+b.id+'" onclick="choose(\''+b.id+'\')"><div class="im"><img src="/'+IMG[b.id]+'.jpg" alt="'+b.name+' gift bundle" loading="lazy"></div><div class="tx"><h3>'+b.name+'</h3><div class="c">'+contents(b)+'</div><div class="p">'+money(b.price)+'<small>'+'Shipping included'+'</small></div></div></button>';});
   $('grid').innerHTML=h;
 }
 function choose(id){
@@ -139,7 +139,7 @@ function choose(id){
   BUNDLES.forEach(function(b){$('b-'+b.id).classList.toggle('on',b.id===id)});
   $('form').style.display='block';
   $('f-title').textContent=cur.name;
-  $('f-sub').textContent=contents(cur)+(cur.c?'. Your recipient picks the blends.':'. ')+(cur.list>cur.price?' You save '+money(cur.list-cur.price)+' vs. buying separately.':'');
+  $('f-sub').textContent=contents(cur)+(cur.c?'. Your recipient picks the blends.':'. ')+(cur.list>cur.price?' You save '+money(cur.list-cur.price)+' vs. buying separately.':' Shipping to your recipient is included.');
   $('s-name').textContent=cur.name+' ('+contents(cur)+')';
   $('s-price').textContent=money(cur.price);
   $('s-ship').textContent=ship(cur)?money(ship(cur)):'Included';
@@ -155,7 +155,7 @@ async function initSquare(){
   }catch(e){console.error('Square init',e);$('err').textContent='Payment form could not load. Please refresh the page.';$('err').style.display='block'}
 }
 var ALPHA='ABCDEFGHJKMNPQRSTUVWXYZ23456789';
-function makeCode(k){var a=new Uint8Array(6);(window.crypto||window.msCrypto).getRandomValues(a);var s='';for(var i=0;i<6;i++)s+=ALPHA[a[i]%ALPHA.length];return 'KAHOA-'+k+'-'+s}
+function makeCode(k){var a=new Uint8Array(8);(window.crypto||window.msCrypto).getRandomValues(a);var s='';for(var i=0;i<8;i++)s+=ALPHA[a[i]%ALPHA.length];return 'KAHOA-'+k+'-'+s.slice(0,4)+'-'+s.slice(4)}
 async function pay(){
   var first=$('f-first').value.trim(),last=$('f-last').value.trim(),email=$('f-email').value.trim(),err=$('err');
   err.style.display='none';function bad(m){err.textContent=m;err.style.display='block'}
@@ -172,22 +172,24 @@ async function pay(){
     var summary='GIFT CARD: '+b.name+' ('+contents(b)+')';
     var res=await fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
       source_id:r.token,verification_token:(r.details&&r.details.verificationToken)||undefined,
-      product_name:summary,grind:'N/A',quantity:1,unit_price_cents:Math.round(b.price*100),shipping:ship(b)>0?{serviceName:'Gift shipping',amountCents:Math.round(ship(b)*100)}:null,
+      product_name:summary,grind:'N/A',quantity:1,unit_price_cents:Math.round(b.price*100),shipping:null,
       buyer:{name:name,email:email,phone:'',address:'Gift card (digital delivery)'}})});
     var d=await res.json();
     var charged=d.success===true||(d.payment_id&&!d.checkout_url);
     if(!res.ok||!charged){bad('Payment failed: '+(d.errors&&d.errors[0]?d.errors[0].detail:(d.error||'please try again')));btn.disabled=false;btn.textContent='Buy gift card';return}
     // paid: only now do we create the code
-    var code=makeCode(b.k),to=$('f-to').value.trim(),note=$('f-msg').value.trim();
+    var to=$('f-to').value.trim(),note=$('f-msg').value.trim(),code='',registered=false;
+    try{var ir=await fetch(WORKER_BASE+'/gift/issue',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({payment_id:d.payment_id,bundle:b.id,buyer_name:name,buyer_email:email,recipient:to,message:note})});var idat=await ir.json();if(ir.ok&&idat.code){code=idat.code;registered=true}}catch(x){console.error('gift issue',x)}
+    if(!code)code=makeCode(b.k);
     var share=(to?'Hi '+to+',\n\n':'Hi,\n\n')+first+' sent you a Kahoa Coffee gift: '+b.name+' ('+contents(b)+').'+(note?'\n\n"'+note+'"':'')+'\n\nYour gift code: '+code+'\n\nRedeem it at https://kahoa.shop/gift-redeem.html\nYou pick your blends and where it ships.';
     $('form').style.display='none';$('pick').style.display='none';$('ok').style.display='block';window.scrollTo(0,0);
     $('o-email').textContent=email;$('o-code').textContent=code;$('o-what').textContent=b.name+' ('+contents(b)+')';$('o-msg').textContent=share;
     $('o-mail').href='mailto:?subject='+encodeURIComponent('A Kahoa Coffee gift for you')+'&body='+encodeURIComponent(share);
-    var tp={to_email:'info@kahoa.shop',order_id:d.payment_id||d.order_id||('GIFT-'+Date.now()),order_type:'GIFT CARD PURCHASED',customer_name:name,customer_email:email,customer_phone:'',customer_address:'Digital gift card',product_name:summary+' | CODE: '+code,grind:'N/A',price:money(amt),shipping_method:'Gift shipping '+(ship(b)?money(ship(b)):'included'),checkout_url:d.receipt_url||'',notes:'Gift code '+code+' for '+b.name+'. Recipient: '+(to||'not given')+'. Message: '+(note||'none')+'. Code is redeemed at kahoa.shop/gift-redeem.html and shows up in the sheet as a GIFT REDEMPTION row. Mark it used there.'};
+    var tp={to_email:'info@kahoa.shop',order_id:d.payment_id||d.order_id||('GIFT-'+Date.now()),order_type:'GIFT CARD PURCHASED',customer_name:name,customer_email:email,customer_phone:'',customer_address:'Digital gift card',product_name:summary+' | CODE: '+code,grind:'N/A',price:money(amt),shipping_method:'Gift shipping included',checkout_url:d.receipt_url||'',notes:(registered?'Code registered: it works once, automatically. ':'WARNING: code was NOT registered with the gift server. Add it by hand or the redeem page will run in manual mode for it. ')+'Gift code '+code+' for '+b.name+'. Recipient: '+(to||'not given')+'. Message: '+(note||'none')+'.'};
     if(typeof emailjs!=='undefined'){emailjs.init(EJKEY);
       emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error(e)});
       emailjs.send(EJSVC,EJTMPL,Object.assign({},tp,{to_email:email,order_type:'Your Kahoa Gift Card Code',customer_address:'Send this code to your recipient',notes:'Your gift code is '+code+' ('+b.name+'). Send it to your recipient. They redeem it at https://kahoa.shop/gift-redeem.html and choose their blends and shipping address. The code works one time and does not expire.'})).catch(function(e){console.error(e)})}
-    try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:'',product:'GIFT CARD SOLD: '+b.name+' ('+contents(b)+')'+(to?' for '+to:''),grind:'N/A',total:money(amt),coupon:code,address:'',opted_in:'Yes',source:'kahoa.shop/gift-card'})})}catch(x){}
+    try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:'',product:'GIFT CARD SOLD'+(registered?'':' (NOT REGISTERED)')+': '+b.name+' ('+contents(b)+')'+(to?' for '+to:''),grind:'N/A',total:money(amt),coupon:code,address:'',opted_in:'Yes',source:'kahoa.shop/gift-card'})})}catch(x){}
   }catch(e){bad('Error: '+e.message);btn.disabled=false;btn.textContent='Buy gift card'}
 }
 function copyText(id,msg){var t=$(id).textContent;function done(){$('o-flash').textContent=msg}

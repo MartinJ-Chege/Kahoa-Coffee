@@ -50,7 +50,7 @@ button.pay:disabled{opacity:.6;cursor:default}
 
     <div class="box">
       <label style="margin-top:0">Gift code</label>
-      <input id="code" placeholder="KAHOA-XX-XXXXXX" autocomplete="off" autocapitalize="characters" oninput="check()">
+      <input id="code" placeholder="KAHOA-XX-XXXX-XXXX" autocomplete="off" autocapitalize="characters" oninput="check()">
       <div class="what" id="what"></div>
       <div class="err" id="cerr"></div>
     </div>
@@ -64,7 +64,7 @@ button.pay:disabled{opacity:.6;cursor:default}
       <label>ZIP</label><input id="f-zip" inputmode="numeric" maxlength="5" autocomplete="postal-code">
       <div class="err" id="err"></div>
       <button class="pay" id="go" onclick="redeem()">Redeem my gift</button>
-      <p class="note">Each code works one time. We check your code before we ship. Coffee is roasted fresh to order. Syrup ships starting November 16.</p>
+      <p class="note">Each code works one time. Coffee is roasted fresh to order. Syrup ships starting November 16.</p>
     </div>
   </div>
 
@@ -82,18 +82,30 @@ var EJSVC='service_wsy9uog',EJTMPL='template_8jwdv8c',EJKEY='quYV-P5H4GYrFzjOw';
 // keep in sync with gift-cards.html
 var BY={CO:{name:'The Kahoa Collection',c:3,s:2},FT:{name:'The Full Taste',c:3,s:1},PP:{name:'Pair + Syrup',c:2,s:1},ST:{name:'The Starter',c:1,s:1},TR:{name:'Coffee Trio',c:3,s:0},CP:{name:'Coffee Pair',c:2,s:0},SD:{name:'Syrup Duo',c:0,s:2},SY:{name:'Single Syrup',c:0,s:1}};
 var BLENDS=['Nairobi Sunrise','Savanna Gold','Ngong Dark Reserve'];
-var cur=null,curCode='';
+var cur=null,curCode='',mode='manual',WORKER_BASE='https://kahoa-checkoutout.chegekibuthu1.workers.dev',seq=0;
 function $(id){return document.getElementById(id)}
 function contents(b){var a=[];if(b.c)a.push(b.c+(b.c>1?' coffees':' coffee'));if(b.s)a.push(b.s+(b.s>1?' syrups':' syrup'));return a.join(' + ')}
-function check(){
-  var v=$('code').value.toUpperCase().replace(/[^A-Z0-9-]/g,'');$('code').value=v;
-  $('cerr').style.display='none';
-  var m=v.match(/^KAHOA-([A-Z]{2})-([A-Z0-9]{6})$/);
-  if(!m||!BY[m[1]]){cur=null;$('what').style.display='none';$('step2').style.display='none';if(v.length>=14){$('cerr').textContent='That code does not look right. Please check it and try again.';$('cerr').style.display='block'}return}
-  cur=BY[m[1]];curCode=v;
-  $('what').innerHTML='<b>'+cur.name+'</b><br>'+contents(cur)+(cur.s?'. The syrup is Mombasa Wildflower Honey &amp; Cardamom.':'');$('what').style.display='block';
-  var h='';for(var i=1;i<=cur.c;i++){h+='<label>Coffee '+i+'</label><div class="pickrow"><select id="cb'+i+'">'+BLENDS.map(function(x){return '<option>'+x+'</option>'}).join('')+'</select><select id="cg'+i+'"><option>Whole bean</option><option>Ground</option></select></div>'}
-  $('picks').innerHTML=h;$('step2').style.display='block';
+function norm(v){var t=v.toUpperCase().replace(/[^A-Z0-9]/g,'');if(t.indexOf('KAHOA')===0)t=t.slice(5);
+  var out='KAHOA';if(t.length>0)out+='-'+t.slice(0,2);if(t.length>2)out+='-'+t.slice(2,6);if(t.length>6)out+='-'+t.slice(6,10);return out}
+function showBundle(b,note){cur=b;
+  $('what').innerHTML='<b>'+b.name+'</b><br>'+contents(b)+(b.s?'. The syrup is Mombasa Wildflower Honey &amp; Cardamom.':'')+(note||'');$('what').style.display='block';
+  var h='';for(var i=1;i<=b.c;i++){h+='<label>Coffee '+i+'</label><div class="pickrow"><select id="cb'+i+'">'+BLENDS.map(function(x){return '<option>'+x+'</option>'}).join('')+'</select><select id="cg'+i+'"><option>Whole bean</option><option>Ground</option></select></div>'}
+  $('picks').innerHTML=h;$('step2').style.display='block'}
+function cerr(m){cur=null;$('what').style.display='none';$('step2').style.display='none';$('cerr').textContent=m;$('cerr').style.display='block'}
+async function check(){
+  var raw=$('code').value;if(raw.toUpperCase().replace(/[^A-Z0-9]/g,'').length>=5)$('code').value=norm(raw);
+  var v=$('code').value;$('cerr').style.display='none';var my=++seq;
+  var m=v.match(/^KAHOA-([A-Z]{2})-([A-Z0-9]{4})-([A-Z0-9]{4})$/);
+  if(!m){cur=null;$('what').style.display='none';$('step2').style.display='none';return}
+  curCode=v;mode='manual';
+  var data=null;
+  try{var r=await fetch(WORKER_BASE+'/gift/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:v})});if(r.ok){var j=await r.json();if(j&&typeof j.valid==='boolean')data=j}}catch(e){}
+  if(my!==seq)return;
+  if(data){
+    if(!data.valid){return cerr(data.reason==='redeemed'?'This gift code has already been used.':'We do not recognize that code. Please check it and try again.')}
+    mode='server';return showBundle(data.bundle)}
+  if(!BY[m[1]])return cerr('That code does not look right. Please check it and try again.');
+  showBundle(BY[m[1]])
 }
 async function redeem(){
   var name=$('f-name').value.trim(),email=$('f-email').value.trim(),phone=$('f-phone').value.trim(),addr=$('f-addr').value.trim(),city=$('f-city').value.trim(),st=$('f-state').value.trim().toUpperCase(),zip=$('f-zip').value.trim(),err=$('err');
@@ -107,7 +119,13 @@ async function redeem(){
   if(cur.s)picks.push(cur.s+' x Mombasa Wildflower Syrup');
   var full=addr+', '+city+', '+st+' '+zip,summary='GIFT REDEMPTION ['+curCode+'] '+cur.name+': '+picks.join(', ');
   var btn=$('go');btn.disabled=true;btn.textContent='Sending...';
-  try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:phone,product:summary,grind:picks.join(' | '),total:'Gift card',coupon:curCode,address:full,opted_in:'Yes',source:'kahoa.shop/gift-redeem'})})}catch(x){}
+  if(mode==='server'){
+    try{var rr=await fetch(WORKER_BASE+'/gift/redeem',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:curCode,picks:picks,name:name,email:email,phone:phone,address:full})});var rj={};try{rj=await rr.json()}catch(x){}
+      if(rr.status===409||rj.reason==='redeemed'){btn.disabled=false;btn.textContent='Redeem my gift';return bad('This gift code has already been used.')}
+      if(!rr.ok||!rj.ok){btn.disabled=false;btn.textContent='Redeem my gift';return bad('We could not redeem that code. Please check it and try again, or email info@kahoa.shop.')}
+    }catch(e){btn.disabled=false;btn.textContent='Redeem my gift';return bad('Connection problem. Please try again in a moment.')}
+  }
+  try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:phone,product:summary+(mode==='server'?' [VERIFIED, code now used]':' [UNVERIFIED - check the code]'),grind:picks.join(' | '),total:'Gift card',coupon:curCode,address:full,opted_in:'Yes',source:'kahoa.shop/gift-redeem'})})}catch(x){}
   try{if(typeof emailjs!=='undefined'){emailjs.init(EJKEY);emailjs.send(EJSVC,EJTMPL,{to_email:email,reply_to:'info@kahoa.shop',order_id:'GIFT-'+curCode,order_type:'Your Kahoa Gift Is Confirmed',customer_name:name,customer_email:email,customer_phone:phone,customer_address:full,product_name:cur.name+': '+picks.join(', '),grind:'N/A',price:'Gift card',shipping_method:'Included',checkout_url:'',notes:'We got your gift redemption (code '+curCode+'). We will check your code and email you before it ships. Coffee is roasted fresh to order. Syrup ships starting November 16.'}).catch(function(e){console.error(e)})}}catch(x){}
   $('main').style.display='none';$('ok').style.display='block';window.scrollTo(0,0);
   $('ok-t').textContent='We got your redemption for '+cur.name+' and sent a confirmation to '+email+'. We will check your code and email you before it ships.';
