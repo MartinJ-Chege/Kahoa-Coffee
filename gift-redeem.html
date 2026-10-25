@@ -82,7 +82,7 @@ var EJSVC='service_wsy9uog',EJTMPL='template_8jwdv8c',EJKEY='quYV-P5H4GYrFzjOw';
 // keep in sync with gift-cards.html
 var BY={CO:{name:'The Kahoa Collection',c:3,s:2},FT:{name:'The Full Taste',c:3,s:1},PP:{name:'Pair + Syrup',c:2,s:1},ST:{name:'The Starter',c:1,s:1},TR:{name:'Coffee Trio',c:3,s:0},CP:{name:'Coffee Pair',c:2,s:0},SD:{name:'Syrup Duo',c:0,s:2},SY:{name:'Single Syrup',c:0,s:1}};
 var BLENDS=['Nairobi Sunrise','Savanna Gold','Ngong Dark Reserve'];
-var cur=null,curCode='',mode='manual',WORKER_BASE='https://kahoa-checkoutout.chegekibuthu1.workers.dev',seq=0;
+var cur=null,curCode='',curMsg='',mode='manual',WORKER_BASE='https://kahoa-checkoutout.chegekibuthu1.workers.dev',seq=0;
 function $(id){return document.getElementById(id)}
 function contents(b){var a=[];if(b.c)a.push(b.c+(b.c>1?' coffees':' coffee'));if(b.s)a.push(b.s+(b.s>1?' syrups':' syrup'));return a.join(' + ')}
 function norm(v){var t=v.toUpperCase().replace(/[^A-Z0-9]/g,'');if(t.indexOf('KAHOA')===0)t=t.slice(5);
@@ -97,13 +97,13 @@ async function check(){
   var v=$('code').value;$('cerr').style.display='none';var my=++seq;
   var m=v.match(/^KAHOA-([A-Z]{2})-([A-Z0-9]{4})-([A-Z0-9]{4})$/);
   if(!m){cur=null;$('what').style.display='none';$('step2').style.display='none';return}
-  curCode=v;mode='manual';
+  curCode=v;mode='manual';curMsg='';
   var data=null;
   try{var r=await fetch(WORKER_BASE+'/gift/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:v})});if(r.ok){var j=await r.json();if(j&&typeof j.valid==='boolean')data=j}}catch(e){}
   if(my!==seq)return;
   if(data){
     if(!data.valid){return cerr(data.reason==='redeemed'?'This gift code has already been used.':'We do not recognize that code. Please check it and try again.')}
-    mode='server';return showBundle(data.bundle)}
+    mode='server';curMsg=String(data.message||'');return showBundle(data.bundle)}
   if(!BY[m[1]])return cerr('That code does not look right. Please check it and try again.');
   showBundle(BY[m[1]])
 }
@@ -126,7 +126,7 @@ async function redeem(){
     }catch(e){btn.disabled=false;btn.textContent='Redeem my gift';return bad('Connection problem. Please try again in a moment.')}
   }
   try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:phone,product:summary+(mode==='server'?' [VERIFIED, code now used]':' [UNVERIFIED - check the code]'),grind:picks.join(' | '),total:'Gift card',coupon:curCode,address:full,opted_in:'Yes',source:'kahoa.shop/gift-redeem'})})}catch(x){}
-  try{if(typeof emailjs!=='undefined'){emailjs.init(EJKEY);emailjs.send(EJSVC,EJTMPL,{to_email:'info@kahoa.shop',reply_to:email,order_id:'GIFT-'+curCode,order_type:'GIFT REDEEMED - SHIP THIS',customer_name:name,customer_email:email,customer_phone:phone,customer_address:full,product_name:cur.name+': '+picks.join(', '),grind:'See picks',price:'Gift card (prepaid)',shipping_method:'Prepaid',checkout_url:'',notes:'Gift code '+curCode+' redeemed ('+(mode==='server'?'VERIFIED by server, single use':'UNVERIFIED, check code by hand')+'). Ship to: '+full+'. Phone: '+phone+'. HANDWRITTEN CARD: if the buyer wrote a message, find it by searching code '+curCode+' in your purchase email or in the Kahoa Orders sheet (Coupon column, message in the Address column).'}).catch(function(e){console.error(e)});emailjs.send(EJSVC,EJTMPL,{to_email:email,reply_to:'info@kahoa.shop',order_id:'GIFT-'+curCode,order_type:'Your Kahoa Gift Is Confirmed',customer_name:name,customer_email:email,customer_phone:phone,customer_address:full,product_name:cur.name+': '+picks.join(', '),grind:'N/A',price:'Gift card',shipping_method:'Included',checkout_url:'',notes:'We got your gift redemption (code '+curCode+'). We will check your code and email you before it ships. Coffee is roasted fresh to order. Syrup ships starting November 16.'}).catch(function(e){console.error(e)})}}catch(x){}
+  try{if(typeof emailjs!=='undefined'){emailjs.init(EJKEY);emailjs.send(EJSVC,EJTMPL,{to_email:'info@kahoa.shop',reply_to:email,order_id:'GIFT-'+curCode,order_type:'GIFT REDEEMED - SHIP THIS',customer_name:name,customer_email:email,customer_phone:phone,customer_address:full,product_name:cur.name+': '+picks.join(', '),grind:'See picks',price:'Gift card (prepaid)',shipping_method:'Prepaid',checkout_url:'',notes:'Gift code '+curCode+' redeemed ('+(mode==='server'?'VERIFIED by server, single use':'UNVERIFIED, check code by hand')+'). Ship to: '+full+'. Phone: '+phone+'. HANDWRITTEN CARD: '+(curMsg?('write this message by hand on a card and put it in the box: "'+curMsg+'"'):'the buyer left no message (if you think they did, search code '+curCode+' in the Kahoa Orders sheet, Coupon column, message in the Address column).')}).catch(function(e){console.error(e)});emailjs.send(EJSVC,EJTMPL,{to_email:email,reply_to:'info@kahoa.shop',order_id:'GIFT-'+curCode,order_type:'Your Kahoa Gift Is Confirmed',customer_name:name,customer_email:email,customer_phone:phone,customer_address:full,product_name:cur.name+': '+picks.join(', '),grind:'N/A',price:'Gift card',shipping_method:'Included',checkout_url:'',notes:'We got your gift redemption (code '+curCode+'). We will check your code and email you before it ships. Coffee is roasted fresh to order. Syrup ships starting November 16.'}).catch(function(e){console.error(e)})}}catch(x){}
   $('main').style.display='none';$('ok').style.display='block';window.scrollTo(0,0);
   $('ok-t').textContent='We got your redemption for '+cur.name+' and sent a confirmation to '+email+'. We will check your code and email you before it ships.';
 }
