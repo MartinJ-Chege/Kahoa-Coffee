@@ -190,7 +190,7 @@ async function pay(){
     if(typeof emailjs!=='undefined'){emailjs.init(EJKEY);
       emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error(e)});
       emailjs.send(EJSVC,EJTMPL,Object.assign({},tp,{to_email:email,order_type:'Your Kahoa Gift Card Code',customer_address:'Send this code to your recipient',notes:'Your gift code is '+code+' ('+b.name+'). Send it to your recipient. They redeem it at https://kahoa.shop/gift-redeem.html and choose their blends and shipping address. The code works one time and does not expire.'})).catch(function(e){console.error(e)})}
-    try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:'',product:'GIFT CARD SOLD'+(registered?'':' (NOT REGISTERED)')+': '+b.name+' ('+contents(b)+')'+(to?' for '+to:''),grind:'N/A',total:money(amt),coupon:code,address:'',opted_in:'Yes',source:'kahoa.shop/gift-card'})})}catch(x){}
+    try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:'',product:'GIFT CARD SOLD'+(registered?'':' (NOT REGISTERED)')+': '+b.name+' ('+contents(b)+')'+(to?' for '+to:''),grind:'N/A',total:money(amt),coupon:code,address:(note?'HANDWRITE ON CARD: '+note:''),opted_in:'Yes',source:'kahoa.shop/gift-card'})})}catch(x){}
   }catch(e){bad('Error: '+e.message);btn.disabled=false;btn.textContent='Buy gift card'}
 }
 function copyText(id,msg){var t=$(id).textContent;function done(){$('o-flash').textContent=msg}
