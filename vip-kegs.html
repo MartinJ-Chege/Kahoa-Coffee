@@ -95,7 +95,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
   <p class=sub style="margin-bottom:24px;">Same VIP pricing philosophy, extended to kegs. Great for offices, hotels, restaurants, and cafes who want Kahoa on tap instead of by the bag.</p>
 
   <div class=prod-card style="margin-bottom:14px;">
-    <div class=prod-name style="color:#4a90d9;">Kifaru Nitro (Draft) Cold Brew Keg <span style="color:#4a90d9;float:right;">$130 <span style="font-size:10px;font-weight:400;opacity:.7;">+ tax</span></span></div>
+    <div class=prod-name style="color:#4a90d9;">Kifaru Spice Nitro Keg <span style="color:#4a90d9;float:right;">$130 <span style="font-size:10px;font-weight:400;opacity:.7;">+ tax</span></span></div>
     <div class=prod-detail>5-gallon keg &middot; Cascading, creamy texture straight from the tap.</div>
     <div class=qty-add-row>
       <div class=qty-wrap>
@@ -325,7 +325,7 @@ var KEG_COLD=125,KEG_NITRO=130,KEG_SPICE=140,LEASE_PRICE=50;var KEG_DEPOSIT=50,K
 function vipKegCount(items){return items.reduce(function(s,i){return s+(i.unit==='keg'?i.qty:0);},0);}
 function vipDepositWaived(){var cb=document.getElementById('vf-has-deposit');return !!(cb&&cb.checked);}
 function vipGetDeposit(items){return vipDepositWaived()?0:vipKegCount(items)*KEG_DEPOSIT;}
-var KEG_INFO={'keg-cold':{name:'Kifaru Classic Cold Brew Keg',price:KEG_COLD},'keg-nitro':{name:'Kifaru Nitro (Draft) Cold Brew Keg',price:KEG_NITRO},'keg-spice':{name:'Kifaru Spice Cold Brew Keg',price:KEG_SPICE}};
+var KEG_INFO={'keg-cold':{name:'Kifaru Spice Cold Brew Keg',price:KEG_COLD},'keg-nitro':{name:'Kifaru Spice Nitro Keg',price:KEG_NITRO},'keg-spice':{name:'Kifaru Spice Cold Brew Keg',price:KEG_SPICE}};
 var vipCart=[];
 var vipPayments=null,vipCard=null;
 var SQUARE_APP_ID='sq0idp-khlBwyn6FQYmXDU8zxjAiQ';
