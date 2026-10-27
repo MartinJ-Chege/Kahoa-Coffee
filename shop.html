@@ -1259,16 +1259,18 @@ function boot(){tweak();initPlaces()}if(document.readyState==="loading")document
   function curl(col,len,amp){
     var w=amp*2+6,h=len,m=w/2;
     var d='M'+m+' 1 C '+(m+amp)+' '+(h*.17)+','+(m-amp)+' '+(h*.33)+','+m+' '+(h*.5)+' S '+(m-amp)+' '+(h*.83)+','+m+' '+(h-1);
-    return '<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" style="display:block;overflow:visible"><path d="'+d+'" fill="none" stroke="rgba(0,0,0,.4)" stroke-width="4.6" stroke-linecap="round"/><path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="3" stroke-linecap="round"/></svg>';
+    return '<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" style="display:block;overflow:visible"><path d="'+d+'" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="3" stroke-linecap="round"/><path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="1.7" stroke-linecap="round"/></svg>';
   }
+  var layer;
   function confetti(x,y,soft){
     if(RM||!document.body.animate)return;
+    if(!layer){layer=document.createElement('div');layer.setAttribute('aria-hidden','true');layer.style.cssText='position:fixed;left:0;top:0;width:100%;height:100%;overflow:hidden;pointer-events:none;z-index:10049;contain:strict;touch-action:none';document.body.appendChild(layer)}
     var n=40;
     for(var i=0;i<n;i++){(function(){
       var el=document.createElement('i'),col=KE[Math.floor(Math.random()*KE.length)],len=28+Math.random()*22,amp=3+Math.random()*4;
       el.innerHTML=curl(col,len,amp);
-      el.style.cssText='position:fixed;left:'+x+'px;top:'+y+'px;margin:'+(-len/2)+'px 0 0 '+(-(amp+3))+'px;z-index:10049;pointer-events:none;will-change:transform,opacity;line-height:0';
-      document.body.appendChild(el);
+      el.style.cssText='position:absolute;left:'+x+'px;top:'+y+'px;margin:'+(-len/2)+'px 0 0 '+(-(amp+3))+'px;pointer-events:none;will-change:transform,opacity;line-height:0';
+      layer.appendChild(el);
       var sp=(soft?230:300)+Math.random()*(soft?170:260),ang=-Math.PI/2+(Math.random()-.5)*(soft?3.4:2.6);
       var vx=Math.cos(ang)*sp,vy=Math.sin(ang)*sp*(soft&&Math.sin(ang)<0?.55:1);
       var k=3.1,vt=95+Math.random()*60,T=2.9,sway=8+Math.random()*14,ph=Math.random()*6.28,spin=(Math.random()-.5)*900,flip=3+Math.random()*4,N=30,kfs=[];
