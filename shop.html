@@ -1149,29 +1149,21 @@ function boot(){tweak();initPlaces()}if(document.readyState==="loading")document
 .kf-boing{animation:kfBoing .42s cubic-bezier(.34,1.56,.64,1)}
 @keyframes kfBadge{0%{transform:scale(1)}40%{transform:scale(1.75)}70%{transform:scale(.85)}100%{transform:scale(1)}}
 .kf-badge-pop{animation:kfBadge .6s ease}
-#kf-toast{position:fixed;top:40%;left:50%;z-index:10050;width:min(86vw,330px);padding:0 22px 20px;border-radius:14px;overflow:hidden;background:#FFF6E0;color:#1C0E06;border:2px solid #D4A843;box-shadow:0 22px 60px rgba(28,14,6,.45),0 0 0 6px rgba(212,168,67,.25);font-family:Montserrat,Poppins,sans-serif;text-align:center;opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,-50%) scale(.6)}
-#kf-toast.kf-show{visibility:visible;pointer-events:auto;animation:kfToastIn .55s cubic-bezier(.22,1.4,.36,1) both}
-#kf-toast.kf-hide{animation:kfToastOut .25s ease both;pointer-events:none}
-@keyframes kfToastIn{0%{opacity:0;transform:translate(-50%,-50%) scale(.55)}60%{opacity:1;transform:translate(-50%,-50%) scale(1.07)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
-@keyframes kfToastOut{to{opacity:0;transform:translate(-50%,-56%) scale(.92)}}
-#kf-toast .kf-stripe{height:10px;margin:0 -22px 16px;background:linear-gradient(180deg,#000 0,#000 3px,#fff 3px,#fff 4px,#C8102E 4px,#C8102E 6px,#fff 6px,#fff 7px,#1E8A3C 7px,#1E8A3C 10px)}
-#kf-toast .kf-tick{width:46px;height:46px;margin:0 auto 8px;border-radius:50%;background:#1E8A3C;color:#fff;font-size:26px;line-height:46px;font-weight:700;box-shadow:0 4px 12px rgba(30,138,60,.45)}
-#kf-toast.kf-show .kf-tick{animation:kfTick .6s .15s cubic-bezier(.34,1.8,.5,1) both}
-@keyframes kfTick{0%{transform:scale(0) rotate(-40deg)}100%{transform:scale(1) rotate(0)}}
-#kf-toast .kf-t1{font-family:'Cormorant Garamond',Georgia,serif;font-size:26px;font-weight:700;line-height:1.1}
-#kf-toast .kf-t2{font-size:13px;color:#5A2E1A;margin:6px 0 2px;font-weight:600}
-#kf-toast .kf-t3{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#8B4A26;margin:2px 0 16px}
-#kf-toast .kf-btns{display:flex;gap:10px}
-#kf-toast .kf-btns button{flex:1;padding:12px 6px;border-radius:4px;font-family:inherit;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer}
-#kf-toast .kf-keep{background:transparent;border:1.5px solid #8B4A26;color:#5A2E1A}
-#kf-toast .kf-view{background:linear-gradient(135deg,#E8C878,#C9972F);border:1.5px solid #C9972F;color:#1C0E06}
+#kf-pill{position:fixed;left:50%;bottom:104px;z-index:10050;display:flex;align-items:center;gap:10px;width:max-content;max-width:92vw;padding:8px 8px 8px 10px;border-radius:999px;background:#FFF6E0;color:#1C0E06;border:2px solid #D4A843;box-shadow:0 12px 32px rgba(28,14,6,.4);font-family:Montserrat,Poppins,sans-serif;opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,40px)}
+#kf-pill.kf-show{visibility:visible;pointer-events:auto;animation:kfPillIn .5s cubic-bezier(.22,1.5,.36,1) both}
+#kf-pill.kf-hide{animation:kfPillOut .25s ease both;pointer-events:none}
+@keyframes kfPillIn{0%{opacity:0;transform:translate(-50%,40px) scale(.9)}100%{opacity:1;transform:translate(-50%,0) scale(1)}}
+@keyframes kfPillOut{to{opacity:0;transform:translate(-50%,30px) scale(.95)}}
+#kf-pill .kf-tick{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:#1E8A3C;color:#fff;font-size:15px;line-height:26px;font-weight:700;text-align:center}
+#kf-pill .kf-ptxt{font-size:12.5px;font-weight:700;color:#3A1E10;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(92vw - 190px)}
+#kf-pill .kf-pview{flex:0 0 auto;padding:9px 14px;border-radius:999px;border:0;background:linear-gradient(135deg,#E8C878,#C9972F);color:#1C0E06;font-family:inherit;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;cursor:pointer}
 .kf-steam{position:absolute;left:79%;bottom:36%;width:46px;height:52px;margin-left:-23px;pointer-events:none;z-index:2}
 .kf-steam i{position:absolute;bottom:0;width:12px;height:38px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,255,255,.9),rgba(255,255,255,0) 70%);filter:blur(2.5px);opacity:0;animation:kfSteam 3.6s ease-in-out infinite}
 .kf-steam i:nth-child(1){left:2px;animation-delay:0s}
 .kf-steam i:nth-child(2){left:19px;animation-delay:1.2s}
 .kf-steam i:nth-child(3){left:32px;animation-delay:2.4s}
 @keyframes kfSteam{0%{opacity:0;transform:translateY(8px) scaleX(1)}25%{opacity:1}70%{opacity:.4;transform:translateY(-22px) scaleX(1.6) translateX(4px)}100%{opacity:0;transform:translateY(-36px) scaleX(2) translateX(-3px)}}
-@media(prefers-reduced-motion:reduce){.kf-pre{opacity:1!important}.kf-in,.kf-cart-bounce,.kf-badge-pop,.kf-boing,.kf-steam i,.kf-cart-has::after{animation:none!important}.kf-cart-has::after{display:none}.kf-steam{display:none}#kf-toast.kf-show,#kf-toast.kf-show .kf-tick{animation:none!important;opacity:1;transform:translate(-50%,-50%)}#kf-toast.kf-show .kf-tick{transform:none}}
+@media(prefers-reduced-motion:reduce){.kf-pre{opacity:1!important}.kf-in,.kf-cart-bounce,.kf-badge-pop,.kf-boing,.kf-steam i,.kf-cart-has::after{animation:none!important}.kf-cart-has::after{display:none}.kf-steam{display:none}#kf-pill.kf-show{animation:none!important;opacity:1;transform:translate(-50%,0)}}
 </style>
 <script id="kahoa-fun-js">
 (function(){
@@ -1206,23 +1198,48 @@ function boot(){tweak();initPlaces()}if(document.readyState==="loading")document
   },true);
 
   /* 3. cart bounce + "just added" toast */
-  var toast;
-  function hideToast(){
-    if(!toast||!toast.classList.contains('kf-show'))return;
-    clearTimeout(toast._t);toast.classList.add('kf-hide');
-    setTimeout(function(){toast.classList.remove('kf-show','kf-hide')},260);
+  var lastCard=null,lastCardAt=0;
+  document.addEventListener('click',function(e){
+    var c=e.target.closest&&e.target.closest('.product-card,.sips-grid>div,.merch-grid>div,.green-grid>div');
+    if(c){lastCard=c;lastCardAt=Date.now()}
+  },true);
+  var pill;
+  function hidePill(){
+    if(!pill||!pill.classList.contains('kf-show'))return;
+    clearTimeout(pill._t);pill.classList.add('kf-hide');
+    setTimeout(function(){pill.classList.remove('kf-show','kf-hide')},260);
   }
-  function showToast(name){
-    if(!toast){
-      toast=document.createElement('div');toast.id='kf-toast';toast.setAttribute('role','status');
-      toast.innerHTML='<div class="kf-stripe"></div><div class="kf-tick">\u2713</div><div class="kf-t1">Added to your cart!</div><div class="kf-t2"></div><div class="kf-t3">Asante sana \u2615 \uD83C\uDDF0\uD83C\uDDEA</div><div class="kf-btns"><button type="button" class="kf-keep">Keep shopping</button><button type="button" class="kf-view">View cart \u2192</button></div>';
-      document.body.appendChild(toast);
-      toast.querySelector('.kf-keep').addEventListener('click',hideToast);
-      toast.querySelector('.kf-view').addEventListener('click',function(){hideToast();if(window._kfOpenCart)window._kfOpenCart()});
+  function showPill(name){
+    if(!pill){
+      pill=document.createElement('div');pill.id='kf-pill';pill.setAttribute('role','status');
+      pill.innerHTML='<span class="kf-tick">\u2713</span><span class="kf-ptxt"></span><button type="button" class="kf-pview">View cart \u2192</button>';
+      document.body.appendChild(pill);
+      pill.querySelector('.kf-pview').addEventListener('click',function(){hidePill();if(window._kfOpenCart)window._kfOpenCart()});
     }
-    var t2=toast.querySelector('.kf-t2');t2.textContent=name||'';t2.style.display=name?'block':'none';
-    toast.classList.remove('kf-show','kf-hide');void toast.offsetWidth;toast.classList.add('kf-show');
-    clearTimeout(toast._t);toast._t=setTimeout(hideToast,4200);
+    pill.querySelector('.kf-ptxt').textContent=name?name+' added':'Added to cart';
+    pill.classList.remove('kf-show','kf-hide');void pill.offsetWidth;pill.classList.add('kf-show');
+    clearTimeout(pill._t);pill._t=setTimeout(hidePill,3600);
+  }
+  function flyToCart(done){
+    var badge=document.getElementById('kahoa-cart-badge'),btn=badge&&badge.parentElement;
+    if(!btn||RM||!document.body.animate){done();return}
+    var card=(Date.now()-lastCardAt<60000&&lastCard&&document.body.contains(lastCard))?lastCard:null;
+    var img=card&&card.querySelector('img');
+    var from=img&&img.getBoundingClientRect();
+    if(from&&(from.width<10||from.bottom<0||from.top>innerHeight))from=null;
+    var to=btn.getBoundingClientRect();
+    var sx=from?from.left+from.width/2:innerWidth/2,sy=from?from.top+from.height/2:innerHeight*.55;
+    var el=document.createElement(from?'img':'div');
+    if(from)el.src=img.currentSrc||img.src;else el.textContent='\u2615';
+    el.style.cssText='position:fixed;left:'+(sx-32)+'px;top:'+(sy-32)+'px;width:64px;height:64px;object-fit:cover;border-radius:50%;border:2px solid #E8C878;background:#1C0E06;color:#E8C878;font-size:30px;line-height:60px;text-align:center;box-shadow:0 8px 22px rgba(0,0,0,.45);z-index:10049;pointer-events:none;will-change:transform,opacity';
+    document.body.appendChild(el);
+    var dx=to.left+to.width/2-sx,dy=to.top+to.height/2-sy;
+    var a=el.animate([
+      {transform:'translate(0,0) scale(1)',opacity:1},
+      {transform:'translate('+(dx*.5)+'px,'+(dy*.5-90)+'px) scale(.85)',opacity:1,offset:.5},
+      {transform:'translate('+dx+'px,'+dy+'px) scale(.2)',opacity:.9}
+    ],{duration:750,easing:'cubic-bezier(.5,0,.6,1)',fill:'forwards'});
+    a.onfinish=function(){el.remove();done()};
   }
   function drawerOpen(){var d=document.getElementById('kahoa-cart-drawer');return !!d&&getComputedStyle(d).display!=='none'}
   /* keep nudging the cart icon while there is something to check out */
@@ -1239,7 +1256,7 @@ function boot(){tweak();initPlaces()}if(document.readyState==="loading")document
   setTimeout(function(){syncCartNudge();var badge=document.getElementById('kahoa-cart-badge'),btn=badge&&badge.parentElement;if(btn&&!RM&&cartQty()>0)replay(btn,'kf-cart-bounce',800)},2000);
 
   var KE=['#C8102E','#1E8A3C','#111111','#FFFFFF','#C8102E','#1E8A3C'];
-  function confetti(x,y){
+  function confetti(x,y,soft){
     if(RM||!document.body.animate)return;
     var n=44;
     for(var i=0;i<n;i++){(function(){
@@ -1247,7 +1264,7 @@ function boot(){tweak();initPlaces()}if(document.readyState==="loading")document
       var w=5+Math.random()*6,h=7+Math.random()*8,col=KE[Math.floor(Math.random()*KE.length)],round=Math.random()<.3;
       el.style.cssText='position:fixed;left:'+x+'px;top:'+y+'px;width:'+w+'px;height:'+(round?w:h)+'px;background:'+col+';border-radius:'+(round?'50%':'1px')+';z-index:10049;pointer-events:none;box-shadow:0 0 0 1px rgba(0,0,0,.28);will-change:transform,opacity';
       document.body.appendChild(el);
-      var vx=(Math.random()-.5)*460,vy=-(160+Math.random()*320),g=1100,T=1.5,rot=(Math.random()-.5)*900,kfs=[];
+      var vx=(Math.random()-.5)*460,vy=-((soft?40:160)+Math.random()*(soft?140:320)),g=1100,T=1.5,rot=(Math.random()-.5)*900,kfs=[];
       for(var k=0;k<=14;k++){var t=k/14*T;kfs.push({transform:'translate('+(vx*t).toFixed(1)+'px,'+(vy*t+.5*g*t*t).toFixed(1)+'px) rotate('+(rot*t/T).toFixed(0)+'deg)',opacity:k>10?1-(k-10)/4:1})}
       var a=el.animate(kfs,{duration:T*1000+Math.random()*300,easing:'linear',fill:'forwards'});
       a.onfinish=function(){el.remove()};
@@ -1256,10 +1273,12 @@ function boot(){tweak();initPlaces()}if(document.readyState==="loading")document
   function celebrate(name){
     if(drawerOpen())return;
     window._kfJustAdded=true;setTimeout(function(){window._kfJustAdded=false},120);
-    var badge=document.getElementById('kahoa-cart-badge');
-    if(!RM){replay(badge&&badge.parentElement,'kf-cart-bounce',800);replay(badge,'kf-badge-pop',700)}
-    showToast(name);
-    var r=toast.getBoundingClientRect();confetti(r.left+r.width/2,r.top+r.height/2);
+    var badge=document.getElementById('kahoa-cart-badge'),btn=badge&&badge.parentElement;
+    flyToCart(function(){
+      if(!RM){replay(btn,'kf-cart-bounce',800);replay(badge,'kf-badge-pop',700)}
+      if(btn){var r=btn.getBoundingClientRect();confetti(r.left+r.width/2,r.top+r.height/2,true)}
+      showPill(name);
+    });
   }
   if(typeof window.kahoaCartOpen==='function'){
     var origOpen=window.kahoaCartOpen;window._kfOpenCart=function(){return origOpen.apply(window,arguments)};
