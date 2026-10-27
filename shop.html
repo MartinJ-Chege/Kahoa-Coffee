@@ -1136,3 +1136,92 @@ function boot(){tweak();initPlaces()}if(document.readyState==="loading")document
 <script>(function(){if(Date.now()>=Date.parse("2026-11-01T00:00:00-05:00")){var n=document.getElementById("syrup-notify"),o=document.getElementById("syrup-preorder"),t=document.getElementById("syrup-open-note");if(n&&o){n.style.display="none";o.style.display="block"}if(t)t.textContent="pre-sale open now"}})();</script>
 <style id="cream-notify">#kahoa-notify-modal>div{background:#FDF8EF!important;border:1px solid #e3d2ab!important}#kahoa-notify-modal h3{color:#1C0E06!important}#kahoa-notify-modal p{color:#6b5a45!important}#kahoa-notify-modal p:first-of-type{color:#8B4A26!important}#kahoa-notify-modal input{background:#fff!important;border:1px solid #d9c9a6!important;color:#1C0E06!important}#kahoa-notify-modal input::placeholder{color:rgba(60,40,20,.4)}#kahoa-notify-modal button[onclick*=close],#kahoa-notify-modal #ss-close{color:#6b5a45!important}#kahoa-notify-modal #ss-msg,#kahoa-notify-modal #notify-msg{color:#8B4A26!important}</style>
 <style>#kahoa-notify-modal>div>button:first-of-type{color:#6b5a45!important}</style>
+
+<style id="kahoa-fun">
+@keyframes kfPop{0%{opacity:0;transform:translateY(34px) scale(.94)}55%{opacity:1;transform:translateY(-8px) scale(1.015)}78%{transform:translateY(3px) scale(.998)}100%{opacity:1;transform:none}}
+.kf-pre{opacity:0}
+.kf-in{animation:kfPop .75s cubic-bezier(.22,1,.36,1) both;animation-delay:var(--kfd,0ms)}
+@keyframes kfCart{0%,100%{transform:scale(1) rotate(0)}20%{transform:scale(1.28) rotate(-8deg)}40%{transform:scale(.92) rotate(6deg)}60%{transform:scale(1.14) rotate(-3deg)}80%{transform:scale(.98) rotate(1deg)}}
+.kf-cart-bounce{animation:kfCart .75s ease}
+@keyframes kfBadge{0%{transform:scale(1)}40%{transform:scale(1.75)}70%{transform:scale(.85)}100%{transform:scale(1)}}
+.kf-badge-pop{animation:kfBadge .6s ease}
+#kf-toast{position:fixed;top:78px;left:50%;z-index:10050;max-width:calc(100vw - 32px);padding:11px 20px;border-radius:4px;background:#1C0E06;color:#E8C878;border:1px solid rgba(232,200,120,.55);box-shadow:0 10px 30px rgba(0,0,0,.35);font-family:Montserrat,Poppins,sans-serif;font-size:13px;font-weight:600;letter-spacing:.4px;text-align:center;pointer-events:none;opacity:0;transform:translate(-50%,-24px)}
+#kf-toast.kf-show{animation:kfToast 2.6s cubic-bezier(.22,1,.36,1) both}
+@keyframes kfToast{0%{opacity:0;transform:translate(-50%,-24px) scale(.92)}12%{opacity:1;transform:translate(-50%,6px) scale(1.04)}22%{transform:translate(-50%,0) scale(1)}82%{opacity:1;transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-14px) scale(.96)}}
+.kf-steam{position:absolute;left:79%;bottom:36%;width:46px;height:52px;margin-left:-23px;pointer-events:none;z-index:2}
+.kf-steam i{position:absolute;bottom:0;width:12px;height:38px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,255,255,.9),rgba(255,255,255,0) 70%);filter:blur(2.5px);opacity:0;animation:kfSteam 3.6s ease-in-out infinite}
+.kf-steam i:nth-child(1){left:2px;animation-delay:0s}
+.kf-steam i:nth-child(2){left:19px;animation-delay:1.2s}
+.kf-steam i:nth-child(3){left:32px;animation-delay:2.4s}
+@keyframes kfSteam{0%{opacity:0;transform:translateY(8px) scaleX(1)}25%{opacity:1}70%{opacity:.4;transform:translateY(-22px) scaleX(1.6) translateX(4px)}100%{opacity:0;transform:translateY(-36px) scaleX(2) translateX(-3px)}}
+@media(prefers-reduced-motion:reduce){.kf-pre{opacity:1!important}.kf-in,.kf-cart-bounce,.kf-badge-pop,.kf-steam i{animation:none!important}.kf-steam{display:none}#kf-toast.kf-show{animation:none;opacity:1;transform:translate(-50%,0)}}
+</style>
+<script id="kahoa-fun-js">
+(function(){
+  var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function qty(a){var n=0;(a||[]).forEach(function(i){n+=(i.qty||1)});return n}
+  function replay(el,cls,ms){if(!el)return;el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);setTimeout(function(){el.classList.remove(cls)},ms||900)}
+
+  /* 1. cards bounce in as they scroll into view */
+  if(!RM&&'IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){
+      if(!e.isIntersecting)return;var el=e.target;io.unobserve(el);
+      var idx=Array.prototype.indexOf.call(el.parentNode.children,el);
+      el.style.setProperty('--kfd',(idx%3)*110+'ms');el.classList.add('kf-in');
+      el.addEventListener('animationend',function f(ev){if(ev.target!==el)return;el.classList.remove('kf-pre','kf-in');el.style.removeProperty('--kfd');el.removeEventListener('animationend',f)});
+    })},{threshold:.1,rootMargin:'0px 0px -6% 0px'});
+    var cards=document.querySelectorAll('.products-grid>.product-card,.sips-grid>div,.merch-grid>div,.green-grid>div');
+    cards.forEach(function(el){el.classList.add('kf-pre');io.observe(el)});
+    setTimeout(function(){cards.forEach(function(el){
+      if(el.classList.contains('kf-pre')&&!el.classList.contains('kf-in')&&el.offsetParent!==null&&el.getBoundingClientRect().top<innerHeight*1.5)el.classList.remove('kf-pre');
+    })},4000);
+  }
+
+  /* steam over the coffee cards */
+  if(!RM){document.querySelectorAll('.product-card .product-card-img').forEach(function(box){
+    var s=document.createElement('span');s.className='kf-steam';s.setAttribute('aria-hidden','true');s.innerHTML='<i></i><i></i><i></i>';box.appendChild(s);
+  })}
+
+  /* 3. cart bounce + "just added" toast */
+  var toast;
+  function showToast(msg){
+    if(!toast){toast=document.createElement('div');toast.id='kf-toast';toast.setAttribute('role','status');document.body.appendChild(toast)}
+    toast.textContent=msg;toast.classList.remove('kf-show');void toast.offsetWidth;toast.classList.add('kf-show');
+    clearTimeout(toast._t);toast._t=setTimeout(function(){toast.classList.remove('kf-show')},2700);
+  }
+  function drawerOpen(){var d=document.getElementById('kahoa-cart-drawer');return !!d&&getComputedStyle(d).display!=='none'}
+  function celebrate(name){
+    if(drawerOpen())return;
+    window._kfJustAdded=true;setTimeout(function(){window._kfJustAdded=false},120);
+    var badge=document.getElementById('kahoa-cart-badge');
+    if(!RM){replay(badge&&badge.parentElement,'kf-cart-bounce',800);replay(badge,'kf-badge-pop',700)}
+    showToast('☕ '+(name?name+' added':'Added to your cart')+' — asante!');
+  }
+  if(typeof window.kahoaCartOpen==='function'){
+    var origOpen=window.kahoaCartOpen;
+    window.kahoaCartOpen=function(){
+      var self=this,a=arguments;
+      if(window._kfJustAdded){window._kfJustAdded=false;setTimeout(function(){if(toast)toast.classList.remove('kf-show');origOpen.apply(self,a)},800);return}
+      return origOpen.apply(this,a);
+    };
+  }
+  if(typeof window.kahoaCartSave==='function'&&typeof window.kahoaCartGet==='function'){
+    var origSave=window.kahoaCartSave;
+    window.kahoaCartSave=function(items){
+      var prev=[];try{prev=window.kahoaCartGet()||[]}catch(e){}
+      var r=origSave.apply(this,arguments);
+      try{
+        if(qty(items)>qty(prev)){
+          var name='';
+          (items||[]).forEach(function(it){
+            var p=prev.filter(function(x){return x.productKey===it.productKey&&x.grind===it.grind})[0];
+            if(!p||(it.qty||1)>(p.qty||1))name=it.productName||it.name||name;
+          });
+          celebrate(name);
+        }
+      }catch(e){}
+      return r;
+    };
+  }
+})();
+</script>
