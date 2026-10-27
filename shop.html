@@ -1141,6 +1141,8 @@ function boot(){tweak();initPlaces()}if(document.readyState==="loading")document
 @keyframes kfPop{0%{opacity:0;transform:translateY(34px) scale(.94)}55%{opacity:1;transform:translateY(-8px) scale(1.015)}78%{transform:translateY(3px) scale(.998)}100%{opacity:1;transform:none}}
 .kf-pre{opacity:0}
 .kf-in{animation:kfPop .75s cubic-bezier(.22,1,.36,1) both;animation-delay:var(--kfd,0ms)}
+@keyframes kfRing{0%{transform:scale(.9);opacity:.9}100%{transform:scale(1.7);opacity:0}}
+.kf-cart-has::after{content:'';position:absolute;left:-2px;right:-2px;top:-2px;bottom:-2px;border-radius:50%;border:2px solid #E8C878;pointer-events:none;animation:kfRing 2.2s ease-out infinite}
 @keyframes kfCart{0%,100%{transform:scale(1) rotate(0)}20%{transform:scale(1.28) rotate(-8deg)}40%{transform:scale(.92) rotate(6deg)}60%{transform:scale(1.14) rotate(-3deg)}80%{transform:scale(.98) rotate(1deg)}}
 .kf-cart-bounce{animation:kfCart .75s ease}
 @keyframes kfBoing{0%{transform:scale(1)}30%{transform:scale(.9)}62%{transform:scale(1.06)}100%{transform:scale(1)}}
@@ -1169,7 +1171,7 @@ function boot(){tweak();initPlaces()}if(document.readyState==="loading")document
 .kf-steam i:nth-child(2){left:19px;animation-delay:1.2s}
 .kf-steam i:nth-child(3){left:32px;animation-delay:2.4s}
 @keyframes kfSteam{0%{opacity:0;transform:translateY(8px) scaleX(1)}25%{opacity:1}70%{opacity:.4;transform:translateY(-22px) scaleX(1.6) translateX(4px)}100%{opacity:0;transform:translateY(-36px) scaleX(2) translateX(-3px)}}
-@media(prefers-reduced-motion:reduce){.kf-pre{opacity:1!important}.kf-in,.kf-cart-bounce,.kf-badge-pop,.kf-boing,.kf-steam i{animation:none!important}.kf-steam{display:none}#kf-toast.kf-show,#kf-toast.kf-show .kf-tick{animation:none!important;opacity:1;transform:translate(-50%,-50%)}#kf-toast.kf-show .kf-tick{transform:none}}
+@media(prefers-reduced-motion:reduce){.kf-pre{opacity:1!important}.kf-in,.kf-cart-bounce,.kf-badge-pop,.kf-boing,.kf-steam i,.kf-cart-has::after{animation:none!important}.kf-cart-has::after{display:none}.kf-steam{display:none}#kf-toast.kf-show,#kf-toast.kf-show .kf-tick{animation:none!important;opacity:1;transform:translate(-50%,-50%)}#kf-toast.kf-show .kf-tick{transform:none}}
 </style>
 <script id="kahoa-fun-js">
 (function(){
@@ -1223,6 +1225,19 @@ function boot(){tweak();initPlaces()}if(document.readyState==="loading")document
     clearTimeout(toast._t);toast._t=setTimeout(hideToast,4200);
   }
   function drawerOpen(){var d=document.getElementById('kahoa-cart-drawer');return !!d&&getComputedStyle(d).display!=='none'}
+  /* keep nudging the cart icon while there is something to check out */
+  function cartQty(){try{return qty(window.kahoaCartGet())}catch(e){return 0}}
+  function syncCartNudge(){
+    var badge=document.getElementById('kahoa-cart-badge'),btn=badge&&badge.parentElement;if(!btn)return;
+    btn.classList.toggle('kf-cart-has',cartQty()>0&&!drawerOpen());
+  }
+  setInterval(function(){
+    syncCartNudge();
+    var badge=document.getElementById('kahoa-cart-badge'),btn=badge&&badge.parentElement;
+    if(btn&&!RM&&!document.hidden&&cartQty()>0&&!drawerOpen())replay(btn,'kf-cart-bounce',800);
+  },7000);
+  setTimeout(function(){syncCartNudge();var badge=document.getElementById('kahoa-cart-badge'),btn=badge&&badge.parentElement;if(btn&&!RM&&cartQty()>0)replay(btn,'kf-cart-bounce',800)},2000);
+
   var KE=['#C8102E','#1E8A3C','#111111','#FFFFFF','#C8102E','#1E8A3C'];
   function confetti(x,y){
     if(RM||!document.body.animate)return;
@@ -1258,6 +1273,7 @@ function boot(){tweak();initPlaces()}if(document.readyState==="loading")document
     window.kahoaCartSave=function(items){
       var prev=[];try{prev=window.kahoaCartGet()||[]}catch(e){}
       var r=origSave.apply(this,arguments);
+      setTimeout(syncCartNudge,0);
       try{
         if(qty(items)>qty(prev)){
           var name='';
