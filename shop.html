@@ -1143,6 +1143,8 @@ function boot(){tweak();initPlaces()}if(document.readyState==="loading")document
 .kf-in{animation:kfPop .75s cubic-bezier(.22,1,.36,1) both;animation-delay:var(--kfd,0ms)}
 @keyframes kfCart{0%,100%{transform:scale(1) rotate(0)}20%{transform:scale(1.28) rotate(-8deg)}40%{transform:scale(.92) rotate(6deg)}60%{transform:scale(1.14) rotate(-3deg)}80%{transform:scale(.98) rotate(1deg)}}
 .kf-cart-bounce{animation:kfCart .75s ease}
+@keyframes kfBoing{0%{transform:scale(1)}30%{transform:scale(.9)}62%{transform:scale(1.06)}100%{transform:scale(1)}}
+.kf-boing{animation:kfBoing .42s cubic-bezier(.34,1.56,.64,1)}
 @keyframes kfBadge{0%{transform:scale(1)}40%{transform:scale(1.75)}70%{transform:scale(.85)}100%{transform:scale(1)}}
 .kf-badge-pop{animation:kfBadge .6s ease}
 #kf-toast{position:fixed;top:78px;left:50%;z-index:10050;max-width:calc(100vw - 32px);padding:11px 20px;border-radius:4px;background:#1C0E06;color:#E8C878;border:1px solid rgba(232,200,120,.55);box-shadow:0 10px 30px rgba(0,0,0,.35);font-family:Montserrat,Poppins,sans-serif;font-size:13px;font-weight:600;letter-spacing:.4px;text-align:center;pointer-events:none;opacity:0;transform:translate(-50%,-24px)}
@@ -1154,7 +1156,7 @@ function boot(){tweak();initPlaces()}if(document.readyState==="loading")document
 .kf-steam i:nth-child(2){left:19px;animation-delay:1.2s}
 .kf-steam i:nth-child(3){left:32px;animation-delay:2.4s}
 @keyframes kfSteam{0%{opacity:0;transform:translateY(8px) scaleX(1)}25%{opacity:1}70%{opacity:.4;transform:translateY(-22px) scaleX(1.6) translateX(4px)}100%{opacity:0;transform:translateY(-36px) scaleX(2) translateX(-3px)}}
-@media(prefers-reduced-motion:reduce){.kf-pre{opacity:1!important}.kf-in,.kf-cart-bounce,.kf-badge-pop,.kf-steam i{animation:none!important}.kf-steam{display:none}#kf-toast.kf-show{animation:none;opacity:1;transform:translate(-50%,0)}}
+@media(prefers-reduced-motion:reduce){.kf-pre{opacity:1!important}.kf-in,.kf-cart-bounce,.kf-badge-pop,.kf-boing,.kf-steam i{animation:none!important}.kf-steam{display:none}#kf-toast.kf-show{animation:none;opacity:1;transform:translate(-50%,0)}}
 </style>
 <script id="kahoa-fun-js">
 (function(){
@@ -1181,6 +1183,12 @@ function boot(){tweak();initPlaces()}if(document.readyState==="loading")document
   if(!RM){document.querySelectorAll('.product-card .product-card-img').forEach(function(box){
     var s=document.createElement('span');s.className='kf-steam';s.setAttribute('aria-hidden','true');s.innerHTML='<i></i><i></i><i></i>';box.appendChild(s);
   })}
+
+  /* squish on tap */
+  if(!RM)document.addEventListener('click',function(e){
+    var b=e.target.closest&&e.target.closest('.product-card-body button,.sips-grid button,.sips-grid a[onclick],.merch-grid button,.merch-grid a[onclick],.green-grid button');
+    if(b)replay(b,'kf-boing',500);
+  },true);
 
   /* 3. cart bounce + "just added" toast */
   var toast;
