@@ -555,3 +555,70 @@ window.addEventListener('load',kegRestoreFromAgreement);
 </script>
 </body>
 </html>
+
+
+<style id="kahoa-vip-welcome-css">
+.ks-wrap{text-align:center;overflow:hidden}
+.ks-wrap .ks-stripe{height:10px;margin:0 0 16px;background:linear-gradient(180deg,#000 0,#000 3px,#fff 3px,#fff 4px,#C8102E 4px,#C8102E 6px,#fff 6px,#fff 7px,#1E8A3C 7px,#1E8A3C 10px);transform-origin:left center}
+.ks-wrap .ks-cup{position:relative;display:inline-block;margin-bottom:6px;font-size:50px;line-height:1}
+.ks-wrap .ks-steam{position:absolute;left:50%;bottom:78%;width:44px;height:46px;margin-left:-22px;pointer-events:none}
+.ks-wrap .ks-steam i{position:absolute;bottom:0;width:10px;height:30px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(139,90,52,.55),rgba(139,90,52,0) 70%);filter:blur(2.5px);opacity:0}
+.ks-wrap.ks-dark .ks-steam i{background:radial-gradient(ellipse at center,rgba(255,255,255,.55),rgba(255,255,255,0) 70%)}
+.ks-wrap .ks-steam i:nth-child(1){left:3px}.ks-wrap .ks-steam i:nth-child(2){left:17px}.ks-wrap .ks-steam i:nth-child(3){left:31px}
+.ks-wrap .ks-h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:32px;line-height:1.1;font-weight:700;color:#1C0E06}
+.ks-wrap .ks-h2{font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-style:italic;color:#8B4A26;margin:4px 0 10px}
+.ks-wrap .ks-p{font-family:Montserrat,sans-serif;font-size:13.5px;line-height:1.65;color:#4A2A14;max-width:340px;margin:0 auto 14px}
+.ks-wrap .ks-sign{font-family:Montserrat,sans-serif;font-size:12px;line-height:1.6;color:#7a5a3a;margin-top:6px}
+.ks-wrap .ks-sign em{font-family:'Cormorant Garamond',Georgia,serif;font-size:18px;color:#1C0E06}
+.ks-wrap.ks-dark .ks-h1{color:#F6E3A8}
+.ks-wrap.ks-dark .ks-h2{color:#E8C878}
+.ks-wrap.ks-dark .ks-p{color:rgba(255,255,255,.78)}
+.ks-wrap.ks-dark .ks-sign{color:rgba(255,255,255,.6)}
+.ks-wrap.ks-dark .ks-sign em{color:#F6E3A8}
+@keyframes ksDraw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes ksRise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes ksPop{0%{transform:scale(.3) rotate(-12deg);opacity:0}60%{transform:scale(1.18) rotate(4deg);opacity:1}100%{transform:none;opacity:1}}
+@keyframes ksSteam{0%{opacity:0;transform:translateY(8px) scaleX(1)}25%{opacity:.9}70%{opacity:.35;transform:translateY(-22px) scaleX(1.6)}100%{opacity:0;transform:translateY(-38px) scaleX(2)}}
+.ks-wrap.ks-play .ks-stripe{animation:ksDraw .8s cubic-bezier(.22,1,.36,1) both}
+.ks-wrap.ks-play .ks-cup{animation:ksPop .7s .15s cubic-bezier(.34,1.6,.5,1) both}
+.ks-wrap.ks-play .ks-steam i{animation:ksSteam 3.2s ease-in-out infinite}
+.ks-wrap.ks-play .ks-steam i:nth-child(2){animation-delay:1.1s}.ks-wrap.ks-play .ks-steam i:nth-child(3){animation-delay:2.2s}
+.ks-wrap.ks-play .ks-h1{animation:ksRise .6s .35s cubic-bezier(.22,1,.36,1) both}
+.ks-wrap.ks-play .ks-h2{animation:ksRise .6s .55s cubic-bezier(.22,1,.36,1) both}
+.ks-wrap.ks-play .ks-p{animation:ksRise .6s .75s cubic-bezier(.22,1,.36,1) both}
+.ks-wrap.ks-play .ks-sign{animation:ksRise .6s .95s cubic-bezier(.22,1,.36,1) both}
+@media(prefers-reduced-motion:reduce){.ks-wrap.ks-play *{animation:none!important}.ks-wrap .ks-steam{display:none}}
+</style>
+<script id="kahoa-vip-welcome-js">
+(function(){
+  function first(id,fullName){
+    try{var el=document.getElementById(id);var v=el&&el.value?String(el.value).trim():'';if(!v)return '';
+      if(fullName)v=v.split(/\s+/)[0];return v.charAt(0).toUpperCase()+v.slice(1)}catch(e){return ''}
+  }
+  function wire(boxId,dark,fn,msg,sign){
+    var box=document.getElementById(boxId);if(!box)return;
+    box.classList.add('ks-wrap');if(dark)box.classList.add('ks-dark');
+    box.innerHTML='<div class="ks-stripe"></div><div class="ks-cup">☕<span class="ks-steam" aria-hidden="true"><i></i><i></i><i></i></span></div>'+
+      '<div class="ks-h1">Asante sana<span class="ks-nm"></span>!</div>'+
+      '<div class="ks-h2">Welcome to the Kahoa family 🇰🇪</div>'+
+      '<div class="ks-p">'+msg+'</div>'+
+      '<div class="ks-sign">'+(sign?sign+'<br>':'')+'<em>— Martin, Kahoa Coffee</em></div>';
+    function play(){
+      if(getComputedStyle(box).display==='none'){box.classList.remove('ks-play');return}
+      var nm=fn();box.querySelector('.ks-nm').textContent=nm?', '+nm:'';
+      box.classList.remove('ks-play');void box.offsetWidth;box.classList.add('ks-play');
+    }
+    new MutationObserver(play).observe(box,{attributes:true,attributeFilter:['style']});
+  }
+  /* VIP order (coffee + kegs): cream modal */
+  wire('vip-success',false,function(){return first('vf-fname')},
+    'We\'re so glad you\'re part of us. Your coffee is being roasted fresh for you.',
+    'Confirmation sent to your email.<br>We\'ll roast fresh and ship within 3-5 days.');
+  /* VIP keg lease: dark page */
+  wire('vip-lease-success',true,function(){return first('lf-name',true)},
+    'Your keg lease has started and your first charge was processed today. We\'re so glad you\'re part of us.','');
+  /* VIP coffee cart booking: dark page */
+  wire('cb-success',true,function(){return first('cb-name',true)},
+    'We\'ve got your booking request and can\'t wait to serve you. We\'ll confirm your date shortly.','');
+})();
+</script>

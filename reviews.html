@@ -694,3 +694,227 @@ function render(d){var s=(d&&d.suggestions||[]).filter(function(x){return x.plac
 function pick(id,fallback){hide();fetch("https://places.googleapis.com/v1/places/"+encodeURIComponent(id)+"?sessionToken="+token,{headers:{"X-Goog-Api-Key":KEY,"X-Goog-FieldMask":"addressComponents,formattedAddress"}}).then(function(r){return r.json()}).then(function(d){token=uuid();var c={};(d.addressComponents||[]).forEach(function(a){(a.types||[]).forEach(function(t){c[t]=a})});var n=c.street_number?c.street_number.longText:"",rt=c.route?c.route.longText:"";var line=(n+" "+rt).trim();setV("sq-address",line||fallback.split(",")[0]);if(c.subpremise){var a2=$("sq-address2");if(a2&&!(a2.value||"").trim())setV("sq-address2","#"+c.subpremise.longText)}var city=(c.locality||c.postal_town||c.sublocality_level_1||c.sublocality||c.neighborhood||{}).longText;if(city)setV("sq-city",city);if(c.administrative_area_level_1)setV("sq-state",c.administrative_area_level_1.shortText);if(c.postal_code){lastZip=c.postal_code.longText;setV("sq-zip",c.postal_code.longText)}}).catch(function(){token=uuid()})}
 addr.addEventListener("input",function(){clearTimeout(timer);var q=(addr.value||"").trim();if(q.length<4){hide();return}var my=++seq;timer=setTimeout(function(){fetch("https://places.googleapis.com/v1/places:autocomplete",{method:"POST",headers:{"Content-Type":"application/json","X-Goog-Api-Key":KEY},body:JSON.stringify({input:q,sessionToken:token,includedRegionCodes:["us"],locationBias:{circle:{center:{latitude:30.2672,longitude:-97.7431},radius:50000}}})}).then(function(r){return r.json()}).then(function(d){if(d&&d.error){console.warn("Places error",d.error);if(/placesdebug=1/.test(location.search)){var m=$("kahoa-places-dbg");if(!m){m=document.createElement("div");m.id="kahoa-places-dbg";m.style.cssText="margin-top:4px;padding:8px;background:#fff3cd;border:1px solid #e0b100;color:#5a4500;font:12px/1.4 monospace;white-space:pre-wrap;word-break:break-word";addr.parentNode.appendChild(m)}m.textContent="Google says: "+(d.error.status||"")+" - "+(d.error.message||"")}}if(/placesdebug=1/.test(location.search)&&d&&!d.error){dbg("Google replied OK. Suggestions: "+((d.suggestions||[]).length))}if(my===seq)render(d)}).catch(function(e){if(/placesdebug=1/.test(location.search))dbg("Request failed before reaching Google: "+e);hide()})},250)});addr.addEventListener("blur",function(){setTimeout(hide,200)});addr.addEventListener("keydown",function(e){if(e.key==="Escape")hide()})}
 function boot(){tweak();initPlaces()}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();window.kahoaInitPlaces=initPlaces})();</script>
+
+<style id="kahoa-fun">
+@keyframes kfPop{0%{opacity:0;transform:translateY(34px) scale(.94)}55%{opacity:1;transform:translateY(-8px) scale(1.015)}78%{transform:translateY(3px) scale(.998)}100%{opacity:1;transform:none}}
+.kf-pre{opacity:0}
+.kf-in{animation:kfPop .75s cubic-bezier(.22,1,.36,1) both;animation-delay:var(--kfd,0ms)}
+@keyframes kfRing{0%{transform:scale(.9);opacity:.9}100%{transform:scale(1.7);opacity:0}}
+.kf-cart-has::after{content:'';position:absolute;left:-2px;right:-2px;top:-2px;bottom:-2px;border-radius:50%;border:2px solid #E8C878;pointer-events:none;animation:kfRing 2.2s ease-out infinite}
+@keyframes kfCart{0%,100%{transform:scale(1) rotate(0)}20%{transform:scale(1.28) rotate(-8deg)}40%{transform:scale(.92) rotate(6deg)}60%{transform:scale(1.14) rotate(-3deg)}80%{transform:scale(.98) rotate(1deg)}}
+.kf-cart-bounce{animation:kfCart .75s ease}
+@keyframes kfBoing{0%{transform:scale(1)}30%{transform:scale(.9)}62%{transform:scale(1.06)}100%{transform:scale(1)}}
+.kf-boing{animation:kfBoing .42s cubic-bezier(.34,1.56,.64,1)}
+@keyframes kfBadge{0%{transform:scale(1)}40%{transform:scale(1.75)}70%{transform:scale(.85)}100%{transform:scale(1)}}
+.kf-badge-pop{animation:kfBadge .6s ease}
+#kf-pill{position:fixed;left:50%;bottom:104px;z-index:10050;display:flex;align-items:center;gap:10px;width:max-content;max-width:92vw;padding:8px 8px 8px 10px;border-radius:999px;background:#FFF6E0;color:#1C0E06;border:2px solid #D4A843;box-shadow:0 12px 32px rgba(28,14,6,.4);font-family:Montserrat,Poppins,sans-serif;opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,40px)}
+#kf-pill.kf-show{visibility:visible;pointer-events:auto;animation:kfPillIn .5s cubic-bezier(.22,1.5,.36,1) both}
+#kf-pill.kf-hide{animation:kfPillOut .25s ease both;pointer-events:none}
+@keyframes kfPillIn{0%{opacity:0;transform:translate(-50%,40px) scale(.9)}100%{opacity:1;transform:translate(-50%,0) scale(1)}}
+@keyframes kfPillOut{to{opacity:0;transform:translate(-50%,30px) scale(.95)}}
+#kf-pill .kf-tick{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:#1E8A3C;color:#fff;font-size:15px;line-height:26px;font-weight:700;text-align:center}
+#kf-pill .kf-ptxt{font-size:12.5px;font-weight:700;color:#3A1E10;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(92vw - 190px)}
+#kf-pill .kf-pview{flex:0 0 auto;padding:9px 14px;border-radius:999px;border:0;background:linear-gradient(135deg,#E8C878,#C9972F);color:#1C0E06;font-family:inherit;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;cursor:pointer}
+.kf-steam{position:absolute;left:79%;bottom:36%;width:46px;height:52px;margin-left:-23px;pointer-events:none;z-index:2}
+.kf-steam i{position:absolute;bottom:0;width:12px;height:38px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,255,255,.9),rgba(255,255,255,0) 70%);filter:blur(2.5px);opacity:0;animation:kfSteam 3.6s ease-in-out infinite}
+.kf-steam i:nth-child(1){left:2px;animation-delay:0s}
+.kf-steam i:nth-child(2){left:19px;animation-delay:1.2s}
+.kf-steam i:nth-child(3){left:32px;animation-delay:2.4s}
+@keyframes kfSteam{0%{opacity:0;transform:translateY(8px) scaleX(1)}25%{opacity:1}70%{opacity:.4;transform:translateY(-22px) scaleX(1.6) translateX(4px)}100%{opacity:0;transform:translateY(-36px) scaleX(2) translateX(-3px)}}
+@media(prefers-reduced-motion:reduce){.kf-pre{opacity:1!important}.kf-in,.kf-cart-bounce,.kf-badge-pop,.kf-boing,.kf-steam i,.kf-cart-has::after{animation:none!important}.kf-cart-has::after{display:none}.kf-steam{display:none}#kf-pill.kf-show{animation:none!important;opacity:1;transform:translate(-50%,0)}}
+</style>
+<script id="kahoa-fun-js">
+(function(){
+  var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function qty(a){var n=0;(a||[]).forEach(function(i){n+=(i.qty||1)});return n}
+  function replay(el,cls,ms){if(!el)return;el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);setTimeout(function(){el.classList.remove(cls)},ms||900)}
+
+  /* squish on tap */
+  if(!RM)document.addEventListener('click',function(e){
+    var b=e.target.closest&&e.target.closest('.product-card-body button,.sips-grid button,.sips-grid a[onclick],.merch-grid button,.merch-grid a[onclick],.green-grid button');
+    if(b)replay(b,'kf-boing',500);
+  },true);
+
+  /* 3. cart bounce + "just added" toast */
+  var lastCard=null,lastCardAt=0;
+  document.addEventListener('click',function(e){
+    var c=e.target.closest&&e.target.closest('.product-card,.sips-grid>div,.merch-grid>div,.green-grid>div');
+    if(c){lastCard=c;lastCardAt=Date.now()}
+  },true);
+  var pill;
+  function hidePill(){
+    if(!pill||!pill.classList.contains('kf-show'))return;
+    clearTimeout(pill._t);pill.classList.add('kf-hide');
+    setTimeout(function(){pill.classList.remove('kf-show','kf-hide')},260);
+  }
+  function showPill(name){
+    if(!pill){
+      pill=document.createElement('div');pill.id='kf-pill';pill.setAttribute('role','status');
+      pill.innerHTML='<span class="kf-tick">\u2713</span><span class="kf-ptxt"></span><button type="button" class="kf-pview">View cart \u2192</button>';
+      document.body.appendChild(pill);
+      pill.querySelector('.kf-pview').addEventListener('click',function(){hidePill();if(window._kfOpenCart)window._kfOpenCart()});
+    }
+    pill.querySelector('.kf-ptxt').textContent=name?name+' added':'Added to cart';
+    pill.classList.remove('kf-show','kf-hide');void pill.offsetWidth;pill.classList.add('kf-show');
+    clearTimeout(pill._t);pill._t=setTimeout(hidePill,3600);
+  }
+  function flyToCart(done){
+    var badge=document.getElementById('kahoa-cart-badge'),btn=badge&&badge.parentElement;
+    if(!btn||RM||!document.body.animate){done();return}
+    var card=(Date.now()-lastCardAt<60000&&lastCard&&document.body.contains(lastCard))?lastCard:null;
+    var img=card&&card.querySelector('img');
+    var from=img&&img.getBoundingClientRect();
+    if(from&&(from.width<10||from.bottom<0||from.top>innerHeight))from=null;
+    var to=btn.getBoundingClientRect();
+    var sx=from?from.left+from.width/2:innerWidth/2,sy=from?from.top+from.height/2:innerHeight*.55;
+    var el=document.createElement(from?'img':'div');
+    if(from)el.src=img.currentSrc||img.src;else el.textContent='\u2615';
+    el.style.cssText='position:fixed;left:'+(sx-32)+'px;top:'+(sy-32)+'px;width:64px;height:64px;object-fit:cover;border-radius:50%;border:2px solid #E8C878;background:#1C0E06;color:#E8C878;font-size:30px;line-height:60px;text-align:center;box-shadow:0 8px 22px rgba(0,0,0,.45);z-index:10049;pointer-events:none;will-change:transform,opacity';
+    document.body.appendChild(el);
+    var dx=to.left+to.width/2-sx,dy=to.top+to.height/2-sy;
+    var a=el.animate([
+      {transform:'translate(0,0) scale(1)',opacity:1},
+      {transform:'translate('+(dx*.5)+'px,'+(dy*.5-90)+'px) scale(.85)',opacity:1,offset:.5},
+      {transform:'translate('+dx+'px,'+dy+'px) scale(.2)',opacity:.9}
+    ],{duration:750,easing:'cubic-bezier(.5,0,.6,1)',fill:'forwards'});
+    a.onfinish=function(){el.remove();done()};
+  }
+  function drawerOpen(){var d=document.getElementById('kahoa-cart-drawer');return !!d&&getComputedStyle(d).display!=='none'}
+  /* keep nudging the cart icon while there is something to check out */
+  function cartQty(){try{return qty(window.kahoaCartGet())}catch(e){return 0}}
+  function syncCartNudge(){
+    var badge=document.getElementById('kahoa-cart-badge'),btn=badge&&badge.parentElement;if(!btn)return;
+    btn.classList.toggle('kf-cart-has',cartQty()>0&&!drawerOpen());
+  }
+  setInterval(function(){
+    syncCartNudge();
+    var badge=document.getElementById('kahoa-cart-badge'),btn=badge&&badge.parentElement;
+    if(btn&&!RM&&!document.hidden&&cartQty()>0&&!drawerOpen())replay(btn,'kf-cart-bounce',800);
+  },7000);
+  setTimeout(function(){syncCartNudge();var badge=document.getElementById('kahoa-cart-badge'),btn=badge&&badge.parentElement;if(btn&&!RM&&cartQty()>0)replay(btn,'kf-cart-bounce',800)},2000);
+
+  var KE=['#C8102E','#1E8A3C','#111111','#FFFFFF','#C8102E','#1E8A3C'];
+  function curl(col,len,amp){
+    var w=amp*2+6,h=len,m=w/2;
+    var d='M'+m+' 1 C '+(m+amp)+' '+(h*.17)+','+(m-amp)+' '+(h*.33)+','+m+' '+(h*.5)+' S '+(m-amp)+' '+(h*.83)+','+m+' '+(h-1);
+    return '<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" style="display:block;overflow:visible"><path d="'+d+'" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="3" stroke-linecap="round"/><path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="1.7" stroke-linecap="round"/></svg>';
+  }
+  var layer;
+  function confetti(x,y,soft){
+    if(RM||!document.body.animate)return;
+    if(!layer){layer=document.createElement('div');layer.setAttribute('aria-hidden','true');layer.style.cssText='position:fixed;left:0;top:0;width:100%;height:100%;overflow:hidden;pointer-events:none;z-index:10049;contain:strict;touch-action:none';document.body.appendChild(layer)}
+    var n=40;
+    for(var i=0;i<n;i++){(function(){
+      var el=document.createElement('i'),col=KE[Math.floor(Math.random()*KE.length)],len=28+Math.random()*22,amp=3+Math.random()*4;
+      el.innerHTML=curl(col,len,amp);
+      el.style.cssText='position:absolute;left:'+x+'px;top:'+y+'px;margin:'+(-len/2)+'px 0 0 '+(-(amp+3))+'px;pointer-events:none;will-change:transform,opacity;line-height:0';
+      layer.appendChild(el);
+      var sp=(soft?230:300)+Math.random()*(soft?170:260),ang=-Math.PI/2+(Math.random()-.5)*(soft?3.4:2.6);
+      var vx=Math.cos(ang)*sp,vy=Math.sin(ang)*sp*(soft&&Math.sin(ang)<0?.55:1);
+      var k=3.1,vt=95+Math.random()*60,T=2.9,sway=8+Math.random()*14,ph=Math.random()*6.28,spin=(Math.random()-.5)*900,flip=3+Math.random()*4,N=30,kfs=[];
+      for(var q=0;q<=N;q++){
+        var f=q/N,t=f*T,e=(1-Math.exp(-k*t))/k;
+        var px=vx*e+Math.sin(t*4+ph)*sway*Math.min(1,t*1.2);
+        var py=(vy-vt)*e+vt*t;
+        kfs.push({transform:'translate('+px.toFixed(1)+'px,'+py.toFixed(1)+'px) rotate('+(spin*Math.pow(f,.7)).toFixed(0)+'deg) scale('+Math.cos(t*flip).toFixed(2)+',1)',opacity:f>.7?Math.max(0,1-(f-.7)/.3):1});
+      }
+      var a=el.animate(kfs,{duration:T*1000+Math.random()*400,easing:'linear',fill:'forwards',delay:Math.random()*90});
+      a.onfinish=function(){el.remove()};
+    })()}
+  }
+  function celebrate(name){
+    if(drawerOpen())return;
+    window._kfJustAdded=true;setTimeout(function(){window._kfJustAdded=false},120);
+    var badge=document.getElementById('kahoa-cart-badge'),btn=badge&&badge.parentElement;
+    flyToCart(function(){
+      if(!RM){replay(btn,'kf-cart-bounce',800);replay(badge,'kf-badge-pop',700)}
+      if(btn){var r=btn.getBoundingClientRect();confetti(r.left+r.width/2,r.top+r.height/2,true)}
+      showPill(name);
+    });
+  }
+  if(typeof window.kahoaCartOpen==='function'){
+    var origOpen=window.kahoaCartOpen;window._kfOpenCart=function(){return origOpen.apply(window,arguments)};
+    window.kahoaCartOpen=function(){
+      if(window._kfJustAdded){window._kfJustAdded=false;return}
+      return origOpen.apply(this,arguments);
+    };
+  }
+  if(typeof window.kahoaCartSave==='function'&&typeof window.kahoaCartGet==='function'){
+    var origSave=window.kahoaCartSave;
+    window.kahoaCartSave=function(items){
+      var prev=[];try{prev=window.kahoaCartGet()||[]}catch(e){}
+      var r=origSave.apply(this,arguments);
+      setTimeout(syncCartNudge,0);
+      try{
+        if(qty(items)>qty(prev)){
+          var name='';
+          (items||[]).forEach(function(it){
+            var p=prev.filter(function(x){return x.productKey===it.productKey&&x.grind===it.grind})[0];
+            if(!p||(it.qty||1)>(p.qty||1))name=it.productName||it.name||name;
+          });
+          celebrate(name);
+        }
+      }catch(e){}
+      return r;
+    };
+  }
+})();
+</script>
+
+
+<style id="kahoa-welcome-css">
+#kahoa-success-message{padding:0 14px 22px!important;overflow:hidden}
+#kahoa-success-message .ks-stripe{height:10px;margin:0 -14px 18px;background:linear-gradient(180deg,#000 0,#000 3px,#fff 3px,#fff 4px,#C8102E 4px,#C8102E 6px,#fff 6px,#fff 7px,#1E8A3C 7px,#1E8A3C 10px);transform-origin:left center}
+#kahoa-success-message .ks-cup{position:relative;display:inline-block;margin-bottom:6px;font-size:54px;line-height:1}
+#kahoa-success-message .ks-steam{position:absolute;left:50%;bottom:78%;width:44px;height:46px;margin-left:-22px;pointer-events:none}
+#kahoa-success-message .ks-steam i{position:absolute;bottom:0;width:10px;height:30px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(139,90,52,.55),rgba(139,90,52,0) 70%);filter:blur(2.5px);opacity:0}
+#kahoa-success-message .ks-steam i:nth-child(1){left:3px}
+#kahoa-success-message .ks-steam i:nth-child(2){left:17px}
+#kahoa-success-message .ks-steam i:nth-child(3){left:31px}
+#kahoa-success-message .ks-h1{font-family:'Cormorant Garamond',Lora,Georgia,serif;font-size:32px;line-height:1.1;font-weight:700;color:#1C0E06}
+#kahoa-success-message .ks-h2{font-family:'Cormorant Garamond',Lora,Georgia,serif;font-size:22px;font-style:italic;color:#8B4A26;margin:4px 0 10px}
+#kahoa-success-message .ks-p{font-family:Montserrat,sans-serif;font-size:13.5px;line-height:1.65;color:#4A2A14;max-width:340px;margin:0 auto 16px}
+#kahoa-success-message .ks-label{font-family:Montserrat,sans-serif;font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:#1E8A3C;font-weight:700;margin:0 0 8px}
+#kahoa-success-message #kahoa-success-details{background:rgba(212,168,67,.12);border:1px solid rgba(212,168,67,.45);border-radius:6px;padding:12px 14px;text-align:left}
+#kahoa-success-message .ks-sign{margin-top:14px;font-family:Montserrat,sans-serif;font-size:12px;line-height:1.6;color:#7a5a3a}
+#kahoa-success-message .ks-sign em{font-family:'Cormorant Garamond',Lora,Georgia,serif;font-size:18px;color:#1C0E06}
+@keyframes ksDraw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes ksRise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes ksPop{0%{transform:scale(.3) rotate(-12deg);opacity:0}60%{transform:scale(1.18) rotate(4deg);opacity:1}100%{transform:none;opacity:1}}
+@keyframes ksSteam{0%{opacity:0;transform:translateY(8px) scaleX(1)}25%{opacity:.9}70%{opacity:.35;transform:translateY(-22px) scaleX(1.6)}100%{opacity:0;transform:translateY(-38px) scaleX(2)}}
+#kahoa-success-message.ks-play .ks-stripe{animation:ksDraw .8s cubic-bezier(.22,1,.36,1) both}
+#kahoa-success-message.ks-play .ks-cup{animation:ksPop .7s .15s cubic-bezier(.34,1.6,.5,1) both}
+#kahoa-success-message.ks-play .ks-steam i{animation:ksSteam 3.2s ease-in-out infinite}
+#kahoa-success-message.ks-play .ks-steam i:nth-child(2){animation-delay:1.1s}
+#kahoa-success-message.ks-play .ks-steam i:nth-child(3){animation-delay:2.2s}
+#kahoa-success-message.ks-play .ks-h1{animation:ksRise .6s .35s cubic-bezier(.22,1,.36,1) both}
+#kahoa-success-message.ks-play .ks-h2{animation:ksRise .6s .55s cubic-bezier(.22,1,.36,1) both}
+#kahoa-success-message.ks-play .ks-p{animation:ksRise .6s .75s cubic-bezier(.22,1,.36,1) both}
+#kahoa-success-message.ks-play .ks-label,#kahoa-success-message.ks-play #kahoa-success-details{animation:ksRise .6s .95s cubic-bezier(.22,1,.36,1) both}
+#kahoa-success-message.ks-play .ks-sign{animation:ksRise .6s 1.15s cubic-bezier(.22,1,.36,1) both}
+@media(prefers-reduced-motion:reduce){#kahoa-success-message.ks-play *{animation:none!important}#kahoa-success-message .ks-steam{display:none}}
+</style>
+<script id="kahoa-welcome-js">
+(function(){
+  var box=document.getElementById('kahoa-success-message');if(!box)return;
+  var old=document.getElementById('kahoa-success-details');
+  var keepStyle=old?old.getAttribute('style'):'';
+  box.innerHTML='<div class="ks-stripe"></div>'+
+    '<div class="ks-cup">☕<span class="ks-steam" aria-hidden="true"><i></i><i></i><i></i></span></div>'+
+    '<div class="ks-h1">Asante sana<span id="ks-name"></span>!</div>'+
+    '<div class="ks-h2">Welcome to the Kahoa family 🇰🇪</div>'+
+    '<div class="ks-p">We\'re so glad you\'re part of us. Your coffee is being roasted fresh for you.</div>'+
+    '<div class="ks-label">✓ Order confirmed</div>'+
+    '<div id="kahoa-success-details"'+(keepStyle?' style="'+keepStyle.replace(/"/g,'&quot;')+'"':'')+'></div>'+
+    '<div class="ks-sign">A receipt has been emailed to you.<br><em>— Martin, Kahoa Coffee</em></div>';
+  function play(){
+    var shown=getComputedStyle(box).display!=='none';
+    if(!shown){box.classList.remove('ks-play');return}
+    var nm='';try{var o=window._kahoaPaymentContext&&window._kahoaPaymentContext.order;nm=o&&o.fname?String(o.fname).trim():''}catch(e){}
+    if(nm)nm=nm.charAt(0).toUpperCase()+nm.slice(1);
+    var n=document.getElementById('ks-name');if(n)n.textContent=nm?', '+nm:'';
+    box.classList.remove('ks-play');void box.offsetWidth;box.classList.add('ks-play');
+  }
+  new MutationObserver(play).observe(box,{attributes:true,attributeFilter:['style']});
+})();
+</script>
