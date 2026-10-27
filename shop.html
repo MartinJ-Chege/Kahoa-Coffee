@@ -1322,3 +1322,60 @@ function boot(){tweak();initPlaces()}if(document.readyState==="loading")document
   }
 })();
 </script>
+
+<style id="kahoa-welcome-css">
+#kahoa-success-message{padding:0 14px 22px!important;overflow:hidden}
+#kahoa-success-message .ks-stripe{height:10px;margin:0 -14px 18px;background:linear-gradient(180deg,#000 0,#000 3px,#fff 3px,#fff 4px,#C8102E 4px,#C8102E 6px,#fff 6px,#fff 7px,#1E8A3C 7px,#1E8A3C 10px);transform-origin:left center}
+#kahoa-success-message .ks-cup{position:relative;display:inline-block;margin-bottom:6px;font-size:54px;line-height:1}
+#kahoa-success-message .ks-steam{position:absolute;left:50%;bottom:78%;width:44px;height:46px;margin-left:-22px;pointer-events:none}
+#kahoa-success-message .ks-steam i{position:absolute;bottom:0;width:10px;height:30px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(139,90,52,.55),rgba(139,90,52,0) 70%);filter:blur(2.5px);opacity:0}
+#kahoa-success-message .ks-steam i:nth-child(1){left:3px}
+#kahoa-success-message .ks-steam i:nth-child(2){left:17px}
+#kahoa-success-message .ks-steam i:nth-child(3){left:31px}
+#kahoa-success-message .ks-h1{font-family:'Cormorant Garamond',Lora,Georgia,serif;font-size:32px;line-height:1.1;font-weight:700;color:#1C0E06}
+#kahoa-success-message .ks-h2{font-family:'Cormorant Garamond',Lora,Georgia,serif;font-size:22px;font-style:italic;color:#8B4A26;margin:4px 0 10px}
+#kahoa-success-message .ks-p{font-family:Montserrat,sans-serif;font-size:13.5px;line-height:1.65;color:#4A2A14;max-width:340px;margin:0 auto 16px}
+#kahoa-success-message .ks-label{font-family:Montserrat,sans-serif;font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:#1E8A3C;font-weight:700;margin:0 0 8px}
+#kahoa-success-message #kahoa-success-details{background:rgba(212,168,67,.12);border:1px solid rgba(212,168,67,.45);border-radius:6px;padding:12px 14px;text-align:left}
+#kahoa-success-message .ks-sign{margin-top:14px;font-family:Montserrat,sans-serif;font-size:12px;line-height:1.6;color:#7a5a3a}
+#kahoa-success-message .ks-sign em{font-family:'Cormorant Garamond',Lora,Georgia,serif;font-size:18px;color:#1C0E06}
+@keyframes ksDraw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes ksRise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes ksPop{0%{transform:scale(.3) rotate(-12deg);opacity:0}60%{transform:scale(1.18) rotate(4deg);opacity:1}100%{transform:none;opacity:1}}
+@keyframes ksSteam{0%{opacity:0;transform:translateY(8px) scaleX(1)}25%{opacity:.9}70%{opacity:.35;transform:translateY(-22px) scaleX(1.6)}100%{opacity:0;transform:translateY(-38px) scaleX(2)}}
+#kahoa-success-message.ks-play .ks-stripe{animation:ksDraw .8s cubic-bezier(.22,1,.36,1) both}
+#kahoa-success-message.ks-play .ks-cup{animation:ksPop .7s .15s cubic-bezier(.34,1.6,.5,1) both}
+#kahoa-success-message.ks-play .ks-steam i{animation:ksSteam 3.2s ease-in-out infinite}
+#kahoa-success-message.ks-play .ks-steam i:nth-child(2){animation-delay:1.1s}
+#kahoa-success-message.ks-play .ks-steam i:nth-child(3){animation-delay:2.2s}
+#kahoa-success-message.ks-play .ks-h1{animation:ksRise .6s .35s cubic-bezier(.22,1,.36,1) both}
+#kahoa-success-message.ks-play .ks-h2{animation:ksRise .6s .55s cubic-bezier(.22,1,.36,1) both}
+#kahoa-success-message.ks-play .ks-p{animation:ksRise .6s .75s cubic-bezier(.22,1,.36,1) both}
+#kahoa-success-message.ks-play .ks-label,#kahoa-success-message.ks-play #kahoa-success-details{animation:ksRise .6s .95s cubic-bezier(.22,1,.36,1) both}
+#kahoa-success-message.ks-play .ks-sign{animation:ksRise .6s 1.15s cubic-bezier(.22,1,.36,1) both}
+@media(prefers-reduced-motion:reduce){#kahoa-success-message.ks-play *{animation:none!important}#kahoa-success-message .ks-steam{display:none}}
+</style>
+<script id="kahoa-welcome-js">
+(function(){
+  var box=document.getElementById('kahoa-success-message');if(!box)return;
+  var old=document.getElementById('kahoa-success-details');
+  var keepStyle=old?old.getAttribute('style'):'';
+  box.innerHTML='<div class="ks-stripe"></div>'+
+    '<div class="ks-cup">☕<span class="ks-steam" aria-hidden="true"><i></i><i></i><i></i></span></div>'+
+    '<div class="ks-h1">Asante sana<span id="ks-name"></span>!</div>'+
+    '<div class="ks-h2">Welcome to the Kahoa family 🇰🇪</div>'+
+    '<div class="ks-p">We\'re so glad you\'re part of us. Your coffee is being roasted fresh for you.</div>'+
+    '<div class="ks-label">✓ Order confirmed</div>'+
+    '<div id="kahoa-success-details"'+(keepStyle?' style="'+keepStyle.replace(/"/g,'&quot;')+'"':'')+'></div>'+
+    '<div class="ks-sign">A receipt has been emailed to you.<br><em>— Martin, Kahoa Coffee</em></div>';
+  function play(){
+    var shown=getComputedStyle(box).display!=='none';
+    if(!shown){box.classList.remove('ks-play');return}
+    var nm='';try{var o=window._kahoaPaymentContext&&window._kahoaPaymentContext.order;nm=o&&o.fname?String(o.fname).trim():''}catch(e){}
+    if(nm)nm=nm.charAt(0).toUpperCase()+nm.slice(1);
+    var n=document.getElementById('ks-name');if(n)n.textContent=nm?', '+nm:'';
+    box.classList.remove('ks-play');void box.offsetWidth;box.classList.add('ks-play');
+  }
+  new MutationObserver(play).observe(box,{attributes:true,attributeFilter:['style']});
+})();
+</script>
