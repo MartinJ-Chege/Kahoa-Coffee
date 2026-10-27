@@ -1147,9 +1147,10 @@ function boot(){tweak();initPlaces()}if(document.readyState==="loading")document
 .kf-boing{animation:kfBoing .42s cubic-bezier(.34,1.56,.64,1)}
 @keyframes kfBadge{0%{transform:scale(1)}40%{transform:scale(1.75)}70%{transform:scale(.85)}100%{transform:scale(1)}}
 .kf-badge-pop{animation:kfBadge .6s ease}
-#kf-toast{position:fixed;top:78px;left:50%;z-index:10050;max-width:calc(100vw - 32px);padding:11px 20px;border-radius:4px;background:#1C0E06;color:#E8C878;border:1px solid rgba(232,200,120,.55);box-shadow:0 10px 30px rgba(0,0,0,.35);font-family:Montserrat,Poppins,sans-serif;font-size:13px;font-weight:600;letter-spacing:.4px;text-align:center;pointer-events:none;opacity:0;transform:translate(-50%,-24px)}
-#kf-toast.kf-show{animation:kfToast 2.6s cubic-bezier(.22,1,.36,1) both}
-@keyframes kfToast{0%{opacity:0;transform:translate(-50%,-24px) scale(.92)}12%{opacity:1;transform:translate(-50%,6px) scale(1.04)}22%{transform:translate(-50%,0) scale(1)}82%{opacity:1;transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-14px) scale(.96)}}
+#kf-toast{position:fixed;top:78px;left:50%;z-index:10050;max-width:calc(100vw - 32px);padding:22px 24px 14px;border-radius:6px;overflow:hidden;background:#1C0E06;color:#F6E3A8;border:1px solid rgba(232,200,120,.7);box-shadow:0 14px 38px rgba(0,0,0,.45),0 0 0 4px rgba(232,200,120,.18);font-family:Montserrat,Poppins,sans-serif;font-size:14.5px;font-weight:700;letter-spacing:.4px;text-align:center;pointer-events:none;opacity:0;transform:translate(-50%,-24px)}
+#kf-toast::before{content:'';position:absolute;left:0;right:0;top:0;height:9px;background:linear-gradient(180deg,#000 0,#000 2.6px,#fff 2.6px,#fff 3.6px,#C8102E 3.6px,#C8102E 5.4px,#fff 5.4px,#fff 6.4px,#1E8A3C 6.4px,#1E8A3C 9px)}
+#kf-toast.kf-show{animation:kfToast 2.8s cubic-bezier(.22,1,.36,1) both}
+@keyframes kfToast{0%{opacity:0;transform:translate(-50%,-24px) scale(.92)}10%{opacity:1;transform:translate(-50%,8px) scale(1.14)}20%{transform:translate(-50%,-2px) scale(.97)}30%{transform:translate(-50%,0) scale(1)}82%{opacity:1;transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-14px) scale(.96)}}
 .kf-steam{position:absolute;left:79%;bottom:36%;width:46px;height:52px;margin-left:-23px;pointer-events:none;z-index:2}
 .kf-steam i{position:absolute;bottom:0;width:12px;height:38px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,255,255,.9),rgba(255,255,255,0) 70%);filter:blur(2.5px);opacity:0;animation:kfSteam 3.6s ease-in-out infinite}
 .kf-steam i:nth-child(1){left:2px;animation-delay:0s}
@@ -1198,12 +1199,28 @@ function boot(){tweak();initPlaces()}if(document.readyState==="loading")document
     clearTimeout(toast._t);toast._t=setTimeout(function(){toast.classList.remove('kf-show')},2700);
   }
   function drawerOpen(){var d=document.getElementById('kahoa-cart-drawer');return !!d&&getComputedStyle(d).display!=='none'}
+  var KE=['#C8102E','#1E8A3C','#111111','#FFFFFF','#C8102E','#1E8A3C'];
+  function confetti(x,y){
+    if(RM||!document.body.animate)return;
+    var n=44;
+    for(var i=0;i<n;i++){(function(){
+      var el=document.createElement('i');
+      var w=5+Math.random()*6,h=7+Math.random()*8,col=KE[Math.floor(Math.random()*KE.length)],round=Math.random()<.3;
+      el.style.cssText='position:fixed;left:'+x+'px;top:'+y+'px;width:'+w+'px;height:'+(round?w:h)+'px;background:'+col+';border-radius:'+(round?'50%':'1px')+';z-index:10049;pointer-events:none;box-shadow:0 0 0 1px rgba(0,0,0,.28);will-change:transform,opacity';
+      document.body.appendChild(el);
+      var vx=(Math.random()-.5)*460,vy=-(160+Math.random()*320),g=1100,T=1.5,rot=(Math.random()-.5)*900,kfs=[];
+      for(var k=0;k<=14;k++){var t=k/14*T;kfs.push({transform:'translate('+(vx*t).toFixed(1)+'px,'+(vy*t+.5*g*t*t).toFixed(1)+'px) rotate('+(rot*t/T).toFixed(0)+'deg)',opacity:k>10?1-(k-10)/4:1})}
+      var a=el.animate(kfs,{duration:T*1000+Math.random()*300,easing:'linear',fill:'forwards'});
+      a.onfinish=function(){el.remove()};
+    })()}
+  }
   function celebrate(name){
     if(drawerOpen())return;
     window._kfJustAdded=true;setTimeout(function(){window._kfJustAdded=false},120);
     var badge=document.getElementById('kahoa-cart-badge');
     if(!RM){replay(badge&&badge.parentElement,'kf-cart-bounce',800);replay(badge,'kf-badge-pop',700)}
     showToast('☕ '+(name?name+' added':'Added to your cart')+' — asante!');
+    var r=toast.getBoundingClientRect();confetti(r.left+r.width/2,r.top+r.height/2);
   }
   if(typeof window.kahoaCartOpen==='function'){
     var origOpen=window.kahoaCartOpen;
