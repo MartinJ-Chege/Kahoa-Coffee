@@ -132,7 +132,7 @@ function ship(b){return 0}
 function total(b){return Math.round((b.price+ship(b))*100)/100}
 function render(){
   var h='';BUNDLES.forEach(function(b){
-    h+='<button type="button" class="b" id="b-'+b.id+'" onclick="choose(\''+b.id+'\')"><div class="im"><img src="/'+IMG[b.id]+'.jpg" alt="'+b.name+' gift bundle" loading="lazy"></div><div class="tx"><h3>'+b.name+'</h3><div class="c">'+contents(b)+'</div><div class="p">'+money(b.price)+'<small>'+'Shipping included'+'</small></div></div></button>';});
+    h+='<button type="button" class="b" id="b-'+b.id+'" onclick="choose(\''+b.id+'\')"><div class="im"><img src="/'+IMG[b.id]+'.jpg?v=2" alt="'+b.name+' gift bundle" loading="lazy"></div><div class="tx"><h3>'+b.name+'</h3><div class="c">'+contents(b)+'</div><div class="p">'+money(b.price)+'<small>'+'Shipping included'+'</small></div></div></button>';});
   $('grid').innerHTML=h;
 }
 function choose(id){
