@@ -46,6 +46,25 @@ button.pay:disabled{opacity:.6;cursor:default}
 #soon{display:none}
 </style>
 <style id="cream-forms">.box{background:#FDF8EF!important;border:1px solid #e3d2ab!important;color:#2a1608!important}.box h2,.box h3{color:#1C0E06!important}.box label{color:#8B4A26!important}.box input,.box select,.box textarea{background:#fff!important;border:1px solid #d9c9a6!important;color:#1C0E06!important}.box input::placeholder,.box textarea::placeholder{color:rgba(60,40,20,.38)}.box input:focus,.box select:focus,.box textarea:focus{outline:2px solid rgba(212,168,67,.55);border-color:#D4A843!important}.box .note,.box p[style]{color:#6b5a45!important}.box .sum{color:#3a2a1a!important}.box .sum .t{border-top:1px solid #d9c9a6!important;color:#1C0E06!important}#card{background:#fff!important;border:1px solid #d9c9a6}.box a{color:#8B4A26!important}.what{background:#F5EAD0!important;border-color:#d9b866!important;color:#2a1608!important}.what b{color:#8B4A26!important}.code{background:#fff!important;color:#8B4A26!important;border-color:#D4A843!important}.msgbox{background:#fff!important;color:#2a1608!important;border-color:#d9c9a6!important}.ghost{border-color:#8B4A26!important;color:#8B4A26!important}.ghost:hover{background:#8B4A26;color:#fff!important}.box b{color:#1C0E06}#ok p,#ok .note{color:#4a3a28!important}.err{background:#fde8e4!important;color:#a3271a!important}</style>
+<style id="ks-css">
+#ok .ks-stripe{height:10px;margin:-20px -20px 18px;background:linear-gradient(180deg,#000 0,#000 3px,#fff 3px,#fff 4px,#C8102E 4px,#C8102E 6px,#fff 6px,#fff 7px,#1E8A3C 7px,#1E8A3C 10px);transform-origin:left center}
+#ok .ks-cup{font-size:54px;line-height:1;margin-bottom:6px;display:inline-block}
+#ok .ks-h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:34px;line-height:1.1;font-weight:700;color:#1C0E06}
+#ok .ks-h2{font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-style:italic;color:#8B4A26;margin:4px 0 12px}
+#ok .ks-p{font-family:Montserrat,sans-serif;font-size:13.5px;line-height:1.7;color:#4A2A14;max-width:360px;margin:0 auto 14px}
+#ok .ks-label{font-family:Montserrat,sans-serif;font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:#1E8A3C;font-weight:700;margin:6px 0 8px}
+#ok .ks-card{background:rgba(212,168,67,.12);border:1px solid rgba(212,168,67,.45);border-radius:6px;padding:12px 14px;text-align:left;font-family:Montserrat,sans-serif;font-size:13px;line-height:1.65;color:#2a1608}
+#ok .ks-sign{margin-top:16px;font-family:Montserrat,sans-serif;font-size:12px;line-height:1.7;color:#7a5a3a}
+#ok .ks-sign em{font-family:'Cormorant Garamond',Georgia,serif;font-size:19px;color:#1C0E06}
+@keyframes ksDraw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes ksRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes ksPop{0%{transform:scale(.3) rotate(-12deg);opacity:0}60%{transform:scale(1.18) rotate(4deg);opacity:1}100%{transform:none;opacity:1}}
+#ok.ks-play .ks-stripe{animation:ksDraw .8s cubic-bezier(.22,1,.36,1) both}
+#ok.ks-play .ks-cup{animation:ksPop .7s .15s cubic-bezier(.34,1.6,.5,1) both}
+#ok.ks-play .ks-h1{animation:ksRise .6s .35s both}#ok.ks-play .ks-h2{animation:ksRise .6s .55s both}
+#ok.ks-play .ks-p,#ok.ks-play .ks-label,#ok.ks-play .ks-card{animation:ksRise .6s .8s both}#ok.ks-play .ks-sign{animation:ksRise .6s 1.1s both}
+@media(prefers-reduced-motion:reduce){#ok.ks-play *{animation:none!important}}
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -92,10 +111,17 @@ button.pay:disabled{opacity:.6;cursor:default}
     <p class="note">You're charged today. Deliveries start November 16 and go out in the order orders come in. We'll email you before yours arrives. Austin-area orders are hand-delivered. Everywhere else ships by standard shipping.</p>
   </div>
 
-  <div class="box" id="ok">
-    <h2>You're in. Thank you!</h2>
-    <p style="font-size:14px;line-height:1.8;color:rgba(255,255,255,.7);font-weight:300">Your pre-order is confirmed and a receipt is on its way to your email. Deliveries start November 16, and we'll email you before yours arrives.</p>
-    <p style="margin-top:18px"><a href="/shop.html" style="color:var(--gold)">Back to the shop</a></p>
+  <div class="box" id="ok" style="text-align:center;overflow:hidden">
+    <div class="ks-stripe"></div>
+    <div class="ks-cup">&#127855;</div>
+    <div class="ks-h1">Asante sana<span id="ks-name"></span>!</div>
+    <div class="ks-h2">Welcome to the Kahoa family &#127472;&#127466;</div>
+    <p class="ks-p">You just helped bring Mombasa Wildflower to life. It is made in small batches, by hand, with Texas wildflower honey and cardamom, inspired by the coffee my family has loved all my life. I am so grateful you are one of the first.</p>
+    <div class="ks-label">&#10003; Pre-order confirmed</div>
+    <div class="ks-card"><span id="ks-sum"></span><br>Your bottle ships starting <strong>November 16</strong>, in the order pre-orders came in. I will email you before it is on its way. A receipt is on its way to your inbox now.</div>
+    <p class="ks-p" style="margin-top:14px">Stir it into a latte, cold brew, or even warm milk, and tell me what you think. Just reply to your receipt email. I read every one.</p>
+    <div class="ks-sign">Karibu sana, always.<br><em>&mdash; Martin, Kahoa Coffee</em></div>
+    <p style="margin-top:16px"><a href="/shop.html" style="color:#8B4A26;font-size:13px">Back to the shop</a></p>
   </div>
 </div>
 
@@ -145,7 +171,7 @@ async function pay(){
     var d=await res.json();
     var charged=d.success===true||(d.payment_id&&!d.checkout_url);
     if(!res.ok||!charged){bad('Payment failed: '+(d.errors&&d.errors[0]?d.errors[0].detail:(d.error||'please try again')));btn.disabled=false;btn.textContent='Pre-order now';return}
-    $('form').style.display='none';$('ok').style.display='block';window.scrollTo(0,0);
+    $('form').style.display='none';try{var _n=String(first||'').trim();$('ks-name').textContent=_n?', '+_n.charAt(0).toUpperCase()+_n.slice(1):'';$('ks-sum').innerHTML='<strong>'+c.q+' &times; Mombasa Wildflower (12 oz)</strong> &middot; total '+money(c.total)+'<br>'}catch(e){}$('ok').style.display='block';$('ok').classList.add('ks-play');try{$('ok').scrollIntoView({behavior:'smooth',block:'start'})}catch(e){window.scrollTo(0,0)}
     var tp={to_email:'info@kahoa.shop',order_id:d.payment_id||d.order_id||('SYRUP-'+Date.now()),order_type:'SYRUP PRE-ORDER',customer_name:name,customer_email:email,customer_phone:phone,customer_address:full,product_name:summary,grind:'N/A',price:money(c.total),shipping_method:local?'Free Austin-area delivery':'Standard Shipping '+money(c.ship),checkout_url:d.receipt_url||'',notes:'Mombasa Wildflower syrup pre-sale. Fulfillment starts Nov 16, in order received. '+(local?'Hand-deliver':'Ship')+' Email the customer before it goes out.'};
     if(typeof emailjs!=='undefined'){emailjs.init(EJKEY);emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error(e)});
       emailjs.send(EJSVC,EJTMPL,Object.assign({},tp,{to_email:email,order_type:'Your Kahoa Coffee Pre-Order Confirmation'})).catch(function(e){console.error(e)})}
