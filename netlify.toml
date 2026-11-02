@@ -4,10 +4,26 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    Cache-Control = "public, max-age=0, must-revalidate"
     Content-Security-Policy = "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https: http:;"
     X-Frame-Options = "SAMEORIGIN"
     X-Content-Type-Options = "nosniff"
+
+# Images are cached for 7 days. When you replace an image under the same file name,
+# add or change a version tag in the page (for example ?v=3) so visitors get the new one right away.
+[[headers]]
+  for = "/*.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
 
 [[redirects]]
   from = "/shop"
