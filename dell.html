@@ -53,7 +53,9 @@ select option{color:#000}
 .stp button{width:34px;height:34px;border:1px solid #d9c9a6;background:#fff;color:#1C0E06;font-size:18px;cursor:pointer;font-family:inherit}
 .stp output{min-width:22px;text-align:center;font-weight:600}
 .exg{display:none;margin:-4px 0 6px}
-.inc{border:1px solid #d9c9a6;background:#fff;padding:12px 14px;margin-top:16px;font-size:13px;line-height:1.6;color:#2a1608}
+.fixed{padding:12px;background:#f3ead6;border:1px solid #d9c9a6;font-size:14px;color:#1C0E06}
+.fixed.free{color:#2e7d32;font-weight:600}
+.inc{display:none;border:1px solid #d9c9a6;background:#fff;padding:12px 14px;margin-top:16px;font-size:13px;line-height:1.6;color:#2a1608}
 .inc b{color:#2e7d32}
 .more{width:100%;margin-top:14px;background:#fff;border:1px dashed #8B4A26;color:#8B4A26;padding:13px;font-family:inherit;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;cursor:pointer}
 .paidnote{background:#fff4e0;border:1px solid #e3b866;color:#5a3a10;padding:11px 13px;font-size:12px;line-height:1.6;margin:14px 0 4px}
@@ -99,8 +101,8 @@ button.pay:disabled{opacity:.6;cursor:default}
       <div id="picks"></div>
 
       <div class="inc" id="inc"></div>
-      <button type="button" class="more" id="more-btn" onclick="toggleExtras()">+ Want more? Add extras (you pay for these)</button>
-      <div id="extras-wrap" style="display:none">
+      <label style="margin-top:22px">Want more? Extras you can buy (optional)</label>
+      <div id="extras-wrap">
         <div class="paidnote"><b>Extras are NOT part of your gift.</b> Anything you add here is charged to your card at regular price. Your pack above is already covered by Dell, so you do not need to add it again.</div>
         <div id="extras"></div>
         <p class="note" style="color:#6b5a45;margin-top:4px">Extras ship free in the same box. Texas orders pay sales tax on extras.</p>
@@ -161,8 +163,7 @@ var EXTRA_ITEMS=[
  {k:'nd',name:'EXTRA Ngong Dark Reserve',sub:'12 oz coffee, in addition to your pack',coffee:true},
  {k:'syr',name:'EXTRA Mombasa Wildflower Syrup',sub:'12 oz syrup, in addition to your pack',coffee:false}
 ];
-function resetExtras(){for(var k in qty){qty[k]=0;var q=$('q-'+k);if(q)q.textContent=0;var g=$('g-'+k);if(g)g.style.display='none'}$('extras-wrap').style.display='none';$('more-btn').style.display='block';recalc()}
-function toggleExtras(){$('extras-wrap').style.display='block';$('more-btn').style.display='none'}
+function resetExtras(){for(var k in qty){qty[k]=0;var q=$('q-'+k);if(q)q.textContent=0;var g=$('g-'+k);if(g)g.style.display='none'}recalc()}
 var cur=null,qty={ns:0,sg:0,nd:0,syr:0},payments=null,card=null,squareReady=false,busy=false;
 function $(id){return document.getElementById(id)}
 function money(n){return '$'+n.toFixed(2)}
@@ -195,6 +196,7 @@ function choose(id){
   $('f-sub').textContent=contents(cur)+'. Shipping is included.';
   $('s-pack').textContent=cur.name;
   var h='';for(var i=1;i<=cur.c;i++){h+='<label>Coffee '+i+'</label><div class="pickrow"><select id="cb'+i+'">'+BLENDS.map(function(x){return '<option>'+x+'</option>'}).join('')+'</select><select id="cg'+i+'"><option>Whole bean</option><option>Ground</option></select></div>'}
+  for(var j=1;j<=cur.s;j++){h+='<label>Syrup '+j+' &middot; included</label><div class="pickrow"><div class="fixed">Mombasa Wildflower Honey &amp; Cardamom</div><div class="fixed free">12 oz &middot; Free</div></div>'}
     $('picks').innerHTML=h;
   $('inc').innerHTML='<b>&#10003; Included in your gift, nothing to pay:</b><br>'+(cur.c?cur.c+' &times; coffee (you choose the blend above)':'')+(cur.c&&cur.s?'<br>':'')+(cur.s?cur.s+' &times; Mombasa Wildflower syrup':'')+'<br>Shipping';
   resetExtras();
