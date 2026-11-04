@@ -27,12 +27,25 @@ input,select{width:100%;padding:12px;background:rgba(255,255,255,.07);border:1px
 select option{color:#000}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .pickrow{display:grid;grid-template-columns:1.4fr 1fr;gap:10px}
-.packs{display:grid;gap:10px;margin-bottom:18px}
-.pack{display:block;width:100%;text-align:left;font-family:inherit;color:#fff;cursor:pointer;background:rgba(255,255,255,.04);border:1px solid rgba(212,168,67,.25);padding:16px 16px 16px 18px;position:relative}
-.pack b{display:block;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:22px;color:var(--gold-light);margin-bottom:2px}
+.packs{display:grid;gap:12px;margin-bottom:18px}
+.hero{position:relative;margin:0 -16px 22px;height:200px;overflow:hidden}
+.hero img{width:100%;height:100%;object-fit:cover;display:block}
+.hero:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(28,14,6,.15) 0,rgba(28,14,6,.1) 45%,var(--dark) 100%)}
+.hero p{position:absolute;left:16px;bottom:12px;z-index:2;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-light)}
+.story{border-left:3px solid var(--gold);background:rgba(212,168,67,.08);padding:16px 18px;margin-bottom:22px}
+.story p{font-family:'Cormorant Garamond',serif;font-size:19px;line-height:1.6;font-weight:300;font-style:italic;color:rgba(255,255,255,.88)}
+.story cite{display:block;margin-top:10px;font-style:normal;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+.step{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:600;margin:4px 0 12px}
+.pack{display:grid;grid-template-columns:112px 1fr;gap:14px;align-items:center;width:100%;text-align:left;font-family:inherit;color:#fff;cursor:pointer;background:rgba(255,255,255,.05);border:1px solid rgba(212,168,67,.4);border-radius:10px;padding:10px 14px 10px 10px;position:relative;transition:border-color .15s,background .15s}
+.pack:hover{border-color:var(--gold)}
+.pack img{width:112px;height:90px;object-fit:cover;border-radius:6px;display:block}
+.pack .cta{display:inline-block;margin-top:9px;border:1px solid var(--gold);color:var(--gold);font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;padding:7px 14px;border-radius:30px}
+.pack.on .cta{background:var(--gold);color:var(--dark)}
+.pack b{display:block;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:21px;color:var(--gold-light);margin-bottom:2px;padding-right:0}
 .pack span{font-size:12px;color:rgba(255,255,255,.6);line-height:1.6}
-.pack.on{border-color:var(--gold);background:rgba(212,168,67,.14)}
-.pack i{position:absolute;right:12px;top:12px;font-style:normal;font-size:9px;letter-spacing:2px;text-transform:uppercase;background:var(--gold);color:var(--dark);padding:3px 8px;font-weight:700}
+.pack.on{border-color:var(--gold);background:rgba(212,168,67,.16);box-shadow:0 0 0 1px var(--gold)}
+@media(max-width:380px){.pack{grid-template-columns:88px 1fr}.pack img{width:88px;height:74px}}
+.pack i{position:absolute;right:10px;top:-9px;font-style:normal;font-size:9px;letter-spacing:2px;text-transform:uppercase;background:var(--gold);color:var(--dark);padding:3px 8px;font-weight:700}
 .ex{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #eadfc6}
 .ex:last-child{border-bottom:0}
 .ex small{display:block;font-size:11px;opacity:.7}
@@ -66,11 +79,14 @@ button.pay:disabled{opacity:.6;cursor:default}
   </div>
 
   <div id="main">
+    <div class="hero"><img src="/kahoa-farm-hero-poster.webp" alt="Coffee rows in the Kenyan highlands" width="960" height="506" fetchpriority="high"><p>The Kenyan highlands</p></div>
     <span class="badge">A gift from Dell</span>
     <h1>Thank you for joining us</h1>
     <p class="lead">Dell is treating you to Kahoa Coffee, single-origin Kenyan coffee roasted fresh in Texas. Pick one pack below. Shipping is covered, and there is nothing to pay.</p>
+    <div class="story"><p>As kids, my siblings and I woke before sunrise to pick coffee cherries alongside our grandparents in the Kenyan highlands. When my father took over the farm, I learned coffee from root to roast. Now every bag of Kahoa is my way of completing that journey and putting it in your hands.</p><cite>Martin Kibuthu, Founder</cite></div>
     <div class="how"><span><b>1</b>Pick your pack</span><span><b>2</b>Choose your blends and tell us where to ship</span><span><b>3</b>We roast it fresh and send it within a few days</span></div>
 
+    <p class="step">Step 1 &middot; Tap a pack to choose it</p>
     <div class="packs" id="packs"></div>
 
     <div class="box" id="form">
@@ -126,9 +142,9 @@ var SHEET='https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289
 var EJSVC='service_wsy9uog',EJTMPL='template_8jwdv8c',EJKEY='quYV-P5H4GYrFzjOw';
 /* ==================================== */
 var PACKS=[
- {id:'trio',name:'3 Coffees',c:3,s:0,sub:'Any three 12 oz bags of Kahoa coffee'},
- {id:'pair-syrup',name:'2 Coffees + 1 Syrup',c:2,s:1,sub:'Two bags of coffee and one bottle of Mombasa Wildflower Honey & Cardamom syrup'},
- {id:'one-two',name:'1 Coffee + 2 Syrups',c:1,s:2,tag:'Most popular',sub:'One bag of coffee and two bottles of Mombasa Wildflower Honey & Cardamom syrup'}
+ {id:'trio',img:'gift-trio-sm',name:'3 Coffees',c:3,s:0,sub:'Any three 12 oz bags of Kahoa coffee'},
+ {id:'pair-syrup',img:'gift-pair-plus-sm',name:'2 Coffees + 1 Syrup',c:2,s:1,sub:'Two bags of coffee and one bottle of Mombasa Wildflower Honey & Cardamom syrup'},
+ {id:'one-two',img:'gift-one-two-sm',name:'1 Coffee + 2 Syrups',c:1,s:2,tag:'Most popular',sub:'One bag of coffee and two bottles of Mombasa Wildflower Honey & Cardamom syrup'}
 ];
 var BLENDS=['Nairobi Sunrise','Savanna Gold','Ngong Dark Reserve'];
 var EXTRA_ITEMS=[
@@ -156,7 +172,7 @@ function gate(){
 
 function renderPacks(){
   $('packs').innerHTML=PACKS.map(function(p){
-    return '<button type="button" class="pack" id="p-'+p.id+'" onclick="choose(\''+p.id+'\')">'+(p.tag?'<i>'+p.tag+'</i>':'')+'<b>'+p.name+'</b><span>'+p.sub+'</span></button>'}).join('');
+    return '<button type="button" class="pack" id="p-'+p.id+'" aria-pressed="false" onclick="choose(\''+p.id+'\')">'+(p.tag?'<i>'+p.tag+'</i>':'')+'<img src="/'+p.img+'.webp" alt="'+p.name+'" width="112" height="90" loading="lazy"><div><b>'+p.name+'</b><span>'+p.sub+'</span><br><span class="cta">Choose this pack</span></div></button>'}).join('');
   $('extras').innerHTML=EXTRA_ITEMS.map(function(x){
     return '<div class="ex" id="x-'+x.k+'"><div><b>'+x.name+'</b><small>'+x.sub+' &middot; '+money(PRICES[x.k])+' each</small></div>'+
       '<div class="stp"><button type="button" aria-label="Remove one" onclick="bump(\''+x.k+'\',-1)">&minus;</button><output id="q-'+x.k+'">0</output><button type="button" aria-label="Add one" onclick="bump(\''+x.k+'\',1)">+</button></div></div>'+
@@ -164,7 +180,7 @@ function renderPacks(){
 }
 function choose(id){
   cur=PACKS.filter(function(p){return p.id===id})[0];if(!cur)return;
-  PACKS.forEach(function(p){$('p-'+p.id).classList.toggle('on',p.id===id)});
+  PACKS.forEach(function(p){var e=$('p-'+p.id),on=p.id===id;e.classList.toggle('on',on);e.setAttribute('aria-pressed',on);e.querySelector('.cta').textContent=on?'\u2713 Selected':'Choose this pack'});
   $('f-title').textContent=cur.name;
   $('f-sub').textContent=contents(cur)+'. Shipping is included.';
   $('s-pack').textContent=cur.name;
