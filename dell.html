@@ -28,10 +28,8 @@ select option{color:#000}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .pickrow{display:grid;grid-template-columns:1.4fr 1fr;gap:10px}
 .packs{display:grid;gap:12px;margin-bottom:18px}
-.hero{position:relative;margin:0 -16px 22px;height:200px;overflow:hidden}
-.hero img{width:100%;height:100%;object-fit:cover;display:block}
-.hero:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(28,14,6,.15) 0,rgba(28,14,6,.1) 45%,var(--dark) 100%)}
-.hero p{position:absolute;left:16px;bottom:12px;z-index:2;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-light)}
+.hero{margin:0 0 22px;border-radius:10px;overflow:hidden;border:1px solid rgba(212,168,67,.3)}
+.hero img{width:100%;height:auto;display:block}
 .story{border-left:3px solid var(--gold);background:rgba(212,168,67,.08);padding:16px 18px;margin-bottom:22px}
 .story p{font-family:'Cormorant Garamond',serif;font-size:19px;line-height:1.6;font-weight:300;font-style:italic;color:rgba(255,255,255,.88)}
 .story cite{display:block;margin-top:10px;font-style:normal;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
@@ -85,7 +83,7 @@ button.pay:disabled{opacity:.6;cursor:default}
   </div>
 
   <div id="main">
-    <div class="hero"><img src="/kahoa-farm-hero-poster.webp" alt="Coffee rows in the Kenyan highlands" width="960" height="506" fetchpriority="high"><p>The Kenyan highlands</p></div>
+    <div class="hero"><img src="/meet-the-hands.webp" srcset="/meet-the-hands-sm.webp 640w, /meet-the-hands.webp 1024w" sizes="(max-width:600px) 100vw, 560px" alt="Meet the hands behind your cup: Wanja, a Kenyan coffee farmer, hand-picking ripe coffee cherries" width="1024" height="1536" fetchpriority="high"></div>
     <span class="badge">A gift from Dell</span>
     <h1>Thank you for joining us</h1>
     <p class="lead">Dell is treating you to Kahoa Coffee, single-origin Kenyan coffee roasted fresh in Texas. Pick one pack below. Shipping is covered, and there is nothing to pay.</p>
