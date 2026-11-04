@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Your Gift from Dell | Kahoa Coffee</title>
+<meta name="description" content="Claim your Kahoa Coffee gift from Dell. Choose your pack and tell us where to ship.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="canonical" href="https://kahoa.shop/dell">
+<link rel="icon" type="image/png" href="/kahoalogo.png">
+<link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@300;400;500;600;700&display=swap" media=print onload="this.media='all'"><noscript><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@300;400;500;600;700&display=swap"></noscript>
+<script src="https://web.squarecdn.com/v1/square.js" defer></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#D4A843;--gold-light:#E8C878;--dark:#1C0E06}
+body{font-family:'Montserrat',sans-serif;background:var(--dark);color:#fff;min-height:100vh}
+.wrap{max-width:560px;margin:0 auto;padding:28px 16px 80px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px}
+.top img{height:64px;width:auto}
+.badge{display:inline-block;border:1px solid rgba(212,168,67,.45);background:rgba(212,168,67,.12);color:var(--gold);font-size:10px;letter-spacing:3px;text-transform:uppercase;padding:5px 14px;margin-bottom:14px}
+h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:36px;line-height:1.15;margin-bottom:10px}
+.lead{font-size:14px;line-height:1.8;color:rgba(255,255,255,.65);font-weight:300;margin-bottom:22px}
+.box{background:rgba(255,255,255,.04);border:1px solid rgba(212,168,67,.18);padding:20px;margin-bottom:18px}
+.box h2{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:24px;margin-bottom:6px}
+label{display:block;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(212,168,67,.7);margin:12px 0 5px;font-weight:600}
+input,select{width:100%;padding:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);color:#fff;font-family:inherit;font-size:14px}
+select option{color:#000}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pickrow{display:grid;grid-template-columns:1.4fr 1fr;gap:10px}
+.packs{display:grid;gap:10px;margin-bottom:18px}
+.pack{display:block;width:100%;text-align:left;font-family:inherit;color:#fff;cursor:pointer;background:rgba(255,255,255,.04);border:1px solid rgba(212,168,67,.25);padding:16px 16px 16px 18px;position:relative}
+.pack b{display:block;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:22px;color:var(--gold-light);margin-bottom:2px}
+.pack span{font-size:12px;color:rgba(255,255,255,.6);line-height:1.6}
+.pack.on{border-color:var(--gold);background:rgba(212,168,67,.14)}
+.pack i{position:absolute;right:12px;top:12px;font-style:normal;font-size:9px;letter-spacing:2px;text-transform:uppercase;background:var(--gold);color:var(--dark);padding:3px 8px;font-weight:700}
+.ex{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #eadfc6}
+.ex:last-child{border-bottom:0}
+.ex small{display:block;font-size:11px;opacity:.7}
+.stp{display:flex;align-items:center;gap:8px}
+.stp button{width:34px;height:34px;border:1px solid #d9c9a6;background:#fff;color:#1C0E06;font-size:18px;cursor:pointer;font-family:inherit}
+.stp output{min-width:22px;text-align:center;font-weight:600}
+.exg{display:none;margin:-4px 0 6px}
+.sum{font-size:13px;margin-top:16px}
+.sum div{display:flex;justify-content:space-between;padding:5px 0}
+.sum .t{font-weight:700;font-size:15px;margin-top:6px;padding-top:10px}
+#card{min-height:44px;padding:13px;margin-bottom:6px}
+button.pay{width:100%;margin-top:16px;background:var(--gold);color:var(--dark);border:0;padding:16px;font-family:inherit;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
+button.pay:disabled{opacity:.6;cursor:default}
+.err{display:none;background:rgba(192,57,43,.2);border:1px solid #c0392b;color:#ffb3a8;padding:10px;font-size:13px;margin-top:12px}
+.note{font-size:11px;color:rgba(255,255,255,.5);line-height:1.7;margin-top:10px}
+#form,#ok,#closed{display:none}
+#ok{text-align:center;padding:30px 16px}
+#ok h2{font-size:30px;font-weight:300}
+.how{display:grid;gap:6px;margin-bottom:20px;font-size:12px;color:rgba(255,255,255,.7)}
+.how b{display:inline-block;width:20px;height:20px;line-height:20px;text-align:center;border-radius:50%;background:var(--gold);color:var(--dark);font-size:11px;margin-right:8px}
+</style>
+<style id="cream-forms">.box{background:#FDF8EF!important;border:1px solid #e3d2ab!important;color:#2a1608!important}.box h2,.box h3{color:#1C0E06!important}.box label{color:#8B4A26!important}.box input,.box select,.box textarea{background:#fff!important;border:1px solid #d9c9a6!important;color:#1C0E06!important}.box input::placeholder,.box textarea::placeholder{color:rgba(60,40,20,.38)}.box input:focus,.box select:focus,.box textarea:focus{outline:2px solid rgba(212,168,67,.55);border-color:#D4A843!important}.box .note,.box p[style]{color:#6b5a45!important}.box .sum{color:#3a2a1a!important}.box .sum .t{border-top:1px solid #d9c9a6!important;color:#1C0E06!important}#card{background:#fff!important;border:1px solid #d9c9a6}.box a{color:#8B4A26!important}.what{background:#F5EAD0!important;border-color:#d9b866!important;color:#2a1608!important}.what b{color:#8B4A26!important}.code{background:#fff!important;color:#8B4A26!important;border-color:#D4A843!important}.msgbox{background:#fff!important;color:#2a1608!important;border-color:#d9c9a6!important}.ghost{border-color:#8B4A26!important;color:#8B4A26!important}.ghost:hover{background:#8B4A26;color:#fff!important}.box b{color:#1C0E06}#ok p,#ok .note{color:#4a3a28!important}.err{background:#fde8e4!important;color:#a3271a!important}.ex b{color:#1C0E06}.stp output{color:#1C0E06}.sum div{color:#3a2a1a}.sum .t{border-top:1px solid #d9c9a6;color:#1C0E06}#closed h2,#ok h2{color:#1C0E06!important}#closed .note{color:#6b5a45}</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a href="/"><img src="/kahoa-logo.webp" alt="Kahoa Coffee"></a></div>
+
+  <div id="closed" class="box">
+    <h2 id="closed-h">This gift is not open yet</h2>
+    <p class="note" style="color:#6b5a45" id="closed-t"></p>
+  </div>
+
+  <div id="main">
+    <span class="badge">A gift from Dell</span>
+    <h1>Thank you for joining us</h1>
+    <p class="lead">Dell is treating you to Kahoa Coffee, single-origin Kenyan coffee roasted fresh in Texas. Pick one pack below. Shipping is covered, and there is nothing to pay.</p>
+    <div class="how"><span><b>1</b>Pick your pack</span><span><b>2</b>Choose your blends and tell us where to ship</span><span><b>3</b>We roast it fresh and send it within a few days</span></div>
+
+    <div class="packs" id="packs"></div>
+
+    <div class="box" id="form">
+      <h2 id="f-title">Your pack</h2>
+      <p class="note" style="margin:0 0 4px;color:#6b5a45" id="f-sub"></p>
+      <div id="picks"></div>
+
+      <label style="margin-top:18px">Want more? Add extras (optional)</label>
+      <div id="extras"></div>
+      <p class="note" style="color:#6b5a45;margin-top:4px">Extras are regular price and ship free in the same box.</p>
+
+      <label style="margin-top:18px">Your name</label><input id="f-name" autocomplete="name">
+      <div class="row"><div><label>Email</label><input id="f-email" type="email" autocomplete="email"></div><div><label>Phone</label><input id="f-phone" type="tel" autocomplete="tel"></div></div>
+      <label>Shipping address</label><input id="f-addr" autocomplete="address-line1">
+      <div class="row"><div><label>City</label><input id="f-city" autocomplete="address-level2"></div><div><label>State</label><input id="f-state" maxlength="2" autocomplete="address-level1" style="text-transform:uppercase"></div></div>
+      <label>ZIP</label><input id="f-zip" inputmode="numeric" maxlength="5" autocomplete="postal-code">
+
+      <div id="cardwrap" style="display:none"><label>Card for your extras</label><div id="card"></div></div>
+
+      <div class="sum">
+        <div><span id="s-pack">Your pack</span><span>Covered by Dell</span></div>
+        <div id="s-ex-row" style="display:none"><span>Extras</span><span id="s-ex">$0.00</span></div>
+        <div id="s-tax-row" style="display:none"><span>Sales tax on extras (8.25%)</span><span id="s-tax">$0.00</span></div>
+        <div><span>Shipping</span><span>Included</span></div>
+        <div class="t"><span>Due today</span><span id="s-tot">$0.00</span></div>
+      </div>
+      <div class="err" id="err"></div>
+      <button class="pay" id="go" onclick="submitOrder()">Claim my gift</button>
+      <p class="note" style="color:#6b5a45">One gift per person. Coffee is roasted fresh to order and ships within a few days. Ships within the U.S.</p>
+    </div>
+  </div>
+
+  <div class="box" id="ok">
+    <h2 id="ok-h">Asante sana</h2>
+    <p style="font-size:14px;line-height:1.8" id="ok-t"></p>
+    <p style="margin-top:18px"><a href="/" style="color:#8B4A26">Visit Kahoa</a></p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script>
+<script>
+/* ===== Dell gift page settings ===== */
+var OPEN_AT  = '2026-12-03T00:00:00-06:00';   /* page opens to guests (presentation day) */
+var CLOSE_AT = '2026-12-31T23:59:59-06:00';   /* last day to claim */
+var CAP_NOTE = 100;                            /* cap, enforced at fulfilment (and by CHECK_URL if set) */
+var CHECK_URL = '';                            /* optional Apps Script URL: ?action=dellcheck&email=... -> {ok:true|false,reason:''} */
+var PACK_VALUE = 50;
+var TAX_RATE = 0.0825;
+var PRICES = {ns:20, sg:18, nd:22, syr:20};
+var SQUARE_APP_ID='sq0idp-khlBwyn6FQYmXDU8zxjAiQ', SQUARE_LOC='L2M4GT1KDJZPY';
+var WORKER_BASE='https://kahoa-checkoutout.chegekibuthu1.workers.dev';
+var SHEET='https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289hVmWtR1OKDqxLruwmKbRf_GkAwkiuEepPfk22Q/exec';
+var EJSVC='service_wsy9uog',EJTMPL='template_8jwdv8c',EJKEY='quYV-P5H4GYrFzjOw';
+/* ==================================== */
+var PACKS=[
+ {id:'trio',name:'3 Coffees',c:3,s:0,sub:'Any three 12 oz bags of Kahoa coffee'},
+ {id:'pair-syrup',name:'2 Coffees + 1 Syrup',c:2,s:1,sub:'Two bags of coffee and one bottle of Mombasa Wildflower Honey & Cardamom syrup'},
+ {id:'one-two',name:'1 Coffee + 2 Syrups',c:1,s:2,tag:'Most popular',sub:'One bag of coffee and two bottles of Mombasa Wildflower Honey & Cardamom syrup'}
+];
+var BLENDS=['Nairobi Sunrise','Savanna Gold','Ngong Dark Reserve'];
+var EXTRA_ITEMS=[
+ {k:'ns',name:'Nairobi Sunrise',sub:'12 oz coffee',coffee:true},
+ {k:'sg',name:'Savanna Gold',sub:'12 oz coffee',coffee:true},
+ {k:'nd',name:'Ngong Dark Reserve',sub:'12 oz coffee',coffee:true},
+ {k:'syr',name:'Mombasa Wildflower Syrup',sub:'12 oz syrup',coffee:false}
+];
+var cur=null,qty={ns:0,sg:0,nd:0,syr:0},payments=null,card=null,squareReady=false,busy=false;
+function $(id){return document.getElementById(id)}
+function money(n){return '$'+n.toFixed(2)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function firstUp(s){s=String(s||'').trim().split(/\s+/)[0]||'';return s?s.charAt(0).toUpperCase()+s.slice(1):''}
+function contents(b){var a=[];if(b.c)a.push(b.c+(b.c>1?' coffees':' coffee'));if(b.s)a.push(b.s+(b.s>1?' syrups':' syrup'));return a.join(' + ')}
+
+function gate(){
+  var now=Date.now(),open=Date.parse(OPEN_AT),close=Date.parse(CLOSE_AT),preview=/[?&]preview=1/.test(location.search);
+  if(preview)return true;
+  var h=$('closed-h'),t=$('closed-t');
+  if(now<open){h.textContent='Your gift opens soon';t.textContent='This page opens after the Dell presentation. Please come back then, and thank you for your patience.'}
+  else if(now>close){h.textContent='This gift has ended';t.textContent='The claim period for this gift is over. We would still love to see you at kahoa.shop.'}
+  else return true;
+  $('main').style.display='none';$('closed').style.display='block';return false;
+}
+
+function renderPacks(){
+  $('packs').innerHTML=PACKS.map(function(p){
+    return '<button type="button" class="pack" id="p-'+p.id+'" onclick="choose(\''+p.id+'\')">'+(p.tag?'<i>'+p.tag+'</i>':'')+'<b>'+p.name+'</b><span>'+p.sub+'</span></button>'}).join('');
+  $('extras').innerHTML=EXTRA_ITEMS.map(function(x){
+    return '<div class="ex" id="x-'+x.k+'"><div><b>'+x.name+'</b><small>'+x.sub+' &middot; '+money(PRICES[x.k])+' each</small></div>'+
+      '<div class="stp"><button type="button" aria-label="Remove one" onclick="bump(\''+x.k+'\',-1)">&minus;</button><output id="q-'+x.k+'">0</output><button type="button" aria-label="Add one" onclick="bump(\''+x.k+'\',1)">+</button></div></div>'+
+      (x.coffee?'<div class="exg" id="g-'+x.k+'"><select id="gs-'+x.k+'"><option>Whole bean</option><option>Ground</option></select></div>':'')}).join('');
+}
+function choose(id){
+  cur=PACKS.filter(function(p){return p.id===id})[0];if(!cur)return;
+  PACKS.forEach(function(p){$('p-'+p.id).classList.toggle('on',p.id===id)});
+  $('f-title').textContent=cur.name;
+  $('f-sub').textContent=contents(cur)+'. Shipping is included.';
+  $('s-pack').textContent=cur.name;
+  var h='';for(var i=1;i<=cur.c;i++){h+='<label>Coffee '+i+'</label><div class="pickrow"><select id="cb'+i+'">'+BLENDS.map(function(x){return '<option>'+x+'</option>'}).join('')+'</select><select id="cg'+i+'"><option>Whole bean</option><option>Ground</option></select></div>'}
+  if(cur.s)h+='<p class="note" style="color:#6b5a45;margin-top:12px">'+cur.s+' &times; Mombasa Wildflower Honey &amp; Cardamom syrup (12 oz) will be in your box.</p>';
+  $('picks').innerHTML=h;
+  $('form').style.display='block';
+  $('form').scrollIntoView({behavior:'smooth',block:'start'});
+  recalc();
+}
+function bump(k,d){qty[k]=Math.max(0,Math.min(12,qty[k]+d));$('q-'+k).textContent=qty[k];var g=$('g-'+k);if(g)g.style.display=qty[k]>0?'block':'none';recalc()}
+function extrasTotal(){var t=0;for(var k in qty)t+=qty[k]*PRICES[k];return Math.round(t*100)/100}
+function isTX(){return $('f-state').value.trim().toUpperCase()==='TX'}
+function calc(){var ex=extrasTotal(),tax=(ex>0&&isTX())?Math.round(ex*TAX_RATE*100)/100:0;return {ex:ex,tax:tax,total:Math.round((ex+tax)*100)/100}}
+function recalc(){
+  var c=calc();
+  $('s-ex-row').style.display=c.ex>0?'flex':'none';$('s-ex').textContent=money(c.ex);
+  $('s-tax-row').style.display=c.tax>0?'flex':'none';$('s-tax').textContent=money(c.tax);
+  $('s-tot').textContent=money(c.total);
+  $('cardwrap').style.display=c.total>0?'block':'none';
+  $('go').textContent=c.total>0?'Pay '+money(c.total)+' and claim my gift':'Claim my gift';
+  if(c.total>0&&!squareReady){squareReady=true;initSquare()}
+}
+async function initSquare(){
+  try{for(var i=0;i<50&&typeof Square==='undefined';i++)await new Promise(function(r){setTimeout(r,200)});
+    payments=Square.payments(SQUARE_APP_ID,SQUARE_LOC);card=await payments.card();await card.attach('#card')}
+  catch(e){console.error('Square init',e);squareReady=false;$('err').textContent='The card form could not load. Please refresh the page, or remove your extras to claim your gift without paying.';$('err').style.display='block'}
+}
+document.addEventListener('input',function(e){if(e.target&&e.target.id==='f-state')recalc()});
+
+async function submitOrder(){
+  if(busy)return;
+  var name=$('f-name').value.trim(),email=$('f-email').value.trim(),phone=$('f-phone').value.trim(),addr=$('f-addr').value.trim(),city=$('f-city').value.trim(),st=$('f-state').value.trim().toUpperCase(),zip=$('f-zip').value.trim(),err=$('err');
+  err.style.display='none';function bad(m){err.textContent=m;err.style.display='block';return false}
+  if(!cur)return bad('Please pick your pack first.');
+  if(!name)return bad('Please enter your name.');
+  if(email.indexOf('@')<1)return bad('Please enter a valid email.');
+  if(!phone)return bad('Please add a phone number for delivery.');
+  if(!addr||!city||st.length!==2||zip.length!==5)return bad('Please enter your full shipping address.');
+  try{if(localStorage.getItem('dell_claimed')){return bad('This device has already claimed a gift. Each person gets one. If this is a mistake, email info@kahoa.shop.')}}catch(x){}
+  var c=calc(),btn=$('go');busy=true;btn.disabled=true;btn.textContent='Please wait...';
+  function fail(m){busy=false;btn.disabled=false;recalc();bad(m)}
+  /* optional server-side one-per-email and cap check */
+  if(CHECK_URL){try{var cr=await fetch(CHECK_URL+(CHECK_URL.indexOf('?')>-1?'&':'?')+'action=dellcheck&email='+encodeURIComponent(email.toLowerCase()));var cj=await cr.json();if(cj&&cj.ok===false)return fail(cj.reason||'This gift has already been claimed.')}catch(x){}}
+  var picks=[];for(var i=1;i<=cur.c;i++)picks.push($('cb'+i).value+' ('+$('cg'+i).value+')');
+  if(cur.s)picks.push(cur.s+' x Mombasa Wildflower Syrup');
+  var ext=[];EXTRA_ITEMS.forEach(function(x){if(qty[x.k]>0){ext.push(qty[x.k]+' x '+x.name+(x.coffee?' ('+$('gs-'+x.k).value+')':''))}});
+  var full=addr+', '+city+', '+st+' '+zip;
+  var summary='DELL GIFT: '+cur.name+' ['+picks.join(', ')+']'+(ext.length?' + EXTRAS: '+ext.join(', '):'');
+  var paidId='';
+  if(c.total>0){
+    if(!card)return fail('The card form is still loading. Please try again in a moment.');
+    try{
+      var r=await card.tokenize();
+      if(r.status!=='OK')return fail('Card error: '+(r.errors&&r.errors[0]?r.errors[0].message:r.status));
+      var res=await fetch(WORKER_BASE+'/charge',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+        source_id:r.token,verification_token:(r.details&&r.details.verificationToken)||undefined,
+        product_name:'Dell gift extras: '+ext.join(', ')+(c.tax?' (incl. tax '+money(c.tax)+')':''),grind:'N/A',quantity:1,unit_price_cents:Math.round(c.total*100),shipping:null,
+        buyer:{name:name,email:email,phone:phone,address:full}})});
+      var d=await res.json();
+      var charged=d.success===true||(d.payment_id&&!d.checkout_url);
+      if(!res.ok||!charged)return fail('Payment failed: '+(d.errors&&d.errors[0]?d.errors[0].detail:(d.error||'please try again')));
+      paidId=d.payment_id||d.order_id||'';
+    }catch(e){return fail('Error: '+e.message)}
+  }
+  try{localStorage.setItem('dell_claimed',email.toLowerCase())}catch(x){}
+  var oid='DELL-'+Date.now().toString(36).toUpperCase();
+  var notes='DELL GIFT (Dell pays $'+PACK_VALUE+' for the pack, shipping included). Pack: '+cur.name+' - '+picks.join(', ')+'. '+(ext.length?'EXTRAS PAID BY GUEST ('+money(c.total)+(c.tax?', incl. '+money(c.tax)+' tax':'')+'): '+ext.join(', ')+(paidId?'. Square payment '+paidId:'')+'. ':'No extras. ')+'Ship to: '+full+'. Phone: '+phone+'. Check the Dell tab/sheet: one gift per email, cap '+CAP_NOTE+'.';
+  try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:phone,product:summary,grind:picks.concat(ext).join(' | '),total:c.total>0?money(c.total)+' (extras)':'Dell gift $'+PACK_VALUE,coupon:'DELL-GIFT',address:full,opted_in:'Yes',source:'kahoa.shop/dell'})})}catch(x){}
+  try{if(typeof emailjs!=='undefined'){emailjs.init(EJKEY);
+    emailjs.send(EJSVC,EJTMPL,{to_email:'info@kahoa.shop',reply_to:email,order_id:oid,order_type:'DELL GIFT - SHIP THIS',customer_name:name,customer_email:email,customer_phone:phone,customer_address:full,product_name:cur.name+': '+picks.join(', ')+(ext.length?' + '+ext.join(', '):''),grind:'See picks',price:c.total>0?money(c.total)+' extras paid':'Dell gift (prepaid by Dell)',shipping_method:'Included',checkout_url:'',notes:notes}).catch(function(e){console.error(e)});
+    emailjs.send(EJSVC,EJTMPL,{to_email:email,reply_to:'info@kahoa.shop',order_id:oid,order_type:'Your Kahoa Gift From Dell Is Confirmed',customer_name:name,customer_email:email,customer_phone:phone,customer_address:full,product_name:cur.name+': '+picks.join(', ')+(ext.length?' + '+ext.join(', '):''),grind:'N/A',price:c.total>0?money(c.total)+' (extras)':'Gift from Dell',shipping_method:'Included',checkout_url:'',notes:'Asante sana, '+firstUp(name)+'. We got your gift. Your coffee is roasted fresh to order and ships within a few days to '+full+'. Reply to this email if anything needs fixing.'}).catch(function(e){console.error(e)})}}catch(x){}
+  var fn=firstUp(name);
+  $('main').style.display='none';$('ok').style.display='block';window.scrollTo(0,0);
+  $('ok-h').textContent='Asante sana'+(fn?', '+fn:'');
+  $('ok-t').textContent='Thank you for sharing your evening with us. Your '+cur.name.toLowerCase()+' is on its way. We will roast it fresh and ship it within a few days, and we sent a note to '+email+'. Karibu Kahoa.';
+}
+renderPacks();gate();
+</script>
+</body>
+</html>
