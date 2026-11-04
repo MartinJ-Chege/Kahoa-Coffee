@@ -136,6 +136,8 @@ button.pay:disabled{opacity:.6;cursor:default}
   <div class="box" id="ok">
     <h2 id="ok-h">Asante sana</h2>
     <p style="font-size:14px;line-height:1.8" id="ok-t"></p>
+    <p style="margin-top:16px;font-size:14px;line-height:1.8" id="rv-t">If you enjoy it, a quick Google review would mean the world to our family business.</p>
+    <p style="margin-top:12px"><a id="rv-btn" href="#" target="_blank" rel="noopener" style="display:none;background:#D4A843;color:#1C0E06!important;padding:14px 22px;text-decoration:none;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:700">&#9733; Leave a Google review</a></p>
     <p style="margin-top:18px"><a href="/" style="color:#8B4A26">Visit Kahoa</a></p>
   </div>
 </div>
@@ -147,6 +149,7 @@ var OPEN_AT  = '2026-12-03T00:00:00-06:00';   /* page opens to guests (presentat
 var CLOSE_AT = '2026-12-31T23:59:59-06:00';   /* last day to claim */
 var CAP_NOTE = 100;                            /* cap, enforced at fulfilment (and by CHECK_URL if set) */
 var CHECK_URL = '';                            /* optional Apps Script URL: ?action=dellcheck&email=... -> {ok:true|false,reason:''} */
+var GOOGLE_REVIEW_URL = '';                    /* paste your Google review link here (Business Profile > Get more reviews) */
 var PACK_VALUE = 50;
 var TAX_RATE = 0.0825;
 var PRICES = {ns:20, sg:18, nd:22, syr:20};
@@ -269,11 +272,12 @@ async function submitOrder(){
   try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:phone,product:summary,grind:picks.concat(ext).join(' | '),total:c.total>0?money(c.total)+' (extras)':'Dell gift $'+PACK_VALUE,coupon:'DELL-GIFT',address:full,opted_in:'Yes',source:'kahoa.shop/dell'})})}catch(x){}
   try{if(typeof emailjs!=='undefined'){emailjs.init(EJKEY);
     emailjs.send(EJSVC,EJTMPL,{to_email:'info@kahoa.shop',reply_to:email,order_id:oid,order_type:'DELL GIFT - SHIP THIS',customer_name:name,customer_email:email,customer_phone:phone,customer_address:full,product_name:cur.name+': '+picks.join(', ')+(ext.length?' + '+ext.join(', '):''),grind:'See picks',price:c.total>0?money(c.total)+' extras paid':'Dell gift (prepaid by Dell)',shipping_method:'Included',checkout_url:'',notes:notes}).catch(function(e){console.error(e)});
-    emailjs.send(EJSVC,EJTMPL,{to_email:email,reply_to:'info@kahoa.shop',order_id:oid,order_type:'Your Kahoa Gift From Dell Is Confirmed',customer_name:name,customer_email:email,customer_phone:phone,customer_address:full,product_name:cur.name+': '+picks.join(', ')+(ext.length?' + '+ext.join(', '):''),grind:'N/A',price:c.total>0?money(c.total)+' (extras)':'Gift from Dell',shipping_method:'Included',checkout_url:'',notes:'Asante sana, '+firstUp(name)+'. We got your gift. Your coffee is roasted fresh to order and ships within a few days to '+full+'. Reply to this email if anything needs fixing.'}).catch(function(e){console.error(e)})}}catch(x){}
+    emailjs.send(EJSVC,EJTMPL,{to_email:email,reply_to:'info@kahoa.shop',order_id:oid,order_type:'Your Kahoa Gift From Dell Is Confirmed',customer_name:name,customer_email:email,customer_phone:phone,customer_address:full,product_name:cur.name+': '+picks.join(', ')+(ext.length?' + '+ext.join(', '):''),grind:'N/A',price:c.total>0?money(c.total)+' (extras)':'Gift from Dell',shipping_method:'Included',checkout_url:'',notes:'Asante sana, '+firstUp(name)+'. We got your gift. Your coffee is roasted fresh to order and ships within a few days to '+full+'. Reply to this email if anything needs fixing. Thank you for listening to our story. If you enjoy the coffee, a Google review would mean the world to us.'+(GOOGLE_REVIEW_URL?' Leave one here: '+GOOGLE_REVIEW_URL:'')}).catch(function(e){console.error(e)})}}catch(x){}
   var fn=firstUp(name);
   $('main').style.display='none';$('ok').style.display='block';window.scrollTo(0,0);
   $('ok-h').textContent='Asante sana'+(fn?', '+fn:'');
-  $('ok-t').textContent='Thank you so much for spending your morning with us. Your '+cur.name.toLowerCase()+' is on its way. We will roast it fresh and ship it within a few days, and we sent a note to '+email+'. Karibu Kahoa.';
+  if(GOOGLE_REVIEW_URL){$('rv-btn').href=GOOGLE_REVIEW_URL;$('rv-btn').style.display='inline-block'}else{$('rv-t').textContent='If you enjoy it, a quick Google review of Kahoa Coffee would mean the world to our family business.'}
+  $('ok-t').textContent='Thank you so much for spending your morning with us and for listening to our story. Your '+cur.name.toLowerCase()+' is on its way. We will roast it fresh and ship it within a few days, and we sent a note to '+email+'. Karibu Kahoa.';
 }
 renderPacks();gate();
 </script>
