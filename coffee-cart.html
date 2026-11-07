@@ -353,7 +353,7 @@ function ccSubmit(){
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){alert("Please enter a valid email address.");return;}
   document.getElementById("ccFormWrap").style.display="none";
   document.getElementById("ccSuccess").style.display="block";
-  var ccParams={customer_name:fname+" "+lname,customer_email:email,customer_phone:phone,company:company,event_date:date||"TBD",guest_count:guests?guests+" guests":"TBD",location:location,package:pkg,event_type:eventType,message:message||"None"};
+  var ccParams={customer_name:fname+" "+lname,customer_email:email,customer_phone:phone,company:company,event_date:date||"TBD",guest_count:guests?guests+" guests":"TBD",location:location,package:pkg,event_type:eventType,service_name:"Coffee Cart",service_short:"Coffee Cart",message:message||"None"};
   if(typeof emailjs<"u"){
     emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_CC_BUSINESS_TMPL,ccParams).then(
       function(res){console.log("Coffee cart business email sent:",res.status,res.text);},
