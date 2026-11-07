@@ -1104,6 +1104,7 @@ function _kahoaFreeOrderFinish(){
 <h2 style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:#fff;line-height:1.2;margin-bottom:10px;">Get 10% Off<br>Your First Bag</h2>
 <p style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.6;margin-bottom:22px;">Join the Kahoa family and we'll send you a code for 10% off premium single-origin Kenyan coffee.</p>
 <div id="kahoa-welcome-form">
+<input id="kahoa-welcome-name" type="text" autocomplete="given-name" placeholder="Your first name" style="width:100%;border:1px solid rgba(212,168,67,0.3);background:rgba(255,255,255,0.05);color:#fff;padding:13px 14px;font-family:Montserrat,sans-serif;font-size:14px;margin-bottom:12px;border-radius:3px;outline:none;box-sizing:border-box;">
 <input id="kahoa-welcome-email" type="email" placeholder="you@email.com" style="width:100%;border:1px solid rgba(212,168,67,0.3);background:rgba(255,255,255,0.05);color:#fff;padding:13px 14px;font-family:Montserrat,sans-serif;font-size:14px;margin-bottom:12px;border-radius:3px;outline:none;box-sizing:border-box;">
 <button onclick="kahoaSubmitWelcome()" style="width:100%;background:#D4A843;color:#1C0E06;border:none;padding:14px;font-family:Montserrat,sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:3px;">Send My Code →</button>
 <p style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:12px;">No spam. Unsubscribe anytime.</p>
@@ -1120,14 +1121,17 @@ window.KAHOA_WELCOME_TMPL=window.KAHOA_WELCOME_TMPL||'';
 function kahoaCloseWelcome(){document.getElementById('kahoa-welcome-popup').style.display='none';try{localStorage.setItem('kahoa_welcome_seen','1');}catch(e){}}
 function kahoaSubmitWelcome(){
   var email=document.getElementById('kahoa-welcome-email').value.trim();
+  var fname=((document.getElementById('kahoa-welcome-name')||{}).value||'').trim().replace(/\s+/g,' ');
+  if(!fname){alert('Please enter your first name.');return;}
+  fname=fname.charAt(0).toUpperCase()+fname.slice(1);
   if(!email||!email.includes('@')){alert('Please enter a valid email.');return;}
-  try{fetch('https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289hVmWtR1OKDqxLruwmKbRf_GkAwkiuEepPfk22Q/exec',{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:'(Newsletter Signup)',email:email,phone:'',product:'WELCOME10 signup',grind:'',total:'$0',coupon:'WELCOME10',address:'',opted_in:'Yes',source:'welcome-popup'})});}catch(e){}
+  try{fetch('https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289hVmWtR1OKDqxLruwmKbRf_GkAwkiuEepPfk22Q/exec',{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:fname,email:email,phone:'',product:'WELCOME10 signup',grind:'',total:'$0',coupon:'WELCOME10',address:'',opted_in:'Yes',source:'welcome-popup'})});}catch(e){}
   try{
     var _oid='WELCOME-'+Date.now();
-    var _base={order_id:_oid,customer_name:'(Welcome signup)',customer_email:email,customer_phone:'',customer_address:'',product_name:'WELCOME10 email signup',grind:'N/A',price:'$0',shipping_method:'N/A',checkout_url:'https://kahoa.shop/shop.html'};
+    var _base={order_id:_oid,customer_name:fname,customer_email:email,customer_phone:'',customer_address:'',product_name:'WELCOME10 email signup',grind:'N/A',price:'$0',shipping_method:'N/A',checkout_url:'https://kahoa.shop/shop.html'};
     if(typeof emailjs!=='undefined'){
-      emailjs.send('service_wsy9uog','template_8jwdv8c',Object.assign({},_base,{to_email:'info@kahoa.shop',reply_to:email,order_type:'NEW EMAIL SIGNUP (WELCOME10)',notes:'New subscriber: '+email+'. Opted in on the welcome popup.'})).catch(function(e){console.error('Signup notify failed',e);});
-      if(window.KAHOA_WELCOME_TMPL){emailjs.send('service_wsy9uog',window.KAHOA_WELCOME_TMPL,{to_email:email,customer_email:email,reply_to:'info@kahoa.shop',coupon_code:'WELCOME10'}).catch(function(e){console.error('Welcome email failed',e);});}
+      emailjs.send('service_wsy9uog','template_8jwdv8c',Object.assign({},_base,{to_email:'info@kahoa.shop',reply_to:email,order_type:'NEW EMAIL SIGNUP (WELCOME10)',notes:'New subscriber: '+fname+' ('+email+').'+' Opted in on the welcome popup.'})).catch(function(e){console.error('Signup notify failed',e);});
+      if(window.KAHOA_WELCOME_TMPL){emailjs.send('service_wsy9uog',window.KAHOA_WELCOME_TMPL,{to_email:email,customer_email:email,customer_name:fname,first_name:fname,reply_to:'info@kahoa.shop',coupon_code:'WELCOME10'}).catch(function(e){console.error('Welcome email failed',e);});}
     }
   }catch(e){}
   document.getElementById('kahoa-welcome-form').style.display='none';
