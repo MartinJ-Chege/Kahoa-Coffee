@@ -329,7 +329,7 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 </section>
 
 <script>
-try{emailjs.init({publicKey:"quYV-P5H4GYrFzjOw"});}catch(e){}
+window.addEventListener("load",function(){try{emailjs.init({publicKey:"quYV-P5H4GYrFzjOw"});}catch(e){}});
 var EMAILJS_SERVICE_ID="service_wsy9uog",EMAILJS_ORDER_TMPL="template_8jwdv8c",EMAILJS_CC_BUSINESS_TMPL="template_2x9f9bi",EMAILJS_CC_CUSTOMER_TMPL="template_x0vfpk2";
 function ccPick(pkg){var sel=document.getElementById("cc-package");if(sel)sel.value=pkg;document.getElementById("cc-inquire").scrollIntoView({behavior:"smooth"});kahoaTrack("select_item",{item_name:"coffee-cart-"+pkg});}
 function ccSubmit(){

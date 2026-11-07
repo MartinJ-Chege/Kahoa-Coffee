@@ -181,7 +181,7 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 </div></section>
 
 <script>
-try{emailjs.init({publicKey:"quYV-P5H4GYrFzjOw"});}catch(e){}
+window.addEventListener("load",function(){try{emailjs.init({publicKey:"quYV-P5H4GYrFzjOw"});}catch(e){}});
 var EMAILJS_SERVICE_ID="service_wsy9uog",EMAILJS_CC_BUSINESS_TMPL="template_2x9f9bi",EMAILJS_CC_CUSTOMER_TMPL="template_x0vfpk2";
 function evPick(p){var s=document.getElementById("ev-package");if(s)s.value=p;document.getElementById("ev-inquire").scrollIntoView({behavior:"smooth"});kahoaTrack("select_item",{item_name:"events-"+p});}
 function evSubmit(){
