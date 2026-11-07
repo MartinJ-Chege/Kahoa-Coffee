@@ -312,17 +312,17 @@ function ccSubmit(){
   if(typeof emailjs<"u"){
     emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_KEG_BUSINESS_TMPL,kegParams).then(
       function(res){console.log("Keg program business email sent:",res.status,res.text);},
-      function(err){console.error("Keg program business email FAILED:",err);}
+      function(err){console.error("Keg program business email FAILED:",err);kahoaInqFail("ccSuccess","Keg program inquiry",kegParams);}
     );
     emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_KEG_CUSTOMER_TMPL,kegParams).then(
       function(res){console.log("Keg program customer email sent:",res.status,res.text);},
       function(err){console.error("Keg program customer email FAILED:",err);}
     );
   }else{
-    console.error("EmailJS library not loaded - inquiry emails not sent.");
+    console.error("EmailJS library not loaded - inquiry emails not sent.");kahoaInqFail("ccSuccess","Keg program inquiry",kegParams);
   }
   try{fetch("https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289hVmWtR1OKDqxLruwmKbRf_GkAwkiuEepPfk22Q/exec",{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify({timestamp:new Date().toISOString(),name:fname+" "+lname,email:email,phone:phone,product:"KEG PROGRAM: "+pkg,grind:eventType+" | Tap: "+tapEquipment,total:guests?guests+" kegs/month":"TBD",coupon:"",address:location,opted_in:"Inquiry",source:"keg-program",company:company,event_date:date,message:message,beans_interest:beansInterest})}).catch(function(err){console.error("Keg program Sheet log FAILED:",err);});}catch(e){console.error("Keg program Sheet log threw:",e);}
   kahoaTrack("generate_lead",{item_name:"keg-program",value:pkg});
 }
 </script>
-</body></html>
+<script>function kahoaInqFail(boxId,label,params){try{var box=document.getElementById(boxId);if(!box||box.querySelector(".inq-fail"))return;var lines=[];for(var k in params){if(params.hasOwnProperty(k))lines.push(k.replace(/_/g," ")+": "+params[k]);}var href="mailto:info@kahoa.shop?subject="+encodeURIComponent(label)+"&body="+encodeURIComponent(lines.join("\n"));var d=document.createElement("div");d.className="inq-fail";d.style.cssText="margin:18px auto 0;max-width:520px;padding:14px 16px;border:1px solid #c9a24a;border-radius:10px;background:rgba(201,162,74,.12);color:#fff;font-size:14px;line-height:1.6;text-align:center;";d.innerHTML='We saved your request, but our email system hit a snag. To make sure we see it right away, please <a href="'+href+'" style="color:#e0b85c;font-weight:700;">tap here to email it to us</a> or write to info@kahoa.shop.';box.appendChild(d);if(typeof kahoaTrack==="function")kahoaTrack("inquiry_email_failed",{item_name:label});}catch(e){}}</script></body></html>
