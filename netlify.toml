@@ -79,3 +79,9 @@
   from = "/team-usa.html"
   to = "/usa-kayak.html"
   status = 301
+
+[[redirects]]
+  from = "/blog"
+  to = "/blog.html"
+  status = 301
+  force = true
