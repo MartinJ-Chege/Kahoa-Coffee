@@ -25,6 +25,7 @@ CSS = rd(SRC, 'base.css') + rd(SRC, 'blog.css').replace('\n', '')
 esc = html.escape
 def attr(s): return esc(s, quote=True)
 
+ICONS = json.load(open(os.path.join(SRC, 'icons.json'), encoding='utf-8'))
 authors = json.load(open(os.path.join(SRC, 'authors.json'), encoding='utf-8'))
 posts = []
 for f in glob.glob(os.path.join(SRC, 'posts', '*.json')):
@@ -111,11 +112,24 @@ def build_post(p, others):
               {"@type": "ListItem", "position": 1, "name": "Home", "item": SITE + "/"}, {"@type": "ListItem", "position": 2, "name": "Stories", "item": SITE + "/blog.html"},
               {"@type": "ListItem", "position": 3, "name": p['title'], "item": url}]}]
     q = urllib.parse.quote
-    share = (f'<div class=share><span>Share</span><a href="https://wa.me/?text={q(p["title"] + " " + url)}" rel=noopener>WhatsApp</a>'
-             f'<a href="https://www.facebook.com/sharer/sharer.php?u={q(url)}" rel=noopener>Facebook</a>'
-             f'<a href="https://twitter.com/intent/tweet?text={q(p["title"])}&url={q(url)}" rel=noopener>X</a>'
-             f'<a href="mailto:?subject={q(p["title"])}&body={q(url)}">Email</a>'
-             f'<button type=button onclick="navigator.clipboard&&navigator.clipboard.writeText(\'{url}\').then(()=>{{this.textContent=\'Copied\'}})">Copy link</button></div>')
+    def svg(n, fill=True):
+        i = ICONS[n]
+        inner = f'<path d="{i}"/>' if n in ('whatsapp', 'facebook', 'x') else i
+        return f'<svg viewBox="0 0 24 24" width=20 height=20 aria-hidden=true focusable=false{" fill=currentColor" if n in ("whatsapp","facebook","x") else ""}>{inner}</svg>'
+    def btn(net, label, href=None, extra=''):
+        if href: return f'<a class=sbtn data-net={net} href="{href}" target=_blank rel="noopener noreferrer" aria-label="{label}" title="{label}">{svg(net)}</a>'
+        return f'<button type=button class=sbtn data-net={net} aria-label="{label}" title="{label}" {extra}>{svg(net)}</button>'
+    buttons = (btn('whatsapp', 'Share on WhatsApp', f'https://wa.me/?text={q(p["title"] + " " + url)}') +
+               btn('facebook', 'Share on Facebook', f'https://www.facebook.com/sharer/sharer.php?u={q(url)}') +
+               btn('x', 'Share on X', f'https://twitter.com/intent/tweet?text={q(p["title"])}&url={q(url)}') +
+               btn('mail', 'Share by email', f'mailto:?subject={q(p["title"])}&body={q(url)}') +
+               btn('link', 'Copy link', extra=f'data-copy="{url}"') +
+               btn('share', 'More sharing options', extra=f'data-native hidden data-title="{attr(p["title"])}" data-url="{url}"'))
+    share = f'<div class=share role=group aria-label="Share this story"><span class=slabel>Share this story</span><div class=sbtns>{buttons}</div></div>'
+    rail = f'<aside class=rail aria-label="Share"><div class=rail-in>{buttons}</div></aside>'
+    SHARE_JS = ("<div class=toast role=status aria-live=polite></div><script>(function(){var t=document.querySelector('.toast'),h;function show(m){t.textContent=m;t.className='toast on';clearTimeout(h);h=setTimeout(function(){t.className='toast'},2200)}"
+                "document.querySelectorAll('[data-copy]').forEach(function(b){b.addEventListener('click',function(){var u=b.getAttribute('data-copy');(navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(function(){show('Link copied')},function(){window.prompt('Copy this link',u)})})});"
+                "document.querySelectorAll('[data-native]').forEach(function(b){if(navigator.share){b.hidden=false;b.addEventListener('click',function(){navigator.share({title:b.getAttribute('data-title'),url:b.getAttribute('data-url')}).catch(function(){})})}});})();</script>")
     abox = (f'<div class=abox><div class=acard><img src="{a["image"]}" alt="{attr(a["image_alt"])}" width=92 height=92 loading=lazy><div><div class=lbl>Written by</div>'
             f'<h3>{esc(a["name"])}</h3><div class=role>{esc(a["role"])}</div><p>{esc(a["bio"])}</p><a href="{a["url"]}">Read our story &rarr;</a></div></div></div>')
     more = ''
@@ -124,7 +138,7 @@ def build_post(p, others):
     body += (f'<header class=phero><p class=eyebrow>{esc(p["category"])}</p><h1>{p["h1_html"]}</h1><p class=lede>{esc(p["description"])}</p>'
              f'<div class=byline><img src="{a["image"]}" alt="{attr(a["image_alt"])}" width=52 height=52><div><b>By {esc(a["name"])}</b><span>{esc(a["role"])} &middot; <time datetime="{p["date"]}">{fmt_date(p["date"])}</time> &middot; {p["read_min"]} min read</span></div></div></header>\n'
              f'<div class=crumbs role=navigation aria-label=Breadcrumb><a href=/>Home</a> &rsaquo; <a href=/blog.html>Stories</a> &rsaquo; {p["h1_html"]}</div>\n'
-             f'<main class=post><div class=answer><p><strong>In short:</strong> {esc(p["summary"])}</p></div>\n{p["body_html"]}\n</main>\n{share}\n{abox}\n{more}\n'
+             f'<div class=postwrap>{rail}<main class=post><div class=answer><p><strong>In short:</strong> {esc(p["summary"])}</p></div>\n{p["body_html"]}\n</main></div>\n{share}\n{abox}\n{more}\n{SHARE_JS}\n'
              '<section class=cta-band><h2>Taste Kenya for yourself</h2><p>Single-origin Kenyan coffee, roasted in Texas and shipped fresh, with free local delivery in Austin.</p><a class=btn-gold href=/shop.html>Shop the coffee</a></section>')
     open(os.path.join(ROOT, 'blog', p['slug'] + '.html'), 'w', encoding='utf-8').write(body + TAIL)
 
