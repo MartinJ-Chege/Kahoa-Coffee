@@ -135,9 +135,9 @@ def build_post(p, others):
     more = ''
     if others: more = '<div class=more><h2>More stories</h2><div class=sgrid>' + ''.join(scard(o, authors[o['author']]) for o in others[:3]) + '</div></div>'
     body = head(full_title, p['description'], url, SITE + og, p['title'], p['keywords'], 'article', ld)
-    body += (f'<header class=phero><p class=eyebrow>{esc(p["category"])}</p><h1>{p["h1_html"]}</h1><p class=lede>{esc(p["description"])}</p>'
-             f'<div class=byline><img src="{a["image"]}" alt="{attr(a["image_alt"])}" width=52 height=52><div><b>By {esc(a["name"])}</b><span>{esc(a["role"])} &middot; <time datetime="{p["date"]}">{fmt_date(p["date"])}</time> &middot; {p["read_min"]} min read</span></div></div></header>\n'
-             f'<div class=crumbs role=navigation aria-label=Breadcrumb><a href=/>Home</a> &rsaquo; <a href=/blog.html>Stories</a> &rsaquo; {p["h1_html"]}</div>\n'
+    body += (f'<div class="crumbs first" role=navigation aria-label=Breadcrumb><a href=/>Home</a> &rsaquo; <a href=/blog.html>Stories</a> &rsaquo; {esc(p["category"])}</div>\n'
+             f'<header class=ptop><p class=cat>{esc(p["category"])}</p><h1>{p["h1_html"]}</h1><p class=lede>{esc(p["description"])}</p>'
+             f'<div class=byline><img src="{a["image"]}" alt="{attr(a["image_alt"])}" width=44 height=44><div><b>{esc(a["name"])}</b><span>{esc(a["role"])} &middot; <time datetime="{p["date"]}">{fmt_date(p["date"])}</time> &middot; {p["read_min"]} min read</span></div></div></header>\n'
              f'<div class=postwrap>{rail}<main class=post><div class=answer><p><strong>In short:</strong> {esc(p["summary"])}</p></div>\n{p["body_html"]}\n</main></div>\n{share}\n{abox}\n{more}\n{SHARE_JS}\n'
              '<section class=cta-band><h2>Taste Kenya for yourself</h2><p>Single-origin Kenyan coffee, roasted in Texas and shipped fresh, with free local delivery in Austin.</p><a class=btn-gold href=/shop.html>Shop the coffee</a></section>')
     open(os.path.join(ROOT, 'blog', p['slug'] + '.html'), 'w', encoding='utf-8').write(body + TAIL)
