@@ -54,7 +54,7 @@ function load(){
   show('Loading…');
   fetch(api()+'?api=orders&k='+encodeURIComponent(key)).then(function(r){return r.json()}).then(function(d){
     if(!d.ok){if(/authorized/i.test(d.error||'')){forgetKey();return}show(d.error||'Something went wrong.',true);return}
-    ORDERS=d.orders;draw(ORDERS);
+    ORDERS=d.orders.filter(function(o){return !/^\s*events?\s*:/i.test(o.product)&&!/guests/i.test(o.total)});draw(ORDERS);
   }).catch(function(){show("Couldn't reach the Kahoa script. Check your signal, and that the script is deployed with access set to Anyone.",true)});
 }
 function draw(a){
@@ -83,7 +83,7 @@ function go(r){
 }
 /* ---- labels (4x6) ---- */
 function parseItems(product,grind){
-  var parts=String(product).split(';').map(function(x){return x.trim()}).filter(String);
+  var parts=String(product).replace(/\s*\+\s*sales tax\s*\([^)]*\)/ig,'').replace(/\s*\[(local delivery|pickup|shipping)\]/ig,'').trim().split(';').map(function(x){return x.trim()}).filter(String);
   var items=parts.map(function(p){var m=p.match(/^(\d+)\s*[x×*]\s*(.+)$/i),qty=m?Number(m[1]):1,rest=m?m[2]:p,g='';
     var gm=rest.match(/[\[(]([^\])]+)[\])]\s*$/);if(gm){g=gm[1];rest=rest.replace(/\s*[\[(][^\])]+[\])]\s*$/,'')}
     return{qty:qty,name:rest.trim(),grind:g}});
