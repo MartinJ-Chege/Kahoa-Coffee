@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Kahoa Ship</title>
+<link rel="apple-touch-icon" href="/ship-icon.png"><link rel="icon" href="/ship-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Kahoa Ship"><meta name="theme-color" content="#1f4d2e">
+<style>
+body{font-family:-apple-system,Segoe UI,Arial,sans-serif;background:#f6f1ea;margin:0;padding:16px;color:#2a2118}
+h1{font-size:20px;margin:0 0 4px}.sub{color:#6b5a48;font-size:13px;margin-bottom:14px}
+.c{background:#fff;border-radius:10px;padding:14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.c.done{opacity:.6}.n{font-weight:700}.m{font-size:13px;color:#6b5a48;margin-top:2px}
+button{background:#1f4d2e;color:#fff;border:0;border-radius:8px;padding:11px 16px;font-size:15px;font-weight:600;margin-top:10px}
+button.g{background:#e8dfd3;color:#2a2118}button:disabled{opacity:.5}
+label{display:block;margin:8px 0;font-size:15px}select,input[type=text],input[type=password]{width:100%;box-sizing:border-box;padding:10px;font-size:16px;border:1px solid #cdbfae;border-radius:8px;margin-top:4px}
+.err{color:#b3261e;font-size:14px;margin-top:8px}.ok{color:#1f4d2e;font-weight:700}.hide{display:none}
+#labels{display:none}
+.lbl{width:4in;height:6in;background:#fff;border:2px solid #000;border-radius:14px;padding:.14in .18in;margin:10px auto;display:flex;flex-direction:column;page-break-after:always;overflow:hidden;color:#000}
+.lbl .logo{width:100%;height:auto;display:block;margin-bottom:2px}
+.lbl .sec{border-top:2px solid #000;padding:5px 0 4px}.lbl .lb{font-weight:800;font-size:11pt}
+.lbl .nm{font-weight:800;font-size:19pt;line-height:1.1}.lbl .ad{font-family:Georgia,serif;font-size:14pt;line-height:1.2}
+.lbl .pv{font-weight:700;font-size:13pt;line-height:1.15}.lbl .q{font-weight:800;font-size:20pt}.lbl .q small{font-size:12pt}
+.lbl .nt{font-size:10pt;font-weight:700;margin-top:3px}
+.lbl .ft{border-top:2px solid #000;margin-top:auto;padding-top:8px;display:flex;align-items:center;justify-content:space-between}
+.lbl .paid{background:#000;color:#fff;font-weight:900;font-size:20pt;padding:6px 14px;border-radius:8px}
+.lbl .ty{font-family:Georgia,serif;font-style:italic;font-weight:700;font-size:11pt;text-align:center;line-height:1.2}
+@page{size:4in 6in;margin:0}
+@media print{body{background:#fff;padding:0}#app{display:none}#labels{display:block}.lbl{margin:0 auto;border-radius:0}}
+</style></head><body>
+<div id="app">
+<h1>Orders to ship</h1>
+<div class="sub">Tap an order, choose how it's going out, send. The customer is emailed and the sheet is updated.</div>
+<div id="keybox" class="c hide"><b>Enter your private key</b> <span class="m">(once per phone)</span><input type="password" id="key" placeholder="Private key" autocomplete="off"><button onclick="saveKey()">Save</button></div>
+<div id="top" class="hide"><button class="g" onclick="printAll()">Print all Austin labels</button> <button class="g" onclick="load()">Refresh</button> <button class="g" onclick="forgetKey()">Sign out</button></div>
+<div id="list">Loading…</div>
+</div>
+<div id="labels"></div>
+<script>
+var API='https://script.google.com/macros/s/AKfycbzwH-qbfxz5pHjlQ3FRDhVdwuTwHnW2vaLN5zEo69myM_Xu3FRANPClnlmV6zqBz5KM/exec';
+var LOGO='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';
+var ORDERS=[];
+function E(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function K(){try{return localStorage.getItem('kahoa_ship_key')||''}catch(e){return ''}}
+function saveKey(){var v=document.getElementById('key').value.trim();if(!v)return;try{localStorage.setItem('kahoa_ship_key',v)}catch(e){}load()}
+function forgetKey(){try{localStorage.removeItem('kahoa_ship_key')}catch(e){}location.reload()}
+function show(msg,isErr){document.getElementById('list').innerHTML='<div class="'+(isErr?'err':'m')+'">'+E(msg)+'</div>'}
+function load(){
+  var key=K();
+  document.getElementById('keybox').className=key?'hide':'c';
+  document.getElementById('top').className=key?'':'hide';
+  if(!key){show('');return}
+  show('Loading…');
+  fetch(API+'?api=orders&k='+encodeURIComponent(key)).then(function(r){return r.json()}).then(function(d){
+    if(!d.ok){if(/authorized/i.test(d.error||'')){forgetKey();return}show(d.error||'Something went wrong.',true);return}
+    ORDERS=d.orders;draw(ORDERS);
+  }).catch(function(){show("Couldn't reach the Kahoa script. Check your signal, and that the script is deployed with access set to Anyone.",true)});
+}
+function draw(a){
+  var el=document.getElementById('list');if(!a.length){el.innerHTML='<div class="m">No recent orders.</div>';return}
+  var open=a.filter(function(o){return !o.status}),done=a.filter(function(o){return o.status});
+  var h=open.length?'':'<div class="c">All caught up ✓ Nothing waiting to ship.</div>';
+  open.concat(done).forEach(function(o){var d=!!o.status;
+    h+='<div class="c'+(d?' done':'')+'" id="c'+o.row+'"><div class="n">'+E(o.name)+' · '+E(o.total)+'</div><div class="m">'+E(o.product)+(o.grind?' · '+E(o.grind):'')+'</div><div class="m">'+E(o.address)+'</div><div class="m">'+E(o.when)+' · '+E(o.email)+'</div>';
+    if(d){h+='<div class="m"><span class="ok">'+E(o.status)+'</span> '+E(o.shippedOn)+(o.tracking?' · '+E(o.tracking):'')+'</div>'}
+    else{h+='<button class="g" onclick="printOne('+o.row+')">Print label</button> <button onclick="openF('+o.row+')">Ship this order</button><div class="hide" id="f'+o.row+'">'+form(o)+'</div>'}
+    h+='</div>'});
+  el.innerHTML=h;
+}
+function form(o){var r=o.row;return '<label><input type="radio" name="m'+r+'" value="carrier" checked onchange="sw('+r+')"> Ship with a carrier (tracking)</label><label><input type="radio" name="m'+r+'" value="local" onchange="sw('+r+')"> Austin delivery (I drop it off)</label><label><input type="radio" name="m'+r+'" value="pickup" onchange="sw('+r+')"> Pickup</label><div id="k'+r+'"><select id="ca'+r+'"><option>USPS</option><option>UPS</option><option>FedEx</option></select><input type="text" id="t'+r+'" placeholder="Tracking number" autocapitalize="characters"></div><input type="text" id="n'+r+'" placeholder="Optional note (e.g. delivering Thursday evening)" style="margin-top:8px"><label><input type="checkbox" id="x'+r+'"> Don\'t email — just mark it done</label><button id="b'+r+'" onclick="go('+r+')">Send shipped email</button><div class="err" id="e'+r+'"></div>'}
+function openF(r){var f=document.getElementById('f'+r);f.className='';f.scrollIntoView({behavior:'smooth',block:'center'})}
+function mv(r){var x=document.getElementsByName('m'+r);for(var i=0;i<x.length;i++)if(x[i].checked)return x[i].value}
+function sw(r){document.getElementById('k'+r).className=mv(r)=='carrier'?'':'hide';document.getElementById('n'+r).placeholder=mv(r)=='pickup'?'Pickup details: where and when (required)':'Optional note (e.g. delivering Thursday evening)'}
+function go(r){
+  var o=ORDERS.filter(function(x){return x.row===r})[0],b=document.getElementById('b'+r),e=document.getElementById('e'+r);
+  e.textContent='';b.disabled=true;b.textContent='Sending…';
+  var p={k:K(),row:r,email:o.email,method:mv(r),carrier:document.getElementById('ca'+r).value,tracking:document.getElementById('t'+r).value,note:document.getElementById('n'+r).value,noEmail:document.getElementById('x'+r).checked};
+  fetch(API,{method:'POST',body:JSON.stringify(p)}).then(function(r){return r.json()}).then(function(d){
+    if(d.ok){var c=document.getElementById('c'+r);c.className='c done';c.innerHTML='<div class="ok">✓ Done'+(p.noEmail?'':' — customer emailed')+'.</div>'}
+    else{e.textContent=d.error||'Failed.';b.disabled=false;b.textContent='Send shipped email'}
+  }).catch(function(){e.textContent="Couldn't reach the script. Check your signal and try again. It may not have sent, so check the sheet before retrying.";b.disabled=false;b.textContent='Send shipped email'});
+}
+/* ---- labels (4x6) ---- */
+function parseItems(product,grind){
+  var parts=String(product).split(';').map(function(x){return x.trim()}).filter(String);
+  var items=parts.map(function(p){var m=p.match(/^(\d+)\s*[x×*]\s*(.+)$/i),qty=m?Number(m[1]):1,rest=m?m[2]:p,g='';
+    var gm=rest.match(/[\[(]([^\])]+)[\])]\s*$/);if(gm){g=gm[1];rest=rest.replace(/\s*[\[(][^\])]+[\])]\s*$/,'')}
+    return{qty:qty,name:rest.trim(),grind:g}});
+  if(items.length===1&&!items[0].grind&&grind&&!/n\/a|none|see items|mixed|^sample$/i.test(grind))items[0].grind=grind;
+  return items}
+function splitAddr(a){a=String(a);var note='',m=a.match(/\s*[—-]+\s*DELIVERY NOTE:\s*([\s\S]*)$/i);
+  if(m){note=m[1].trim();a=a.replace(m[0],'')}
+  var p=a.match(/^(.*),\s*([^,]+),\s*([A-Za-z]{2,})\s+([\d-]+)\s*$/);
+  return p?{l1:p[1].trim(),l2:p[2].trim()+', '+p[3].toUpperCase().slice(0,2)+' '+p[4],note:note}:{l1:a.trim(),l2:'',note:note}}
+function labelHtml(o){
+  var items=parseItems(o.product,o.grind),bags=items.reduce(function(n,i){return n+i.qty},0),ad=splitAddr(o.address),free=/^\$?0(\.00)?$/.test(String(o.total).trim());
+  var prods=items.map(function(i,k){return '<div class="sec"><div class="lb">PRODUCT '+(k+1)+':</div><div class="pv">'+(i.qty>1?i.qty+'× ':'')+E(i.name)+(i.grind?' ('+E(i.grind)+')':'')+'</div></div>'}).join('');
+  var qty=bags+(bags===1?' Bag':' Bags')+(items.length>1&&items.every(function(i){return i.qty===1})?' <small>(1 of each)</small>':'');
+  return '<div class="lbl"><img class="logo" src="data:image/png;base64,'+LOGO+'"><div class="sec"><div class="lb">NAME:</div><div class="nm">'+E(o.name)+'</div></div><div class="sec"><div class="lb">SHIP TO:</div><div class="ad">'+E(ad.l1)+'<br>'+E(ad.l2)+'</div>'+(ad.note?'<div class="nt">NOTE: '+E(ad.note)+'</div>':'')+'</div>'+prods+'<div class="sec"><div class="lb">QUANTITY:</div><div class="q">'+qty+'</div></div><div class="ft"><div class="paid">'+(free?'✓ FREE ORDER':'✓ PAID')+'</div><div class="ty">Thank you for being<br>part of the Kahoa family!</div></div></div>'}
+function printLabels(sel){if(!sel.length){alert('No matching orders to print.');return}
+  document.getElementById('labels').innerHTML=sel.map(labelHtml).join('');setTimeout(function(){window.print()},150)}
+function printOne(r){printLabels(ORDERS.filter(function(o){return o.row===r}))}
+function printAll(){printLabels(ORDERS.filter(function(o){return !o.status&&/austin/i.test(o.address)}))}
+load();
+</script></body></html>
