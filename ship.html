@@ -15,18 +15,35 @@ button{background:#1f4d2e;color:#fff;border:0;border-radius:8px;padding:11px 16p
 button.g{background:#e8dfd3;color:#2a2118}button:disabled{opacity:.5}
 label{display:block;margin:8px 0;font-size:15px}select,input[type=text],input[type=password]{width:100%;box-sizing:border-box;padding:10px;font-size:16px;border:1px solid #cdbfae;border-radius:8px;margin-top:4px}
 .err{color:#b3261e;font-size:14px;margin-top:8px}.ok{color:#1f4d2e;font-weight:700}.hide{display:none}
-#labels{display:none}
-.lbl{width:4in;height:6in;background:#fff;border:2px solid #000;border-radius:14px;padding:.14in .18in;margin:10px auto;display:flex;flex-direction:column;page-break-after:always;overflow:hidden;color:#000}
-.lbl .logo{width:100%;height:auto;display:block;margin-bottom:2px}
-.lbl .sec{border-top:2px solid #000;padding:5px 0 4px}.lbl .lb{font-weight:800;font-size:11pt}
-.lbl .nm{font-weight:800;font-size:19pt;line-height:1.1}.lbl .ad{font-family:Georgia,serif;font-size:14pt;line-height:1.2}
-.lbl .pv{font-weight:700;font-size:13pt;line-height:1.15}.lbl .q{font-weight:800;font-size:20pt}.lbl .q small{font-size:12pt}
+#labels{position:absolute;left:-10000px;top:0}
+.lbl,.lbl *{box-sizing:border-box}
+.lbl{width:4in;height:6in;background:#fff;border:2px solid #000;border-radius:14px;padding:.12in .16in .1in;margin:10px auto;display:flex;flex-direction:column;page-break-after:always;overflow:hidden;color:#000;font-family:Arial,Helvetica,sans-serif}
+.lbl .logo{width:100%;height:auto;display:block}
+.lbl .rule{border-top:2px solid #000}
+.lbl .mid{flex:1;display:flex;min-height:0}
+.lbl .left{flex:1;min-width:0}
+.lbl .vb{position:relative;width:.52in;flex:none}
+.lbl .vbin{position:absolute;top:0;left:0;transform-origin:top left}
+.lbl .vbin svg,.lbl .hb svg{display:block;width:100%;height:100%}
+.lbl .vnum{position:absolute;right:0;top:0;height:100%;writing-mode:vertical-rl;font-size:9pt;letter-spacing:3px;display:flex;justify-content:center;align-items:center}
+.lbl .sec{border-top:2px solid #000;padding:4px 0 3px}.lbl .left .sec:first-child{border-top:0}
+.lbl .lb{font-weight:800;font-size:10.5pt}
+.lbl .nm{font-weight:800;font-size:19pt;line-height:1.08}
+.lbl .ad{font-family:Georgia,serif;font-size:14pt;line-height:1.15}
+.lbl .pv{font-weight:700;font-size:12.5pt;line-height:1.12}
+.lbl .q{font-weight:800;font-size:21pt;line-height:1.1}.lbl .q small{font-size:12pt}
 .lbl .nt{font-size:10pt;font-weight:700;margin-top:3px}
-.lbl .ft{border-top:2px solid #000;margin-top:auto;padding-top:8px;display:flex;align-items:center;justify-content:space-between}
-.lbl .paid{background:#000;color:#fff;font-weight:900;font-size:20pt;padding:6px 14px;border-radius:8px}
-.lbl .ty{font-family:Georgia,serif;font-style:italic;font-weight:700;font-size:11pt;text-align:center;line-height:1.2}
+.lbl.sm .pv{font-size:10.5pt}.lbl.sm .nm{font-size:16pt}.lbl.sm .ad{font-size:12pt}.lbl.sm .q{font-size:16pt}
+.lbl .ft{border-top:2px solid #000;display:flex;align-items:center;justify-content:space-between;padding:6px 0}
+.lbl .paid{background:#000;color:#fff;font-weight:900;font-size:21pt;padding:4px 14px 4px 8px;border-radius:8px;display:flex;align-items:center;gap:7px}
+.lbl .paid svg{width:.3in;height:.3in;flex:none}
+.lbl .ty{font-family:Georgia,serif;font-style:italic;font-weight:700;font-size:11.5pt;text-align:center;line-height:1.15;padding-bottom:6px;position:relative}
+.lbl .ty svg{position:absolute;left:8%;bottom:0;width:84%;height:6px}
+.lbl .bot{border-top:2px solid #000;padding-top:5px}
+.lbl .hb{height:.55in}
+.lbl .hnum{text-align:center;font-size:14pt;letter-spacing:5px;margin-top:2px;font-weight:500}
 @page{size:4in 6in;margin:0}
-@media print{body{background:#fff;padding:0}#app{display:none}#labels{display:block}.lbl{margin:0 auto;border-radius:0}}
+@media print{body{background:#fff;padding:0}#app{display:none}#labels{position:static}.lbl{margin:0 auto;border-radius:0}}
 </style></head><body>
 <div id="app">
 <h1>Orders to ship</h1>
@@ -36,6 +53,7 @@ label{display:block;margin:8px 0;font-size:15px}select,input[type=text],input[ty
 <div id="list">Loading…</div>
 </div>
 <div id="labels"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js"></script>
 <script>
 var DEFAULT_API='https://script.google.com/macros/s/AKfycbzwH-qbfxz5pHjlQ3FRDhVdwuTwHnW2vaLN5zEo69myM_Xu3FRANPClnlmV6zqBz5KM/exec';
 function api(){try{return localStorage.getItem('kahoa_ship_api')||DEFAULT_API}catch(e){return DEFAULT_API}}
@@ -93,13 +111,33 @@ function splitAddr(a){a=String(a);var note='',m=a.match(/\s*[—-]+\s*DELIVERY N
   if(m){note=m[1].trim();a=a.replace(m[0],'')}
   var p=a.match(/^(.*),\s*([^,]+),\s*([A-Za-z]{2,})\s+([\d-]+)\s*$/);
   return p?{l1:p[1].trim(),l2:p[2].trim()+', '+p[3].toUpperCase().slice(0,2)+' '+p[4],note:note}:{l1:a.trim(),l2:'',note:note}}
+function orderNo(o){var d=new Date(o.ts);return isNaN(d)?String(o.row):d.toISOString().replace(/\D/g,'').slice(0,14)}
 function labelHtml(o){
-  var items=parseItems(o.product,o.grind),bags=items.reduce(function(n,i){return n+i.qty},0),ad=splitAddr(o.address),free=/^\$?0(\.00)?$/.test(String(o.total).trim());
+  var items=parseItems(o.product,o.grind),bags=items.reduce(function(n,i){return n+i.qty},0),ad=splitAddr(o.address),free=/^\$?0(\.00)?$/.test(String(o.total).trim()),no=orderNo(o);
   var prods=items.map(function(i,k){return '<div class="sec"><div class="lb">PRODUCT '+(k+1)+':</div><div class="pv">'+(i.qty>1?i.qty+'× ':'')+E(i.name)+(i.grind?' ('+E(i.grind)+')':'')+'</div></div>'}).join('');
   var qty=bags+(bags===1?' Bag':' Bags')+(items.length>1&&items.every(function(i){return i.qty===1})?' <small>(1 of each)</small>':'');
-  return '<div class="lbl"><img class="logo" src="data:image/png;base64,'+LOGO+'"><div class="sec"><div class="lb">NAME:</div><div class="nm">'+E(o.name)+'</div></div><div class="sec"><div class="lb">SHIP TO:</div><div class="ad">'+E(ad.l1)+'<br>'+E(ad.l2)+'</div>'+(ad.note?'<div class="nt">NOTE: '+E(ad.note)+'</div>':'')+'</div>'+prods+'<div class="sec"><div class="lb">QUANTITY:</div><div class="q">'+qty+'</div></div><div class="ft"><div class="paid">'+(free?'✓ FREE ORDER':'✓ PAID')+'</div><div class="ty">Thank you for being<br>part of the Kahoa family!</div></div></div>'}
+  var check='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#fff"/><path d="M6.5 12.5l3.8 3.8 7.4-8" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var swoosh='<svg viewBox="0 0 100 6" preserveAspectRatio="none"><path d="M0 5 Q50 -2 100 4" fill="none" stroke="#000" stroke-width="1.6"/></svg>';
+  return '<div class="lbl'+(items.length>2?' sm':'')+'" data-no="'+no+'"><img class="logo" src="data:image/png;base64,'+LOGO+'"><div class="rule"></div>'+
+   '<div class="mid"><div class="left"><div class="sec"><div class="lb">NAME:</div><div class="nm">'+E(o.name)+'</div></div>'+
+   '<div class="sec"><div class="lb">SHIP TO:</div><div class="ad">'+E(ad.l1)+'<br>'+E(ad.l2)+'</div>'+(ad.note?'<div class="nt">NOTE: '+E(ad.note)+'</div>':'')+'</div>'+
+   prods+'<div class="sec"><div class="lb">QUANTITY:</div><div class="q">'+qty+'</div></div></div>'+
+   '<div class="vb"><div class="vbin"><svg class="bcv"></svg></div><div class="vnum">'+no+'</div></div></div>'+
+   '<div class="ft"><div class="paid">'+check+(free?'FREE':'PAID')+'</div><div class="ty">Thank you for being<br>part of the Kahoa family!'+swoosh+'</div></div>'+
+   '<div class="bot"><div class="hb"><svg class="bch"></svg></div><div class="hnum">'+no+'</div></div></div>'}
+function drawBarcodes(){
+  var ls=document.querySelectorAll('#labels .lbl');
+  for(var i=0;i<ls.length;i++){var l=ls[i],no=l.getAttribute('data-no');
+    if(typeof JsBarcode==='function'){
+      ['.bcv','.bch'].forEach(function(q){var sv=l.querySelector(q);try{JsBarcode(sv,no,{format:'CODE128',displayValue:false,margin:0,width:2,height:60});
+        sv.setAttribute('viewBox','0 0 '+String(sv.getAttribute('width')).replace('px','')+' 60');sv.setAttribute('preserveAspectRatio','none');sv.removeAttribute('width');sv.removeAttribute('height')}catch(e){}});
+    }
+    var vb=l.querySelector('.vb'),inn=l.querySelector('.vbin'),h=vb.clientHeight,w=Math.round(vb.clientWidth*0.62);
+    inn.style.width=h+'px';inn.style.height=w+'px';inn.style.transform='translateX('+w+'px) rotate(90deg)';
+  }}
 function printLabels(sel){if(!sel.length){alert('No matching orders to print.');return}
-  document.getElementById('labels').innerHTML=sel.map(labelHtml).join('');setTimeout(function(){window.print()},150)}
+  document.getElementById('labels').innerHTML=sel.map(labelHtml).join('');
+  setTimeout(function(){drawBarcodes();setTimeout(function(){window.print()},150)},100)}
 function printOne(r){printLabels(ORDERS.filter(function(o){return o.row===r}))}
 function printAll(){printLabels(ORDERS.filter(function(o){return !o.status&&/austin/i.test(o.address)}))}
 load();
