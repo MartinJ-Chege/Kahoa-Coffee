@@ -112,6 +112,9 @@ button.pay:disabled{opacity:.6;cursor:default}
         <p class="note" style="color:#6b5a45;margin-top:4px">Extras ship free in the same box. Texas orders pay sales tax on extras.</p>
       </div>
 
+      <label style="margin-top:18px">Your Dell code</label><input id="f-code" autocomplete="off" autocapitalize="characters" placeholder="DELL-XXXX-XXXX" style="text-transform:uppercase">
+      <p class="note" style="color:#6b5a45;margin:4px 0 0">Your personal code was emailed to you. One code per guest.</p>
+
       <label style="margin-top:18px">Your name</label><input id="f-name" autocomplete="name">
       <div class="row"><div><label>Email</label><input id="f-email" type="email" autocomplete="email"></div><div><label>Phone</label><input id="f-phone" type="tel" autocomplete="tel"></div></div>
       <label>Shipping address</label><input id="f-addr" autocomplete="address-line1">
@@ -145,10 +148,9 @@ button.pay:disabled{opacity:.6;cursor:default}
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script>
 <script>
 /* ===== Dell gift page settings ===== */
-var OPEN_AT  = '2026-12-03T00:00:00-06:00';   /* page opens to guests (presentation day) */
+var OPEN_AT  = '2026-12-10T00:00:00-06:00';   /* page opens to guests (presentation day) */
 var CLOSE_AT = '2026-12-31T23:59:59-06:00';   /* last day to claim */
 var CAP_NOTE = 100;                            /* cap, enforced at fulfilment (and by CHECK_URL if set) */
-var CHECK_URL = '';                            /* optional Apps Script URL: ?action=dellcheck&email=... -> {ok:true|false,reason:''} */
 var GOOGLE_REVIEW_URL = 'https://g.page/r/CXk61J1QHrA5ECE/review';                    /* paste your Google review link here (Business Profile > Get more reviews) */
 var PACK_VALUE = 50;
 var TAX_RATE = 0.0825;
@@ -240,16 +242,17 @@ async function submitOrder(){
   if(email.indexOf('@')<1)return bad('Please enter a valid email.');
   if(!phone)return bad('Please add a phone number for delivery.');
   if(!addr||!city||st.length!==2||zip.length!==5)return bad('Please enter your full shipping address.');
-  try{if(localStorage.getItem('dell_claimed')){return bad('This device has already claimed a gift. Each person gets one. If this is a mistake, email info@kahoa.shop.')}}catch(x){}
+  var code=$('f-code').value.trim().toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(!/^DELL[A-Z0-9]{8}$/.test(code))return bad('Please enter your Dell code (it looks like DELL-XXXX-XXXX).');
   var c=calc(),btn=$('go');if(c.total>0&&!confirm('You added extras that are NOT part of your free gift. Your card will be charged '+money(c.total)+'. Continue?'))return;busy=true;btn.disabled=true;btn.textContent='Please wait...';
-  function fail(m){busy=false;btn.disabled=false;recalc();bad(m)}
-  /* optional server-side one-per-email and cap check */
-  if(CHECK_URL){try{var cr=await fetch(CHECK_URL+(CHECK_URL.indexOf('?')>-1?'&':'?')+'action=dellcheck&email='+encodeURIComponent(email.toLowerCase()));var cj=await cr.json();if(cj&&cj.ok===false)return fail(cj.reason||'This gift has already been claimed.')}catch(x){}}
+  var redeemed=false;
+  function fail(m){if(redeemed){redeemed=false;try{fetch(WORKER_BASE+'/dell/release',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code,email:email})})}catch(x){}}busy=false;btn.disabled=false;recalc();bad(m)}
   var picks=[];for(var i=1;i<=cur.c;i++)picks.push($('cb'+i).value+' ('+$('cg'+i).value+')');
   if(cur.s)picks.push(cur.s+' x Mombasa Wildflower Syrup');
   var ext=[];EXTRA_ITEMS.forEach(function(x){if(qty[x.k]>0){ext.push(qty[x.k]+' x '+x.name+(x.coffee?' ('+$('gs-'+x.k).value+')':''))}});
   var full=addr+', '+city+', '+st+' '+zip;
   var summary='DELL GIFT: '+cur.name+' ['+picks.join(', ')+']'+(ext.length?' + EXTRAS: '+ext.join(', '):'');
+  try{var rr=await fetch(WORKER_BASE+'/dell/redeem',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code,name:name,email:email,details:{pack:cur.name}})});var rj=await rr.json().catch(function(){return {}});if(!rr.ok||!rj.ok)return fail(rj.reason||'We could not check your code. Please try again.');redeemed=true}catch(x){return fail('We could not reach our server to check your code. Please try again.')}
   var paidId='';
   if(c.total>0){
     if(!card)return fail('The card form is still loading. Please try again in a moment.');
@@ -266,10 +269,10 @@ async function submitOrder(){
       paidId=d.payment_id||d.order_id||'';
     }catch(e){return fail('Error: '+e.message)}
   }
-  try{localStorage.setItem('dell_claimed',email.toLowerCase())}catch(x){}
+  redeemed=false;
   var oid='DELL-'+Date.now().toString(36).toUpperCase();
-  var notes='DELL GIFT (Dell pays $'+PACK_VALUE+' for the pack, shipping included). Pack: '+cur.name+' - '+picks.join(', ')+'. '+(ext.length?'EXTRAS PAID BY GUEST ('+money(c.total)+(c.tax?', incl. '+money(c.tax)+' tax':'')+'): '+ext.join(', ')+(paidId?'. Square payment '+paidId:'')+'. ':'No extras. ')+'Ship to: '+full+'. Phone: '+phone+'. Check the Dell tab/sheet: one gift per email, cap '+CAP_NOTE+'.';
-  try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:phone,product:summary,grind:picks.concat(ext).join(' | '),total:c.total>0?money(c.total)+' (extras)':'Dell gift $'+PACK_VALUE,coupon:'DELL-GIFT',address:full,opted_in:'Yes',source:'kahoa.shop/dell'})})}catch(x){}
+  var notes='DELL GIFT (Dell pays $'+PACK_VALUE+' for the pack, shipping included). Pack: '+cur.name+' - '+picks.join(', ')+'. '+(ext.length?'EXTRAS PAID BY GUEST ('+money(c.total)+(c.tax?', incl. '+money(c.tax)+' tax':'')+'): '+ext.join(', ')+(paidId?'. Square payment '+paidId:'')+'. ':'No extras. ')+'Ship to: '+full+'. Phone: '+phone+'. Dell code: '+code+' (single-use, already redeemed). Cap '+CAP_NOTE+'.';
+  try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:phone,product:summary,grind:picks.concat(ext).join(' | '),total:c.total>0?money(c.total)+' (extras)':'Dell gift $'+PACK_VALUE,coupon:'DELL-GIFT '+code,address:full,opted_in:'Yes',source:'kahoa.shop/dell'})})}catch(x){}
   try{if(typeof emailjs!=='undefined'){emailjs.init(EJKEY);
     emailjs.send(EJSVC,EJTMPL,{to_email:'info@kahoa.shop',reply_to:email,order_id:oid,order_type:'DELL GIFT - SHIP THIS',customer_name:name,customer_email:email,customer_phone:phone,customer_address:full,product_name:cur.name+': '+picks.join(', ')+(ext.length?' + '+ext.join(', '):''),grind:'See picks',price:c.total>0?money(c.total)+' extras paid':'Dell gift (prepaid by Dell)',shipping_method:'Included',checkout_url:'',notes:notes}).catch(function(e){console.error(e)});
     emailjs.send(EJSVC,EJTMPL,{to_email:email,reply_to:'info@kahoa.shop',order_id:oid,order_type:'Your Kahoa Gift From Dell Is Confirmed',customer_name:name,customer_email:email,customer_phone:phone,customer_address:full,product_name:cur.name+': '+picks.join(', ')+(ext.length?' + '+ext.join(', '):''),grind:'N/A',price:c.total>0?money(c.total)+' (extras)':'Gift from Dell',shipping_method:'Included',checkout_url:'',notes:'Asante sana, '+firstUp(name)+'. We got your gift. Your coffee is roasted fresh to order and ships within a few days to '+full+'. Reply to this email if anything needs fixing. Thank you for listening to our story. If you enjoy the coffee, a Google review would mean the world to us.'+(GOOGLE_REVIEW_URL?' Leave one here: '+GOOGLE_REVIEW_URL:'')}).catch(function(e){console.error(e)})}}catch(x){}
