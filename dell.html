@@ -38,6 +38,8 @@ select option{color:#000}
 .hero{margin:0 0 22px;border-radius:10px;overflow:hidden;border:1px solid rgba(212,168,67,.3)}
 .hero img{width:100%;height:auto;display:block}
 .story{border-left:3px solid var(--gold);background:rgba(212,168,67,.08);padding:16px 18px;margin-bottom:22px}
+.story{display:flex;gap:16px;align-items:center}.story img{width:84px;height:84px;border-radius:50%;object-fit:cover;object-position:center 12%;border:2px solid var(--gold);flex:none}@media(max-width:480px){.story img{width:64px;height:64px}}
+.gift{background:#f3ead6;border:1px solid #d9c9a6;padding:16px;margin-top:18px;color:#2a1608;font-size:14px;line-height:1.7}.gift b{color:#1C0E06}.gift a{display:inline-block;margin-top:8px;background:#1C0E06;color:#fff!important;padding:12px 18px;text-decoration:none;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:700}
 .story p{font-family:'Cormorant Garamond',serif;font-size:19px;line-height:1.6;font-weight:300;font-style:italic;color:rgba(255,255,255,.88)}
 .story cite{display:block;margin-top:10px;font-style:normal;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
 .step{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:600;margin:4px 0 12px}
@@ -93,7 +95,7 @@ button.pay:disabled{opacity:.6;cursor:default}
     <div class="stext"><span class="badge">A gift from Dell</span>
     <h1>Thank you for joining us</h1>
     <p class="lead">Dell is treating you to Kahoa Coffee, single-origin Kenyan coffee roasted fresh in Texas. Pick one pack below. Shipping is covered, and there is nothing to pay.</p><p class="cap">Wanja, hand-picking ripe cherries in the Kenyan highlands</p></div></div>
-    <div class="story"><p>As kids, my siblings and I woke before sunrise to pick coffee cherries alongside our grandparents in the Kenyan highlands. When my father took over the farm, I learned coffee from root to roast. Now every bag of Kahoa is my way of completing that journey and putting it in your hands.</p><cite>Martin Kibuthu, Founder</cite></div>
+    <div class="story"><img src="/martin-kibuthu-2.webp" alt="Martin Kibuthu, founder of Kahoa Coffee" width="84" height="84"><div><p>As kids, my siblings and I woke before sunrise to pick coffee cherries alongside our grandparents in the Kenyan highlands. When my father took over the farm, I learned coffee from root to roast. Now every bag of Kahoa is my way of completing that journey and putting it in your hands.</p><cite>Martin Kibuthu, Founder</cite></div></div>
     <div class="how"><span><b>1</b>Pick your pack</span><span><b>2</b>Choose your blends and tell us where to ship</span><span><b>3</b>We roast it fresh and send it within a few days</span></div>
 
     <p class="step">Step 1 &middot; Tap a pack to choose it</p>
@@ -110,6 +112,7 @@ button.pay:disabled{opacity:.6;cursor:default}
         <div class="paidnote"><b>Extras are NOT part of your gift.</b> Anything you add here is charged to your card at regular price. Your pack above is already covered by Dell, so you do not need to add it again.</div>
         <div id="extras"></div>
         <p class="note" style="color:#6b5a45;margin-top:4px">Extras ship free in the same box. Texas orders pay sales tax on extras.</p>
+        <div class="gift"><b>Holiday gifts, sorted.</b> Kahoa gift bundles make an easy present for family, friends and your team. You get a gift code right away and send it to anyone. They pick their own blends and we ship it fresh.<br><a href="/gift-cards.html" target="_blank" rel="noopener">Shop holiday gift bundles</a></div>
       </div>
 
       <label style="margin-top:18px">Your Dell code</label><input id="f-code" autocomplete="off" autocapitalize="characters" placeholder="DELL-XXXX-XXXX" style="text-transform:uppercase">
@@ -141,6 +144,7 @@ button.pay:disabled{opacity:.6;cursor:default}
     <p style="font-size:14px;line-height:1.8" id="ok-t"></p>
     <p style="margin-top:16px;font-size:14px;line-height:1.8" id="rv-t">If you enjoy it, a quick Google review would mean the world to our family business.</p>
     <p style="margin-top:12px"><a id="rv-btn" href="#" target="_blank" rel="noopener" style="display:none;background:#D4A843;color:#1C0E06!important;padding:14px 22px;text-decoration:none;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:700">&#9733; Leave a Google review</a></p>
+    <div class="gift" style="text-align:left"><b>Still shopping for the holidays?</b> Send someone a Kahoa gift bundle. You get the gift code instantly and they choose their own blends.<br><a href="/gift-cards.html">Shop holiday gift bundles</a></div>
     <p style="margin-top:18px"><a href="/" style="color:#8B4A26">Visit Kahoa</a></p>
   </div>
 </div>
