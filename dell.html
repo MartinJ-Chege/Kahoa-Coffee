@@ -39,7 +39,7 @@ select option{color:#000}
 .hero{margin:0 0 22px;border-radius:10px;overflow:hidden;border:1px solid rgba(212,168,67,.3)}
 .hero img{width:100%;height:auto;display:block}
 .story{border-left:3px solid var(--gold);background:rgba(212,168,67,.08);padding:16px 18px;margin-bottom:22px}
-.story{display:flex;gap:16px;align-items:center}.story img{width:84px;height:84px;border-radius:50%;object-fit:cover;object-position:center 12%;border:2px solid var(--gold);flex:none}@media(max-width:480px){.story img{width:64px;height:64px}}
+.story{display:flex;gap:16px;align-items:center}.story img{width:84px;height:84px;border-radius:50%;object-fit:cover;object-position:center 12%;border:2px solid var(--gold);flex:none}
 .gift{background:#f3ead6;border:1px solid #d9c9a6;padding:16px;margin-top:18px;color:#2a1608;font-size:14px;line-height:1.7}.gift b{color:#1C0E06}.box .gift a{display:inline-block;margin-top:8px;background:#1C0E06;color:#fff!important;padding:12px 18px;text-decoration:none;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:700}
 .story p{font-family:'Cormorant Garamond',serif;font-size:19px;line-height:1.6;font-weight:300;font-style:italic;color:rgba(255,255,255,.88)}
 .story cite{display:block;margin-top:10px;font-style:normal;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
@@ -80,6 +80,29 @@ button.pay:disabled{opacity:.6;cursor:default}
 #ok h2{font-size:30px;font-weight:300}
 .how{display:grid;gap:6px;margin-bottom:20px;font-size:12px;color:rgba(255,255,255,.7)}
 .how b{display:inline-block;width:20px;height:20px;line-height:20px;text-align:center;border-radius:50%;background:var(--gold);color:var(--dark);font-size:11px;margin-right:8px}
+
+.prog{display:flex;align-items:center;gap:8px;margin:6px 0 18px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.45)}
+.prog .st{display:flex;align-items:center;gap:7px;white-space:nowrap}
+.prog .st b{width:22px;height:22px;line-height:22px;text-align:center;border-radius:50%;border:1px solid rgba(212,168,67,.5);font-size:11px;color:var(--gold)}
+.prog .st.on{color:var(--gold-light)}
+.prog .st.done b{background:var(--gold);color:var(--dark);border-color:var(--gold)}
+.prog .ln{flex:1;height:1px;background:rgba(212,168,67,.3);min-width:10px}
+.codebox{border:1px solid rgba(212,168,67,.45);background:rgba(212,168,67,.08);border-radius:10px;padding:16px;margin-bottom:22px}
+.codebox label{display:block;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:8px}
+.codebox .cr{display:flex;gap:8px}
+.codebox input{flex:1;min-width:0;background:#fff;border:1px solid #d9c9a6;color:#1C0E06;font-family:inherit;font-size:16px;letter-spacing:2px;padding:13px;text-transform:uppercase}
+.codebox button{background:var(--gold);color:var(--dark);border:0;font-family:inherit;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:700;padding:0 18px;cursor:pointer}
+.codebox .cs{font-size:13px;margin-top:9px;min-height:18px;line-height:1.5}
+.codebox .cs.ok{color:#7ed39a}.codebox .cs.no{color:#ffb3a8}
+.codebox .ch{font-size:11px;color:rgba(255,255,255,.55);margin-top:6px}
+.story{flex-direction:column;text-align:center;gap:12px}
+.story img{width:118px;height:118px}
+.story p{font-size:18px}
+.pack .ship{display:block;margin-top:6px;font-size:11px;color:var(--gold-light);opacity:.8}
+.ex{grid-template-columns:56px 1fr auto}
+.ex img{width:56px;height:56px;object-fit:cover;border-radius:6px;background:#1C0E06}
+.ex .pr{color:#8B4A26;font-weight:700}
+.minigift{font-size:13px;margin-top:12px;color:#5a4636}.minigift a{color:#8B4A26;font-weight:700}
 </style>
 <style id="cream-forms">.box{background:#FDF8EF!important;border:1px solid #e3d2ab!important;color:#2a1608!important}.box h2,.box h3{color:#1C0E06!important}.box label{color:#8B4A26!important}.box input,.box select,.box textarea{background:#fff!important;border:1px solid #d9c9a6!important;color:#1C0E06!important}.box input::placeholder,.box textarea::placeholder{color:rgba(60,40,20,.38)}.box input:focus,.box select:focus,.box textarea:focus{outline:2px solid rgba(212,168,67,.55);border-color:#D4A843!important}.box .note,.box p[style]{color:#6b5a45!important}.box .sum{color:#3a2a1a!important}.box .sum .t{border-top:1px solid #d9c9a6!important;color:#1C0E06!important}#card{background:#fff!important;border:1px solid #d9c9a6}.box a{color:#8B4A26!important}.what{background:#F5EAD0!important;border-color:#d9b866!important;color:#2a1608!important}.what b{color:#8B4A26!important}.code{background:#fff!important;color:#8B4A26!important;border-color:#D4A843!important}.msgbox{background:#fff!important;color:#2a1608!important;border-color:#d9c9a6!important}.ghost{border-color:#8B4A26!important;color:#8B4A26!important}.ghost:hover{background:#8B4A26;color:#fff!important}.box b{color:#1C0E06}#ok p,#ok .note{color:#4a3a28!important}.err{background:#fde8e4!important;color:#a3271a!important}.ex b{color:#1C0E06}.stp output{color:#1C0E06}.sum div{color:#3a2a1a}.sum .t{border-top:1px solid #d9c9a6;color:#1C0E06}#closed h2,#ok h2{color:#1C0E06!important}#closed .note{color:#6b5a45}</style>
 </head>
@@ -96,10 +119,11 @@ button.pay:disabled{opacity:.6;cursor:default}
     <div class="stext"><span class="badge">A gift from Dell &amp; SHI</span>
     <h1>Thank you for joining us</h1>
     <p class="lead">Dell &amp; SHI are treating you to Kahoa Coffee, single-origin Kenyan coffee roasted fresh in Texas. Pick one pack below. Shipping is covered, and there is nothing to pay.</p><p class="cap">Wanja, hand-picking ripe cherries in the Kenyan highlands</p></div></div>
-    <div class="story"><img src="/martin-kibuthu-2.webp" alt="Martin Kibuthu, founder of Kahoa Coffee" width="84" height="84"><div><p>As kids, my siblings and I woke before sunrise to pick coffee cherries alongside our grandparents in the Kenyan highlands. When my father took over the farm, I learned coffee from root to roast. Now every bag of Kahoa is my way of completing that journey and putting it in your hands.</p><cite>Martin Kibuthu, Founder</cite></div></div>
-    <div class="how"><span><b>1</b>Pick your pack</span><span><b>2</b>Choose your blends and tell us where to ship</span><span><b>3</b>We roast it fresh and send it within a few days</span></div>
+    <div class="prog" id="prog"><span class="st on" id="pg1"><b>1</b>Code</span><span class="ln"></span><span class="st" id="pg2"><b>2</b>Pack</span><span class="ln"></span><span class="st" id="pg3"><b>3</b>Ship</span></div>
+    <div class="codebox"><label for="f-code">Enter your Dell code</label><div class="cr"><input id="f-code" autocomplete="off" autocapitalize="characters" placeholder="DELL-XXXX-XXXX"><button type="button" id="code-go">Check</button></div><div class="cs" id="code-st"></div><p class="ch">Your personal code was emailed to you. One code per guest.</p></div>
 
-    <p class="step">Step 1 &middot; Tap a pack to choose it</p>
+    <div class="story"><img src="/martin-kibuthu-2.webp" alt="Martin Kibuthu, founder of Kahoa Coffee" width="118" height="118"><div><p>Now every bag of Kahoa is my way of putting my family's farm in your hands. Thank you for letting us be part of your day.</p><cite>Martin Kibuthu, Founder</cite></div></div>
+    <p class="step">Step 2 &middot; Tap a pack to choose it</p>
     <div class="packs" id="packs"></div>
 
     <div class="box" id="form">
@@ -113,11 +137,8 @@ button.pay:disabled{opacity:.6;cursor:default}
         <div class="paidnote"><b>Extras are NOT part of your gift.</b> Anything you add here is charged to your card at regular price. Your pack above is already covered by Dell &amp; SHI, so you do not need to add it again.</div>
         <div id="extras"></div>
         <p class="note" style="color:#6b5a45;margin-top:4px">Extras ship free in the same box. Texas orders pay sales tax on extras.</p>
-        <div class="gift"><b>Holiday gifts, sorted.</b> Kahoa gift bundles make an easy present for family, friends and your team. You get a gift code right away and send it to anyone. They pick their own blends and we ship it fresh.<br><a href="/gift-cards.html" target="_blank" rel="noopener">Shop holiday gift bundles</a></div>
+        <p class="minigift">Shopping for the holidays? <a href="/gift-cards.html" target="_blank" rel="noopener">Send someone a Kahoa gift bundle</a>.</p>
       </div>
-
-      <label style="margin-top:18px">Your Dell code</label><input id="f-code" autocomplete="off" autocapitalize="characters" placeholder="DELL-XXXX-XXXX" style="text-transform:uppercase">
-      <p class="note" style="color:#6b5a45;margin:4px 0 0">Your personal code was emailed to you. One code per guest.</p>
 
       <label style="margin-top:18px">Your name</label><input id="f-name" autocomplete="name">
       <div class="row"><div><label>Email</label><input id="f-email" type="email" autocomplete="email"></div><div><label>Phone</label><input id="f-phone" type="tel" autocomplete="tel"></div></div>
@@ -172,10 +193,10 @@ var PACKS=[
 ];
 var BLENDS=['Nairobi Sunrise','Savanna Gold','Ngong Dark Reserve'];
 var EXTRA_ITEMS=[
- {k:'ns',name:'EXTRA Nairobi Sunrise',sub:'12 oz coffee, in addition to your pack',coffee:true},
- {k:'sg',name:'EXTRA Savanna Gold',sub:'12 oz coffee, in addition to your pack',coffee:true},
- {k:'nd',name:'EXTRA Ngong Dark Reserve',sub:'12 oz coffee, in addition to your pack',coffee:true},
- {k:'syr',name:'EXTRA Mombasa Wildflower Syrup',sub:'12 oz syrup, in addition to your pack',coffee:false}
+ {k:'ns',img:'nairobisunrise-sm',name:'Nairobi Sunrise',sub:'12 oz coffee',coffee:true},
+ {k:'sg',img:'savannagold-sm',name:'Savanna Gold',sub:'12 oz coffee',coffee:true},
+ {k:'nd',img:'ngongdarkreserve-sm',name:'Ngong Dark Reserve',sub:'12 oz coffee',coffee:true},
+ {k:'syr',img:'syrup-front',name:'Mombasa Wildflower Syrup',sub:'Honey &amp; cardamom syrup',coffee:false}
 ];
 function resetExtras(){for(var k in qty){qty[k]=0;var q=$('q-'+k);if(q)q.textContent=0;var g=$('g-'+k);if(g)g.style.display='none'}recalc()}
 var cur=null,qty={ns:0,sg:0,nd:0,syr:0},payments=null,card=null,squareReady=false,busy=false;
@@ -197,14 +218,25 @@ function gate(){
 
 function renderPacks(){
   $('packs').innerHTML=PACKS.map(function(p){
-    return '<button type="button" class="pack" id="p-'+p.id+'" aria-pressed="false" onclick="choose(\''+p.id+'\')">'+(p.tag?'<i>'+p.tag+'</i>':'')+'<img src="/'+p.img+'.webp" alt="'+p.name+'" width="112" height="90" loading="lazy"><div><b>'+p.name+'</b><span>'+p.sub+'</span><br><span class="cta">Choose this pack</span></div></button>'}).join('');
+    return '<button type="button" class="pack" id="p-'+p.id+'" aria-pressed="false" onclick="choose(\''+p.id+'\')">'+(p.tag?'<i>'+p.tag+'</i>':'')+'<img src="/'+p.img+'.webp" alt="'+p.name+'" width="112" height="90" loading="lazy"><div><b>'+p.name+'</b><span>'+p.sub+'</span><span class="ship">Roasted fresh to order &middot; ships in 3 to 5 days</span><span class="cta">Choose this pack</span></div></button>'}).join('');
   $('extras').innerHTML=EXTRA_ITEMS.map(function(x){
-    return '<div class="ex" id="x-'+x.k+'"><div><b>'+x.name+'</b><small>'+x.sub+' &middot; '+money(PRICES[x.k])+' each</small></div>'+
+    return '<div class="ex" id="x-'+x.k+'"><img src="/'+x.img+'.webp" alt="" width="56" height="56" loading="lazy"><div><b>'+x.name+'</b><small>'+x.sub+' &middot; <span class="pr">'+money(PRICES[x.k])+'</span></small></div>'+
       '<div class="stp"><button type="button" aria-label="Remove one" onclick="bump(\''+x.k+'\',-1)">&minus;</button><output id="q-'+x.k+'">0</output><button type="button" aria-label="Add one" onclick="bump(\''+x.k+'\',1)">+</button></div></div>'+
       (x.coffee?'<div class="exg" id="g-'+x.k+'"><select id="gs-'+x.k+'"><option>Whole bean</option><option>Ground</option></select></div>':'')}).join('');
 }
+var codeOk=false;
+function prog(){var a=$('pg1'),b=$('pg2'),c=$('pg3');a.className='st '+(codeOk?'done':'on');b.className='st '+(cur?'done':(codeOk?'on':''));c.className='st '+(cur&&codeOk?'on':'')}
+async function checkCode(){
+  var raw=$('f-code').value.trim().toUpperCase().replace(/[^A-Z0-9]/g,''),el=$('code-st');codeOk=false;
+  if(!/^DELL[A-Z0-9]{8}$/.test(raw)){el.className='cs no';el.textContent='That does not look like a Dell code. It looks like DELL-XXXX-XXXX.';prog();return}
+  el.className='cs';el.textContent='Checking...';
+  try{var r=await fetch(WORKER_BASE+'/dell/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:raw})});var j=await r.json().catch(function(){return {}});
+    if(r.ok&&j.ok){codeOk=true;el.className='cs ok';el.textContent='\u2713 Code accepted. Now pick your pack below.'}
+    else{el.className='cs no';el.textContent=j.reason||'That code is not valid.'}
+  }catch(x){el.className='cs';el.textContent='We could not check it right now. You can keep going and we will check it when you claim.';codeOk=true}
+  prog()}
 function choose(id){
-  cur=PACKS.filter(function(p){return p.id===id})[0];if(!cur)return;
+  cur=PACKS.filter(function(p){return p.id===id})[0];if(!cur)return;prog();
   PACKS.forEach(function(p){var e=$('p-'+p.id),on=p.id===id;e.classList.toggle('on',on);e.setAttribute('aria-pressed',on);e.querySelector('.cta').textContent=on?'\u2713 Selected':'Choose this pack'});
   $('f-title').textContent=cur.name;
   $('f-sub').textContent=contents(cur)+'. Shipping is included.';
@@ -254,7 +286,7 @@ async function submitOrder(){
   function fail(m){if(redeemed){redeemed=false;try{fetch(WORKER_BASE+'/dell/release',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code,email:email})})}catch(x){}}busy=false;btn.disabled=false;recalc();bad(m)}
   var picks=[];for(var i=1;i<=cur.c;i++)picks.push($('cb'+i).value+' ('+$('cg'+i).value+')');
   if(cur.s)picks.push(cur.s+' x Mombasa Wildflower Syrup');
-  var ext=[];EXTRA_ITEMS.forEach(function(x){if(qty[x.k]>0){ext.push(qty[x.k]+' x '+x.name+(x.coffee?' ('+$('gs-'+x.k).value+')':''))}});
+  var ext=[];EXTRA_ITEMS.forEach(function(x){if(qty[x.k]>0){ext.push(qty[x.k]+' x EXTRA '+x.name+(x.coffee?' ('+$('gs-'+x.k).value+')':''))}});
   var full=addr+', '+city+', '+st+' '+zip;
   var summary='DELL GIFT: '+cur.name+' ['+picks.join(', ')+']'+(ext.length?' + EXTRAS: '+ext.join(', '):'');
   try{var rr=await fetch(WORKER_BASE+'/dell/redeem',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code,name:name,email:email,details:{pack:cur.name}})});var rj=await rr.json().catch(function(){return {}});if(!rr.ok||!rj.ok)return fail(rj.reason||'We could not check your code. Please try again.');redeemed=true}catch(x){return fail('We could not reach our server to check your code. Please try again.')}
@@ -287,7 +319,7 @@ async function submitOrder(){
   if(GOOGLE_REVIEW_URL){$('rv-btn').href=GOOGLE_REVIEW_URL;$('rv-btn').style.display='inline-block'}else{$('rv-t').textContent='If you enjoy it, a quick Google review of Kahoa Coffee would mean the world to our family business.'}
   $('ok-t').textContent='Thank you so much for spending your morning with us and for listening to our story. Your '+cur.name.toLowerCase()+' is on its way. We will roast it fresh and ship it within a few days, and we sent a note to '+email+'. Karibu Kahoa.';
 }
-renderPacks();gate();
+renderPacks();gate();$('code-go').onclick=checkCode;$('f-code').addEventListener('change',checkCode);$('f-code').addEventListener('input',function(){if(codeOk){codeOk=false;$('code-st').textContent='';prog()}});
 </script>
 </body>
 </html>
