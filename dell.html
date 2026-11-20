@@ -16,11 +16,12 @@
 body{font-family:'Montserrat',sans-serif;background:var(--dark);color:#fff;min-height:100vh}
 .wrap{max-width:560px;margin:0 auto;padding:28px 16px 80px}
 .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px}
-.top img{height:64px;width:auto}
+.top img{height:140px;width:auto}
 .lock{justify-content:center;gap:12px}
-.lock img{height:92px}
+.lock img{height:140px}.top .klogo,.lock .klogo{height:86px;width:auto}
+@media(max-width:480px){.lock{flex-direction:column;gap:8px}.lock .x{display:none}.top .klogo,.lock .klogo{height:84px}.partners{gap:8px;padding:6px 10px}.top .partners .shi{height:22px}.lock .dw{font-size:18px;letter-spacing:2px}.partners .sep{height:18px}}
 .lock .x{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--gold)}
-.partners{display:flex;align-items:center;gap:14px;background:#fff;padding:8px 16px;border-radius:4px}.partners .sep{width:1px;height:30px;background:#cfd6dd}.top .shi{height:38px;width:auto}.lock .dw{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;letter-spacing:5px;text-transform:uppercase;color:#0076CE}
+.partners{display:flex;align-items:center;gap:10px;background:#fff;padding:6px 12px;border-radius:4px}.partners .sep{width:1px;height:22px;background:#cfd6dd}.top .partners .shi{height:28px;width:auto}.lock .dw{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#0076CE}
 .stage{position:relative;margin:-28px -16px 22px;padding:28px 16px 22px;min-height:660px;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(180deg,#1C0E06 0,#1C0E06 14%,rgba(28,14,6,0) 22%,rgba(28,14,6,0) 40%,rgba(28,14,6,.9) 58%,#1C0E06 70%),url(/wanja-harvest.webp) center 92px/100% auto no-repeat;background-color:#1C0E06}
 .stage .top{margin-bottom:0}.stext{margin-top:auto;padding-top:300px}
 .cap{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-light);opacity:.85;margin-top:-6px}
@@ -91,7 +92,7 @@ button.pay:disabled{opacity:.6;cursor:default}
   </div>
 
   <div id="main">
-    <div class="stage"><div class="top lock"><a href="/"><img src="/kahoa-logo.webp" alt="Kahoa Coffee"></a><span class="x">&times;</span><span class="partners"><span class="dw">Dell</span><span class="sep"></span><img class="shi" src="/shi-logo.webp" alt="SHI" width="82" height="38"></span></div>
+    <div class="stage"><div class="top lock"><a href="/"><img class="klogo" src="/kahoa-logo-tight.webp" alt="Kahoa Coffee" width="312" height="114"></a><span class="x">&times;</span><span class="partners"><span class="dw">Dell</span><span class="sep"></span><img class="shi" src="/shi-logo.webp" alt="SHI" width="82" height="38"></span></div>
     <div class="stext"><span class="badge">A gift from Dell &amp; SHI</span>
     <h1>Thank you for joining us</h1>
     <p class="lead">Dell &amp; SHI are treating you to Kahoa Coffee, single-origin Kenyan coffee roasted fresh in Texas. Pick one pack below. Shipping is covered, and there is nothing to pay.</p><p class="cap">Wanja, hand-picking ripe cherries in the Kenyan highlands</p></div></div>
