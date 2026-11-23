@@ -9,6 +9,7 @@
 <link rel=apple-touch-icon href=/kahoalogo.png>
 <link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@300;400;500;600;700&display=swap" media=print onload="this.media='all'"><noscript><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@300;400;500;600;700&display=swap"></noscript>
 <script src=https://web.squarecdn.com/v1/square.js defer></script>
+<script src=/kahoa-cal.js defer></script>
 <style>
 html{scroll-behavior:smooth;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -215,7 +216,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
   <button class=checkout-btn id=cb-pay-btn onclick=cbSubmit()>Select a package to continue</button>
   <div id=cb-success style="display:none;text-align:center;padding:16px 0;">
     <div style="font-size:32px;margin-bottom:8px;">&#9749;</div>
-    <p style="color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:18px;">Booking received! We'll confirm your date within 1 business day. If we can't do your date, we refund your full payment.</p>
+    <p style="color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:18px;">You're booked! Your date is reserved. Check your email for your booking details.</p>
   </div>
 </div>
 
@@ -466,6 +467,7 @@ window.addEventListener('load',function(){
   });
   cbRestoreDraft();
   cbCalc();
+  if(window.KahoaCal)KahoaCal.attach('cb-date');
 });
 async function cbSubmit(){
   if(!cbSelectedPkg){
@@ -532,7 +534,12 @@ async function cbSubmit(){
   var pkgName=cbSelectedPkg==='essentials'?'Essentials':cbSelectedPkg==='premium'?'Premium':'Full Experience';
 
   var btn=document.getElementById('cb-pay-btn');
-  btn.disabled=true;btn.textContent='Processing...';
+  btn.disabled=true;btn.textContent='Checking your date...';
+  var calHold={ok:false,offline:true};
+  if(window.KahoaCal){calHold=await KahoaCal.hold({date:date,source:'cart',name:name,email:email,detail:pkgName+', '+time+', '+guests+' guests, '+location});}
+  if(!calHold.ok&&!calHold.offline){errEl.textContent=KahoaCal.reasonText(calHold.reason);errEl.style.display='block';btn.disabled=false;cbCalc();return;}
+  var calNote=calHold.ok?'Calendar: date booked automatically.':'CALENDAR CHECK FAILED: please check this date is free and add it to the booking calendar.';
+  btn.textContent='Processing...';
   try{
     var result=await cbCard.tokenize();
     if(result.status!=='OK'){throw new Error(result.errors?result.errors[0].message:'Card error');}
@@ -551,10 +558,11 @@ async function cbSubmit(){
     if(resp.ok&&(data.success||data.payment_id)){
       document.getElementById('cb-success').style.display='block';
       btn.style.display='none';
+      if(calHold.ok)KahoaCal.confirm(calHold.hold_id,data.payment_id);
       baClear();
       if(typeof emailjs!=='undefined'){
         emailjs.init(EJKEY);
-        var notes='Package: '+pkgName+' ($'+pkgPrice.toFixed(2)+'). Service Style: '+styleChoice+'. Cold Brew on Tap: '+flavorChoice+'. Signature Drinks: '+(drinkChoice||'None selected')+'. Add-ons: '+addonSummary+'. Subtotal: $'+preTax.toFixed(2)+'. Tax (8.25%): $'+taxTotal.toFixed(2)+'. Event total: $'+grandTotal.toFixed(2)+'. Charged today ('+(payType==='deposit'?'30% deposit':'paid in full, 5% discount applied')+'): $'+chargeNow.toFixed(2)+'. '+(payType==='deposit'?'Balance due 7 days before event: $'+(grandTotal-chargeNow).toFixed(2)+'.':'Discount savings: $'+(grandTotal-chargeNow).toFixed(2)+'.')+' Event time: '+time+'. Signed: '+signature+'. Overage/overtime authorization: '+(agreedOverage?'YES':'NO')+'.';
+        var notes=calNote+' Package: '+pkgName+' ($'+pkgPrice.toFixed(2)+'). Service Style: '+styleChoice+'. Cold Brew on Tap: '+flavorChoice+'. Signature Drinks: '+(drinkChoice||'None selected')+'. Add-ons: '+addonSummary+'. Subtotal: $'+preTax.toFixed(2)+'. Tax (8.25%): $'+taxTotal.toFixed(2)+'. Event total: $'+grandTotal.toFixed(2)+'. Charged today ('+(payType==='deposit'?'30% deposit':'paid in full, 5% discount applied')+'): $'+chargeNow.toFixed(2)+'. '+(payType==='deposit'?'Balance due 7 days before event: $'+(grandTotal-chargeNow).toFixed(2)+'.':'Discount savings: $'+(grandTotal-chargeNow).toFixed(2)+'.')+' Event time: '+time+'. Signed: '+signature+'. Overage/overtime authorization: '+(agreedOverage?'YES':'NO')+'.';
         var tp={to_email:'info@kahoa.shop',checkout_url:data.receipt_url||'',order_type:'VIP COFFEE CART BOOKING',customer_name:name,customer_email:email,customer_phone:phone,customer_address:location,product_name:'Coffee Cart \u2014 '+pkgName,grind:date+' '+time,price:'$'+chargeNow.toFixed(2)+' charged today',notes:notes};
         emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error('Cart booking email error',e);});
         var custTp=Object.assign({},tp,{to_email:email,order_type:'Your Kahoa Coffee Cart Booking'});
@@ -568,6 +576,7 @@ async function cbSubmit(){
     errEl.textContent=e.message||'Something went wrong. Please try again.';
     errEl.style.display='block';
     console.error('Cart booking error:',e);
+    if(calHold&&calHold.ok){KahoaCal.release(calHold.hold_id);}
   }
   btn.disabled=false;
   if(document.getElementById('cb-success').style.display!=='block'){cbCalc();}
@@ -639,6 +648,6 @@ async function cbSubmit(){
     'Your keg lease has started and your first charge was processed today. We\'re so glad you\'re part of us.','');
   /* VIP coffee cart booking: dark page */
   wire('cb-success',true,function(){return first('cb-name',true)},
-    'We\'ve got your booking request and can\'t wait to serve you. We\'ll confirm your date shortly.','');
+    'Your date is booked and we can\'t wait to serve you. Check your email for your booking details.','');
 })();
 </script>

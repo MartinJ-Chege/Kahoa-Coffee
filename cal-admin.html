@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Kahoa Booking Calendar</title>
+<style>
+:root{--bg:#1c110b;--card:#2b1810;--gold:#D4A843;--cream:#faf4e8;--muted:rgba(255,255,255,.6);--red:#e06a6a;--green:#6fcf8a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#fff;font-family:Montserrat,-apple-system,Segoe UI,Roboto,sans-serif;font-size:15px}
+.wrap{max-width:820px;margin:0 auto;padding:24px 16px 60px}
+h1{font-family:'Cormorant Garamond',Georgia,serif;color:var(--gold);font-size:32px;margin:0 0 4px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 22px}
+.card{background:var(--card);border:1px solid rgba(212,168,67,.25);border-radius:10px;padding:18px;margin-bottom:18px}
+h2{font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin:0 0 12px}
+input,button,select{font:inherit}
+input{width:100%;padding:11px 12px;border-radius:6px;border:1px solid rgba(168,110,60,.3);background:var(--cream);color:#2b1810}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+button{background:var(--gold);color:#2b1810;border:none;border-radius:6px;padding:11px 16px;font-weight:700;cursor:pointer}
+button.ghost{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+button.small{padding:6px 10px;font-size:12px}
+.msg{font-size:13px;margin-top:8px;min-height:18px}
+.day{border-top:1px solid rgba(255,255,255,.1);padding:12px 0}
+.day:first-child{border-top:none}
+.dh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+.dh b{font-size:15px}
+.pill{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px}
+.pill.full{background:rgba(224,106,106,.2);color:var(--red)}
+.pill.open{background:rgba(111,207,138,.18);color:var(--green)}
+.pill.closed{background:rgba(255,255,255,.12);color:#fff}
+.bk{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:rgba(255,255,255,.85);padding:4px 0;align-items:flex-start}
+.bk small{color:var(--muted);display:block}
+.empty{color:var(--muted);font-size:13px}
+@media (max-width:560px){.row{grid-template-columns:1fr}}
+</style></head>
+<body><div class="wrap">
+<h1>Booking Calendar</h1>
+<p class="sub">One calendar for the coffee cart and events. Up to 2 bookings per date. Private page, not linked anywhere on the site.</p>
+
+<div class="card" id="login">
+<h2>Your key</h2>
+<div class="row"><input id="key" type="password" placeholder="Paste your calendar key" autocomplete="current-password"><button onclick="saveKey()">Open calendar</button></div>
+<div class="msg" id="login-msg"></div>
+</div>
+
+<div id="app" style="display:none">
+<div class="card">
+<h2>Close a date</h2>
+<p class="sub" style="margin-bottom:10px">Customers can't book a closed date. Use it for travel, personal days or anything else.</p>
+<div class="row"><input id="b-date" type="date"><input id="b-reason" placeholder="Reason (only you see this)"></div>
+<button onclick="act('block',{date:v('b-date'),reason:v('b-reason')})">Close this date</button>
+<div class="msg" id="b-msg"></div>
+</div>
+
+<div class="card">
+<h2>Add a booking made outside the site</h2>
+<p class="sub" style="margin-bottom:10px">For Signature or Flagship events, phone bookings or anything paid by invoice. Each one takes one of the 2 spots that day.</p>
+<div class="row"><input id="a-date" type="date"><input id="a-name" placeholder="Client or company"></div>
+<input id="a-detail" placeholder="Details (package, time, venue)" style="margin-bottom:10px">
+<button onclick="act('add',{date:v('a-date'),name:v('a-name'),detail:v('a-detail')})">Add booking</button>
+<div class="msg" id="a-msg"></div>
+</div>
+
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><h2 style="margin:0">Coming up</h2><button class="ghost small" onclick="list()">Refresh</button></div>
+<div id="list"><p class="empty">Loading...</p></div>
+</div>
+<button class="ghost small" onclick="forget()">Forget key on this device</button>
+</div>
+</div>
+<script>
+var API='https://kahoa-checkoutout.chegekibuthu1.workers.dev/cal/admin',KEY='';
+function v(i){return (document.getElementById(i).value||'').trim();}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(m){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});}
+function call(body){body.key=KEY;return fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json().then(function(d){return{s:r.status,d:d};});});}
+function nice(d){var x=new Date(d+'T12:00:00');return x.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});}
+function saveKey(){KEY=v('key');call({action:'list'}).then(function(r){if(r.s===403){document.getElementById('login-msg').textContent='That key is not right.';document.getElementById('login-msg').style.color='#e06a6a';return;}try{localStorage.setItem('kahoa_cal_key',KEY);}catch(e){}open(r.d);}).catch(function(){document.getElementById('login-msg').textContent='Could not reach the calendar. Check your connection.';});}
+function forget(){try{localStorage.removeItem('kahoa_cal_key');}catch(e){}location.reload();}
+function open(d){document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';render(d);}
+function list(){call({action:'list'}).then(function(r){render(r.d);});}
+function render(d){
+  var days={};(d.bookings||[]).forEach(function(b){(days[b.date]=days[b.date]||{b:[],c:null}).b.push(b);});
+  (d.blocks||[]).forEach(function(b){(days[b.date]=days[b.date]||{b:[],c:null}).c=b;});
+  var keys=Object.keys(days).sort();
+  if(!keys.length){document.getElementById('list').innerHTML='<p class="empty">No bookings or closed dates yet. Every date is open.</p>';return;}
+  document.getElementById('list').innerHTML=keys.map(function(k){var x=days[k];var n=x.b.length;
+    var pill=x.c?'<span class="pill closed">Closed</span>':n>=d.capacity?'<span class="pill full">Full ('+n+'/'+d.capacity+')</span>':'<span class="pill open">'+n+'/'+d.capacity+' booked</span>';
+    var h='<div class="day"><div class="dh"><b>'+nice(k)+'</b>'+pill+'</div>';
+    if(x.c)h+='<div class="bk"><span>Closed'+(x.c.reason?': '+esc(x.c.reason):'')+'</span><button class="ghost small" onclick="act(\'unblock\',{date:\''+k+'\'})">Reopen</button></div>';
+    x.b.forEach(function(b){h+='<div class="bk"><span>'+(b.status==='held'?'<i>Paying now</i>: ':'')+esc(b.name||'(no name)')+' <small>'+esc(b.source||'')+(b.detail?' · '+esc(b.detail):'')+(b.email?' · '+esc(b.email):'')+'</small></span>'+(b.status==='booked'?'<button class="ghost small" onclick="if(confirm(\'Cancel this booking and free the spot? This does not refund the customer; do that in Square.\'))act(\'cancel\',{id:\''+b.id+'\'})">Cancel</button>':'')+'</div>';});
+    return h+'</div>';}).join('');
+}
+function act(action,extra){var body=Object.assign({action:action},extra);var m=action==='block'?'b-msg':action==='add'?'a-msg':null;
+  if((action==='block'||action==='add')&&!body.date){if(m){document.getElementById(m).textContent='Pick a date first.';}return;}
+  call(body).then(function(r){if(m){document.getElementById(m).textContent=r.d.ok?'Done.':'Something went wrong: '+(r.d.error||'');document.getElementById(m).style.color=r.d.ok?'#6fcf8a':'#e06a6a';}list();});}
+(function(){var k='';try{k=localStorage.getItem('kahoa_cal_key')||'';}catch(e){}if(k){document.getElementById('key').value=k;saveKey();}})();
+</script>
+</body></html>

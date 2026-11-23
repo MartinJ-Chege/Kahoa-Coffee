@@ -2,6 +2,7 @@
 <!doctype html><html lang=en><head><meta charset=UTF-8>
 <meta name=viewport content="width=device-width,initial-scale=1">
 <script src=https://web.squarecdn.com/v1/square.js defer></script>
+<script src=/kahoa-cal.js defer></script>
 <title>Experiential Marketing Coffee Bar Austin | Kahoa</title>
 <meta name="description" content="Brand activation coffee bar in Austin, built around your brand for SXSW, ACL, F1, launches and corporate events. Custom cups, specialty coffee. Get a quote.">
 <link rel=canonical href="https://kahoa.shop/events.html">
@@ -174,7 +175,7 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 
 <section class="cc-form-section" id="ev-reserve" style="display:none">
 <h2 class="cc-h2">Reserve Your Hosted Coffee Bar</h2>
-<p class="cc-h2-sub">Pay a 50% deposit to hold your date. We confirm it within 1 business day. If we can't do your date, we refund every cent.</p>
+<p class="cc-h2-sub">Pick your date and pay a 50% deposit. If the date is open, it's yours the moment your payment goes through.</p>
 <div class="cc-form">
 <div id="rs-form">
 <div class="cc-row"><div class="cc-field"><label for=rs-fname>First Name *</label><input id="rs-fname" type="text" autocomplete="given-name"></div><div class="cc-field"><label for=rs-lname>Last Name *</label><input id="rs-lname" type="text" autocomplete="family-name"></div></div>
@@ -197,7 +198,7 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 <strong>Kahoa Coffee LLC event terms (Hosted Coffee Bar)</strong>
 <ol>
 <li>Your agreement is with Kahoa Coffee LLC, Austin, Texas.</li>
-<li>Your deposit is 50% of the $3,500 package price, plus sales tax. Your date is held once we confirm it within 1 business day. If we can't confirm your date, we refund your full payment.</li>
+<li>Your deposit is 50% of the $3,500 package price, plus sales tax. Your date is reserved as soon as your payment goes through. If your venue turns out to be outside our service area or can't support setup (space, power or access), Kahoa may cancel the booking and refund everything you paid.</li>
 <li>The balance is due 7 days before your event. It includes the remaining 50% plus any of these that apply: a 15% premium for SXSW, ACL or Formula 1 weekends, a 15% premium for events booked less than 14 days out, travel at $1.50 per mile beyond 30 miles round trip, cups beyond 750 at $2.50 each, and extra service hours at $500 per hour. We list any of these in writing before the balance is due.</li>
 <li>Cancel more than 30 days before your event and we refund your deposit. Within 30 days of your event, the deposit is non-refundable.</li>
 <li>Custom-printed cups are paid in full at booking. They are refundable until you approve the proof and we place the order, and non-refundable after that.</li>
@@ -212,8 +213,8 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 </div>
 <div id="rs-done" style="display:none;text-align:center;padding:20px 0">
 <div style="font-size:40px">&#9749;</div>
-<h3 style="font-family:'Cormorant Garamond',serif;color:var(--gold);font-size:28px;margin:8px 0">Asante sana! Your deposit is in.</h3>
-<p style="color:rgba(255,255,255,.8);line-height:1.7">We'll confirm your date within 1 business day and send next steps<span id="rs-done-cups"></span>. Questions? <a href="mailto:info@kahoa.shop" style="color:var(--gold)">info@kahoa.shop</a></p>
+<h3 style="font-family:'Cormorant Garamond',serif;color:var(--gold);font-size:28px;margin:8px 0">Asante sana! Your date is booked.</h3>
+<p style="color:rgba(255,255,255,.8);line-height:1.7">We'll be in touch with next steps<span id="rs-done-cups"></span>. Questions? <a href="mailto:info@kahoa.shop" style="color:var(--gold)">info@kahoa.shop</a></p>
 <p style="color:rgba(255,255,255,.6);font-size:13px" id="rs-done-ref"></p>
 </div>
 </div>
@@ -286,8 +287,10 @@ async function initCard(){
   try{if(typeof Square==='undefined')throw new Error('Square not loaded');var p=await Square.payments(APP,LOC);card=await p.card();await card.attach('#rs-card');}catch(e){console.error('Reserve card init',e);card=null;}
   starting=false;
 }
+var calAttached=false;
 window.evReserveOpen=function(){
   var s=$('ev-reserve');s.style.display='block';render();s.scrollIntoView({behavior:'smooth'});initCard();
+  if(!calAttached&&window.KahoaCal){calAttached=true;KahoaCal.attach('rs-date');}
   try{if(typeof kahoaTrack==='function')kahoaTrack('begin_checkout',{item_name:'events-hosted-deposit'});}catch(e){}
 };
 ['rs-date','rs-guests','rs-cups','rs-cups-qty'].forEach(function(i){document.addEventListener('DOMContentLoaded',function(){var el=$(i);if(el){el.addEventListener('input',render);el.addEventListener('change',render);}});});
@@ -301,8 +304,13 @@ window.evReservePay=async function(){
   var d=daysOut();if(d!==null&&d<1)return err('Please choose an event date from tomorrow onward. For same-day events, email info@kahoa.shop.');
   if(!$('rs-agree').checked)return err('Please agree to the Kahoa Coffee LLC event terms to continue.');
   if(!card){await initCard();if(!card)return err('The payment form is still loading. Please try again in a moment.');}
-  var c=calc(),btn=$('rs-pay');btn.disabled=true;btn.textContent='Processing...';
+  var c=calc(),btn=$('rs-pay');btn.disabled=true;btn.textContent='Checking your date...';
   var ref='KH-EV-'+String(Date.now()).slice(-6);
+  var calHold={ok:false,offline:true};
+  if(window.KahoaCal){calHold=await KahoaCal.hold({date:f.date,source:'events',name:f.fname+' '+f.lname,email:f.email,detail:'Hosted Coffee Bar, '+f.company+', '+f.time+', '+f.guests+' guests, '+f.loc});}
+  if(!calHold.ok&&!calHold.offline){btn.disabled=false;render();return err(KahoaCal.reasonText(calHold.reason));}
+  var calNote=calHold.ok?'Calendar: date booked automatically.':'CALENDAR CHECK FAILED: please check this date is free and add it to the booking calendar.';
+  btn.textContent='Processing...';
   try{
     var t=await card.tokenize();
     if(t.status!=='OK')throw new Error(t.errors&&t.errors[0]?t.errors[0].message:'Card error. Please check your card details.');
@@ -315,17 +323,18 @@ window.evReservePay=async function(){
     var data=await r.json();
     if(!(r.ok&&(data.success||data.payment_id)))throw new Error((data.detail&&data.detail[0]&&data.detail[0].detail)||data.error||'Payment did not go through. Please try again.');
     $('rs-form').style.display='none';$('rs-done').style.display='block';
+    if(calHold.ok)KahoaCal.confirm(calHold.hold_id,data.payment_id);
     $('rs-done-cups').textContent=c.cupsOn?', including your cup proof':'';
     $('rs-done-ref').textContent='Reference '+ref+(data.receipt_number?' · Receipt #'+data.receipt_number:'');
-    var notes='HOSTED COFFEE BAR DEPOSIT. Company: '+f.company+'. Date: '+f.date+' '+f.time+'. Guests: '+f.guests+'. Venue: '+f.loc+'. Deposit $'+c.dep.toFixed(2)+(c.cupsOn?'. CUSTOM CUPS: '+c.qty+' cups = $'+c.cups.toFixed(2)+' paid in full, send proof':'. No custom cups')+'. Tax $'+c.tax.toFixed(2)+'. Charged today $'+c.now.toFixed(2)+'. Balance due 7 days before: $'+(c.bal+c.balTax).toFixed(2)+' incl tax, plus any peak/rush/travel/extras. CONFIRM DATE WITHIN 1 BUSINESS DAY or refund. Agreed to Kahoa Coffee LLC event terms: YES. Notes: '+(f.notes||'none')+'. Ref '+ref+'. Square payment '+(data.payment_id||'');
+    var notes=calNote+' HOSTED COFFEE BAR DEPOSIT. Company: '+f.company+'. Date: '+f.date+' '+f.time+'. Guests: '+f.guests+'. Venue: '+f.loc+'. Deposit $'+c.dep.toFixed(2)+(c.cupsOn?'. CUSTOM CUPS: '+c.qty+' cups = $'+c.cups.toFixed(2)+' paid in full, send proof':'. No custom cups')+'. Tax $'+c.tax.toFixed(2)+'. Charged today $'+c.now.toFixed(2)+'. Balance due 7 days before: $'+(c.bal+c.balTax).toFixed(2)+' incl tax, plus any peak/rush/travel/extras. Agreed to Kahoa Coffee LLC event terms: YES. Notes: '+(f.notes||'none')+'. Ref '+ref+'. Square payment '+(data.payment_id||'');
     try{if(typeof emailjs!=='undefined'){emailjs.init(EJKEY);
       var tp={to_email:'info@kahoa.shop',checkout_url:data.receipt_url||'',order_type:'EVENTS: HOSTED COFFEE BAR DEPOSIT',customer_name:f.fname+' '+f.lname+' ('+f.company+')',customer_email:f.email,customer_phone:f.phone,customer_address:f.loc,product_name:'Hosted Coffee Bar'+(c.cupsOn?' + '+c.qty+' custom cups':''),grind:f.date+' '+f.time,price:'$'+c.now.toFixed(2)+' charged today',notes:notes};
       emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error(e);});
-      emailjs.send(EJSVC,EJTMPL,Object.assign({},tp,{to_email:f.email,order_type:'Your Kahoa Hosted Coffee Bar reservation',notes:'Thank you! We received your deposit of $'+c.now.toFixed(2)+' for '+f.date+'. We will confirm your date within 1 business day. If we cannot, we refund your full payment. Balance due 7 days before your event: $'+(c.bal+c.balTax).toFixed(2)+' incl. tax, plus any extras listed in your terms.'+(c.cupsOn?' We will email your custom cup proof to approve.':'')+' Reference '+ref+'. Kahoa Coffee LLC, info@kahoa.shop'})).catch(function(e){console.error(e);});
+      emailjs.send(EJSVC,EJTMPL,Object.assign({},tp,{to_email:f.email,order_type:'Your Kahoa Hosted Coffee Bar reservation',notes:'Thank you! We received your deposit of $'+c.now.toFixed(2)+' and your date, '+f.date+', is booked. Balance due 7 days before your event: $'+(c.bal+c.balTax).toFixed(2)+' incl. tax, plus any extras listed in your terms.'+(c.cupsOn?' We will email your custom cup proof to approve.':'')+' Reference '+ref+'. Kahoa Coffee LLC, info@kahoa.shop'})).catch(function(e){console.error(e);});
     }}catch(e){}
     try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:f.fname+' '+f.lname,email:f.email,phone:f.phone,product:'Events: Hosted Coffee Bar deposit ('+f.company+')'+(c.cupsOn?' + '+c.qty+' custom cups':''),grind:f.date,total:'$'+c.now.toFixed(2)+' paid today',coupon:'',address:f.loc,opted_in:'Yes',source:'kahoa.shop/events'})}).catch(function(){});}catch(e){}
     try{if(typeof kahoaTrack==='function')kahoaTrack('purchase',{value:c.now,currency:'USD',item_name:'events-hosted-deposit'});}catch(e){}
-  }catch(e){err(e.message||'Something went wrong. Please try again.');btn.disabled=false;render();console.error(e);}
+  }catch(e){if(calHold&&calHold.ok)KahoaCal.release(calHold.hold_id);err(e.message||'Something went wrong. Please try again.');btn.disabled=false;render();console.error(e);}
 };
 })();
 </script>
