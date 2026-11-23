@@ -1,6 +1,7 @@
 <!-- redeploy-force 1788498892.2796738 -->
 <!doctype html><html lang=en><head><meta charset=UTF-8>
 <meta name=viewport content="width=device-width,initial-scale=1">
+<script src=https://web.squarecdn.com/v1/square.js defer></script>
 <title>Experiential Marketing Coffee Bar Austin | Kahoa</title>
 <meta name="description" content="Brand activation coffee bar in Austin, built around your brand for SXSW, ACL, F1, launches and corporate events. Custom cups, specialty coffee. Get a quote.">
 <link rel=canonical href="https://kahoa.shop/events.html">
@@ -136,9 +137,9 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 
 <section class="cc-section">
 <h2 class="cc-h2">Activation Packages</h2>
-<p class="cc-h2-sub">Every event is quoted individually based on headcount, hours, menu and date. These are the formats we build around.</p>
+<p class="cc-h2-sub">The Hosted Coffee Bar can be booked online today. Signature and Flagship events are quoted individually based on headcount, hours, menu and date.</p>
 <div class="cc-packages">
-<div class="cc-pkg"><h3>Hosted Coffee Bar</h3><div class="cc-tagline">A staffed specialty coffee bar for your booth, lounge or party</div><ul><li>Barista-staffed bar for your hours</li><li>Specialty espresso drinks made with our house syrups, plus Kifaru Spice Cold Brew or Nitro (our Kenyan chai-spiced cold brew) on tap</li><li>Branded sleeves</li><li>Setup and cleanup included</li><li>Minimum booking applies</li></ul><a class="cc-pkg-btn" onclick="evPick('Hosted Coffee Bar')">Request a Quote</a></div>
+<div class="cc-pkg"><h3>Hosted Coffee Bar</h3><div class="cc-tagline">A staffed specialty coffee bar for your booth, lounge or party</div><ul><li>Barista-staffed bar for your hours</li><li>Specialty espresso drinks made with our house syrups, plus Kifaru Spice Cold Brew or Nitro (our Kenyan chai-spiced cold brew) on tap</li><li>About 4 hours of service, 2 trained baristas</li><li>Up to 750 cups (about 600 guests)</li><li>Branded sleeves</li><li>Setup and cleanup included</li><li>Event recap report</li></ul><div class="ev-price"><span>From</span> $3,500</div><a class="cc-pkg-btn ev-reserve-btn" onclick="evReserveOpen()">Reserve your date</a><a class="ev-quote-link" onclick="evPick('Hosted Coffee Bar')">or request a quote</a></div>
 <div class="cc-pkg featured"><div class="cc-pkg-badge">Recommended</div><h3>Signature Brand Activation</h3><div class="cc-tagline">Your brand, our coffee</div><ul><li>Everything in Hosted Coffee Bar</li><li>Custom cups and signage with your brand</li><li>Branded signature drinks and latte art</li><li>Custom menu cards built around your brand</li><li>The Kahoa family story woven into your space</li><li>Two taps: nitro, cold brew, or both, up to 300 cups an hour</li></ul><a class="cc-pkg-btn" onclick="evPick('Signature Brand Activation')">Request a Quote</a></div>
 <div class="cc-pkg"><h3>Flagship Festival Takeover</h3><div class="cc-tagline">Multi-day takeovers for festival weeks and flagship events</div><ul><li>Everything in Signature Brand Activation</li><li>Multi-day staffing, with up to 300 cups an hour on tap</li><li>Pour-over reserve for VIP guests and a slower, premium moment</li><li>Built-out signage and a full branded menu</li></ul><a class="cc-pkg-btn" onclick="evPick('Flagship Festival Takeover')">Request a Quote</a></div>
 </div>
@@ -171,6 +172,163 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 <p style="text-align:center;color:rgba(255,255,255,0.4);font-size:11.5px;max-width:680px;margin:30px auto 0;line-height:1.6;">Kahoa Coffee is an independent Austin company. SXSW, Austin City Limits and Formula 1 are the property of their respective owners. We are not affiliated with or endorsed by them, and we serve private brand and corporate events held around these weeks.</p>
 </section>
 
+<section class="cc-form-section" id="ev-reserve" style="display:none">
+<h2 class="cc-h2">Reserve Your Hosted Coffee Bar</h2>
+<p class="cc-h2-sub">Pay a 50% deposit to hold your date. We confirm it within 1 business day. If we can't do your date, we refund every cent.</p>
+<div class="cc-form">
+<div id="rs-form">
+<div class="cc-row"><div class="cc-field"><label for=rs-fname>First Name *</label><input id="rs-fname" type="text" autocomplete="given-name"></div><div class="cc-field"><label for=rs-lname>Last Name *</label><input id="rs-lname" type="text" autocomplete="family-name"></div></div>
+<div class="cc-field"><label for=rs-company>Company / Brand *</label><input id="rs-company" type="text" autocomplete="organization"></div>
+<div class="cc-row"><div class="cc-field"><label for=rs-email>Email *</label><input id="rs-email" type="email" autocomplete="email"></div><div class="cc-field"><label for=rs-phone>Phone *</label><input id="rs-phone" type="tel" autocomplete="tel"></div></div>
+<div class="cc-row"><div class="cc-field"><label for=rs-date>Event Date *</label><input id="rs-date" type="date"></div><div class="cc-field"><label for=rs-time>Service Start Time *</label><input id="rs-time" type="time"></div></div>
+<div class="cc-row"><div class="cc-field"><label for=rs-guests>Expected Guests *</label><input id="rs-guests" type="number" min="1" placeholder="up to about 600"></div><div class="cc-field"><label for=rs-location>Venue Address *</label><input id="rs-location" type="text" placeholder="Street, city"></div></div>
+<p id="rs-guest-note" class="rs-note" style="display:none">Over 600 guests? The Signature Brand Activation covers up to about 1,000. <a onclick="evPick('Signature Brand Activation')">Request a Signature quote</a>, or reserve Hosted and we'll talk through extra cups.</p>
+
+<div class="rs-cups">
+<label class="rs-check"><input type="checkbox" id="rs-cups"> <span><strong>Add custom cups printed with your logo</strong><br><span class="rs-sub">$0.75 per cup, 600-cup minimum ($450). Paid in full today. We email you a proof to approve before we order.</span></span></label>
+<div id="rs-cups-qty-wrap" style="display:none"><label for=rs-cups-qty>How many cups?</label><input id="rs-cups-qty" type="number" min="600" step="50" value="750"></div>
+<p id="rs-cups-note" class="rs-note" style="display:none">Custom cups take about 3 weeks to print, so they need an event date at least 4 weeks away. For sooner dates, we can do logo stickers on cups. Mention it in your notes.</p>
+</div>
+<div class="cc-field"><label for=rs-notes>Notes (optional)</label><textarea id="rs-notes" rows="3" placeholder="Parking, load-in, your goals, anything we should know"></textarea></div>
+
+<div class="rs-sum" id="rs-sum"></div>
+
+<div class="rs-terms-box">
+<strong>Kahoa Coffee LLC event terms (Hosted Coffee Bar)</strong>
+<ol>
+<li>Your agreement is with Kahoa Coffee LLC, Austin, Texas.</li>
+<li>Your deposit is 50% of the $3,500 package price, plus sales tax. Your date is held once we confirm it within 1 business day. If we can't confirm your date, we refund your full payment.</li>
+<li>The balance is due 7 days before your event. It includes the remaining 50% plus any of these that apply: a 15% premium for SXSW, ACL or Formula 1 weekends, a 15% premium for events booked less than 14 days out, travel at $1.50 per mile beyond 30 miles round trip, cups beyond 750 at $2.50 each, and extra service hours at $500 per hour. We list any of these in writing before the balance is due.</li>
+<li>Cancel more than 30 days before your event and we refund your deposit. Within 30 days of your event, the deposit is non-refundable.</li>
+<li>Custom-printed cups are paid in full at booking. They are refundable until you approve the proof and we place the order, and non-refundable after that.</li>
+<li>Package includes about 4 hours of service, 2 trained baristas and up to 750 cups. You provide a loading spot and access to standard power at the venue.</li>
+</ol>
+</div>
+<label class="rs-check rs-terms"><input type="checkbox" id="rs-agree"> <span>I agree to the <strong>Kahoa Coffee LLC</strong> event terms above and authorize this charge.</span></label>
+<div id="rs-card" style="background:#fff;border-radius:6px;padding:4px;margin:16px 0;min-height:44px;"></div>
+<div id="rs-err" class="rs-err" style="display:none"></div>
+<button class="cc-submit" id="rs-pay" onclick="evReservePay()">Pay deposit</button>
+<p class="rs-sub" style="text-align:center;margin-top:10px">Secure card payment by Square. You'll get an email receipt.</p>
+</div>
+<div id="rs-done" style="display:none;text-align:center;padding:20px 0">
+<div style="font-size:40px">&#9749;</div>
+<h3 style="font-family:'Cormorant Garamond',serif;color:var(--gold);font-size:28px;margin:8px 0">Asante sana! Your deposit is in.</h3>
+<p style="color:rgba(255,255,255,.8);line-height:1.7">We'll confirm your date within 1 business day and send next steps<span id="rs-done-cups"></span>. Questions? <a href="mailto:info@kahoa.shop" style="color:var(--gold)">info@kahoa.shop</a></p>
+<p style="color:rgba(255,255,255,.6);font-size:13px" id="rs-done-ref"></p>
+</div>
+</div>
+</section>
+<style>
+.ev-price{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:700;color:var(--gold);text-align:center;margin:6px 0 14px;line-height:1}
+.ev-price span{display:block;font-family:Montserrat,sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.6);font-weight:600;margin-bottom:6px}
+.cc-pkg .ev-reserve-btn{background:var(--gold);color:var(--coffee-dark)}
+.ev-quote-link{display:block;text-align:center;margin-top:10px;font-size:12px;color:rgba(255,255,255,.65);text-decoration:underline;cursor:pointer}
+#ev-reserve .cc-form{max-width:760px}
+.rs-check{display:flex!important;gap:10px;align-items:flex-start;text-transform:none!important;letter-spacing:0!important;font-size:14px!important;color:var(--text-dark,#2b1810)!important;font-weight:400!important;cursor:pointer;line-height:1.5}
+.rs-check input{width:18px!important;height:18px;flex:none;margin-top:2px;padding:0!important;accent-color:#a86e3c}
+.rs-sub{font-size:12.5px;color:#7a5a3a;line-height:1.5}
+.rs-cups{background:#fbf6ee;border:1px solid rgba(168,110,60,.25);border-radius:6px;padding:16px;margin-bottom:22px}
+#rs-cups-qty-wrap{margin-top:12px}
+.rs-note{font-size:12.5px;color:#8a4b14;background:#fdf1dc;border-radius:6px;padding:10px 12px;margin:-8px 0 18px;line-height:1.5}
+.rs-cups .rs-note{margin:12px 0 0}
+.rs-note a{color:#8a4b14;text-decoration:underline;cursor:pointer}
+.rs-sum{background:#2b1810;color:#fff;border-radius:6px;padding:16px 18px;margin-bottom:18px;font-size:14px}
+.rs-sum .r{display:flex;justify-content:space-between;padding:4px 0}
+.rs-sum .r.t{border-top:1px solid rgba(255,255,255,.2);margin-top:6px;padding-top:10px;font-weight:700;color:var(--gold);font-size:17px}
+.rs-sum .r.b{color:rgba(255,255,255,.6);font-size:12.5px}
+.rs-terms{margin:16px 0 4px}
+#ev-reserve .rs-terms,#ev-reserve .rs-terms span{color:rgba(255,255,255,.88)!important}
+#ev-reserve .rs-terms strong{color:var(--gold)}
+.rs-terms-box{font-size:12px;line-height:1.6;color:#5a4030;background:#faf4e8;border:1px solid rgba(168,110,60,.2);border-radius:6px;padding:12px 16px;max-height:190px;overflow:auto}
+.rs-terms-box ol{margin:6px 0 0;padding-left:18px}
+.rs-err{color:#b3261e;background:#fde8e6;border-radius:6px;padding:10px 12px;font-size:13px;margin-bottom:10px}
+@media (max-width:640px){#ev-reserve .cc-row{grid-template-columns:1fr;gap:0}}
+</style>
+<script>
+(function(){
+var PKG=3500,DEP=0.5,TAX=0.0825,CUP=0.75,CUPMIN=600;
+var APP='sq0idp-khlBwyn6FQYmXDU8zxjAiQ',LOC='L2M4GT1KDJZPY',WORKER='https://kahoa-checkoutout.chegekibuthu1.workers.dev/charge';
+var SHEET='https://script.google.com/macros/s/AKfycbywSRK7UEk7mTBFCGdk1q4eRHv289hVmWtR1OKDqxLruwmKbRf_GkAwkiuEepPfk22Q/exec';
+var EJSVC='service_wsy9uog',EJTMPL='template_8jwdv8c',EJKEY='quYV-P5H4GYrFzjOw';
+var card=null,starting=false;
+function $(i){return document.getElementById(i);}
+function v(i){return ($(i).value||'').trim();}
+function money(n){return '$'+n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+function daysOut(){var d=v('rs-date');if(!d)return null;var t=new Date(d+'T12:00:00');var n=new Date();n.setHours(12,0,0,0);return Math.round((t-n)/86400000);}
+function cupsOK(){var d=daysOut();return d===null||d>=28;}
+function calc(){
+  var cupsOn=$('rs-cups').checked&&cupsOK();
+  var qty=Math.max(CUPMIN,parseInt($('rs-cups-qty').value)||CUPMIN);
+  var dep=PKG*DEP,cups=cupsOn?Math.round(qty*CUP*100)/100:0;
+  var pre=dep+cups,tax=Math.round(pre*TAX*100)/100,now=pre+tax;
+  var bal=PKG-dep,balTax=Math.round(bal*TAX*100)/100;
+  return {cupsOn:cupsOn,qty:qty,dep:dep,cups:cups,tax:tax,now:now,bal:bal,balTax:balTax};
+}
+function render(){
+  var d=daysOut();
+  $('rs-cups-qty-wrap').style.display=$('rs-cups').checked&&cupsOK()?'block':'none';
+  $('rs-cups-note').style.display=(!cupsOK())?'block':'none';
+  if(!cupsOK())$('rs-cups').checked=false;
+  $('rs-cups').disabled=!cupsOK();
+  var g=parseInt(v('rs-guests'))||0;$('rs-guest-note').style.display=g>600?'block':'none';
+  var c=calc();
+  var h='<div class="r"><span>Hosted Coffee Bar deposit (50% of $3,500)</span><span>'+money(c.dep)+'</span></div>';
+  if(c.cupsOn)h+='<div class="r"><span>Custom cups ('+c.qty+' x $0.75)</span><span>'+money(c.cups)+'</span></div>';
+  h+='<div class="r"><span>Sales tax (8.25%)</span><span>'+money(c.tax)+'</span></div>';
+  h+='<div class="r t"><span>Due today</span><span>'+money(c.now)+'</span></div>';
+  var extra=(d!==null&&d>=0&&d<14)?' plus the 15% rush premium (booked under 14 days out)':'';
+  h+='<div class="r b"><span>Balance due 7 days before your event: '+money(c.bal+c.balTax)+' incl. tax'+extra+'</span></div>';
+  $('rs-sum').innerHTML=h;
+  $('rs-pay').textContent='Pay '+money(c.now)+' and reserve';
+}
+async function initCard(){
+  if(card||starting)return;starting=true;
+  try{if(typeof Square==='undefined')throw new Error('Square not loaded');var p=await Square.payments(APP,LOC);card=await p.card();await card.attach('#rs-card');}catch(e){console.error('Reserve card init',e);card=null;}
+  starting=false;
+}
+window.evReserveOpen=function(){
+  var s=$('ev-reserve');s.style.display='block';render();s.scrollIntoView({behavior:'smooth'});initCard();
+  try{if(typeof kahoaTrack==='function')kahoaTrack('begin_checkout',{item_name:'events-hosted-deposit'});}catch(e){}
+};
+['rs-date','rs-guests','rs-cups','rs-cups-qty'].forEach(function(i){document.addEventListener('DOMContentLoaded',function(){var el=$(i);if(el){el.addEventListener('input',render);el.addEventListener('change',render);}});});
+if(location.hash==='#reserve')document.addEventListener('DOMContentLoaded',function(){setTimeout(window.evReserveOpen,300);});
+function err(t){var e=$('rs-err');e.textContent=t;e.style.display='block';}
+window.evReservePay=async function(){
+  $('rs-err').style.display='none';
+  var f={fname:v('rs-fname'),lname:v('rs-lname'),company:v('rs-company'),email:v('rs-email'),phone:v('rs-phone'),date:v('rs-date'),time:v('rs-time'),guests:v('rs-guests'),loc:v('rs-location'),notes:v('rs-notes')};
+  if(!f.fname||!f.lname||!f.company||!f.email||!f.phone||!f.date||!f.time||!f.guests||!f.loc)return err('Please fill in every field marked *.');
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email))return err('Please enter a valid email address.');
+  var d=daysOut();if(d!==null&&d<1)return err('Please choose an event date from tomorrow onward. For same-day events, email info@kahoa.shop.');
+  if(!$('rs-agree').checked)return err('Please agree to the Kahoa Coffee LLC event terms to continue.');
+  if(!card){await initCard();if(!card)return err('The payment form is still loading. Please try again in a moment.');}
+  var c=calc(),btn=$('rs-pay');btn.disabled=true;btn.textContent='Processing...';
+  var ref='KH-EV-'+String(Date.now()).slice(-6);
+  try{
+    var t=await card.tokenize();
+    if(t.status!=='OK')throw new Error(t.errors&&t.errors[0]?t.errors[0].message:'Card error. Please check your card details.');
+    var items=[{product_name:'Hosted Coffee Bar deposit, 50% ('+f.date+' '+f.time+', '+f.company+')',grind:'',quantity:1,unit_price_cents:Math.round(c.dep*100)}];
+    if(c.cupsOn)items.push({product_name:'Custom logo cups, paid in full',grind:'$0.75 each',quantity:c.qty,unit_price_cents:75});
+    items.push({product_name:'Sales tax 8.25%',grind:'',quantity:1,unit_price_cents:Math.round(c.tax*100)});
+    var payload={source_id:t.token,verification_token:(t.details&&t.details.verificationToken)||undefined,cart_items:items,shipping:null,
+      buyer:{name:f.fname+' '+f.lname,email:f.email,phone:f.phone,address:f.loc}};
+    var r=await fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    var data=await r.json();
+    if(!(r.ok&&(data.success||data.payment_id)))throw new Error((data.detail&&data.detail[0]&&data.detail[0].detail)||data.error||'Payment did not go through. Please try again.');
+    $('rs-form').style.display='none';$('rs-done').style.display='block';
+    $('rs-done-cups').textContent=c.cupsOn?', including your cup proof':'';
+    $('rs-done-ref').textContent='Reference '+ref+(data.receipt_number?' · Receipt #'+data.receipt_number:'');
+    var notes='HOSTED COFFEE BAR DEPOSIT. Company: '+f.company+'. Date: '+f.date+' '+f.time+'. Guests: '+f.guests+'. Venue: '+f.loc+'. Deposit $'+c.dep.toFixed(2)+(c.cupsOn?'. CUSTOM CUPS: '+c.qty+' cups = $'+c.cups.toFixed(2)+' paid in full, send proof':'. No custom cups')+'. Tax $'+c.tax.toFixed(2)+'. Charged today $'+c.now.toFixed(2)+'. Balance due 7 days before: $'+(c.bal+c.balTax).toFixed(2)+' incl tax, plus any peak/rush/travel/extras. CONFIRM DATE WITHIN 1 BUSINESS DAY or refund. Agreed to Kahoa Coffee LLC event terms: YES. Notes: '+(f.notes||'none')+'. Ref '+ref+'. Square payment '+(data.payment_id||'');
+    try{if(typeof emailjs!=='undefined'){emailjs.init(EJKEY);
+      var tp={to_email:'info@kahoa.shop',checkout_url:data.receipt_url||'',order_type:'EVENTS: HOSTED COFFEE BAR DEPOSIT',customer_name:f.fname+' '+f.lname+' ('+f.company+')',customer_email:f.email,customer_phone:f.phone,customer_address:f.loc,product_name:'Hosted Coffee Bar'+(c.cupsOn?' + '+c.qty+' custom cups':''),grind:f.date+' '+f.time,price:'$'+c.now.toFixed(2)+' charged today',notes:notes};
+      emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error(e);});
+      emailjs.send(EJSVC,EJTMPL,Object.assign({},tp,{to_email:f.email,order_type:'Your Kahoa Hosted Coffee Bar reservation',notes:'Thank you! We received your deposit of $'+c.now.toFixed(2)+' for '+f.date+'. We will confirm your date within 1 business day. If we cannot, we refund your full payment. Balance due 7 days before your event: $'+(c.bal+c.balTax).toFixed(2)+' incl. tax, plus any extras listed in your terms.'+(c.cupsOn?' We will email your custom cup proof to approve.':'')+' Reference '+ref+'. Kahoa Coffee LLC, info@kahoa.shop'})).catch(function(e){console.error(e);});
+    }}catch(e){}
+    try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:f.fname+' '+f.lname,email:f.email,phone:f.phone,product:'Events: Hosted Coffee Bar deposit ('+f.company+')'+(c.cupsOn?' + '+c.qty+' custom cups':''),grind:f.date,total:'$'+c.now.toFixed(2)+' paid today',coupon:'',address:f.loc,opted_in:'Yes',source:'kahoa.shop/events'})}).catch(function(){});}catch(e){}
+    try{if(typeof kahoaTrack==='function')kahoaTrack('purchase',{value:c.now,currency:'USD',item_name:'events-hosted-deposit'});}catch(e){}
+  }catch(e){err(e.message||'Something went wrong. Please try again.');btn.disabled=false;render();console.error(e);}
+};
+})();
+</script>
 <section class="cc-form-section" id="ev-inquire">
 <h2 class="cc-h2">Request a Quote</h2>
 <p class="cc-h2-sub">Tell us about your event and we will reply within 1 business day with a custom quote.</p>
