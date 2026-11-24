@@ -129,7 +129,7 @@ function $(id){return document.getElementById(id)}
 function money(n){return '$'+n.toFixed(2)}
 function round2(n){return Math.round(n*100)/100}
 function isTX(z){var n=+z.slice(0,3);return z.length===5&&((n>=750&&n<=799)||n===733||n===885)}
-function shipFor(q,sub,z){if(z.length!==5)return{amt:0,label:'Enter ZIP'};if(AUSTIN_ZIPS.indexOf(z)>=0)return{amt:0,label:'Free'};if(sub>=80)return{amt:0,label:'Free'};var a=9.99+3*(q-1);return{amt:a,label:money(a)}}
+function shipFor(q,sub,z){if(z.length!==5)return{amt:0,label:'Enter ZIP'};if(AUSTIN_ZIPS.indexOf(z)>=0)return{amt:0,label:'Free'};if(sub>=80)return{amt:0,label:'Free'};var a=q===1?7.99:q===2?11.99:15;return{amt:a,label:money(a)}}
 function calc(){var q=+$('f-qty').value,z=$('f-zip').value.trim(),sub=PRICE*q,tax=(z.length!==5||isTX(z))?round2(sub*TAX):0,sh=shipFor(q,sub,z);$('s-q').textContent=q;$('s-sub').textContent=money(sub);$('s-tax').textContent=money(tax);$('s-ship').textContent=sh.label;$('s-dl').textContent=(AUSTIN_ZIPS.indexOf(z)>=0?'Local delivery':'Shipping');$('s-tot').textContent=money(sub+tax+sh.amt);return{q:q,sub:sub,tax:tax,ship:sh.amt,total:round2(sub+tax+sh.amt)}}
 async function initSquare(){
   try{payments=Square.payments(SQUARE_APP_ID,SQUARE_LOC);card=await payments.card();await card.attach('#card')}catch(e){console.error('Square init',e);$('err').textContent='Payment form could not load. Please refresh the page.';$('err').style.display='block'}}
