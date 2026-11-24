@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Checkout | Kahoa Coffee</title>
+  <meta name="robots" content="noindex,nofollow">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MP3BK1KXZ7"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-MP3BK1KXZ7");</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@400;500;600&display=swap">
+  <style>
+    :root{
+      --cream:#F9F2E3;--warm-white:#FDF8EF;--coffee-dark:#1C0E06;--coffee-mid:#5A2E1A;
+      --coffee-light:#8B4A26;--caramel:#C07A2A;--gold:#D4A843;--gold-light:#E8C878;
+      --text-dark:#1A0C05;--text-mid:#4A2A14;--text-light:#8B6040;--border:rgba(168,110,60,0.18);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Montserrat,sans-serif;background:var(--warm-white);color:var(--text-dark);min-height:100vh;line-height:1.5}
+    header{padding:22px 6% 8px;display:flex;align-items:center;justify-content:center}
+    header img{height:64px;width:auto}
+    main{max-width:640px;margin:0 auto;padding:12px 6% 64px}
+    h1{font-family:"Cormorant Garamond",serif;font-weight:400;font-size:clamp(28px,6vw,40px);text-align:center;margin:8px 0 6px}
+    .lede{text-align:center;color:var(--text-mid);font-size:14px;margin-bottom:24px}
+    .card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:22px 22px 16px;box-shadow:0 8px 28px rgba(28,14,6,0.06)}
+    .item{display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--border)}
+    .item:last-of-type{border-bottom:none}
+    .item h2{font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:500;line-height:1.2}
+    .meta{font-size:12px;color:var(--text-light);margin-top:4px}
+    .price{font-weight:600;white-space:nowrap;color:var(--coffee-mid)}
+    .totals{margin-top:8px;padding-top:12px;border-top:1px solid var(--border)}
+    .row{display:flex;justify-content:space-between;font-size:14px;margin:6px 0;color:var(--text-mid)}
+    .row.grand{font-weight:600;color:var(--text-dark);font-size:16px;margin-top:10px}
+    .note{font-size:12px;color:var(--text-light);margin-top:10px}
+    .msg{padding:12px 14px;border-radius:10px;font-size:13px;margin:14px 0}
+    .msg.ok{background:#eef6ee;color:#2a7a3b}
+    .msg.warn{background:#fbf3e6;color:#8B4A26}
+    .msg.err{background:#f8ecec;color:#8a2b2b}
+    .actions{display:flex;flex-direction:column;gap:10px;margin-top:22px}
+    .btn{display:block;text-align:center;text-decoration:none;border:none;cursor:pointer;border-radius:8px;padding:14px 18px;font-family:Montserrat,sans-serif;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+    .btn-primary{background:var(--gold);color:var(--coffee-dark)}
+    .btn-primary:hover{background:var(--gold-light)}
+    .btn-secondary{background:transparent;color:var(--coffee-mid);border:1px solid var(--border)}
+    footer{text-align:center;font-size:12px;color:var(--text-light);padding:8px 6% 28px}
+    footer a{color:var(--coffee-light)}
+  </style>
+</head>
+<body>
+  <header>
+    <a href="https://kahoa.shop/shop.html"><img src="https://kahoa.shop/kahoalogo.png" alt="Kahoa Coffee"></a>
+  </header>
+  <main>
+    <h1 id="page-title">Your Kahoa order</h1>
+    <p class="lede" id="lede">Review your items, then continue to checkout on kahoa.shop.</p>
+    <div class="card" id="panel"></div>
+    <div class="actions" id="actions"></div>
+  </main>
+  <footer>Questions? <a href="mailto:info@kahoa.shop">info@kahoa.shop</a></footer>
+
+  <script>
+  /* Kahoa Meta checkout — maps Commerce Manager catalog IDs onto the
+     kahoa.shop cart (localStorage key kahoa_cart_v1), the same store
+     the shop page's Add to cart uses. */
+  (function (global) {
+    var CART_KEY = "kahoa_cart_v1";
+    var REF_KEY = "kahoa_ref";
+    var FLAG_KEY = "kahoa_meta_checkout";
+    var SHOP_PATH = "/shop.html";
+    var FREE_SHIP = 80;
+    var SHIP_TIERS = { 1: 7.99, 2: 11.99, 3: 15 };
+
+    /* Catalog ids from meta-catalog-upload.csv, mapped to the shop's
+       cart item shape: {productKey, productName, grind, grindLabel, unitPrice, qty}.
+       Coffee has one catalog id per blend (no grind variant), so we add
+       Whole Bean — the shop's recommended option. */
+    var CATALOG = {
+      "kahoa-nairobi-sunrise-340g": { productKey: "nyeri", productName: "Nairobi Sunrise Signature Blend", grind: "whole", grindLabel: "Whole Bean", unitPrice: 20, kind: "coffee" },
+      "kahoa-savanna-gold-340g": { productKey: "kirinyaga", productName: "Savanna Gold Signature Blend", grind: "whole", grindLabel: "Whole Bean", unitPrice: 18, kind: "coffee" },
+      "kahoa-ngong-dark-reserve-340g": { productKey: "dark", productName: "Ngong Dark Reserve Blend", grind: "whole", grindLabel: "Whole Bean", unitPrice: 22, kind: "coffee" },
+      "kahoa-mombasa-wildflower-syrup-12oz": { productKey: "syrup", productName: "Mombasa Wildflower Honey & Cardamom Coffee Syrup", grind: "bottle", grindLabel: "12 oz bottle", unitPrice: 20, kind: "syrup" },
+      "kahoa-chocolate-espresso-beans-4oz": { productKey: "choco4", productName: "Chocolate Covered Espresso Beans · 4 oz", grind: "bag", grindLabel: "4 oz bag", unitPrice: 12, kind: "candy" },
+      "kahoa-chocolate-espresso-beans-8oz": { productKey: "choco8", productName: "Chocolate Covered Espresso Beans · 8 oz", grind: "bag", grindLabel: "8 oz bag", unitPrice: 22, kind: "candy" },
+      "kahoa-kenya-aa-green-beans-1lb": { productKey: "greenaa", productName: "Kenya AA Green Beans", grind: "whole", grindLabel: "1 lb", unitPrice: 10, kind: "green" },
+      "kahoa-kenya-ab-green-beans-1lb": { productKey: "greenab", productName: "Kenya AB Green Beans", grind: "whole", grindLabel: "1 lb", unitPrice: 8.4, kind: "green" },
+      "kahoa-kenya-pb-green-beans-1lb": { productKey: "greenpb", productName: "Kenya PB Peaberry Green Beans", grind: "whole", grindLabel: "1 lb", unitPrice: 8.4, kind: "green" },
+      "kahoa-stealth-elite-bag": { productKey: "backpack", productName: "Stealth Elite Bag", grind: "one", grindLabel: "Limited run", unitPrice: 119, kind: "merch" },
+      "kahoa-apron-black": { productKey: "apron", productName: "Kahoa Apron", grind: "Black", grindLabel: "Black", unitPrice: 45, kind: "merch" },
+      "kahoa-polo-black-s": { productKey: "polo", productName: "Kahoa Polo", grind: "S", grindLabel: "Size: S", unitPrice: 40, kind: "merch" },
+      "kahoa-polo-black-m": { productKey: "polo", productName: "Kahoa Polo", grind: "M", grindLabel: "Size: M", unitPrice: 40, kind: "merch" },
+      "kahoa-polo-black-l": { productKey: "polo", productName: "Kahoa Polo", grind: "L", grindLabel: "Size: L", unitPrice: 40, kind: "merch" },
+      "kahoa-polo-black-xl": { productKey: "polo", productName: "Kahoa Polo", grind: "XL", grindLabel: "Size: XL", unitPrice: 40, kind: "merch" },
+      "kahoa-origins-tee-s": { productKey: "tee", productName: "Kahoa Origins Tee", grind: "S", grindLabel: "Size: S", unitPrice: 35, kind: "merch" },
+      "kahoa-origins-tee-m": { productKey: "tee", productName: "Kahoa Origins Tee", grind: "M", grindLabel: "Size: M", unitPrice: 35, kind: "merch" },
+      "kahoa-origins-tee-l": { productKey: "tee", productName: "Kahoa Origins Tee", grind: "L", grindLabel: "Size: L", unitPrice: 35, kind: "merch" },
+      "kahoa-origins-tee-xl": { productKey: "tee", productName: "Kahoa Origins Tee", grind: "XL", grindLabel: "Size: XL", unitPrice: 35, kind: "merch" },
+      "kahoa-travel-mug-black": { productKey: "mug", productName: "Kahoa Travel Mug — Black", grind: "Black", grindLabel: "Color: Black · Engraved", unitPrice: 35, kind: "merch" },
+      "kahoa-travel-mug-stainless-silver": { productKey: "mug", productName: "Kahoa Travel Mug — Stainless Silver", grind: "Stainless Silver", grindLabel: "Color: Stainless Silver · Engraved", unitPrice: 35, kind: "merch" },
+      "kahoa-travel-mug-white": { productKey: "mug", productName: "Kahoa Travel Mug — White", grind: "White", grindLabel: "Color: White · Engraved", unitPrice: 35, kind: "merch" },
+      "kahoa-travel-mug-navy": { productKey: "mug", productName: "Kahoa Travel Mug — Navy", grind: "Navy", grindLabel: "Color: Navy · Engraved", unitPrice: 35, kind: "merch" },
+      "kahoa-travel-mug-kenya-red": { productKey: "mug", productName: "Kahoa Travel Mug — Kenya Red", grind: "Kenya Red", grindLabel: "Color: Kenya Red · Engraved", unitPrice: 35, kind: "merch" }
+    };
+
+    function money(n) {
+      return "$" + Number(n).toFixed(2);
+    }
+
+    /* products=id:qty,id:qty  — commas and colons may arrive URL-encoded.
+       URLSearchParams already decodes %3A / %2C. IDs must not contain : or , */
+    function parseProducts(raw) {
+      var items = [];
+      var skipped = [];
+      if (raw == null || String(raw).trim() === "") return { items: items, skipped: skipped, empty: true };
+      String(raw).split(",").forEach(function (entry) {
+        var part = entry.trim();
+        if (!part) return;
+        var colon = part.indexOf(":");
+        if (colon < 1) {
+          skipped.push({ raw: part, reason: "missing quantity" });
+          return;
+        }
+        var id = part.slice(0, colon).trim();
+        var qty = parseInt(part.slice(colon + 1).trim(), 10);
+        if (!id) {
+          skipped.push({ raw: part, reason: "missing id" });
+          return;
+        }
+        if (!Number.isFinite(qty) || qty < 1) {
+          skipped.push({ id: id, raw: part, reason: "invalid quantity" });
+          return;
+        }
+        items.push({ id: id, qty: qty });
+      });
+      var merged = [];
+      var index = {};
+      items.forEach(function (it) {
+        if (index[it.id] == null) {
+          index[it.id] = merged.length;
+          merged.push({ id: it.id, qty: it.qty });
+        } else {
+          merged[index[it.id]].qty += it.qty;
+        }
+      });
+      return { items: merged, skipped: skipped, empty: merged.length === 0 && skipped.length === 0 };
+    }
+
+    function mapToCart(parsedItems) {
+      var cart = [];
+      var unknown = [];
+      parsedItems.forEach(function (it) {
+        var def = CATALOG[it.id];
+        if (!def) {
+          unknown.push(it.id);
+          return;
+        }
+        var existing = cart.find(function (c) {
+          return c.productKey === def.productKey && c.grind === def.grind;
+        });
+        if (existing) {
+          existing.qty += it.qty;
+        } else {
+          cart.push({
+            productKey: def.productKey,
+            productName: def.productName,
+            grind: def.grind,
+            grindLabel: def.grindLabel,
+            unitPrice: def.unitPrice,
+            qty: it.qty,
+            catalogId: it.id,
+            kind: def.kind
+          });
+        }
+      });
+      return { cart: cart, unknown: unknown };
+    }
+
+    function estimateShipping(cart) {
+      var subtotal = cart.reduce(function (s, i) { return s + i.unitPrice * i.qty; }, 0);
+      var bagCount = cart.reduce(function (s, i) { return s + i.qty; }, 0);
+      var shipping = 0;
+      if (bagCount === 0) shipping = 0;
+      else if (subtotal >= FREE_SHIP) shipping = 0;
+      else shipping = bagCount === 1 ? SHIP_TIERS[1] : bagCount === 2 ? SHIP_TIERS[2] : SHIP_TIERS[3];
+      return { subtotal: subtotal, shipping: shipping, total: subtotal + shipping, bagCount: bagCount };
+    }
+
+    function readCart() {
+      try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch (e) { return []; }
+    }
+
+    function writeCart(items) {
+      /* Meta's guidance: clear the previous cart, then add the items from this request. */
+      try { localStorage.setItem(CART_KEY, JSON.stringify(items)); } catch (e) {}
+    }
+
+    function saveCoupon(code) {
+      var c = (code || "").trim();
+      if (!c) {
+        try { localStorage.removeItem(REF_KEY); } catch (e) {}
+        return;
+      }
+      try { localStorage.setItem(REF_KEY, JSON.stringify({ code: c, t: Date.now() })); } catch (e) {}
+    }
+
+    function trackingQuery(searchParams) {
+      var keep = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid", "cart_origin"];
+      var out = new URLSearchParams();
+      keep.forEach(function (k) {
+        if (searchParams.has(k)) out.set(k, searchParams.get(k));
+      });
+      return out.toString();
+    }
+
+    function shopCheckoutUrl(searchParams) {
+      var q = trackingQuery(searchParams);
+      var url = SHOP_PATH + (q ? "?" + q : "") + "#kahoa-meta-checkout";
+      return url;
+    }
+
+    function continueToShop(searchParams) {
+      try { sessionStorage.setItem(FLAG_KEY, "1"); } catch (e) {}
+      global.location.assign(shopCheckoutUrl(searchParams));
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c];
+      });
+    }
+
+    function run(search, opts) {
+      opts = opts || {};
+      var params = typeof search === "string"
+        ? new URLSearchParams(search.charAt(0) === "?" ? search.slice(1) : search)
+        : search;
+      var parsed = parseProducts(params.get("products"));
+      var coupon = (params.get("coupon") || "").trim();
+      var mapped = mapToCart(parsed.items);
+      var totals = estimateShipping(mapped.cart);
+      var stay = params.get("stay") === "1" || opts.stay;
+
+      if (mapped.cart.length) {
+        writeCart(mapped.cart.map(function (i) {
+          return {
+            productKey: i.productKey,
+            productName: i.productName,
+            grind: i.grind,
+            grindLabel: i.grindLabel,
+            unitPrice: i.unitPrice,
+            qty: i.qty
+          };
+        }));
+        saveCoupon(coupon);
+      } else {
+        /* Don't wipe a customer's existing cart if this request had nothing valid. */
+        if (coupon) saveCoupon(coupon);
+      }
+
+      return {
+        parsed: parsed,
+        coupon: coupon,
+        cart: mapped.cart,
+        unknown: mapped.unknown,
+        skipped: parsed.skipped,
+        totals: totals,
+        stay: stay,
+        shopUrl: shopCheckoutUrl(params),
+        empty: !params.get("products") || parsed.empty && !mapped.cart.length && !mapped.unknown.length && !parsed.skipped.length
+      };
+    }
+
+    function render(result) {
+      var panel = document.getElementById("panel");
+      var actions = document.getElementById("actions");
+      var title = document.getElementById("page-title");
+      var lede = document.getElementById("lede");
+      var html = "";
+      var messages = [];
+
+      if (result.empty && !result.cart.length) {
+        title.textContent = "Let’s get you to the shop";
+        lede.textContent = "This checkout link didn’t include any items.";
+        panel.innerHTML = "<p class='msg warn'>No products were passed from Facebook or Instagram. You can browse the shop and add items as usual.</p>";
+        actions.innerHTML = "<a class='btn btn-primary' href='/shop.html'>Go to the shop</a>";
+        return;
+      }
+
+      if (result.cart.length) {
+        result.cart.forEach(function (i) {
+          html += "<div class='item'><div><h2>" + escapeHtml(i.productName) + "</h2>" +
+            "<div class='meta'>" + escapeHtml(i.grindLabel) + " · Qty " + i.qty + "</div></div>" +
+            "<div class='price'>" + money(i.unitPrice * i.qty) + "</div></div>";
+        });
+        html += "<div class='totals'>";
+        html += "<div class='row'><span>Subtotal</span><span>" + money(result.totals.subtotal) + "</span></div>";
+        html += "<div class='row'><span>Estimated shipping</span><span>" + (result.totals.shipping === 0 ? "FREE" : money(result.totals.shipping)) + "</span></div>";
+        html += "<div class='row grand'><span>Estimated total</span><span>" + money(result.totals.total) + "</span></div>";
+        html += "<p class='note'>Austin-area delivery is free at checkout. Shipping is $7.99 for one item, $11.99 for two, $15.00 for three or more, and free on orders over $80. Texas sales tax, if it applies, is calculated on the next page.</p>";
+        if (result.cart.some(function (i) { return i.kind === "coffee"; })) {
+          html += "<p class='note'>Coffee is added as whole bean, which stays freshest. If you’d rather have it ground, add a note at checkout or order ground from the shop.</p>";
+        }
+        html += "</div>";
+      }
+
+      if (result.coupon) {
+        messages.push("<p class='msg ok' data-coupon='" + escapeHtml(result.coupon) + "'>Promo code <strong>" + escapeHtml(result.coupon) + "</strong> will be applied on the next page if it’s still valid. If it isn’t, you’ll see a message there.</p>");
+      }
+      if (result.unknown.length) {
+        messages.push("<p class='msg warn'>We couldn’t find " + result.unknown.map(escapeHtml).join(", ") + " in the shop. Those items were left out. <a href='/shop.html'>Browse the shop</a></p>");
+      }
+      if (result.skipped.length) {
+        messages.push("<p class='msg warn'>Some items in the link were incomplete and were skipped.</p>");
+      }
+      if (!result.cart.length && (result.unknown.length || result.skipped.length)) {
+        title.textContent = "We couldn’t add those items";
+        lede.textContent = "Nothing from that link matched a product in the shop.";
+      }
+
+      panel.innerHTML = html + messages.join("");
+      if (result.cart.length) {
+        actions.innerHTML = "<button class='btn btn-primary' type='button' id='continue-btn'>Continue to checkout</button>" +
+          "<a class='btn btn-secondary' href='/shop.html'>Keep shopping</a>";
+        document.getElementById("continue-btn").addEventListener("click", function () {
+          continueToShop(new URLSearchParams(location.search));
+        });
+      } else {
+        actions.innerHTML = "<a class='btn btn-primary' href='/shop.html'>Go to the shop</a>";
+      }
+    }
+
+    var api = {
+      CATALOG: CATALOG,
+      CART_KEY: CART_KEY,
+      parseProducts: parseProducts,
+      mapToCart: mapToCart,
+      estimateShipping: estimateShipping,
+      run: run,
+      continueToShop: continueToShop
+    };
+    global.KahoaMetaCheckout = api;
+
+    document.addEventListener("DOMContentLoaded", function () {
+      var result = run(location.search);
+      global.__kahoaCheckoutResult = result;
+      render(result);
+      try { if (result.cart.length && global.gtag) gtag("event", "begin_checkout", { currency: "USD", value: result.totals.subtotal, items: result.cart.map(function (i) { return { item_id: i.catalogId, item_name: i.productName, price: i.unitPrice, quantity: i.qty }; }) }); } catch (e) {}
+      if (result.cart.length && !result.stay) {
+        setTimeout(function () {
+          if (!global.__kahoaStay) continueToShop(new URLSearchParams(location.search));
+        }, 2800);
+      }
+    });
+  })(window);
+  </script>
+</body>
+</html>
