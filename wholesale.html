@@ -1106,7 +1106,7 @@ document.addEventListener('change',function(e){if(e.target&&e.target.name==='ksp
 })();
 </script>
 <script id="kahoa-carttax">
-/* Texas sales tax in cart checkout: taxable items (merch) only, on the discounted price, Texas ZIPs only.
+/* Texas sales tax in cart checkout: everything except coffee (bags and green beans), gift cards and baskets, on the discounted price, Texas ZIPs only.
    The total shown always equals what is charged: items at the same rounded prices sent to Square, plus shipping, plus tax. */
 (function(){
 function zipVal(){return ((document.getElementById('sq-zip')||{}).value||'').trim();}
@@ -1115,9 +1115,9 @@ function unitCents(it){return Math.round(it.unitPrice*(1-disc(it))*100);}
 function items(){return window._kahoaCartCheckoutItems||[];}
 function skip(){return !window._kahoaCartCheckoutMode||window._kahoaActiveCoupon==='SARE';}
 var RATE=(typeof KAHOA_TAX_RATE==='number')?KAHOA_TAX_RATE:0.0825;
-var TAXABLE_KEYS=['backpack','apron','polo','tee','mug'];
+var COFFEE_KEYS=['nyeri','kirinyaga','dark','greenaa','greenab','greenpb'];
 function isTX(z){if(typeof kahoaIsTXZip==='function')return kahoaIsTXZip(z);z=(z||'').trim();if(z.length<5)return false;var n=+z.slice(0,3);return(n>=750&&n<=799)||n===733||n===885;}
-function taxable(k){var p=(typeof squareProducts!=='undefined')?squareProducts[k]:null;if(p&&typeof p.taxable==='boolean')return p.taxable;return TAXABLE_KEYS.indexOf(k)!==-1;}
+function taxable(k){k=String(k||'');if(COFFEE_KEYS.indexOf(k)!==-1)return false;if(/^gift/i.test(k))return false;var p=(typeof squareProducts!=='undefined')?squareProducts[k]:null;if(p&&p.isBasket)return false;return true;}
 function taxRow(amt){
   if(typeof kahoaTaxRow==='function'){kahoaTaxRow('rv-shipping','kx-rv-tax',amt,true);return;}
   var r=document.getElementById('kx-rv-tax');
