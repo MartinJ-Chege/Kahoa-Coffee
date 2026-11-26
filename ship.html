@@ -72,6 +72,7 @@ button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
 .step{display:flex;gap:12px;margin-bottom:14px}.step>div{flex:1}.step small{display:block;color:var(--muted);font-size:13px;margin:2px 0 8px}.step .btn{text-decoration:none;font-size:14px}
 .num{width:28px;height:28px;border-radius:50%;background:var(--brown);color:var(--gold2);display:grid;place-items:center;font-weight:700;font-size:14px;flex:none}
 .warnt{color:var(--rust);font-weight:600}.pbtns{display:flex;flex-direction:column;align-items:flex-end;gap:2px}.pbtns a.link{text-decoration:underline}
+.footlinks{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin-top:22px}.footlinks .switch{margin:0}
 .spots{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.spots .chip{box-shadow:none;background:var(--soft)}.spots .chip.on{background:var(--brown);color:var(--gold2)}
 #v{max-width:520px;margin:0 auto;padding:22px 18px 48px}
 .title{font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:34px;line-height:1.1;margin:4px 0 4px;color:var(--brown)}
@@ -283,10 +284,10 @@ var IC={
 /* ---------- navigation ---------- */
 function show(v){if(TICK){clearInterval(TICK);TICK=null}
   if(!ME&&v!=='pin')v='who';if(v==='admin'&&!(ME&&ME.is_admin))v='home';
-  VIEW=v;var sub=['ship','supplies','admin','getpaid','sign','w9'].indexOf(v)!==-1;
+  VIEW=v;var sub=['ship','supplies','admin','getpaid','sign','w9','code'].indexOf(v)!==-1;
   $('hb').innerHTML=sub?'<button class="iconbtn" onclick="show(\'home\')" aria-label="Back">'+IC.back+'</button>':(v==='pin'?'<button class="iconbtn" onclick="show(\'who\')" aria-label="Back">'+IC.back+'</button>':'');
   $('hr').innerHTML=ME&&v!=='who'&&v!=='pin'?'<button class="me" onclick="pickAvatar()" aria-label="Change your photo">'+av(ME,'me-av')+'</button>':'';
-  window.scrollTo(0,0);({who:vWho,pin:vPin,home:vHome,ship:vShip,supplies:vSupplies,admin:vAdmin,getpaid:vGetPaid,sign:vSign,w9:vW9})[v]()}
+  window.scrollTo(0,0);({who:vWho,pin:vPin,home:vHome,ship:vShip,supplies:vSupplies,admin:vAdmin,getpaid:vGetPaid,sign:vSign,w9:vW9,code:vCode})[v]()}
 document.addEventListener('visibilitychange',function(){if(!document.hidden&&VIEW==='home')vHome()});
 
 /* ---------- who are you ---------- */
@@ -331,7 +332,7 @@ function vHome(){var hr=hourCT(),g=hr<12?'Good morning':hr<17?'Good afternoon':'
    '<button class="tile" onclick="show(\'supplies\')"><span class="ti">'+IC.cup+'</span><span class="tt"><b>Request supplies</b><small>Cups, milk, syrups, anything</small></span>'+IC.chev+'</button>'+
    '<button class="tile" onclick="show(\'getpaid\')"><span class="ti">'+IC.cash+'</span><span class="tt"><b>Get paid</b><small id="paysub">'+(PAYME?E(payLabel(PAYME)):'Add your Cash App, Venmo, Zelle or PayPal')+'</small></span>'+IC.chev+'</button>'+
    (ME.is_admin?'<button class="tile" onclick="show(\'admin\')"><span class="ti">'+IC.chart+'</span><span class="tt"><b>Admin</b><small>Hours, pay, requests, team</small></span>'+IC.chev+'</button>':'')+'</div>'+
-   '<button class="switch" onclick="switchUser()">Not '+E(ME.name)+'? Switch person</button>';
+   '<div class="footlinks"><button class="switch" onclick="show(\'code\')">Change my code</button><button class="switch" onclick="switchUser()">Not '+E(ME.name)+'? Switch person</button></div>';
   call('check',auth()).then(function(d){if(VIEW!=='home'||!d.ok)return;if((d.person.pv||0)!==(ME.pv||0)||d.person.name!==ME.name||!!d.person.is_admin!==!!ME.is_admin){saveMe(Object.assign({},ME,{pv:d.person.pv||0,name:d.person.name,is_admin:d.person.is_admin}));vHome();return}OPEN=d.open;PAYME=d.pay||null;DOCS=d.docs||null;drawDocBar();if($('paysub'))$('paysub').textContent=PAYME?payLabel(PAYME):'Add your Cash App, Venmo, Zelle or PayPal';drawClock();
     $('week').innerHTML='This week <b>'+hrs(d.week.hours)+' hrs</b>'+(d.week.overtime?' · '+hrs(d.week.overtime)+' overtime':'')})}
 function drawDocBar(){var el=$('docbar');if(!el)return;if(!DOCS||!DOCS.need||(DOCS.signed&&DOCS.w9)){el.innerHTML='';return}
@@ -456,6 +457,15 @@ function w9Got(inp){var f=inp.files&&inp.files[0],p=$('w9p');W9F=null;$('w9b').d
 function w9Send(){var b=$('w9b');if(!W9F)return;b.disabled=true;b.textContent='Uploading…';call('w9',Object.assign(auth(),{file:W9F})).then(function(d){b.disabled=false;b.textContent='Upload W-9';
   if(!d.ok){$('w9e').textContent=d.error||'Try again.';return}DOCS=d.docs;W9F=null;done('W-9 received','Thank you. You\'re all set.');show('home')})}
 
+/* ---------- change my code ---------- */
+function vCode(){$('v').innerHTML='<h1 class="title">Change my code</h1><p class="lead">Pick 4 to 8 numbers you\'ll remember. This phone stays signed in; other phones will ask for the new code.</p>'+
+  '<div class="card"><label class="lbl2">Current code</label><input type="password" inputmode="numeric" maxlength="8" id="cc0" autocomplete="off">'+
+  '<label class="lbl2">New code</label><input type="password" inputmode="numeric" maxlength="8" id="cc1" autocomplete="off"><label class="lbl2">New code again</label><input type="password" inputmode="numeric" maxlength="8" id="cc2" autocomplete="off">'+
+  '<button class="btn wide" id="ccb" onclick="ccSave()">Save new code</button><div class="err" id="cce"></div></div>'}
+function ccSave(){var e=$('cce'),b=$('ccb'),c0=$('cc0').value.trim(),c1=$('cc1').value.trim(),c2=$('cc2').value.trim();e.textContent='';
+  if(!c0){e.textContent='Type your current code.';return}if(!/^\d{4,8}$/.test(c1)){e.textContent='Your new code needs 4 to 8 numbers.';return}if(c1!==c2){e.textContent="The new codes don't match.";return}
+  b.disabled=true;call('change_code',Object.assign(auth(),{current:c0,new_code:c1})).then(function(d){b.disabled=false;if(!d.ok){e.textContent=d.error||'Try again.';return}done('Code changed','Use your new code next time you sign in.');show('home')})}
+
 /* ---------- supplies ---------- */
 function vSupplies(){$('v').innerHTML='<h1 class="title">Request supplies</h1><p class="lead">Tell Martin what you need. He\'ll update you here.</p>'+
   '<div class="card"><textarea id="ritems" rows="4" placeholder="One item per line, e.g.&#10;2 sleeves of 12 oz cups&#10;1 gallon oat milk"></textarea>'+
@@ -488,7 +498,7 @@ function admPay(){if(!RANGE){preset('week');return}var b=$('adm-body');
     h+='<div class="stats"><div class="stat"><small>Hours</small><b>'+hrs(tot.h)+'</b></div><div class="stat"><small>Pay</small><b>'+money(tot.p)+'</b></div><div class="stat"><small>On now</small><b>'+d.on_now.length+'</b></div></div>';
     if(d.on_now.length)h+='<div class="card"><div class="sec0"><i class="live"></i>On the clock now</div>'+d.on_now.map(function(x){return '<div class="orow line"><b>'+E(x.name)+'</b><span class="muted xs">since '+dt(x.clock_in)+(x.in_note?' · '+E(x.in_note):'')+'</span></div>'}).join('')+'</div>';
     h+='<div class="card"><div class="sec0">Pay · '+nice(RANGE.from)+' to '+nice(RANGE.to)+'</div>'+(d.totals.length?d.totals.map(function(x){return '<div class="payrow">'+av({id:x.person_id,name:x.name,pv:pv(x.person_id)},'xs')+'<span class="pr-n"><b>'+E(x.name)+'</b><small>'+x.shifts+' shift'+(x.shifts===1?'':'s')+' · '+hrs(x.hours)+' hrs'+(x.overtime?' · '+hrs(x.overtime)+' OT':'')+'</small></span><b class="pr-p">'+money(x.pay)+'</b></div>'+payActions(x)}).join('')+payHistory(d.payouts):'<div class="muted">No finished shifts in these dates.</div>')+
-      '<div class="fine">Overtime is over 40 hours in a Monday to Sunday week, at 1.5×. Open shifts count once clocked out.</div><button class="btn ghost wide" onclick="csv()">Download for payroll (CSV)</button></div>';
+      '<div class="fine">Pay is hours × their hourly rate. Shifts still open count once they clock out.</div><button class="btn ghost wide" onclick="csv()">Download for payroll (CSV)</button></div>';
     h+='<div class="sech">Shifts</div><div class="card">'+(d.entries.length?d.entries.map(shiftRow).join(''):'<div class="muted">None.</div>')+'</div>';
     h+='<details class="card"><summary>Add a missed shift</summary><select id="ns-p">'+PEOPLE.map(function(p){return '<option value="'+p.id+'">'+E(p.name)+'</option>'}).join('')+'</select><label class="lbl2">Clock in</label><input type="datetime-local" id="ns-i"><label class="lbl2">Clock out</label><input type="datetime-local" id="ns-o"><input type="text" id="ns-n" placeholder="Reason (e.g. forgot to clock in)"><button class="btn wide" onclick="addShift()">Add shift</button><div class="err" id="ns-e"></div></details>';
     $('payout').innerHTML=h})}
