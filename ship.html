@@ -63,6 +63,15 @@ button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
 .photo-pick.has{border:0}.photo-pick.has .pp-in{inset:auto 10px 10px auto;flex-direction:row;background:rgba(28,14,6,.78);color:#fff;padding:7px 12px;border-radius:20px;gap:6px;font-size:13px}
 #app .photo-pick.has .pp-in svg{width:16px;height:16px}.photo-pick.busy{opacity:.55}
 .paybar{margin:4px 0 10px;padding:10px 12px;background:var(--soft);border-radius:12px}.paybar .due{font-size:14px}.paybar .due small{display:block;color:var(--muted);font-size:12.5px}.paybar .obtns{margin-top:10px}.paybar .btn{text-decoration:none;font-size:14px;padding:11px 10px}.paybar .btn.ghost{background:#fff}
+.docbar{width:100%;display:flex;align-items:center;gap:14px;text-align:left;background:#FDF1DC;border:1.5px solid #E9C98A;border-radius:18px;padding:14px 12px;margin-bottom:14px}
+.docbar.soft{background:#fff;border-color:var(--line)}.docbar .ti{background:#fff;color:#8A4B14}.docbar>svg{color:#C9A46A}
+.agdoc{background:#fff;border-radius:18px;padding:18px;max-height:46vh;overflow:auto;margin-bottom:12px;box-shadow:inset 0 -12px 12px -12px rgba(43,24,16,.15);font-size:14px;line-height:1.55}
+.agdoc p{margin:0 0 10px}.agh{font-weight:700;text-align:center;letter-spacing:1px;color:var(--brown)}.agh.sub{font-size:12px;margin:2px 0 14px;color:var(--muted)}
+.sigwrap{position:relative;margin-top:10px}#sig{width:100%;height:150px;background:#fff;border:1.5px dashed #D9C7AA;border-radius:12px;touch-action:none;display:block}
+.sigclr{position:absolute;top:4px;right:10px}.sigx{position:absolute;left:12px;bottom:28px;color:#C9B59A;font-size:16px;pointer-events:none}.sigx:after{content:'';position:absolute;left:18px;right:0;bottom:4px;width:calc(100vw - 120px);max-width:380px;border-bottom:1px solid #E3D4BC}
+.step{display:flex;gap:12px;margin-bottom:14px}.step>div{flex:1}.step small{display:block;color:var(--muted);font-size:13px;margin:2px 0 8px}.step .btn{text-decoration:none;font-size:14px}
+.num{width:28px;height:28px;border-radius:50%;background:var(--brown);color:var(--gold2);display:grid;place-items:center;font-weight:700;font-size:14px;flex:none}
+.warnt{color:var(--rust);font-weight:600}.pbtns{display:flex;flex-direction:column;align-items:flex-end;gap:2px}.pbtns a.link{text-decoration:underline}
 .spots{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.spots .chip{box-shadow:none;background:var(--soft)}.spots .chip.on{background:var(--brown);color:var(--gold2)}
 #v{max-width:520px;margin:0 auto;padding:22px 18px 48px}
 .title{font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:34px;line-height:1.1;margin:4px 0 4px;color:var(--brown)}
@@ -139,7 +148,7 @@ button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
 .sech{font-size:12px;letter-spacing:1.4px;text-transform:uppercase;font-weight:700;color:var(--muted);margin:22px 4px 10px;display:flex;align-items:center;gap:8px}
 .sec0{font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px}
 .count{background:var(--brown);color:var(--gold2);border-radius:20px;padding:1px 8px;font-size:11px;letter-spacing:0}
-input[type=text],input[type=password],input[type=number],input[type=date],input[type=datetime-local],select,textarea{width:100%;font:inherit;font-size:16px;padding:13px 14px;border-radius:12px;border:1.5px solid var(--line);background:#fff;color:var(--ink);margin-top:10px;-webkit-appearance:none;appearance:none}
+input[type=text],input[type=email],input[type=password],input[type=number],input[type=date],input[type=datetime-local],select,textarea{width:100%;font:inherit;font-size:16px;padding:13px 14px;border-radius:12px;border:1.5px solid var(--line);background:#fff;color:var(--ink);margin-top:10px;-webkit-appearance:none;appearance:none}
 select{background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B6040' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center/18px;padding-right:38px}
 textarea{resize:vertical;margin-top:0}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
@@ -232,7 +241,7 @@ function printOne(r){printLabels(ORDERS.filter(function(o){return o.row===r}))}
 function printAll(){printLabels(ORDERS.filter(function(o){return !o.status&&/austin/i.test(o.address)}))}
 
 var API='https://kahoa-checkoutout.chegekibuthu1.workers.dev/staff/',TZ='America/Chicago';
-var PAYME=null,PAYM={cashapp:'Cash App',venmo:'Venmo',zelle:'Zelle',paypal:'PayPal'},PEOPLE=[],ORDERS=[],DELIV=[],DPHOTO={},ME=null,VIEW='',PIN='',PICK=null,TICK=null,OPEN=null,SHIPM={};
+var DOCS=null,PAYME=null,PAYM={cashapp:'Cash App',venmo:'Venmo',zelle:'Zelle',paypal:'PayPal'},PEOPLE=[],ORDERS=[],DELIV=[],DPHOTO={},ME=null,VIEW='',PIN='',PICK=null,TICK=null,OPEN=null,SHIPM={};
 try{ME=JSON.parse(localStorage.getItem('kahoa_team_me')||'null')}catch(e){}
 function saveMe(m){ME=m;try{m?localStorage.setItem('kahoa_team_me',JSON.stringify(m)):localStorage.removeItem('kahoa_team_me')}catch(e){}}
 function E(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
@@ -264,6 +273,8 @@ var IC={
  del:'<svg viewBox="0 0 24 24"><path d="M9 6h11v12H9l-6-6z"/><path d="m12 10 4 4m0-4-4 4"/></svg>',
  cam:'<svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',
  pin:'<svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
+ pen:'<svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4M3 21h18"/></svg>',
+ doc:'<svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg>',
  cash:'<svg viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.8"/><path d="M6 9.5v5M18 9.5v5"/></svg>',
  check:'<svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
  print:'<svg viewBox="0 0 24 24"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M7 14h10v7H7z"/></svg>',
@@ -272,10 +283,10 @@ var IC={
 /* ---------- navigation ---------- */
 function show(v){if(TICK){clearInterval(TICK);TICK=null}
   if(!ME&&v!=='pin')v='who';if(v==='admin'&&!(ME&&ME.is_admin))v='home';
-  VIEW=v;var sub=['ship','supplies','admin','getpaid'].indexOf(v)!==-1;
+  VIEW=v;var sub=['ship','supplies','admin','getpaid','sign','w9'].indexOf(v)!==-1;
   $('hb').innerHTML=sub?'<button class="iconbtn" onclick="show(\'home\')" aria-label="Back">'+IC.back+'</button>':(v==='pin'?'<button class="iconbtn" onclick="show(\'who\')" aria-label="Back">'+IC.back+'</button>':'');
   $('hr').innerHTML=ME&&v!=='who'&&v!=='pin'?'<button class="me" onclick="pickAvatar()" aria-label="Change your photo">'+av(ME,'me-av')+'</button>':'';
-  window.scrollTo(0,0);({who:vWho,pin:vPin,home:vHome,ship:vShip,supplies:vSupplies,admin:vAdmin,getpaid:vGetPaid})[v]()}
+  window.scrollTo(0,0);({who:vWho,pin:vPin,home:vHome,ship:vShip,supplies:vSupplies,admin:vAdmin,getpaid:vGetPaid,sign:vSign,w9:vW9})[v]()}
 document.addEventListener('visibilitychange',function(){if(!document.hidden&&VIEW==='home')vHome()});
 
 /* ---------- who are you ---------- */
@@ -315,14 +326,17 @@ function switchUser(){if(OPEN&&!confirm('You are still clocked in. Switch person
 function vHome(){var hr=hourCT(),g=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
   $('v').innerHTML='<div class="hello"><div><div class="greet">'+g+',</div><div class="nm">'+E(ME.name)+'</div><div class="date">'+new Date().toLocaleDateString('en-US',{timeZone:TZ,weekday:'long',month:'long',day:'numeric'})+'</div></div>'+
    '<button class="myav" onclick="pickAvatar()" aria-label="Change your photo">'+av(ME,'big')+'<span class="cam">'+IC.cam+'</span></button></div>'+
-   '<div class="clock" id="clock"><div class="state">Checking…</div></div><div class="week" id="week"></div>'+
+   '<div id="docbar"></div><div class="clock" id="clock"><div class="state">Checking…</div></div><div class="week" id="week"></div>'+
    '<div class="tiles"><button class="tile" onclick="show(\'ship\')"><span class="ti">'+IC.box+'</span><span class="tt"><b>Ship orders</b><small>Print labels and send tracking</small></span>'+IC.chev+'</button>'+
    '<button class="tile" onclick="show(\'supplies\')"><span class="ti">'+IC.cup+'</span><span class="tt"><b>Request supplies</b><small>Cups, milk, syrups, anything</small></span>'+IC.chev+'</button>'+
    '<button class="tile" onclick="show(\'getpaid\')"><span class="ti">'+IC.cash+'</span><span class="tt"><b>Get paid</b><small id="paysub">'+(PAYME?E(payLabel(PAYME)):'Add your Cash App, Venmo, Zelle or PayPal')+'</small></span>'+IC.chev+'</button>'+
    (ME.is_admin?'<button class="tile" onclick="show(\'admin\')"><span class="ti">'+IC.chart+'</span><span class="tt"><b>Admin</b><small>Hours, pay, requests, team</small></span>'+IC.chev+'</button>':'')+'</div>'+
    '<button class="switch" onclick="switchUser()">Not '+E(ME.name)+'? Switch person</button>';
-  call('check',auth()).then(function(d){if(VIEW!=='home'||!d.ok)return;if((d.person.pv||0)!==(ME.pv||0)||d.person.name!==ME.name||!!d.person.is_admin!==!!ME.is_admin){saveMe(Object.assign({},ME,{pv:d.person.pv||0,name:d.person.name,is_admin:d.person.is_admin}));vHome();return}OPEN=d.open;PAYME=d.pay||null;if($('paysub'))$('paysub').textContent=PAYME?payLabel(PAYME):'Add your Cash App, Venmo, Zelle or PayPal';drawClock();
+  call('check',auth()).then(function(d){if(VIEW!=='home'||!d.ok)return;if((d.person.pv||0)!==(ME.pv||0)||d.person.name!==ME.name||!!d.person.is_admin!==!!ME.is_admin){saveMe(Object.assign({},ME,{pv:d.person.pv||0,name:d.person.name,is_admin:d.person.is_admin}));vHome();return}OPEN=d.open;PAYME=d.pay||null;DOCS=d.docs||null;drawDocBar();if($('paysub'))$('paysub').textContent=PAYME?payLabel(PAYME):'Add your Cash App, Venmo, Zelle or PayPal';drawClock();
     $('week').innerHTML='This week <b>'+hrs(d.week.hours)+' hrs</b>'+(d.week.overtime?' · '+hrs(d.week.overtime)+' overtime':'')})}
+function drawDocBar(){var el=$('docbar');if(!el)return;if(!DOCS||!DOCS.need||(DOCS.signed&&DOCS.w9)){el.innerHTML='';return}
+  el.innerHTML=!DOCS.signed?'<button class="docbar" onclick="show(\'sign\')"><span class="ti">'+IC.pen+'</span><span class="tt"><b>Sign your contractor agreement</b><small>Needed before you can clock in. Takes a minute.</small></span>'+IC.chev+'</button>':
+   '<button class="docbar soft" onclick="show(\'w9\')"><span class="ti">'+IC.doc+'</span><span class="tt"><b>Upload your W-9</b><small>Needed before your first payment</small></span>'+IC.chev+'</button>'}
 function drawClock(){var c=$('clock');if(!c)return;if(TICK){clearInterval(TICK);TICK=null}
   if(OPEN){c.className='clock on';c.innerHTML='<div class="state"><i></i>On the clock</div><div class="timer" id="timer"></div><div class="since">Since '+t(OPEN.clock_in)+(OPEN.in_note?' · '+E(OPEN.in_note):'')+'</div>'+
     '<button class="punch out" id="punch" onclick="punch(\'out\')">Clock out</button><div class="err" id="cerr"></div>';
@@ -335,6 +349,7 @@ function punch(action){var b=$('punch'),e=$('cerr');e.textContent='';b.disabled=
   var note=$('venue')?$('venue').value.trim():'';
   getLoc().then(function(loc){return call('clock',Object.assign(auth(),{action:action,note:note,lat:loc&&loc.lat,lng:loc&&loc.lng}))}).then(function(d){
     if(!ME)return;
+    if(!d.ok&&d.need_agreement){show('sign');return}
     if(!d.ok){e.textContent=d.error||'Try again.';b.disabled=false;b.textContent=action==='in'?'Clock in':'Clock out';if(/already|not clocked/i.test(d.error||''))setTimeout(vHome,1500);return}
     done(action==='in'?'Clocked in':'Clocked out',action==='in'?'Have a great shift, '+E(d.name)+'!':hrs(d.hours)+' hrs this shift. Asante sana, '+E(d.name)+'!',action,t(d.at))})}
 function done(big,small,kind,time){var o=$('done');o.className='done show '+(kind||'');o.innerHTML='<div class="ring">'+IC.check+'</div><div class="dbig">'+big+'</div>'+(time?'<div class="dtime">'+time+'</div>':'')+'<div class="dsmall">'+small+'</div><div class="dtap">Tap to continue</div>';
@@ -406,6 +421,41 @@ function gpSave(){var b=$('gpb'),e=$('gpe');e.textContent='';if(!$('gph').value.
   call('payinfo',Object.assign(auth(),{method:GPM,handle:$('gph').value})).then(function(d){b.disabled=false;if(!d.ok){e.textContent=d.error||'Try again.';return}PAYME=d.pay;done('Saved','Martin will pay you by '+E(payLabel(PAYME))+'.');show('home')})}
 function gpRemove(){if(!confirm('Remove your payment info?'))return;call('payinfo',Object.assign(auth(),{remove:true})).then(function(){PAYME=null;show('home')})}
 
+/* ---------- contractor agreement + W-9 ---------- */
+var AGV='',SIGP=null;
+function vSign(){$('v').innerHTML='<h1 class="title">Contractor agreement</h1><p class="lead">Read it, fill in your details, then sign at the bottom. We\'ll email you a copy.</p><div class="agdoc" id="agdoc"><div class="muted">Loading…</div></div>'+
+  '<div class="card"><label class="lbl2">Full legal name</label><input type="text" id="sgn" value="'+E(ME.name)+'" autocomplete="name" onchange="agLoad()">'+
+  '<label class="lbl2">Mailing address (your 1099 is sent here)</label><input type="text" id="sga" autocomplete="street-address" placeholder="Street, city, state, ZIP">'+
+  '<label class="lbl2">Email</label><input type="email" id="sge" autocomplete="email" inputmode="email" placeholder="you@email.com">'+
+  '<div class="lbl2">Sign here with your finger</div><div class="sigwrap"><canvas id="sig"></canvas><button class="link sigclr" onclick="sigClear()">Clear</button><span class="sigx">✕</span></div>'+
+  '<label class="chk"><input type="checkbox" id="sgok"> I agree to this agreement, and this is my electronic signature.</label>'+
+  '<button class="btn wide" id="sgb" onclick="agSign()">Sign agreement</button><div class="err" id="sge2"></div></div>';
+  agLoad();sigInit()}
+function agLoad(){var n=$('sgn')?$('sgn').value.trim():'';call('agreement',Object.assign(auth(),{legal_name:n})).then(function(d){if(!d.ok||!$('agdoc'))return;AGV=d.version;
+  $('agdoc').innerHTML=d.text.split('\n\n').map(function(p,i){return i<2?'<div class="agh'+(i?' sub':'')+'">'+E(p)+'</div>':'<p>'+E(p).replace(/^(\d+\.\s[^.]+\.)/,'<b>$1</b>')+'</p>'}).join('')})}
+function sigInit(){var c=$('sig'),r=c.getBoundingClientRect(),dp=window.devicePixelRatio||1;c.width=r.width*dp;c.height=r.height*dp;var x=c.getContext('2d');x.scale(dp,dp);x.lineWidth=2.4;x.lineCap='round';x.lineJoin='round';x.strokeStyle='#1C0E06';
+  var on=false,last=null;SIGP={c:c,x:x,n:0};var pt=function(e){var b=c.getBoundingClientRect();return{x:e.clientX-b.left,y:e.clientY-b.top}};
+  c.onpointerdown=function(e){on=true;last=pt(e);c.setPointerCapture(e.pointerId);x.beginPath();x.arc(last.x,last.y,1.1,0,7);x.fillStyle='#1C0E06';x.fill();SIGP.n++;e.preventDefault()};
+  c.onpointermove=function(e){if(!on)return;var p=pt(e);x.beginPath();x.moveTo(last.x,last.y);x.lineTo(p.x,p.y);x.stroke();last=p;SIGP.n++;e.preventDefault()};
+  c.onpointerup=c.onpointercancel=function(){on=false}}
+function sigClear(){if(SIGP){SIGP.x.clearRect(0,0,SIGP.c.width,SIGP.c.height);SIGP.n=0}}
+function agSign(){var e=$('sge2'),b=$('sgb');e.textContent='';if(!SIGP||SIGP.n<8){e.textContent='Please sign in the box.';return}if(!$('sgok').checked){e.textContent='Tick the box to agree.';return}
+  b.disabled=true;b.textContent='Signing…';
+  call('sign',Object.assign(auth(),{version:AGV,legal_name:$('sgn').value,address:$('sga').value,email:$('sge').value,agree:true,signature:SIGP.c.toDataURL('image/png')})).then(function(d){b.disabled=false;b.textContent='Sign agreement';
+    if(!d.ok){e.textContent=d.error||'Try again.';return}DOCS=d.docs;done('Signed','Welcome to the team! A copy is on its way to your email.');show(DOCS.w9?'home':'w9')})}
+function vW9(){$('v').innerHTML='<h1 class="title">Your W-9</h1><p class="lead">Kahoa needs this to send your 1099 at tax time. Only Martin can see it.</p>'+
+  '<div class="card"><div class="step"><span class="num">1</span><div><b>Fill in the IRS form</b><small>Your name, address, and your Social Security number (or EIN). Sign and date it.</small><a class="btn ghost" href="https://www.irs.gov/pub/irs-pdf/fw9.pdf" target="_blank" rel="noopener">'+IC.doc+'Open the W-9 form</a></div></div>'+
+  '<div class="step"><span class="num">2</span><div><b>Upload it here</b><small>A clear photo of the paper form, or the filled-in PDF.</small></div></div>'+
+  '<label class="photo-pick" id="w9p"><input type="file" accept="image/*,application/pdf" onchange="w9Got(this)"><span class="pp-in">'+IC.doc+'<b>Choose photo or PDF</b><small>'+(DOCS&&DOCS.w9?'You already sent one. Upload again to replace it.':'')+'</small></span></label>'+
+  '<button class="btn wide" id="w9b" onclick="w9Send()" disabled>Upload W-9</button><div class="err" id="w9e"></div></div><button class="switch" onclick="show(\'home\')">Do this later</button>'}
+var W9F=null;
+function w9Got(inp){var f=inp.files&&inp.files[0],p=$('w9p');W9F=null;$('w9b').disabled=true;$('w9e').textContent='';if(!f)return;
+  if(f.type==='application/pdf'){if(f.size>1100000){$('w9e').textContent='That PDF is too big. Take a photo of the form instead.';return}
+    var r=new FileReader();r.onload=function(){W9F=r.result;p.classList.add('has');p.style.backgroundImage='';p.querySelector('.pp-in').innerHTML=IC.doc+'<b>'+E(f.name)+'</b>';$('w9b').disabled=false};r.readAsDataURL(f);return}
+  shrink(f,1800,false,0.82).then(function(u){W9F=u;p.classList.add('has');p.style.backgroundImage='url('+u+')';p.querySelector('.pp-in').innerHTML=IC.cam+'<b>Change</b>';$('w9b').disabled=false}).catch(function(){$('w9e').textContent="That file didn't work. Try a photo."})}
+function w9Send(){var b=$('w9b');if(!W9F)return;b.disabled=true;b.textContent='Uploading…';call('w9',Object.assign(auth(),{file:W9F})).then(function(d){b.disabled=false;b.textContent='Upload W-9';
+  if(!d.ok){$('w9e').textContent=d.error||'Try again.';return}DOCS=d.docs;W9F=null;done('W-9 received','Thank you. You\'re all set.');show('home')})}
+
 /* ---------- supplies ---------- */
 function vSupplies(){$('v').innerHTML='<h1 class="title">Request supplies</h1><p class="lead">Tell Martin what you need. He\'ll update you here.</p>'+
   '<div class="card"><textarea id="ritems" rows="4" placeholder="One item per line, e.g.&#10;2 sleeves of 12 oz cups&#10;1 gallon oat milk"></textarea>'+
@@ -474,7 +524,7 @@ function admReq(){var b=$('adm-body');b.innerHTML='<div class="muted">Loading…
 function pickSt(id,el){var bs=$('rs'+id).children;for(var i=0;i<bs.length;i++)bs[i].classList.toggle('sel',bs[i]===el)}
 function saveReq(id){var s=$('rs'+id).querySelector('.sel');A('request_update',{id:id,status:s?s.textContent:'New',admin_note:$('rn'+id).value}).then(function(d){$('rm'+id).innerHTML=d.ok?'<span class="okt">✓ Saved</span>':E(d.error)})}
 function admTeam(){var b=$('adm-body');b.innerHTML='<div class="muted">Loading…</div>';A('people').then(function(d){if(!$('adm-body'))return;if(!d.ok){b.innerHTML='<div class="err">'+E(d.error)+'</div>';return}window._PPL=d.people;
-  b.innerHTML=d.people.map(function(p){return '<div class="card" id="p'+p.id+'"><div class="payrow">'+av(p,'xs')+'<span class="pr-n"><b>'+E(p.name)+'</b><small>'+money(p.rate_cents/100)+'/h'+(p.is_admin?' · admin':'')+(p.active?'':' · inactive')+(p.locked_until>Date.now()?' · locked':'')+(p.phones?' · on '+p.phones+' phone'+(p.phones>1?'s':''):'')+(p.pay_method?'<br>'+E(payLabel({method:p.pay_method,handle:p.pay_handle})):'')+'</small></span><button class="link" onclick="editPerson('+p.id+')">Edit</button></div></div>'}).join('')+
+  b.innerHTML=d.people.map(function(p){return '<div class="card" id="p'+p.id+'"><div class="payrow">'+av(p,'xs')+'<span class="pr-n"><b>'+E(p.name)+'</b><small>'+money(p.rate_cents/100)+'/h'+(p.is_admin?' · admin':'')+(p.active?'':' · inactive')+(p.locked_until>Date.now()?' · locked':'')+(p.phones?' · on '+p.phones+' phone'+(p.phones>1?'s':''):'')+(p.pay_method?'<br>'+E(payLabel({method:p.pay_method,handle:p.pay_handle})):'')+(p.is_admin?'':'<br>'+(p.signed_at?'Agreement ✓ '+day(p.signed_at):'<span class="warnt">Agreement not signed</span>')+' · '+(p.w9_at?'W-9 ✓':'<span class="warnt">No W-9</span>'))+'</small></span><span class="pbtns"><button class="link" onclick="editPerson('+p.id+')">Edit</button>'+(p.is_admin?'':'<a class="link" href="/agreement.html?p='+p.id+'" target="_blank">File</a>')+'</span></div></div>'}).join('')+
    '<details class="card"><summary>Add a team member</summary>'+personForm(null)+'</details>'})}
 function personForm(p){var k=p?p.id:'new';return '<input type="text" id="pn'+k+'" placeholder="Name" value="'+(p?E(p.name):'')+'"><input type="number" id="pr'+k+'" step="0.25" min="0" placeholder="Hourly rate ($)" value="'+(p?(p.rate_cents/100):'')+'"><input type="password" inputmode="numeric" id="pc'+k+'" maxlength="8" placeholder="'+(p?'New code (leave blank to keep)':'Their code (4 digits is easiest)')+'">'+
   (p?'<label class="chk"><input type="checkbox" id="pa'+k+'"'+(p.active?' checked':'')+'> Active</label><label class="chk"><input type="checkbox" id="pf'+k+'"> Sign them out of every phone</label>':'')+'<label class="chk"><input type="checkbox" id="pd'+k+'"'+(p&&p.is_admin?' checked':'')+'> Admin (sees pay, edits shifts)</label>'+
