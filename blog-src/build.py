@@ -65,8 +65,12 @@ def short_date(d):
     x = datetime.date.fromisoformat(d); return x.strftime('%b ') + str(x.day) + x.strftime(', %Y')
 def chip(a, extra=''):
     return f'<div class=chip><img src="{a["image"]}" alt="{attr(a["image_alt"])}" width=42 height=42 loading=lazy><div><b>{esc(a["name"])}</b><span>{esc(a["role"])}{extra}</span></div></div>'
+def card_vid(p):
+    v = p.get('card_video')
+    if not v: return ''
+    return f'<video src="{v}" poster="{p["card_image"]}" autoplay muted loop playsinline preload="metadata" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:{p["card_position"]}"></video>'
 def scard(p, a):
-    return (f'<a class=scard href="/blog/{p["slug"]}.html"><div class=simg role=img aria-label="{attr(p["card_alt"])}" style="background-image:url({p["card_image"]});background-position:{p["card_position"]}"></div>'
+    return (f'<a class=scard href="/blog/{p["slug"]}.html"><div class=simg role=img aria-label="{attr(p["card_alt"])}" style="background-image:url({p["card_image"]});background-position:{p["card_position"]};position:relative;overflow:hidden">{card_vid(p)}</div>'
             f'<div class=sbody><span class=tag>{esc(p["category"])} &middot; {short_date(p["date"])}</span><h3>{esc(p["title"])}</h3><p>{esc(p["excerpt"])}</p><span class=go>Read the story</span></div></a>')
 
 # ---------- OG images ----------
@@ -156,7 +160,7 @@ def build_index():
     h += ('<header class=bhero><p class=eyebrow>The Kahoa Coffee Blog</p><h1>From the <em>Highlands</em></h1><div class=rule></div>'
           '<p class=lede>Stories from our Kenyan coffee-farming family, and plain-English guides to the coffee in your cup.</p></header>\n')
     f = posts[0]; fa = authors[f['author']]
-    h += (f'<a class=feature href="/blog/{f["slug"]}.html"><div class=fimg role=img aria-label="{attr(f["card_alt"])}" style="background-image:url({f["card_image"]});background-position:{f["card_position"]}"></div>'
+    h += (f'<a class=feature href="/blog/{f["slug"]}.html"><div class=fimg role=img aria-label="{attr(f["card_alt"])}" style="background-image:url({f["card_image"]});background-position:{f["card_position"]};position:relative;overflow:hidden">{card_vid(f)}</div>'
           f'<div class=ftxt><span class=tag>Latest story &middot; {esc(f["category"])} &middot; {short_date(f["date"])}</span><h2>{esc(f["title"])}</h2><p class=ex>{esc(f["excerpt"])}</p>'
           f'{chip(fa, " &middot; " + str(f["read_min"]) + " min read")}<span class=go>Read the story</span></div></a>\n')
     if len(posts) > 1:
