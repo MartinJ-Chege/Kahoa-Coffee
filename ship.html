@@ -49,7 +49,20 @@ button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
 #hr{justify-self:end;padding-right:6px}
 .iconbtn{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:var(--gold2)}
 .iconbtn:active{background:rgba(255,255,255,.08)}
-.me{width:34px;height:34px;border-radius:50%;background:var(--gold);color:var(--brown);display:grid;place-items:center;font-weight:700;font-size:15px}
+.me{display:block;padding:0;border-radius:50%}
+.av.me-av{width:36px;height:36px;font-size:18px;box-shadow:0 0 0 2px var(--gold)}
+.av{overflow:hidden}.av img{width:100%;height:100%;object-fit:cover;display:block}
+.hello{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.myav{position:relative;flex:none;padding:0}.myav .av.big{width:78px;height:78px;margin:0;font-size:34px;box-shadow:0 6px 16px rgba(43,24,16,.18)}
+.cam{position:absolute;right:-2px;bottom:-2px;width:30px;height:30px;border-radius:50%;background:var(--brown);color:var(--gold2);display:grid;place-items:center;border:2px solid var(--bg)}
+#app .cam svg{width:15px;height:15px}
+.photo-pick{display:block;position:relative;height:190px;border:2px dashed #D9C7AA;border-radius:16px;background:var(--soft) center/cover no-repeat;cursor:pointer;overflow:hidden}
+.photo-pick input{position:absolute;opacity:0;width:1px;height:1px}
+.pp-in{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--mid)}
+#app .pp-in svg{width:30px;height:30px}.pp-in small{color:var(--muted);font-size:12.5px}
+.photo-pick.has{border:0}.photo-pick.has .pp-in{inset:auto 10px 10px auto;flex-direction:row;background:rgba(28,14,6,.78);color:#fff;padding:7px 12px;border-radius:20px;gap:6px;font-size:13px}
+#app .photo-pick.has .pp-in svg{width:16px;height:16px}.photo-pick.busy{opacity:.55}
+.spots{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.spots .chip{box-shadow:none;background:var(--soft)}.spots .chip.on{background:var(--brown);color:var(--gold2)}
 #v{max-width:520px;margin:0 auto;padding:22px 18px 48px}
 .title{font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:34px;line-height:1.1;margin:4px 0 4px;color:var(--brown)}
 .lead{color:var(--muted);margin:0 0 20px;font-size:14.5px}
@@ -218,7 +231,7 @@ function printOne(r){printLabels(ORDERS.filter(function(o){return o.row===r}))}
 function printAll(){printLabels(ORDERS.filter(function(o){return !o.status&&/austin/i.test(o.address)}))}
 
 var API='https://kahoa-checkoutout.chegekibuthu1.workers.dev/staff/',TZ='America/Chicago';
-var PEOPLE=[],ORDERS=[],ME=null,VIEW='',PIN='',PICK=null,TICK=null,OPEN=null,SHIPM={};
+var PEOPLE=[],ORDERS=[],DELIV=[],DPHOTO={},ME=null,VIEW='',PIN='',PICK=null,TICK=null,OPEN=null,SHIPM={};
 try{ME=JSON.parse(localStorage.getItem('kahoa_team_me')||'null')}catch(e){}
 function saveMe(m){ME=m;try{m?localStorage.setItem('kahoa_team_me',JSON.stringify(m)):localStorage.removeItem('kahoa_team_me')}catch(e){}}
 function E(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
@@ -235,6 +248,11 @@ function money(n){return '$'+Number(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/
 function ymd(d){return d.toLocaleDateString('en-CA',{timeZone:TZ})}
 function localInput(ms){var d=new Date(ms);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16)}
 function initial(n){return E(String(n||'?').trim().charAt(0).toUpperCase())}
+function av(p,cls){cls='av'+(cls?' '+cls:'');return p&&p.pv?'<span class="'+cls+'"><img src="'+API+'avatar/'+p.id+'?v='+p.pv+'" alt=""></span>':'<span class="'+cls+'">'+initial(p&&p.name)+'</span>'}
+function pv(id){var p=PEOPLE.filter(function(x){return x.id===id})[0];return p?p.pv:0}
+function shrink(file,max,square,q){return new Promise(function(res,rej){var img=new Image();img.onload=function(){var w=img.naturalWidth,h=img.naturalHeight,sx=0,sy=0,sw=w,sh=h;
+  if(square){var m=Math.min(w,h);sx=(w-m)/2;sy=(h-m)/2;sw=sh=m}var s=Math.min(1,max/Math.max(sw,sh)),c=document.createElement('canvas');c.width=Math.round(sw*s);c.height=Math.round(sh*s);
+  c.getContext('2d').drawImage(img,sx,sy,sw,sh,0,0,c.width,c.height);URL.revokeObjectURL(img.src);res(c.toDataURL('image/jpeg',q||0.75))};img.onerror=function(){rej(new Error('bad image'))};img.src=URL.createObjectURL(file)})}
 function hourCT(){return Number(new Date().toLocaleString('en-US',{timeZone:TZ,hour:'numeric',hour12:false}))%24}
 var IC={
  box:'<svg viewBox="0 0 24 24"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/></svg>',
@@ -243,6 +261,8 @@ var IC={
  chev:'<svg viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></svg>',
  back:'<svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg>',
  del:'<svg viewBox="0 0 24 24"><path d="M9 6h11v12H9l-6-6z"/><path d="m12 10 4 4m0-4-4 4"/></svg>',
+ cam:'<svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',
+ pin:'<svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
  check:'<svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
  print:'<svg viewBox="0 0 24 24"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M7 14h10v7H7z"/></svg>',
  refresh:'<svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg>'};
@@ -252,20 +272,20 @@ function show(v){if(TICK){clearInterval(TICK);TICK=null}
   if(!ME&&v!=='pin')v='who';if(v==='admin'&&!(ME&&ME.is_admin))v='home';
   VIEW=v;var sub=['ship','supplies','admin'].indexOf(v)!==-1;
   $('hb').innerHTML=sub?'<button class="iconbtn" onclick="show(\'home\')" aria-label="Back">'+IC.back+'</button>':(v==='pin'?'<button class="iconbtn" onclick="show(\'who\')" aria-label="Back">'+IC.back+'</button>':'');
-  $('hr').innerHTML=ME&&v!=='who'&&v!=='pin'?'<span class="me" title="'+E(ME.name)+'">'+initial(ME.name)+'</span>':'';
+  $('hr').innerHTML=ME&&v!=='who'&&v!=='pin'?'<button class="me" onclick="pickAvatar()" aria-label="Change your photo">'+av(ME,'me-av')+'</button>':'';
   window.scrollTo(0,0);({who:vWho,pin:vPin,home:vHome,ship:vShip,supplies:vSupplies,admin:vAdmin})[v]()}
 document.addEventListener('visibilitychange',function(){if(!document.hidden&&VIEW==='home')vHome()});
 
 /* ---------- who are you ---------- */
 function vWho(){$('v').innerHTML='<h1 class="title">Who\'s working?</h1><p class="lead">Tap your name to get started.</p><div class="people" id="people"><div class="muted">Loading…</div></div>';
   call('people').then(function(d){if(VIEW!=='who')return;if(!d.ok){$('people').innerHTML='<div class="err">'+E(d.error)+'</div>';return}PEOPLE=d.people||[];
-    $('people').innerHTML=PEOPLE.length?PEOPLE.map(function(p){return '<button class="person" onclick="pick('+p.id+')"><span class="av">'+initial(p.name)+'</span><span class="pn">'+E(p.name)+'</span>'+(p.on_since?'<span class="ps on">On the clock</span>':'<span class="ps">Off</span>')+'</button>'}).join(''):'<div class="muted">No one on the team yet.</div>'})}
+    $('people').innerHTML=PEOPLE.length?PEOPLE.map(function(p){return '<button class="person" onclick="pick('+p.id+')">'+av(p)+'<span class="pn">'+E(p.name)+'</span>'+(p.on_since?'<span class="ps on">On the clock</span>':'<span class="ps">Off</span>')+'</button>'}).join(''):'<div class="muted">No one on the team yet.</div>'})}
 function pick(id){PICK=PEOPLE.filter(function(p){return p.id===id})[0];PIN='';show('pin')}
 
 /* ---------- code pad ---------- */
 function vPin(){if(!PICK){show('who');return}
   var keys=['1','2','3','4','5','6','7','8','9','del','0','go'];
-  $('v').innerHTML='<div class="pin"><span class="av big">'+initial(PICK.name)+'</span><h1 class="title">Hi '+E(PICK.name)+'</h1><p class="lead">Enter your code</p><div class="dots" id="dots"></div><div class="err c" id="perr"></div>'+
+  $('v').innerHTML='<div class="pin">'+av(PICK,'big')+'<h1 class="title">Hi '+E(PICK.name)+'</h1><p class="lead">Enter your code</p><div class="dots" id="dots"></div><div class="err c" id="perr"></div>'+
    '<div class="pad">'+keys.map(function(k){return k==='del'?'<button class="key fn" onclick="pk(\'del\')" aria-label="Delete">'+IC.del+'</button>':k==='go'?'<button class="key go" id="kgo" onclick="pk(\'go\')" aria-label="Enter">'+IC.check+'</button>':'<button class="key" onclick="pk(\''+k+'\')">'+k+'</button>'}).join('')+'</div></div>';
   dots()}
 function dots(){var n=Math.max(4,PIN.length),h='';for(var i=0;i<n;i++)h+='<i class="'+(i<PIN.length?'f':'')+'"></i>';$('dots').innerHTML=h;$('kgo').className='key go'+(PIN.length>=4?' ready':'')}
@@ -277,18 +297,21 @@ document.addEventListener('keydown',function(e){if(VIEW!=='pin')return;if(/^\d$/
 function submitPin(){var pad=document.querySelector('.pad');pad.classList.add('busy');
   call('check',{person_id:PICK.id,code:PIN,remember:true}).then(function(d){pad.classList.remove('busy');
     if(!d.ok||!d.token){PIN='';dots();$('perr').textContent=d.error||'Try again.';var el=$('dots');el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake');return}
-    saveMe({id:PICK.id,name:d.person.name,is_admin:d.person.is_admin,token:d.token});PIN='';show('home')})}
+    saveMe({id:PICK.id,name:d.person.name,is_admin:d.person.is_admin,token:d.token,pv:d.person.pv||0});PIN='';show('home')})}
+function pickAvatar(){var i=document.createElement('input');i.type='file';i.accept='image/*';i.onchange=function(){var f=i.files&&i.files[0];if(!f)return;
+  shrink(f,360,true,0.8).then(function(u){return call('avatar',Object.assign(auth(),{photo:u}))}).then(function(d){if(!d.ok){alert(d.error||'Try again.');return}saveMe(Object.assign({},ME,{pv:d.pv}));show(VIEW)}).catch(function(){alert("That photo didn't work. Try another one.")})};i.click()}
 function switchUser(){if(OPEN&&!confirm('You are still clocked in. Switch person anyway?'))return;saveMe(null);OPEN=null;show('who')}
 
 /* ---------- home ---------- */
 function vHome(){var hr=hourCT(),g=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
-  $('v').innerHTML='<div class="hello"><div class="greet">'+g+',</div><div class="nm">'+E(ME.name)+'</div><div class="date">'+new Date().toLocaleDateString('en-US',{timeZone:TZ,weekday:'long',month:'long',day:'numeric'})+'</div></div>'+
+  $('v').innerHTML='<div class="hello"><div><div class="greet">'+g+',</div><div class="nm">'+E(ME.name)+'</div><div class="date">'+new Date().toLocaleDateString('en-US',{timeZone:TZ,weekday:'long',month:'long',day:'numeric'})+'</div></div>'+
+   '<button class="myav" onclick="pickAvatar()" aria-label="Change your photo">'+av(ME,'big')+'<span class="cam">'+IC.cam+'</span></button></div>'+
    '<div class="clock" id="clock"><div class="state">Checking…</div></div><div class="week" id="week"></div>'+
    '<div class="tiles"><button class="tile" onclick="show(\'ship\')"><span class="ti">'+IC.box+'</span><span class="tt"><b>Ship orders</b><small>Print labels and send tracking</small></span>'+IC.chev+'</button>'+
    '<button class="tile" onclick="show(\'supplies\')"><span class="ti">'+IC.cup+'</span><span class="tt"><b>Request supplies</b><small>Cups, milk, syrups, anything</small></span>'+IC.chev+'</button>'+
    (ME.is_admin?'<button class="tile" onclick="show(\'admin\')"><span class="ti">'+IC.chart+'</span><span class="tt"><b>Admin</b><small>Hours, pay, requests, team</small></span>'+IC.chev+'</button>':'')+'</div>'+
    '<button class="switch" onclick="switchUser()">Not '+E(ME.name)+'? Switch person</button>';
-  call('check',auth()).then(function(d){if(VIEW!=='home'||!d.ok)return;OPEN=d.open;drawClock();
+  call('check',auth()).then(function(d){if(VIEW!=='home'||!d.ok)return;if((d.person.pv||0)!==(ME.pv||0)||d.person.name!==ME.name||!!d.person.is_admin!==!!ME.is_admin){saveMe(Object.assign({},ME,{pv:d.person.pv||0,name:d.person.name,is_admin:d.person.is_admin}));vHome();return}OPEN=d.open;drawClock();
     $('week').innerHTML='This week <b>'+hrs(d.week.hours)+' hrs</b>'+(d.week.overtime?' · '+hrs(d.week.overtime)+' overtime':'')})}
 function drawClock(){var c=$('clock');if(!c)return;if(TICK){clearInterval(TICK);TICK=null}
   if(OPEN){c.className='clock on';c.innerHTML='<div class="state"><i></i>On the clock</div><div class="timer" id="timer"></div><div class="since">Since '+t(OPEN.clock_in)+(OPEN.in_note?' · '+E(OPEN.in_note):'')+'</div>'+
@@ -311,10 +334,15 @@ function done(big,small,kind,time){var o=$('done');o.className='done show '+(kin
 function vShip(){$('v').innerHTML='<h1 class="title">Ship orders</h1><p class="lead">Mark an order shipped and the customer gets an email with tracking.</p>'+
   '<div class="bar"><button class="btn ghost" onclick="printAll()">'+IC.print+'Print Austin labels</button><button class="btn ghost sq" onclick="vShip()" aria-label="Refresh">'+IC.refresh+'</button></div><div id="list"><div class="muted">Loading orders…</div></div>';
   call('orders',Object.assign(auth(),{api_hint:(function(){try{return localStorage.getItem('kahoa_ship_api')||''}catch(e){return ''}})()})).then(function(d){if(VIEW!=='ship')return;if(!d.ok){$('list').innerHTML='<div class="err">'+E(d.error||'Something went wrong.')+'</div>';return}
-    ORDERS=(d.orders||[]).filter(function(o){return !/^\s*events?\s*:/i.test(o.product)&&!/guests/i.test(o.total)});drawOrders()})}
+    ORDERS=(d.orders||[]).filter(function(o){return !/^\s*events?\s*:/i.test(o.product)&&!/guests/i.test(o.total)});DELIV=d.deliveries||[];drawOrders()})}
 function drawOrders(){var open=ORDERS.filter(function(o){return !o.status}),dn=ORDERS.filter(function(o){return o.status}),h='';
+  var out=DELIV.filter(function(x){return !x.delivered_at});
+  if(out.length)h+='<div class="sech">Out for delivery <span class="count">'+out.length+'</span></div>'+out.map(function(x){return '<div class="card order" id="dv'+x.id+'"><div class="orow"><b class="oname">'+E(x.name)+'</b><span class="pill">Out since '+t(x.out_at)+'</span></div><div class="oprod">'+E(x.product)+'</div><div class="muted">'+E(x.address)+'</div>'+
+    '<button class="btn wide" id="db'+x.id+'" onclick="openDeliver(\''+x.id+'\')">'+IC.cam+'Delivered: add photo</button><div id="df'+x.id+'"></div></div>'}).join('');
   h+=open.length?'<div class="sech">To ship <span class="count">'+open.length+'</span></div>'+open.map(orderCard).join(''):'<div class="card empty"><span class="ring xs">'+IC.check+'</span>All caught up. Nothing waiting to ship.</div>';
-  if(dn.length)h+='<div class="sech">Shipped</div>'+dn.map(function(o){return '<div class="card done-o"><div class="orow"><b>'+E(o.name)+'</b><span class="pill ok">'+E(o.status)+'</span></div><div class="muted">'+E(o.product)+'</div><div class="muted">'+E(o.shippedOn||'')+(o.tracking?' · '+E(o.tracking):'')+'</div></div>'}).join('');
+  if(dn.length)h+='<div class="sech">Shipped</div>'+dn.map(function(o){var dv=DELIV.filter(function(x){return x.order_row===o.row})[0],pend=dv&&!dv.delivered_at;if(pend)return '';
+    return '<div class="card done-o" id="c'+o.row+'"><div class="orow"><b>'+E(o.name)+'</b><span class="pill ok">'+(dv?'Delivered':E(o.status))+'</span></div><div class="muted">'+E(o.product)+'</div><div class="muted xs">'+(dv?'Delivered '+t(dv.delivered_at)+' by '+E(dv.delivered_by)+(dv.left_at?' · '+E(dv.left_at):''):E(o.shippedOn||'')+(o.tracking?' · '+E(o.tracking):''))+'</div>'+
+    (dv?'':'<button class="link" onclick="openDeliver(null,'+o.row+')">Delivered it yourself? Send a photo</button><div id="dfr'+o.row+'"></div>')+'</div>'}).join('');
   $('list').innerHTML=h}
 function orderCard(o){var r=o.row;return '<div class="card order" id="c'+r+'"><div class="orow"><b class="oname">'+E(o.name)+'</b><span class="ototal">'+E(o.total)+'</span></div>'+
   '<div class="oprod">'+E(o.product)+(o.grind?' · '+E(o.grind):'')+'</div><div class="muted">'+E(o.address)+'</div><div class="muted xs">'+E(o.when)+' · '+E(o.email)+'</div>'+
@@ -333,9 +361,29 @@ function shipIt(r){var o=ORDERS.filter(function(x){return x.row===r})[0],b=$('b'
   if(p.method==='carrier'&&!p.tracking&&!p.noEmail){e.textContent='Add the tracking number.';return}
   if(p.method==='pickup'&&!p.note){e.textContent='Add where and when they can pick it up.';return}
   b.disabled=true;b.textContent='Sending…';
-  call('ship',Object.assign(auth(),{ship:p})).then(function(d){
-    if(d.ok){o.status=p.method==='pickup'?'Ready for pickup':p.method==='local'?'Delivered':'Shipped';o.shippedOn='Today';o.tracking=p.tracking;drawOrders();done('Done',p.noEmail?E(o.name)+'\'s order is marked done.':E(o.name)+' was emailed.')}
+  call('ship',Object.assign(auth(),{ship:p,order:{name:o.name,product:o.product,address:o.address}})).then(function(d){
+    if(d.ok){o.status=p.method==='pickup'?'Ready for pickup':p.method==='local'?'Out for delivery':'Shipped';o.shippedOn='Today';o.tracking=p.tracking;
+      if(d.delivery_id)DELIV.unshift({id:d.delivery_id,order_row:r,name:o.name,email:o.email,product:o.product,address:o.address,out_at:Date.now()});
+      drawOrders();done(p.method==='local'?'Out for delivery':'Done',(p.noEmail?E(o.name)+'\'s order is marked done.':E(o.name)+' was emailed.')+(p.method==='local'?' When you drop it off, tap Delivered to send them a photo.':''))}
     else{e.textContent=d.error||"It may not have sent. Check the sheet before trying again.";b.disabled=false;b.textContent=p.noEmail?'Mark done':'Send shipped email'}})}
+
+var SPOTS=['Front door','Back door','Porch','Mailbox','Front desk','Handed to them','Neighbor'];
+function openDeliver(id,row){var k=id||('r'+row),box=$(id?'df'+id:'dfr'+row);if(!box)return;if(id&&$('db'+id))$('db'+id).style.display='none';DPHOTO[k]=null;
+  box.innerHTML='<div class="shipf"><label class="photo-pick" id="pp'+k+'"><input type="file" accept="image/*" capture="environment" onchange="gotPhoto(\''+k+'\',this)"><span class="pp-in">'+IC.cam+'<b>Take a photo</b><small>Show where you left it</small></span></label>'+
+   '<div class="lbl2">Where did you leave it?</div><div class="spots" id="sp'+k+'">'+SPOTS.map(function(x){return '<button class="chip" onclick="spot(\''+k+'\',this)">'+x+'</button>'}).join('')+'</div>'+
+   '<input type="text" id="lf'+k+'" placeholder="Or type it, e.g. by the side gate" maxlength="120"><input type="text" id="dn'+k+'" placeholder="Note for the customer (optional)" maxlength="300">'+
+   '<label class="chk"><input type="checkbox" id="de'+k+'" checked> Email the customer</label><button class="btn wide" id="ds'+k+'" onclick="sendDeliver(\''+(id||'')+'\','+(row||0)+')">Send delivered email</button><div class="err" id="dr'+k+'"></div></div>'}
+function gotPhoto(k,inp){var f=inp.files&&inp.files[0];if(!f)return;var pp=$('pp'+k);pp.classList.add('busy');
+  shrink(f,1280,false,0.72).then(function(u){DPHOTO[k]=u;pp.classList.remove('busy');pp.classList.add('has');pp.style.backgroundImage='url('+u+')';pp.querySelector('.pp-in').innerHTML=IC.cam+'<b>Retake</b>'}).catch(function(){pp.classList.remove('busy');$('dr'+k).textContent="That photo didn't work. Try again."})}
+function spot(k,el){var bs=$('sp'+k).children;for(var i=0;i<bs.length;i++)bs[i].classList.toggle('on',bs[i]===el);$('lf'+k).value=el.textContent}
+function sendDeliver(id,row){var k=id||('r'+row),b=$('ds'+k),e=$('dr'+k);e.textContent='';var left=$('lf'+k).value.trim();
+  if(!DPHOTO[k]&&!left){e.textContent='Add a photo or say where you left it.';return}
+  var body=Object.assign(auth(),{id:id,photo:DPHOTO[k]||'',left_at:left,note:$('dn'+k).value.trim(),email_customer:$('de'+k).checked});
+  if(!id){var o=ORDERS.filter(function(x){return x.row===row})[0];body.order={row:row,name:o.name,email:o.email,product:o.product,address:o.address}}
+  b.disabled=true;b.textContent='Sending…';
+  call('deliver',body).then(function(d){if(!d.ok){e.textContent=d.error||'Try again.';b.disabled=false;b.textContent='Send delivered email';return}
+    var x=DELIV.filter(function(z){return z.id===d.id})[0];if(!x){x={id:d.id,order_row:row};DELIV.unshift(x)}x.delivered_at=Date.now();x.delivered_by=ME.name;x.left_at=left;
+    drawOrders();done('Delivered',d.emailed?'The customer was emailed'+(DPHOTO[k]?' with your photo.':'.'):(body.email_customer?"Saved, but the email didn't send. Try again later.":'Marked delivered.'))})}
 
 /* ---------- supplies ---------- */
 function vSupplies(){$('v').innerHTML='<h1 class="title">Request supplies</h1><p class="lead">Tell Martin what you need. He\'ll update you here.</p>'+
@@ -368,7 +416,7 @@ function admPay(){if(!RANGE){preset('week');return}var b=$('adm-body');
     var tot=d.totals.reduce(function(s,x){return{h:s.h+x.hours,p:s.p+x.pay}},{h:0,p:0}),h='';
     h+='<div class="stats"><div class="stat"><small>Hours</small><b>'+hrs(tot.h)+'</b></div><div class="stat"><small>Pay</small><b>'+money(tot.p)+'</b></div><div class="stat"><small>On now</small><b>'+d.on_now.length+'</b></div></div>';
     if(d.on_now.length)h+='<div class="card"><div class="sec0"><i class="live"></i>On the clock now</div>'+d.on_now.map(function(x){return '<div class="orow line"><b>'+E(x.name)+'</b><span class="muted xs">since '+dt(x.clock_in)+(x.in_note?' · '+E(x.in_note):'')+'</span></div>'}).join('')+'</div>';
-    h+='<div class="card"><div class="sec0">Pay · '+nice(RANGE.from)+' to '+nice(RANGE.to)+'</div>'+(d.totals.length?d.totals.map(function(x){return '<div class="payrow"><span class="av xs">'+initial(x.name)+'</span><span class="pr-n"><b>'+E(x.name)+'</b><small>'+x.shifts+' shift'+(x.shifts===1?'':'s')+' · '+hrs(x.hours)+' hrs'+(x.overtime?' · '+hrs(x.overtime)+' OT':'')+'</small></span><b class="pr-p">'+money(x.pay)+'</b></div>'}).join(''):'<div class="muted">No finished shifts in these dates.</div>')+
+    h+='<div class="card"><div class="sec0">Pay · '+nice(RANGE.from)+' to '+nice(RANGE.to)+'</div>'+(d.totals.length?d.totals.map(function(x){return '<div class="payrow">'+av({id:x.person_id,name:x.name,pv:pv(x.person_id)},'xs')+'<span class="pr-n"><b>'+E(x.name)+'</b><small>'+x.shifts+' shift'+(x.shifts===1?'':'s')+' · '+hrs(x.hours)+' hrs'+(x.overtime?' · '+hrs(x.overtime)+' OT':'')+'</small></span><b class="pr-p">'+money(x.pay)+'</b></div>'}).join(''):'<div class="muted">No finished shifts in these dates.</div>')+
       '<div class="fine">Overtime is over 40 hours in a Monday to Sunday week, at 1.5×. Open shifts count once clocked out.</div><button class="btn ghost wide" onclick="csv()">Download for payroll (CSV)</button></div>';
     h+='<div class="sech">Shifts</div><div class="card">'+(d.entries.length?d.entries.map(shiftRow).join(''):'<div class="muted">None.</div>')+'</div>';
     h+='<details class="card"><summary>Add a missed shift</summary><select id="ns-p">'+PEOPLE.map(function(p){return '<option value="'+p.id+'">'+E(p.name)+'</option>'}).join('')+'</select><label class="lbl2">Clock in</label><input type="datetime-local" id="ns-i"><label class="lbl2">Clock out</label><input type="datetime-local" id="ns-o"><input type="text" id="ns-n" placeholder="Reason (e.g. forgot to clock in)"><button class="btn wide" onclick="addShift()">Add shift</button><div class="err" id="ns-e"></div></details>';
@@ -396,7 +444,7 @@ function admReq(){var b=$('adm-body');b.innerHTML='<div class="muted">Loading…
 function pickSt(id,el){var bs=$('rs'+id).children;for(var i=0;i<bs.length;i++)bs[i].classList.toggle('sel',bs[i]===el)}
 function saveReq(id){var s=$('rs'+id).querySelector('.sel');A('request_update',{id:id,status:s?s.textContent:'New',admin_note:$('rn'+id).value}).then(function(d){$('rm'+id).innerHTML=d.ok?'<span class="okt">✓ Saved</span>':E(d.error)})}
 function admTeam(){var b=$('adm-body');b.innerHTML='<div class="muted">Loading…</div>';A('people').then(function(d){if(!$('adm-body'))return;if(!d.ok){b.innerHTML='<div class="err">'+E(d.error)+'</div>';return}window._PPL=d.people;
-  b.innerHTML=d.people.map(function(p){return '<div class="card" id="p'+p.id+'"><div class="payrow"><span class="av xs">'+initial(p.name)+'</span><span class="pr-n"><b>'+E(p.name)+'</b><small>'+money(p.rate_cents/100)+'/h'+(p.is_admin?' · admin':'')+(p.active?'':' · inactive')+(p.locked_until>Date.now()?' · locked':'')+(p.phones?' · on '+p.phones+' phone'+(p.phones>1?'s':''):'')+'</small></span><button class="link" onclick="editPerson('+p.id+')">Edit</button></div></div>'}).join('')+
+  b.innerHTML=d.people.map(function(p){return '<div class="card" id="p'+p.id+'"><div class="payrow">'+av(p,'xs')+'<span class="pr-n"><b>'+E(p.name)+'</b><small>'+money(p.rate_cents/100)+'/h'+(p.is_admin?' · admin':'')+(p.active?'':' · inactive')+(p.locked_until>Date.now()?' · locked':'')+(p.phones?' · on '+p.phones+' phone'+(p.phones>1?'s':''):'')+'</small></span><button class="link" onclick="editPerson('+p.id+')">Edit</button></div></div>'}).join('')+
    '<details class="card"><summary>Add a team member</summary>'+personForm(null)+'</details>'})}
 function personForm(p){var k=p?p.id:'new';return '<input type="text" id="pn'+k+'" placeholder="Name" value="'+(p?E(p.name):'')+'"><input type="number" id="pr'+k+'" step="0.25" min="0" placeholder="Hourly rate ($)" value="'+(p?(p.rate_cents/100):'')+'"><input type="password" inputmode="numeric" id="pc'+k+'" maxlength="8" placeholder="'+(p?'New code (leave blank to keep)':'Their code (4 digits is easiest)')+'">'+
   (p?'<label class="chk"><input type="checkbox" id="pa'+k+'"'+(p.active?' checked':'')+'> Active</label><label class="chk"><input type="checkbox" id="pf'+k+'"> Sign them out of every phone</label>':'')+'<label class="chk"><input type="checkbox" id="pd'+k+'"'+(p&&p.is_admin?' checked':'')+'> Admin (sees pay, edits shifts)</label>'+

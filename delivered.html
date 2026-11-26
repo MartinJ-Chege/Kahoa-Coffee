@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Your Kahoa order was delivered</title>
+<link rel="icon" href="/kahoalogo.png">
+<meta name="theme-color" content="#2b1810">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F6EFE3;--brown:#2b1810;--mid:#5A2E1A;--muted:#8B6040;--gold:#D4A843;--gold2:#E8C878;--soft:#F1E7D6}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#1C0E06;font-family:Montserrat,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:15px;line-height:1.5}
+.hd{background:var(--brown);height:64px;display:flex;align-items:center;justify-content:center}.hd img{height:34px}
+main{max-width:520px;margin:0 auto;padding:26px 18px 50px}
+.tick{width:64px;height:64px;border-radius:50%;background:var(--gold);color:var(--brown);display:grid;place-items:center;margin:0 auto 14px}
+.tick svg{width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:38px;line-height:1.1;text-align:center;margin:0 0 6px;color:var(--brown)}
+.sub{text-align:center;color:var(--muted);margin:0 0 22px}
+.card{background:#fff;border-radius:20px;padding:16px;box-shadow:0 1px 2px rgba(43,24,16,.06),0 8px 22px rgba(43,24,16,.06);margin-bottom:14px}
+.photo{width:100%;border-radius:14px;display:block;margin-bottom:14px;background:var(--soft)}
+.row{display:flex;gap:12px;padding:8px 0;align-items:flex-start}.row+.row{border-top:1px solid var(--soft)}
+.row small{display:block;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:1px;font-weight:600}
+.row b{font-weight:600}
+.note{background:var(--soft);border-radius:12px;padding:10px 14px;margin-top:8px}
+.btn{display:block;text-align:center;background:var(--brown);color:#FBF4E6;text-decoration:none;font-weight:700;padding:15px;border-radius:14px;margin-top:18px}
+.thanks{text-align:center;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:20px;color:var(--mid);margin-top:22px}
+.muted{color:var(--muted);text-align:center}
+</style></head><body>
+<header class="hd"><a href="/"><img src="/kahoa-logo-tight.webp" alt="Kahoa Coffee"></a></header>
+<main id="m"><p class="muted">Loading your delivery…</p></main>
+<script>
+(function(){
+  function E(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+  var id=(location.search.match(/[?&]d=([a-f0-9]{24})/)||[])[1],m=document.getElementById('m');
+  var tick='<div class="tick"><svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>';
+  if(!id){m.innerHTML='<p class="muted">We couldn\'t find that delivery. Questions? Email <a href="mailto:info@kahoa.shop">info@kahoa.shop</a>.</p>';return}
+  fetch('https://kahoa-checkoutout.chegekibuthu1.workers.dev/staff/delivery',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})})
+  .then(function(r){return r.json()}).then(function(d){
+    if(!d.ok){m.innerHTML='<p class="muted">We couldn\'t find that delivery. Questions? Email <a href="mailto:info@kahoa.shop">info@kahoa.shop</a>.</p>';return}
+    var when=new Date(d.delivered_at).toLocaleString('en-US',{timeZone:'America/Chicago',weekday:'long',month:'long',day:'numeric',hour:'numeric',minute:'2-digit'});
+    m.innerHTML=tick+'<h1>Delivered'+(d.first?', '+E(d.first):'')+'!</h1><p class="sub">Your Kahoa coffee has arrived.</p><div class="card">'+
+      (d.photo?'<img class="photo" src="'+E(d.photo)+'" alt="Where we left your order">':'')+
+      '<div class="row"><div><small>Delivered</small><b>'+E(when)+'</b></div></div>'+
+      (d.left_at?'<div class="row"><div><small>Where we left it</small><b>'+E(d.left_at)+'</b></div></div>':'')+
+      (d.product?'<div class="row"><div><small>Your order</small><b>'+E(d.product)+'</b></div></div>':'')+
+      (d.note?'<div class="note">'+E(d.note)+'</div>':'')+'</div>'+
+      '<p class="muted">Can\'t find it? Email <a href="mailto:info@kahoa.shop">info@kahoa.shop</a> and we\'ll sort it out.</p>'+
+      '<a class="btn" href="/shop.html">Shop Kahoa again</a><p class="thanks">Thank you for being part of the Kahoa family.</p>';
+  }).catch(function(){m.innerHTML='<p class="muted">Couldn\'t load your delivery. Please refresh the page.</p>'});
+})();
+</script>
+</body></html>
