@@ -62,6 +62,7 @@ button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
 #app .pp-in svg{width:30px;height:30px}.pp-in small{color:var(--muted);font-size:12.5px}
 .photo-pick.has{border:0}.photo-pick.has .pp-in{inset:auto 10px 10px auto;flex-direction:row;background:rgba(28,14,6,.78);color:#fff;padding:7px 12px;border-radius:20px;gap:6px;font-size:13px}
 #app .photo-pick.has .pp-in svg{width:16px;height:16px}.photo-pick.busy{opacity:.55}
+.paybar{margin:4px 0 10px;padding:10px 12px;background:var(--soft);border-radius:12px}.paybar .due{font-size:14px}.paybar .due small{display:block;color:var(--muted);font-size:12.5px}.paybar .obtns{margin-top:10px}.paybar .btn{text-decoration:none;font-size:14px;padding:11px 10px}.paybar .btn.ghost{background:#fff}
 .spots{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.spots .chip{box-shadow:none;background:var(--soft)}.spots .chip.on{background:var(--brown);color:var(--gold2)}
 #v{max-width:520px;margin:0 auto;padding:22px 18px 48px}
 .title{font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:34px;line-height:1.1;margin:4px 0 4px;color:var(--brown)}
@@ -231,7 +232,7 @@ function printOne(r){printLabels(ORDERS.filter(function(o){return o.row===r}))}
 function printAll(){printLabels(ORDERS.filter(function(o){return !o.status&&/austin/i.test(o.address)}))}
 
 var API='https://kahoa-checkoutout.chegekibuthu1.workers.dev/staff/',TZ='America/Chicago';
-var PEOPLE=[],ORDERS=[],DELIV=[],DPHOTO={},ME=null,VIEW='',PIN='',PICK=null,TICK=null,OPEN=null,SHIPM={};
+var PAYME=null,PAYM={cashapp:'Cash App',venmo:'Venmo',zelle:'Zelle',paypal:'PayPal'},PEOPLE=[],ORDERS=[],DELIV=[],DPHOTO={},ME=null,VIEW='',PIN='',PICK=null,TICK=null,OPEN=null,SHIPM={};
 try{ME=JSON.parse(localStorage.getItem('kahoa_team_me')||'null')}catch(e){}
 function saveMe(m){ME=m;try{m?localStorage.setItem('kahoa_team_me',JSON.stringify(m)):localStorage.removeItem('kahoa_team_me')}catch(e){}}
 function E(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
@@ -263,6 +264,7 @@ var IC={
  del:'<svg viewBox="0 0 24 24"><path d="M9 6h11v12H9l-6-6z"/><path d="m12 10 4 4m0-4-4 4"/></svg>',
  cam:'<svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',
  pin:'<svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
+ cash:'<svg viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.8"/><path d="M6 9.5v5M18 9.5v5"/></svg>',
  check:'<svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
  print:'<svg viewBox="0 0 24 24"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M7 14h10v7H7z"/></svg>',
  refresh:'<svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg>'};
@@ -270,10 +272,10 @@ var IC={
 /* ---------- navigation ---------- */
 function show(v){if(TICK){clearInterval(TICK);TICK=null}
   if(!ME&&v!=='pin')v='who';if(v==='admin'&&!(ME&&ME.is_admin))v='home';
-  VIEW=v;var sub=['ship','supplies','admin'].indexOf(v)!==-1;
+  VIEW=v;var sub=['ship','supplies','admin','getpaid'].indexOf(v)!==-1;
   $('hb').innerHTML=sub?'<button class="iconbtn" onclick="show(\'home\')" aria-label="Back">'+IC.back+'</button>':(v==='pin'?'<button class="iconbtn" onclick="show(\'who\')" aria-label="Back">'+IC.back+'</button>':'');
   $('hr').innerHTML=ME&&v!=='who'&&v!=='pin'?'<button class="me" onclick="pickAvatar()" aria-label="Change your photo">'+av(ME,'me-av')+'</button>':'';
-  window.scrollTo(0,0);({who:vWho,pin:vPin,home:vHome,ship:vShip,supplies:vSupplies,admin:vAdmin})[v]()}
+  window.scrollTo(0,0);({who:vWho,pin:vPin,home:vHome,ship:vShip,supplies:vSupplies,admin:vAdmin,getpaid:vGetPaid})[v]()}
 document.addEventListener('visibilitychange',function(){if(!document.hidden&&VIEW==='home')vHome()});
 
 /* ---------- who are you ---------- */
@@ -300,6 +302,13 @@ function submitPin(){var pad=document.querySelector('.pad');pad.classList.add('b
     saveMe({id:PICK.id,name:d.person.name,is_admin:d.person.is_admin,token:d.token,pv:d.person.pv||0});PIN='';show('home')})}
 function pickAvatar(){var i=document.createElement('input');i.type='file';i.accept='image/*';i.onchange=function(){var f=i.files&&i.files[0];if(!f)return;
   shrink(f,360,true,0.8).then(function(u){return call('avatar',Object.assign(auth(),{photo:u}))}).then(function(d){if(!d.ok){alert(d.error||'Try again.');return}saveMe(Object.assign({},ME,{pv:d.pv}));show(VIEW)}).catch(function(){alert("That photo didn't work. Try another one.")})};i.click()}
+function payLabel(p){if(!p)return '';return p.method==='cashapp'?'Cash App $'+p.handle:p.method==='venmo'?'Venmo @'+p.handle:p.method==='paypal'?'PayPal.me/'+p.handle:'Zelle '+p.handle}
+function payLink(p,amt,note){var a=Number(amt).toFixed(2),n=encodeURIComponent(note||'Kahoa pay');if(!p)return null;
+  if(p.method==='cashapp')return 'https://cash.app/$'+encodeURIComponent(p.handle)+'/'+a;
+  if(p.method==='venmo')return 'venmo://paycharge?txn=pay&recipients='+encodeURIComponent(p.handle)+'&amount='+a+'&note='+n;
+  if(p.method==='paypal')return 'https://paypal.me/'+encodeURIComponent(p.handle)+'/'+a+'USD';return null}
+function copyTxt(t,el){var ok=function(){if(el){var o=el.textContent;el.textContent='Copied ✓';setTimeout(function(){el.textContent=o},1500)}};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,function(){prompt('Copy this:',t)});else prompt('Copy this:',t)}
 function switchUser(){if(OPEN&&!confirm('You are still clocked in. Switch person anyway?'))return;saveMe(null);OPEN=null;show('who')}
 
 /* ---------- home ---------- */
@@ -309,9 +318,10 @@ function vHome(){var hr=hourCT(),g=hr<12?'Good morning':hr<17?'Good afternoon':'
    '<div class="clock" id="clock"><div class="state">Checking…</div></div><div class="week" id="week"></div>'+
    '<div class="tiles"><button class="tile" onclick="show(\'ship\')"><span class="ti">'+IC.box+'</span><span class="tt"><b>Ship orders</b><small>Print labels and send tracking</small></span>'+IC.chev+'</button>'+
    '<button class="tile" onclick="show(\'supplies\')"><span class="ti">'+IC.cup+'</span><span class="tt"><b>Request supplies</b><small>Cups, milk, syrups, anything</small></span>'+IC.chev+'</button>'+
+   '<button class="tile" onclick="show(\'getpaid\')"><span class="ti">'+IC.cash+'</span><span class="tt"><b>Get paid</b><small id="paysub">'+(PAYME?E(payLabel(PAYME)):'Add your Cash App, Venmo, Zelle or PayPal')+'</small></span>'+IC.chev+'</button>'+
    (ME.is_admin?'<button class="tile" onclick="show(\'admin\')"><span class="ti">'+IC.chart+'</span><span class="tt"><b>Admin</b><small>Hours, pay, requests, team</small></span>'+IC.chev+'</button>':'')+'</div>'+
    '<button class="switch" onclick="switchUser()">Not '+E(ME.name)+'? Switch person</button>';
-  call('check',auth()).then(function(d){if(VIEW!=='home'||!d.ok)return;if((d.person.pv||0)!==(ME.pv||0)||d.person.name!==ME.name||!!d.person.is_admin!==!!ME.is_admin){saveMe(Object.assign({},ME,{pv:d.person.pv||0,name:d.person.name,is_admin:d.person.is_admin}));vHome();return}OPEN=d.open;drawClock();
+  call('check',auth()).then(function(d){if(VIEW!=='home'||!d.ok)return;if((d.person.pv||0)!==(ME.pv||0)||d.person.name!==ME.name||!!d.person.is_admin!==!!ME.is_admin){saveMe(Object.assign({},ME,{pv:d.person.pv||0,name:d.person.name,is_admin:d.person.is_admin}));vHome();return}OPEN=d.open;PAYME=d.pay||null;if($('paysub'))$('paysub').textContent=PAYME?payLabel(PAYME):'Add your Cash App, Venmo, Zelle or PayPal';drawClock();
     $('week').innerHTML='This week <b>'+hrs(d.week.hours)+' hrs</b>'+(d.week.overtime?' · '+hrs(d.week.overtime)+' overtime':'')})}
 function drawClock(){var c=$('clock');if(!c)return;if(TICK){clearInterval(TICK);TICK=null}
   if(OPEN){c.className='clock on';c.innerHTML='<div class="state"><i></i>On the clock</div><div class="timer" id="timer"></div><div class="since">Since '+t(OPEN.clock_in)+(OPEN.in_note?' · '+E(OPEN.in_note):'')+'</div>'+
@@ -385,6 +395,17 @@ function sendDeliver(id,row){var k=id||('r'+row),b=$('ds'+k),e=$('dr'+k);e.textC
     var x=DELIV.filter(function(z){return z.id===d.id})[0];if(!x){x={id:d.id,order_row:row};DELIV.unshift(x)}x.delivered_at=Date.now();x.delivered_by=ME.name;x.left_at=left;
     drawOrders();done('Delivered',d.emailed?'The customer was emailed'+(DPHOTO[k]?' with your photo.':'.'):(body.email_customer?"Saved, but the email didn't send. Try again later.":'Marked delivered.'))})}
 
+/* ---------- get paid ---------- */
+var GPM=null,HINT={cashapp:['$yourname','Your $cashtag'],venmo:['@yourname','Your Venmo username'],zelle:['Phone or email','The phone or email on your bank\'s Zelle'],paypal:['paypal.me/yourname','Your PayPal.me name']};
+function vGetPaid(){GPM=PAYME?PAYME.method:'cashapp';
+  $('v').innerHTML='<h1 class="title">Get paid</h1><p class="lead">Martin pays your hours straight to this account.</p><div class="card"><div class="seg" id="gpseg">'+Object.keys(PAYM).map(function(m){return '<button data-m="'+m+'" onclick="gpPick(\''+m+'\')">'+PAYM[m]+'</button>'}).join('')+'</div>'+
+   '<label class="lbl2" id="gplbl"></label><input type="text" id="gph" autocomplete="off" autocapitalize="none" value="'+E(PAYME?PAYME.handle:'')+'"><button class="btn wide" id="gpb" onclick="gpSave()">Save</button><div class="err" id="gpe"></div></div>'+
+   (PAYME?'<button class="switch" onclick="gpRemove()">Remove my payment info</button>':'');gpPick(GPM,true)}
+function gpPick(m,keep){GPM=m;var bs=$('gpseg').children;for(var i=0;i<bs.length;i++)bs[i].className=bs[i].getAttribute('data-m')===m?'on':'';$('gplbl').textContent=HINT[m][1];var h=$('gph');h.placeholder=HINT[m][0];h.inputMode=m==='zelle'?'email':'text';if(!keep||(PAYME&&PAYME.method!==m))h.value='';$('gpe').textContent=''}
+function gpSave(){var b=$('gpb'),e=$('gpe');e.textContent='';if(!$('gph').value.trim()){e.textContent='Add your '+PAYM[GPM]+' info.';return}b.disabled=true;
+  call('payinfo',Object.assign(auth(),{method:GPM,handle:$('gph').value})).then(function(d){b.disabled=false;if(!d.ok){e.textContent=d.error||'Try again.';return}PAYME=d.pay;done('Saved','Martin will pay you by '+E(payLabel(PAYME))+'.');show('home')})}
+function gpRemove(){if(!confirm('Remove your payment info?'))return;call('payinfo',Object.assign(auth(),{remove:true})).then(function(){PAYME=null;show('home')})}
+
 /* ---------- supplies ---------- */
 function vSupplies(){$('v').innerHTML='<h1 class="title">Request supplies</h1><p class="lead">Tell Martin what you need. He\'ll update you here.</p>'+
   '<div class="card"><textarea id="ritems" rows="4" placeholder="One item per line, e.g.&#10;2 sleeves of 12 oz cups&#10;1 gallon oat milk"></textarea>'+
@@ -416,13 +437,22 @@ function admPay(){if(!RANGE){preset('week');return}var b=$('adm-body');
     var tot=d.totals.reduce(function(s,x){return{h:s.h+x.hours,p:s.p+x.pay}},{h:0,p:0}),h='';
     h+='<div class="stats"><div class="stat"><small>Hours</small><b>'+hrs(tot.h)+'</b></div><div class="stat"><small>Pay</small><b>'+money(tot.p)+'</b></div><div class="stat"><small>On now</small><b>'+d.on_now.length+'</b></div></div>';
     if(d.on_now.length)h+='<div class="card"><div class="sec0"><i class="live"></i>On the clock now</div>'+d.on_now.map(function(x){return '<div class="orow line"><b>'+E(x.name)+'</b><span class="muted xs">since '+dt(x.clock_in)+(x.in_note?' · '+E(x.in_note):'')+'</span></div>'}).join('')+'</div>';
-    h+='<div class="card"><div class="sec0">Pay · '+nice(RANGE.from)+' to '+nice(RANGE.to)+'</div>'+(d.totals.length?d.totals.map(function(x){return '<div class="payrow">'+av({id:x.person_id,name:x.name,pv:pv(x.person_id)},'xs')+'<span class="pr-n"><b>'+E(x.name)+'</b><small>'+x.shifts+' shift'+(x.shifts===1?'':'s')+' · '+hrs(x.hours)+' hrs'+(x.overtime?' · '+hrs(x.overtime)+' OT':'')+'</small></span><b class="pr-p">'+money(x.pay)+'</b></div>'}).join(''):'<div class="muted">No finished shifts in these dates.</div>')+
+    h+='<div class="card"><div class="sec0">Pay · '+nice(RANGE.from)+' to '+nice(RANGE.to)+'</div>'+(d.totals.length?d.totals.map(function(x){return '<div class="payrow">'+av({id:x.person_id,name:x.name,pv:pv(x.person_id)},'xs')+'<span class="pr-n"><b>'+E(x.name)+'</b><small>'+x.shifts+' shift'+(x.shifts===1?'':'s')+' · '+hrs(x.hours)+' hrs'+(x.overtime?' · '+hrs(x.overtime)+' OT':'')+'</small></span><b class="pr-p">'+money(x.pay)+'</b></div>'+payActions(x)}).join('')+payHistory(d.payouts):'<div class="muted">No finished shifts in these dates.</div>')+
       '<div class="fine">Overtime is over 40 hours in a Monday to Sunday week, at 1.5×. Open shifts count once clocked out.</div><button class="btn ghost wide" onclick="csv()">Download for payroll (CSV)</button></div>';
     h+='<div class="sech">Shifts</div><div class="card">'+(d.entries.length?d.entries.map(shiftRow).join(''):'<div class="muted">None.</div>')+'</div>';
     h+='<details class="card"><summary>Add a missed shift</summary><select id="ns-p">'+PEOPLE.map(function(p){return '<option value="'+p.id+'">'+E(p.name)+'</option>'}).join('')+'</select><label class="lbl2">Clock in</label><input type="datetime-local" id="ns-i"><label class="lbl2">Clock out</label><input type="datetime-local" id="ns-o"><input type="text" id="ns-n" placeholder="Reason (e.g. forgot to clock in)"><button class="btn wide" onclick="addShift()">Add shift</button><div class="err" id="ns-e"></div></details>';
     $('payout').innerHTML=h})}
+function payActions(x){if(!x.shifts)return '';if(x.unpaid<=0.004)return '<div class="paybar"><span class="pill ok">Paid ✓</span></div>';
+  var note='Kahoa hours '+nice(RANGE.from)+' to '+nice(RANGE.to),lnk=payLink(x.pay_to,x.unpaid,note),h='<div class="paybar"><div class="due">To pay <b>'+money(x.unpaid)+'</b>'+(x.unpaid<x.pay-0.004?' <small>(rest already paid)</small>':'')+'<small>'+(x.pay_to?E(payLabel(x.pay_to)):'No payment info yet. Ask them to add it under Get paid.')+'</small></div><div class="obtns">';
+  if(lnk)h+='<a class="btn" href="'+lnk+'" target="_blank" rel="noopener">'+IC.cash+'Pay with '+PAYM[x.pay_to.method]+'</a>';
+  else if(x.pay_to&&x.pay_to.method==='zelle')h+='<button class="btn" onclick="copyTxt(\''+E(x.pay_to.handle).replace(/'/g,'')+'\',this)">Copy Zelle '+(x.pay_to.handle.indexOf('@')>0?'email':'number')+'</button>';
+  h+='<button class="btn ghost" onclick="markPaid('+x.person_id+')">Mark paid</button></div></div>';return h}
+function markPaid(pid){var x=window._SUM.totals.filter(function(z){return z.person_id===pid})[0];if(!confirm('Mark '+money(x.unpaid)+' for '+x.name+' as paid?'))return;
+  A('mark_paid',{staff_id:pid,from:RANGE.from,to:RANGE.to,amount:x.unpaid,method:x.pay_to?x.pay_to.method:''}).then(function(d){if(!d.ok){alert(d.error);return}admPay()})}
+function payHistory(a){if(!a||!a.length)return '';return '<div class="sec0" style="margin-top:16px">Recent payments</div>'+a.map(function(o){return '<div class="orow line"><span><b>'+E(o.name)+'</b> '+money(o.amount)+' <span class="muted xs">'+(o.method?PAYM[o.method]||E(o.method):'')+' · '+day(o.paid_at)+'</span></span><button class="link" onclick="undoPaid('+o.id+')">Undo</button></div>'}).join('')}
+function undoPaid(id){if(!confirm('Undo this payment? The hours go back to unpaid. This does not refund any money.'))return;A('undo_paid',{id:id}).then(function(){admPay()})}
 function shiftRow(e){var h=e.clock_out?(e.clock_out-e.clock_in)/3600000:null,long=h!==null&&h>12;var map=function(a,b){return a!=null?' <a target="_blank" rel="noopener" href="https://maps.google.com/?q='+a+','+b+'">map</a>':''};
-  return '<div class="shift" id="s'+e.id+'"><div class="orow"><b>'+E(e.name)+'</b><span>'+(h===null?'<span class="pill ok">On now</span>':'<b>'+hrs(h)+' hrs</b>')+(long?' <span class="pill warn">Check</span>':'')+'</span></div>'+
+  return '<div class="shift" id="s'+e.id+'"><div class="orow"><b>'+E(e.name)+'</b><span>'+(h===null?'<span class="pill ok">On now</span>':'<b>'+hrs(h)+' hrs</b>')+(long?' <span class="pill warn">Check</span>':'')+(e.paid_at?' <span class="pill ok">Paid</span>':'')+'</span></div>'+
    '<div class="muted xs">'+dt(e.clock_in)+map(e.in_lat,e.in_lng)+' → '+(e.clock_out?t(e.clock_out)+map(e.out_lat,e.out_lng):'…')+(e.in_note?' · '+E(e.in_note):'')+(e.out_note?' · '+E(e.out_note):'')+' · '+money(e.rate_cents/100)+'/h</div>'+
    (e.edited?'<div class="fine">'+E(e.edited)+'</div>':'')+'<button class="link" onclick="editShift('+e.id+')">Edit</button></div>'}
 function editShift(id){var e=window._SUM.entries.filter(function(x){return x.id===id})[0];
@@ -444,13 +474,17 @@ function admReq(){var b=$('adm-body');b.innerHTML='<div class="muted">Loading…
 function pickSt(id,el){var bs=$('rs'+id).children;for(var i=0;i<bs.length;i++)bs[i].classList.toggle('sel',bs[i]===el)}
 function saveReq(id){var s=$('rs'+id).querySelector('.sel');A('request_update',{id:id,status:s?s.textContent:'New',admin_note:$('rn'+id).value}).then(function(d){$('rm'+id).innerHTML=d.ok?'<span class="okt">✓ Saved</span>':E(d.error)})}
 function admTeam(){var b=$('adm-body');b.innerHTML='<div class="muted">Loading…</div>';A('people').then(function(d){if(!$('adm-body'))return;if(!d.ok){b.innerHTML='<div class="err">'+E(d.error)+'</div>';return}window._PPL=d.people;
-  b.innerHTML=d.people.map(function(p){return '<div class="card" id="p'+p.id+'"><div class="payrow">'+av(p,'xs')+'<span class="pr-n"><b>'+E(p.name)+'</b><small>'+money(p.rate_cents/100)+'/h'+(p.is_admin?' · admin':'')+(p.active?'':' · inactive')+(p.locked_until>Date.now()?' · locked':'')+(p.phones?' · on '+p.phones+' phone'+(p.phones>1?'s':''):'')+'</small></span><button class="link" onclick="editPerson('+p.id+')">Edit</button></div></div>'}).join('')+
+  b.innerHTML=d.people.map(function(p){return '<div class="card" id="p'+p.id+'"><div class="payrow">'+av(p,'xs')+'<span class="pr-n"><b>'+E(p.name)+'</b><small>'+money(p.rate_cents/100)+'/h'+(p.is_admin?' · admin':'')+(p.active?'':' · inactive')+(p.locked_until>Date.now()?' · locked':'')+(p.phones?' · on '+p.phones+' phone'+(p.phones>1?'s':''):'')+(p.pay_method?'<br>'+E(payLabel({method:p.pay_method,handle:p.pay_handle})):'')+'</small></span><button class="link" onclick="editPerson('+p.id+')">Edit</button></div></div>'}).join('')+
    '<details class="card"><summary>Add a team member</summary>'+personForm(null)+'</details>'})}
 function personForm(p){var k=p?p.id:'new';return '<input type="text" id="pn'+k+'" placeholder="Name" value="'+(p?E(p.name):'')+'"><input type="number" id="pr'+k+'" step="0.25" min="0" placeholder="Hourly rate ($)" value="'+(p?(p.rate_cents/100):'')+'"><input type="password" inputmode="numeric" id="pc'+k+'" maxlength="8" placeholder="'+(p?'New code (leave blank to keep)':'Their code (4 digits is easiest)')+'">'+
   (p?'<label class="chk"><input type="checkbox" id="pa'+k+'"'+(p.active?' checked':'')+'> Active</label><label class="chk"><input type="checkbox" id="pf'+k+'"> Sign them out of every phone</label>':'')+'<label class="chk"><input type="checkbox" id="pd'+k+'"'+(p&&p.is_admin?' checked':'')+'> Admin (sees pay, edits shifts)</label>'+
+  (p?'<div class="lbl2">Pay them by</div><div class="row2"><select id="pm'+k+'">'+Object.keys(PAYM).map(function(m){return '<option value="'+m+'"'+(p.pay_method===m?' selected':'')+'>'+PAYM[m]+'</option>'}).join('')+'</select><input type="text" id="ph'+k+'" autocapitalize="none" placeholder="$tag, @name, phone or email" value="'+E(p.pay_handle||'')+'"></div>':'')+
   '<div class="obtns"><button class="btn" onclick="savePerson('+(p?p.id:0)+')">'+(p?'Save':'Add')+'</button>'+(p?'<button class="btn ghost" onclick="admTeam()">Cancel</button>':'')+'</div><div class="err" id="pe'+k+'"></div>'}
 function editPerson(id){var p=window._PPL.filter(function(x){return x.id===id})[0];$('p'+id).innerHTML='<b>Edit '+E(p.name)+'</b>'+personForm(p)}
-function savePerson(id){var k=id||'new';A('person_save',{id:id||undefined,name:$('pn'+k).value,rate:$('pr'+k).value,new_code:$('pc'+k).value.trim()||undefined,is_admin:$('pd'+k).checked,active:id?$('pa'+k).checked:true,forget_phones:id?$('pf'+k).checked:false}).then(function(d){if(!d.ok){$('pe'+k).textContent=d.error;return}PEOPLE=[];call('people').then(function(x){if(x.ok)PEOPLE=x.people||[]});admTeam()})}
+function savePerson(id){var k=id||'new';A('person_save',{id:id||undefined,name:$('pn'+k).value,rate:$('pr'+k).value,new_code:$('pc'+k).value.trim()||undefined,is_admin:$('pd'+k).checked,active:id?$('pa'+k).checked:true,forget_phones:id?$('pf'+k).checked:false}).then(function(d){if(!d.ok){$('pe'+k).textContent=d.error;return}
+    if(id&&$('ph'+k)){var p=window._PPL.filter(function(x){return x.id===id})[0],nh=$('ph'+k).value.trim(),nm=$('pm'+k).value;
+      if(nh!==(p.pay_handle||'')||(nh&&nm!==p.pay_method)){A('payinfo_set',nh?{staff_id:id,method:nm,handle:nh}:{staff_id:id,remove:true}).then(function(r){if(!r.ok)alert(r.error);admTeam()});return}}
+    PEOPLE=[];call('people').then(function(x){if(x.ok)PEOPLE=x.people||[]});admTeam()})}
 
 show(ME?'home':'who');
 </script></body></html>
