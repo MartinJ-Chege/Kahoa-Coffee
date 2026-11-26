@@ -310,7 +310,7 @@ function done(big,small,kind,time){var o=$('done');o.className='done show '+(kin
 /* ---------- ship ---------- */
 function vShip(){$('v').innerHTML='<h1 class="title">Ship orders</h1><p class="lead">Mark an order shipped and the customer gets an email with tracking.</p>'+
   '<div class="bar"><button class="btn ghost" onclick="printAll()">'+IC.print+'Print Austin labels</button><button class="btn ghost sq" onclick="vShip()" aria-label="Refresh">'+IC.refresh+'</button></div><div id="list"><div class="muted">Loading orders…</div></div>';
-  call('orders',auth()).then(function(d){if(VIEW!=='ship')return;if(!d.ok){$('list').innerHTML='<div class="err">'+E(d.error||'Something went wrong.')+'</div>';return}
+  call('orders',Object.assign(auth(),{api_hint:(function(){try{return localStorage.getItem('kahoa_ship_api')||''}catch(e){return ''}})()})).then(function(d){if(VIEW!=='ship')return;if(!d.ok){$('list').innerHTML='<div class="err">'+E(d.error||'Something went wrong.')+'</div>';return}
     ORDERS=(d.orders||[]).filter(function(o){return !/^\s*events?\s*:/i.test(o.product)&&!/guests/i.test(o.total)});drawOrders()})}
 function drawOrders(){var open=ORDERS.filter(function(o){return !o.status}),dn=ORDERS.filter(function(o){return o.status}),h='';
   h+=open.length?'<div class="sec">To ship <span class="count">'+open.length+'</span></div>'+open.map(orderCard).join(''):'<div class="card empty"><span class="ring sm">'+IC.check+'</span>All caught up. Nothing waiting to ship.</div>';
