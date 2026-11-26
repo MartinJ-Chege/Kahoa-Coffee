@@ -85,3 +85,8 @@
   to = "/blog.html"
   status = 301
   force = true
+
+[[redirects]]
+  from = "/team"
+  to = "/ship.html"
+  status = 301
