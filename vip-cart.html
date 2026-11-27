@@ -72,6 +72,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
 #vip-ship-note{font-size:11px;margin-top:5px;}
 /* Success */
 #vip-success{display:none;text-align:center;padding:40px 20px;}
+.cb-ad{display:block;color:rgba(255,255,255,0.55);font-size:11.5px;line-height:1.45;margin:3px 0 0 22px;font-weight:400}
 </style>
 </head>
 <body>
@@ -152,26 +153,29 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
  <p class=sec-label>Add-Ons</p>
   <div style="display:flex;flex-direction:column;gap:2px;margin-bottom:20px;">
     <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
-      <span><input type=checkbox id=cb-addon-tea checked disabled style="display:none"> Hot Tea &amp; Hot Cocoa</span><span id=cb-price-tea style="color:var(--gold);">Included</span>
+      <span><input type=checkbox id=cb-addon-tea checked disabled style="display:none"> Hot Tea &amp; Hot Cocoa<small class=cb-ad>Classic hot tea and hot cocoa for guests who skip coffee. Always included.</small></span><span id=cb-price-tea style="color:var(--gold);">Included</span>
     </label>
     <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
-      <span><input type=checkbox id=cb-addon-sig onchange=cbCalc()> Custom Signature Drinks</span><span id=cb-price-sig style="color:var(--gold);">+$50.00</span>
+      <span><input type=checkbox id=cb-addon-sig onchange=cbCalc()> Custom Signature Drink<small class=cb-ad>A brand-new drink we create just for you, like a couple's wedding latte or a drink named after your company, with its own sign on the menu. The $50 covers creating and testing the recipe and the extra ingredients. Free with Full Experience. (Drinks from our menu above are different: your package includes some, and each extra is $50.)</small></span><span id=cb-price-sig style="color:var(--gold);">+$50.00</span>
     </label>
     <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
-      <span><input type=checkbox id=cb-addon-sticker onchange=cbCalc()> Logo Stickers on Cups</span><span id=cb-price-sticker style="color:var(--gold);">+$125.00</span>
+      <span><input type=checkbox id=cb-addon-sticker onchange=cbCalc()> Logo Stickers on Cups<small class=cb-ad>Your logo or monogram on a sticker on every cup. $0.30 per guest, $125 minimum. Order at least 2 weeks before your event.</small></span><span id=cb-price-sticker style="color:var(--gold);">+$125.00</span>
     </label>
     <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;" id=cb-print-row>
-      <span><input type=checkbox id=cb-addon-print onchange=cbCalc()> Full Custom-Printed Cups</span><span id=cb-price-print style="color:var(--gold);">+$325.00</span>
+      <span><input type=checkbox id=cb-addon-print onchange=cbCalc()> Full Custom-Printed Cups<small class=cb-ad>Cups printed in full color with your design. $0.65 per guest, $325 minimum. Order at least 21 business days (about 4 weeks) before your event.</small></span><span id=cb-price-print style="color:var(--gold);">+$325.00</span>
     </label>
     <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
-      <span><input type=checkbox id=cb-addon-dj onchange=cbCalc()> Event DJ (speaker, mixer, wireless mic)</span><span id=cb-price-dj style="color:var(--gold);">+$0.00</span>
+      <span><input type=checkbox id=cb-addon-dj onchange=cbCalc()> Event DJ<small class=cb-ad>Our partner DJ with a speaker, mixer and wireless mic. $550 with Essentials, $650 with Premium, $750 with Full Experience. We confirm the DJ within 24 hours.</small></span><span id=cb-price-dj style="color:var(--gold);">+$0.00</span>
+    </label>
+    <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
+      <span><input type=checkbox id=cb-addon-mandazi onchange=cbCalc()> Mother&rsquo;s Love Bites &amp; Boba Tea<small class=cb-ad>Warm Kenyan mandazi (pillowy, lightly spiced pastries made with coconut milk and cardamom, like a beignet) served with boba tea. $80 per 50 guests.</small></span><span id=cb-price-mandazi style="color:var(--gold);">+$80.00</span>
     </label>
     <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;font-size:13px;color:#fff;" id=cb-latte-row>
-      <span><input type=checkbox id=cb-addon-latte onchange=cbCalc()> Latte Art Printer (photos, logos, monograms &amp; messages on every cup)</span><span id=cb-price-latte style="color:var(--gold);">+$175.00</span>
+      <span><input type=checkbox id=cb-addon-latte onchange=cbCalc()> Latte Art Printer<small class=cb-ad>Prints a photo, logo, monogram or message on the foam of every latte: the couple's initials, a company logo, a baby's name. Needs the espresso bar. Free with Full Experience.</small></span><span id=cb-price-latte style="color:var(--gold);">+$175.00</span>
     </label>
   </div>
   <p id=cb-branding-leadtime style="font-size:11px;color:var(--gold);margin:-6px 0 10px;display:none;"></p>
-  <p class=sub style="font-size:11px;margin-top:-2px;margin-bottom:20px;">DJ pricing scales with your package &mdash; select a package above to see the price. Booking confirmed with our partner DJ within 24 hrs. Latte Art Printer turns any cup into a keepsake &mdash; couple's initials or a first dance photo for weddings, a company logo for corporate events, "Happy Birthday" or a baby's name for celebrations, team colors and mascots for game days. Custom Signature Drinks and the Latte Art Printer are included free with Full Experience. Logo Stickers and Full Custom-Printed Cups are custom branding made specifically for your event &mdash; billed separately and paid in full at booking, before your standard service deposit.</p>
+  <p class=sub style="font-size:11px;margin-top:-2px;margin-bottom:20px;">Logo stickers and printed cups are made just for your event, so they are paid in full at booking. We can refund them until you approve the design proof.</p>
 
   <div class=cart-totals style="display:block;margin-bottom:20px;">
     <div class=cart-row><span>Package</span><span id=cb-pkg-total>$0.00</span></div>
@@ -227,6 +231,7 @@ var CART_PKG={essentials:750,premium:1100,full:1850};var SIG_INCLUDED={essential
 var ADDON_TEA=0,ADDON_SIGDRINK=50,ADDON_STICKER_RATE=0.30,ADDON_STICKER_MIN=125,ADDON_PRINT_RATE=0.65,ADDON_PRINT_MIN=325;
 var DJ_PRICE={essentials:550,premium:650,full:750};
 var ADDON_LATTE=175;
+var ADDON_MANDAZI_PER50=80;
 var CB_TAX_RATE=0.0825;
 var CB_FULLPAY_DISCOUNT=0.05;
 var SQUARE_APP_ID='sq0idp-khlBwyn6FQYmXDU8zxjAiQ';
@@ -239,8 +244,8 @@ var AUSTIN_ZIPS='78701.78702.78703.78704.78705.78712.78717.78719.78721.78722.787
 var cbSelectedPkg=null;
 var BA_DRAFT_KEY='kahoa_ba_draft_cart',BA_SIGNED_KEY='kahoa_ba_signed_cart';
 var BA_DEFAULT_MSG='Next step: review and sign your Service Agreement. Your booking details fill in automatically — you only type your name — then you’ll come right back here to pay.';
-var CB_ADDON_IDS={tea:'cb-addon-tea',sig:'cb-addon-sig',sticker:'cb-addon-sticker',print:'cb-addon-print',dj:'cb-addon-dj',latte:'cb-addon-latte'};
-var CB_ADDON_NAMES={tea:'Hot Tea & Hot Cocoa',sig:'Custom Signature Drinks',sticker:'Logo Stickers on Cups',print:'Full Custom-Printed Cups',dj:'Event DJ',latte:'Latte Art Printer'};
+var CB_ADDON_IDS={tea:'cb-addon-tea',sig:'cb-addon-sig',sticker:'cb-addon-sticker',print:'cb-addon-print',dj:'cb-addon-dj',latte:'cb-addon-latte',mandazi:'cb-addon-mandazi'};
+var CB_ADDON_NAMES={mandazi:'Mother\'s Love Bites & Boba Tea',tea:'Hot Tea & Hot Cocoa',sig:'Custom Signature Drinks',sticker:'Logo Stickers on Cups',print:'Full Custom-Printed Cups',dj:'Event DJ',latte:'Latte Art Printer'};
 function baLoad(k){try{var s=sessionStorage.getItem(k);return s?JSON.parse(s):null;}catch(e){return null;}}
 function baSave(k,v){try{sessionStorage.setItem(k,JSON.stringify(v));return true;}catch(e){return false;}}
 function baClear(){try{sessionStorage.removeItem(BA_DRAFT_KEY);sessionStorage.removeItem(BA_SIGNED_KEY);}catch(e){}}
@@ -392,9 +397,11 @@ function cbCalc(){
   document.getElementById('cb-price-sticker').textContent='+$'+stickerPrice.toFixed(2);
   document.getElementById('cb-price-print').textContent='+$'+printPrice.toFixed(2);
   document.getElementById('cb-price-dj').textContent='+$'+djPrice.toFixed(2);
+  var mandaziOn=document.getElementById('cb-addon-mandazi').checked,mandaziPrice=Math.ceil(guests/50)*ADDON_MANDAZI_PER50;
+  document.getElementById('cb-price-mandazi').textContent='+$'+mandaziPrice.toFixed(2);
 
   var _me=cbMenuExtra(),menuExtraPrice=_me.extra*SIG_EXTRA;var _nt=document.getElementById('cb-drinks-note');if(_nt)_nt.textContent=!cbSelectedPkg?'Pick the ones you would like on your menu. Choose a package above to see how many are included. Each extra drink is $50. We will confirm the final menu with you before the event.':'Your package includes '+_me.inc+' signature drink'+(_me.inc===1?'':'s')+'. You have picked '+_me.n+(_me.extra>0?', so '+_me.extra+' extra x $50 = $'+menuExtraPrice.toFixed(2)+' is added to your total.':'.')+' Each extra drink is $50. We will confirm the final menu with you before the event.';
- var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0)+(latteOn?lattePrice:0)+menuExtraPrice;
+ var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0)+(latteOn?lattePrice:0)+(mandaziOn?mandaziPrice:0)+menuExtraPrice;
   var preTax=pkgPrice+addonTotal;
   var taxTotal=preTax*CB_TAX_RATE;
   var grandTotal=preTax+taxTotal;
@@ -512,8 +519,9 @@ async function cbSubmit(){
   var printPrice=Math.max(ADDON_PRINT_MIN,guests*ADDON_PRINT_RATE);
   var djPrice=DJ_PRICE[cbSelectedPkg];
   var lattePrice=latteIncluded?0:ADDON_LATTE;
+  var mandaziOn=document.getElementById('cb-addon-mandazi').checked,mandaziPrice=Math.ceil(guests/50)*ADDON_MANDAZI_PER50;
   var _me=cbMenuExtra(),menuExtraPrice=_me.extra*SIG_EXTRA;
- var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0)+(latteOn?lattePrice:0)+menuExtraPrice;
+ var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0)+(latteOn?lattePrice:0)+(mandaziOn?mandaziPrice:0)+menuExtraPrice;
   var preTax=pkgPrice+addonTotal;
   var taxTotal=preTax*CB_TAX_RATE;
   var grandTotal=preTax+taxTotal;
@@ -531,6 +539,7 @@ async function cbSubmit(){
   if(printOn)addonList.push('Full Custom-Printed Cups ($'+printPrice.toFixed(2)+', billed in full at booking)');
   if(djOn)addonList.push('Event DJ ($'+djPrice.toFixed(2)+')');
   if(latteOn)addonList.push(latteIncluded?'Latte Art Printer (Included with Full Experience)':'Latte Art Printer ($'+lattePrice.toFixed(2)+')');
+  if(mandaziOn)addonList.push('Mother\'s Love Bites & Boba Tea ($'+mandaziPrice.toFixed(2)+')');
   if(menuExtraPrice>0)addonList.push('Extra signature drinks ('+_me.extra+' x $'+SIG_EXTRA.toFixed(2)+' = $'+menuExtraPrice.toFixed(2)+')');
  var addonSummary=addonList.length?addonList.join(', '):'None';
   var pkgName=cbSelectedPkg==='essentials'?'Essentials':cbSelectedPkg==='premium'?'Premium':'Full Experience';
