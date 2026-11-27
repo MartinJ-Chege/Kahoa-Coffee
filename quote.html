@@ -77,7 +77,7 @@ function balDue(d){var x=new Date(d+'T12:00:00');x.setDate(x.getDate()-7);return
 function post(a,b){return fetch(API+a,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({token:tok},b||{}))}).then(function(r){return r.json()}).catch(function(){return{ok:false,error:'Could not connect. Check your internet and try again.'}})}
 if(!tok){$('out').innerHTML='<p class="msg">This link is missing part of the address. Open the link from your email again, or email <a href="mailto:info@kahoa.shop">info@kahoa.shop</a>.</p>';return}
 post('quote').then(function(d){if(!d.ok){$('out').innerHTML='<p class="msg">'+E(d.error||'Could not load this quote.')+'</p>';return}Q=d.quote;BANK=d.bank_note||'';draw()});
-function draw(){var q=Q,st=/^(Not sent|Sent)$/.test(q.status)?'Ready to sign':q.status,pc=/Paid|Deposit/.test(st)?'ok':st==='Canceled'?'no':'';
+function draw(){var q=Q,st=/^(Not sent|Sent|New request)$/.test(q.status)?'Ready to sign':q.status,pc=/Paid|Deposit/.test(st)?'ok':st==='Canceled'?'no':'';
   document.title='Quote '+q.num+' · Kahoa Coffee';
   var h='<div class="card"><p class="kick">Quote '+E(q.num)+'</p><h1>'+E(q.event)+'</h1><span class="pill '+pc+'">'+E(st)+'</span>'+
    '<div class="meta"><b>For</b><span>'+E(q.client)+(q.company?', '+E(q.company):'')+'</span><b>Date</b><span>'+E(D(q.event_date))+'</span>'+(q.venue?'<b>Where</b><span>'+E(q.venue)+'</span>':'')+'</div>'+
