@@ -106,8 +106,12 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
   </div>
 
   <p class=sec-label style="margin-top:16px;">Choose Your Package</p>
-  <p style="font-size:13px;color:rgba(255,255,255,0.6);margin:-4px 0 12px;">Less than 2 hours, fewer guests or a smaller budget? <a href="/coffee-cart.html#cc-inquire" style="color:var(--gold);font-weight:600;">Request a custom quote</a> and we'll price it for you.</p>
+  <p style="font-size:13px;color:rgba(255,255,255,0.6);margin:-4px 0 12px;">Need something different, like a tighter budget or a custom setup? <a href="/coffee-cart.html#cc-inquire" style="color:var(--gold);font-weight:600;">Request a custom quote</a> and we'll price it for you.</p>
   <div id=cb-packages style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+    <div class="prod-card cb-pkg" data-pkg="break" onclick="cbSelectPkg('break')" style="cursor:pointer;">
+      <div class=prod-name>Coffee Break <span style="color:var(--gold);float:right;">$500</span></div>
+      <div class=prod-detail>1 hour &middot; up to ~40 guests &middot; 1 barista &middot; drip + <span style="color:#4a90d9;">Kifaru Spice Cold Brew</span></div>
+    </div>
     <div class="prod-card cb-pkg" data-pkg="essentials" onclick="cbSelectPkg('essentials')" style="cursor:pointer;">
       <div class=prod-name>Essentials <span style="color:var(--gold);float:right;">$750</span></div>
       <div class=prod-detail>2 hours &middot; up to ~50 guests &middot; 1 barista &middot; drip + <span style="color:#4a90d9;">Kifaru Spice Cold Brew</span> &middot; 1 signature drink included</div>
@@ -165,7 +169,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
       <span><input type=checkbox id=cb-addon-print onchange=cbCalc()> Full Custom-Printed Cups<small class=cb-ad>Cups printed in full color with your design. $0.65 per guest, $325 minimum. Order at least 21 business days (about 4 weeks) before your event.</small></span><span id=cb-price-print style="color:var(--gold);">+$325.00</span>
     </label>
     <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
-      <span><input type=checkbox id=cb-addon-dj onchange=cbCalc()> Event DJ<small class=cb-ad>Our partner DJ with a speaker, mixer and wireless mic. $550 with Essentials, $650 with Premium, $750 with Full Experience. We confirm the DJ within 24 hours.</small></span><span id=cb-price-dj style="color:var(--gold);">+$0.00</span>
+      <span><input type=checkbox id=cb-addon-dj onchange=cbCalc()> Event DJ<small class=cb-ad>Our partner DJ with a speaker, mixer and wireless mic. $550 with Coffee Break or Essentials, $650 with Premium, $750 with Full Experience. We confirm the DJ within 24 hours.</small></span><span id=cb-price-dj style="color:var(--gold);">+$0.00</span>
     </label>
     <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
       <span><input type=checkbox id=cb-addon-mandazi onchange=cbCalc()> Mother&rsquo;s Love Bites &amp; Boba Tea<small class=cb-ad>Warm Kenyan mandazi (pillowy, lightly spiced pastries made with coconut milk and cardamom, like a beignet) served with boba tea. $80 per 50 guests.</small></span><span id=cb-price-mandazi style="color:var(--gold);">+$80.00</span>
@@ -227,9 +231,9 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
 
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script>
 <script>
-var CART_PKG={essentials:750,premium:1100,full:1850};var SIG_INCLUDED={essentials:1,premium:2,full:3},SIG_EXTRA=50;function cbMenuExtra(){var n=document.querySelectorAll('.cb-drink:checked').length;var inc=cbSelectedPkg?SIG_INCLUDED[cbSelectedPkg]:0;return {n:n,inc:inc,extra:cbSelectedPkg?Math.max(0,n-inc):0};}
+var CART_PKG={break:500,essentials:750,premium:1100,full:1850};var SIG_INCLUDED={break:0,essentials:1,premium:2,full:3},SIG_EXTRA=50;function cbMenuExtra(){var n=document.querySelectorAll('.cb-drink:checked').length;var inc=cbSelectedPkg?SIG_INCLUDED[cbSelectedPkg]:0;return {n:n,inc:inc,extra:cbSelectedPkg?Math.max(0,n-inc):0};}
 var ADDON_TEA=0,ADDON_SIGDRINK=50,ADDON_STICKER_RATE=0.30,ADDON_STICKER_MIN=125,ADDON_PRINT_RATE=0.65,ADDON_PRINT_MIN=325;
-var DJ_PRICE={essentials:550,premium:650,full:750};
+var DJ_PRICE={break:550,essentials:550,premium:650,full:750};
 var ADDON_LATTE=175;
 var ADDON_MANDAZI_PER50=80;
 var CB_TAX_RATE=0.0825;
@@ -284,7 +288,7 @@ function cbDateLong(d){
 function cbGoSign(){
   var f=cbOrderFields();
   var payType=document.querySelector('input[name=cb-paytype]:checked').value;
-  var pkgName=f.pkg==='essentials'?'Essentials':f.pkg==='premium'?'Premium':'Full Experience';
+  var pkgName=f.pkg==='break'?'Coffee Break':f.pkg==='essentials'?'Essentials':f.pkg==='premium'?'Premium':'Full Experience';
   var txt=function(id){return document.getElementById(id).textContent;};
   var lines=[
     ['Package',pkgName+' — $'+CART_PKG[f.pkg].toFixed(2)],
@@ -427,7 +431,7 @@ function cbCalc(){
   var balanceNote=document.getElementById('cb-balance-note');
   var brandingNote=brandingPreTax>0?' Custom branding ($'+brandingChargeNow.toFixed(2)+') is billed in full today, separate from your service deposit \u2014 it\u2019s produced specifically for your event.':'';
   if(payType==='deposit'){
-    balanceNote.textContent='Remaining $'+(grandTotal-depositAmt).toFixed(2)+' due 7 days before your event (invoiced separately).'+brandingNote;
+    balanceNote.textContent='Remaining $'+(grandTotal-depositAmt).toFixed(2)+' due 7 days before your event. We\'ll email you a link to pay it.'+brandingNote;
   }else{
     balanceNote.textContent='Paid in full today \u2014 you save $'+(serviceTotal-serviceTotal*(1-CB_FULLPAY_DISCOUNT)).toFixed(2)+' on service, nothing more due before your event.'+brandingNote;
   }
@@ -474,7 +478,7 @@ window.addEventListener('load',function(){
     if(el){el.addEventListener('input',cbCalc);el.addEventListener('change',cbCalc);}
   });
   cbRestoreDraft();
-  try{var _pk=(location.search.match(/[?&]pkg=(essentials|premium|full)\b/)||[])[1];if(_pk)cbSelectPkg(_pk);}catch(e){}
+  try{var _pk=(location.search.match(/[?&]pkg=(break|essentials|premium|full)\b/)||[])[1];if(_pk)cbSelectPkg(_pk);}catch(e){}
   cbCalc();
   if(window.KahoaCal)KahoaCal.attach('cb-date');
 });
@@ -542,7 +546,7 @@ async function cbSubmit(){
   if(mandaziOn)addonList.push('Mother\'s Love Bites & Boba Tea ($'+mandaziPrice.toFixed(2)+')');
   if(menuExtraPrice>0)addonList.push('Extra signature drinks ('+_me.extra+' x $'+SIG_EXTRA.toFixed(2)+' = $'+menuExtraPrice.toFixed(2)+')');
  var addonSummary=addonList.length?addonList.join(', '):'None';
-  var pkgName=cbSelectedPkg==='essentials'?'Essentials':cbSelectedPkg==='premium'?'Premium':'Full Experience';
+  var pkgName=cbSelectedPkg==='break'?'Coffee Break':cbSelectedPkg==='essentials'?'Essentials':cbSelectedPkg==='premium'?'Premium':'Full Experience';
 
   var btn=document.getElementById('cb-pay-btn');
   btn.disabled=true;btn.textContent='Checking your date...';
@@ -571,6 +575,11 @@ async function cbSubmit(){
       btn.style.display='none';
       if(calHold.ok)KahoaCal.confirm(calHold.hold_id,data.payment_id);
       baClear();
+      if(payType==='deposit'&&data.payment_id){try{var _it=[{d:'Coffee Cart: '+pkgName+' ('+guests+' guests, '+time+')',p:Math.round(pkgPrice*100)}];
+        if(sigOn&&!sigIncluded)_it.push({d:'Custom signature drink',p:Math.round(sigPrice*100)});if(stickerOn)_it.push({d:'Logo stickers on cups (paid at booking)',p:Math.round(stickerPrice*100)});if(printOn)_it.push({d:'Full custom-printed cups (paid at booking)',p:Math.round(printPrice*100)});
+        if(djOn)_it.push({d:'Event DJ',p:Math.round(djPrice*100)});if(latteOn&&!latteIncluded)_it.push({d:'Latte art printer',p:Math.round(lattePrice*100)});if(mandaziOn)_it.push({d:'Mother\'s Love Bites & Boba Tea',p:Math.round(mandaziPrice*100)});if(menuExtraPrice>0)_it.push({d:'Extra signature drinks ('+_me.extra+')',p:Math.round(menuExtraPrice*100)});
+        fetch('https://kahoa-checkoutout.chegekibuthu1.workers.dev/staff/cart_booked',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({payment_id:data.payment_id,charged_cents:Math.round(chargeNow*100),pay_type:'deposit',items:_it,date:date,time:time,pkg_name:pkgName,name:name,email:email,phone:phone,location:location,signed_name:name})}).then(function(r){return r.json()}).then(function(d){if(d&&d.ok&&d.link){var el=document.getElementById('cb-success'),p=document.createElement('p');p.style.cssText='margin-top:12px;font-size:13px;';p.innerHTML='Your balance is due 7 days before your event. We\'ll email you a reminder, or <a href="'+d.link+'" style="color:var(--gold);font-weight:700;">pay it any time here</a>.';el.appendChild(p);}}).catch(function(e){console.error('Balance link FAILED:',e);});
+      }catch(e){}}
       if(typeof emailjs!=='undefined'){
         emailjs.init(EJKEY);
         var notes=calNote+' Package: '+pkgName+' ($'+pkgPrice.toFixed(2)+'). Service Style: '+styleChoice+'. Cold Brew on Tap: '+flavorChoice+'. Signature Drinks: '+(drinkChoice||'None selected')+'. Add-ons: '+addonSummary+'. Subtotal: $'+preTax.toFixed(2)+'. Tax (8.25%): $'+taxTotal.toFixed(2)+'. Event total: $'+grandTotal.toFixed(2)+'. Charged today ('+(payType==='deposit'?'30% deposit':'paid in full, 5% discount applied')+'): $'+chargeNow.toFixed(2)+'. '+(payType==='deposit'?'Balance due 7 days before event: $'+(grandTotal-chargeNow).toFixed(2)+'.':'Discount savings: $'+(grandTotal-chargeNow).toFixed(2)+'.')+' Event time: '+time+'. Signed: '+signature+'. Overage/overtime authorization: '+(agreedOverage?'YES':'NO')+'.';

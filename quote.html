@@ -77,22 +77,23 @@ function balDue(d){var x=new Date(d+'T12:00:00');x.setDate(x.getDate()-7);return
 function post(a,b){return fetch(API+a,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({token:tok},b||{}))}).then(function(r){return r.json()}).catch(function(){return{ok:false,error:'Could not connect. Check your internet and try again.'}})}
 if(!tok){$('out').innerHTML='<p class="msg">This link is missing part of the address. Open the link from your email again, or email <a href="mailto:info@kahoa.shop">info@kahoa.shop</a>.</p>';return}
 post('quote').then(function(d){if(!d.ok){$('out').innerHTML='<p class="msg">'+E(d.error||'Could not load this quote.')+'</p>';return}Q=d.quote;BANK=d.bank_note||'';draw()});
-function draw(){var q=Q,st=/^(Not sent|Sent|New request)$/.test(q.status)?'Ready to sign':q.status,pc=/Paid|Deposit/.test(st)?'ok':st==='Canceled'?'no':'';
+function draw(){var q=Q,st=/^(Not sent|Sent|New request)$/.test(q.status)?'Ready to sign':q.status,fee=q.fee_bp!==0,pc=/Paid|Deposit/.test(st)?'ok':st==='Canceled'?'no':'';
   document.title='Quote '+q.num+' · Kahoa Coffee';
   var h='<div class="card"><p class="kick">Quote '+E(q.num)+'</p><h1>'+E(q.event)+'</h1><span class="pill '+pc+'">'+E(st)+'</span>'+
-   '<div class="meta"><b>For</b><span>'+E(q.client)+(q.company?', '+E(q.company):'')+'</span><b>Date</b><span>'+E(D(q.event_date))+'</span>'+(q.venue?'<b>Where</b><span>'+E(q.venue)+'</span>':'')+'</div>'+
+   (q.expires_at&&!q.expired?'<p style="margin:8px 0 0;font-size:13px;color:var(--muted)">This quote is good until <b>'+E(new Date(q.expires_at).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}))+'</b>.</p>':'')+'<div class="meta"><b>For</b><span>'+E(q.client)+(q.company?', '+E(q.company):'')+'</span><b>Date</b><span>'+E(D(q.event_date))+'</span>'+(q.venue?'<b>Where</b><span>'+E(q.venue)+'</span>':'')+'</div>'+
    (q.note?'<div class="note">'+E(q.note)+'<br><br><i>Martin Kibuthu, Founder</i></div>':'')+'</div>';
   h+='<div class="card"><h2>Your quote</h2><table><thead><tr><th>What</th><th class="r n">Qty</th><th class="r n">Price</th><th class="r">Total</th></tr></thead><tbody>'+
    q.items.map(function(it){return '<tr><td>'+E(it.d)+(it.q!==1?'<small class="qp">'+E(it.q)+' × '+M(it.p)+'</small>':'')+'</td><td class="r n">'+E(it.q)+'</td><td class="r n">'+M(it.p)+'</td><td class="r">'+M(it.q*it.p)+'</td></tr>'}).join('')+
    '<tr class="t"><td>Subtotal</td><td class="n"></td><td class="n"></td><td class="r">'+M(q.sub)+'</td></tr><tr class="t"><td>Texas sales tax (8.25%)</td><td class="n"></td><td class="n"></td><td class="r">'+M(q.tax)+'</td></tr>'+
    '<tr class="g"><td>Total</td><td class="n"></td><td class="n"></td><td class="r">'+M(q.total)+'</td></tr></tbody></table>'+
-   '<div class="two"><div class="opt"><small>Bank transfer or Zelle</small><b>'+M(q.total)+'</b><span>No fee</span></div><div class="opt"><small>Card</small><b>'+M(q.total_card)+'</b><span>Includes 3% card processing</span></div></div>'+
-   '<div class="sched"><div><span><b>Deposit ('+q.deposit_pct+'%)</b> · holds your date</span><span>'+M(q.dep)+' · card '+M(q.dep_card)+'</span></div>'+
-   (q.bal>0?'<div><span><b>Balance</b> · due '+E(balDue(q.event_date))+'</span><span>'+M(q.bal)+' · card '+M(q.bal_card)+'</span></div>':'')+'</div></div>';
-  h+='<div class="card"><h2>Agreement</h2><div class="terms">'+q.terms.split('\n\n').slice(2).map(function(p){return '<p>'+E(p).replace(/^(\d+\.\s[^.]+\.)/,'<b>$1</b>')+'</p>'}).join('')+'</div>';
-  if(q.signed)h+='<div class="signed" style="margin-top:16px"><img src="'+q.signed.sig+'" alt="Signature"><div><b>'+E(q.signed.name)+'</b>'+(q.signed.title?E(q.signed.title)+' · ':'')+'Signed electronically '+E(W(q.signed.at))+'</div></div>';
+   (fee?'<div class="two"><div class="opt"><small>Bank transfer or Zelle</small><b>'+M(q.total)+'</b><span>No fee</span></div><div class="opt"><small>Card</small><b>'+M(q.total_card)+'</b><span>Includes 3% card processing</span></div></div>':'')+
+   '<div class="sched"><div><span><b>Deposit ('+q.deposit_pct+'%)</b> · holds your date</span><span>'+M(q.dep)+(fee?' · card '+M(q.dep_card):'')+'</span></div>'+
+   (q.bal>0?'<div><span><b>Balance</b> · due '+E(balDue(q.event_date))+'</span><span>'+M(q.bal)+(fee?' · card '+M(q.bal_card):'')+'</span></div>':'')+'</div></div>';
+  h+='<div class="card"><h2>Agreement</h2><div class="terms">'+(function(t){return /AGREEMENT/.test(t[0])?t.slice(2):t})(q.terms.split('\n\n')).map(function(p){return '<p>'+E(p).replace(/^(\d+\.\s[^.]+\.)/,'<b>$1</b>')+'</p>'}).join('')+'</div>';
+  if(q.signed)h+='<div class="signed" style="margin-top:16px">'+(q.signed.sig?'<img src="'+q.signed.sig+'" alt="Signature">':'')+'<div><b>'+E(q.signed.name)+'</b>'+(q.signed.title?E(q.signed.title)+' · ':'')+'Signed electronically '+E(W(q.signed.at))+'</div></div>';
   h+='</div>';
   if(q.canceled)h+='<div class="card"><p style="margin:0">This quote was canceled. Questions? Email <a href="mailto:info@kahoa.shop">info@kahoa.shop</a>.</p></div>';
+  else if(q.expired)h+='<div class="card"><h2>This quote expired</h2><p style="margin:0">Quotes are good for 14 days. Still planning your event? Email <a href="mailto:info@kahoa.shop?subject='+encodeURIComponent('New quote please: '+q.num)+'">info@kahoa.shop</a> and we\'ll send you a fresh one.</p></div>';
   else if(!q.signed)h+='<div class="card noprint" id="signcard"><h2>Sign to book</h2><p style="margin:0;font-size:14px;color:var(--muted)">Read the agreement above, then sign. Next, you\'ll pay the deposit to hold your date.</p>'+
    '<label class="l">Your full name</label><input type="text" id="sn" autocomplete="name" value="'+E(q.client)+'">'+
    '<label class="l">Your title (optional)</label><input type="text" id="stt" placeholder="e.g. Event Manager">'+
@@ -107,12 +108,12 @@ function draw(){var q=Q,st=/^(Not sent|Sent|New request)$/.test(q.status)?'Ready
     else{var bank=which==='dep'?q.dep:q.bal,cardAmt=which==='dep'?q.dep_card:q.bal_card;
       h+='<p style="margin:'+(q.dep_paid?'14px':'0')+' 0 12px;font-size:14px">'+(which==='dep'?'Pay your '+q.deposit_pct+'% deposit to hold your date.':'Your balance is due '+E(balDue(q.event_date))+'.')+'</p>'+
       '<div class="tabs"><button id="tc" class="'+(tab==='card'?'on':'')+'" onclick="kqTab(\'card\')">Card · '+M(cardAmt)+'</button><button id="tb" class="'+(tab==='bank'?'on':'')+'" onclick="kqTab(\'bank\')">Bank or Zelle · '+M(bank)+'</button></div>'+
-      '<div id="pcard" style="display:'+(tab==='card'?'block':'none')+'"><div id="card"></div><button class="btn dark" id="pb" onclick="kqPay()">Pay '+M(cardAmt)+' by card</button><p style="font-size:12px;color:var(--muted);text-align:center;margin:8px 0 0">Secure card payment by Square. Card price includes a 3% processing fee. Pay by bank or Zelle to skip it.</p><div class="err" id="perr"></div></div>'+
+      '<div id="pcard" style="display:'+(tab==='card'?'block':'none')+'"><div id="card"></div><button class="btn dark" id="pb" onclick="kqPay()">Pay '+M(cardAmt)+' by card</button><p style="font-size:12px;color:var(--muted);text-align:center;margin:8px 0 0">Secure card payment by Square.'+(fee?' Card price includes a 3% processing fee. Pay by bank or Zelle to skip it.':'')+'</p><div class="err" id="perr"></div></div>'+
       '<div id="pbank" style="display:'+(tab==='bank'?'block':'none')+'"><p style="margin:0 0 10px;font-size:14px">Send <b>'+M(bank)+'</b> and put <b>'+E(q.num)+'</b> in the memo. We\'ll email you as soon as it arrives.</p>'+(BANK&&/zelle/i.test(BANK)?'<img class="zqr" src="/zelle-qr.png" alt="Zelle QR code for Kahoa Coffee LLC">':'')+'<div class="bank">'+(BANK?E(BANK):'Email <a href="mailto:info@kahoa.shop?subject='+encodeURIComponent('Bank transfer for quote '+q.num)+'">info@kahoa.shop</a> and we\'ll send our bank transfer and Zelle details right away.')+'</div></div>'}
     h+='</div>'}
   h+='<p class="foot">Kahoa Coffee LLC · Austin, Texas · <a href="mailto:info@kahoa.shop">info@kahoa.shop</a> · <a href="https://kahoa.shop">kahoa.shop</a></p>';
   $('out').innerHTML=h;
-  if(!q.signed&&!q.canceled)setupPad();
+  if(!q.signed&&!q.canceled&&!q.expired)setupPad();
   if(q.signed&&!q.canceled&&tab==='card'&&$('card'))initCard();
 }
 var pad,ctx,drawn=false,down=false;

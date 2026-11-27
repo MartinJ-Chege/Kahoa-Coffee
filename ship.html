@@ -666,12 +666,12 @@ show(ME?'home':'who');
 /* ---------- Quotes & invoices (admin) ---------- */
 var QUOTES=[],QBANK='',QEDIT=null;
 var QPRESETS=[['Hosted Coffee Bar (4 hours, 2 baristas, up to 750 cups)',350000],['Signature Brand Activation (6 hours, 3 baristas, up to 1,200 cups)',650000],['Flagship Festival Takeover, per day (8 hours, 4 baristas)',850000],
- ['Coffee Cart: Essentials (2 hours, ~50 guests)',75000],['Coffee Cart: Premium (3 hours, ~100 guests)',110000],['Coffee Cart: Full Experience (4 hours, 150+ guests)',185000],
+ ['Coffee Cart: Coffee Break (1 hour, ~40 guests)',50000],['Coffee Cart: Essentials (2 hours, ~50 guests)',75000],['Coffee Cart: Premium (3 hours, ~100 guests)',110000],['Coffee Cart: Full Experience (4 hours, 150+ guests)',185000],
  ['Custom logo cups (per cup)',75],['Logo stickers on cups (per cup)',30],['Latte art printer (per day)',35000],['VIP Pour-Over Reserve (per day)',45000],['Custom signature drink',25000],['Custom menu cards (per 100)',15000],
  ['Extra barista (per hour)',6000],['Extra hour of service',50000],['Peak week (SXSW, ACL, F1) +15%',0],['Rush booking (under 14 days) +15%',0],['Travel beyond 30 miles (per mile)',150]];
 function qM(c){return '$'+(Math.round(c)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function qDate(d){return d?new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'}):''}
-function qPill(s){return '<span class="pill'+(/Paid|Deposit/.test(s)?' ok':/Canceled|Needs price/.test(s)?' warn':/Signed|New request/.test(s)?' soft':'')+'">'+E(s)+'</span>'}
+function qPill(s){return '<span class="pill'+(/Paid|Deposit/.test(s)?' ok':/Canceled|Needs price|Expired/.test(s)?' warn':/Signed|New request/.test(s)?' soft':'')+'">'+E(s)+'</span>'}
 function admQuotes(){var b=$('adm-body');b.innerHTML='<div class="muted">Loading…</div>';A('quotes').then(function(d){if(!$('adm-body')||ATAB!=='quotes')return;if(!d.ok){b.innerHTML='<div class="err">'+E(d.error)+'</div>';return}
   QUOTES=d.quotes||[];QBANK=d.bank_note||'';var open=QUOTES.filter(function(q){return !q.canceled&&q.status!=='Paid in full'}),done=QUOTES.filter(function(q){return q.canceled||q.status==='Paid in full'});
   var h='<button class="btn wide" onclick="admQuoteEdit()">New quote</button>';
@@ -690,7 +690,10 @@ function admQuote(id){var q=qFind(id),b=$('adm-body');if(!q)return admQuotes();w
    '<div class="qpay"><div><b>Deposit '+q.deposit_pct+'%</b><small>'+qM(q.dep)+' bank · '+qM(q.dep_card)+' card</small></div><div>'+(q.dep_paid?'<span class="pill ok">Paid '+(q.dep_paid.method==='card'?'by card':'by bank')+'</span>':'<span class="pill">Due now</span>')+'</div></div>'+
    (q.bal>0?'<div class="qpay"><div><b>Balance</b><small>'+qM(q.bal)+' bank · '+qM(q.bal_card)+' card</small></div><div>'+(q.bal_paid?'<span class="pill ok">Paid '+(q.bal_paid.method==='card'?'by card':'by bank')+'</span>':'<span class="pill">7 days before</span>')+'</div></div>':'')+
    (q.signed?'<div class="fine">Signed by '+E(q.signed.name)+(q.signed.title?', '+E(q.signed.title):'')+' on '+E(new Date(q.signed.at).toLocaleString('en-US',{timeZone:TZ,month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}))+'</div>':'')+
-   (q.sent_at?'<div class="fine">Emailed to client '+E(new Date(q.sent_at).toLocaleString('en-US',{timeZone:TZ,month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}))+'</div>':'')+'</div>';
+   (q.sent_at&&q.source!=='booking'?'<div class="fine">Emailed to client '+E(new Date(q.sent_at).toLocaleString('en-US',{timeZone:TZ,month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}))+'</div>':'')+
+   (q.source==='booking'?'<div class="fine">Booked and signed on the coffee cart booking page.</div>':'')+
+   (q.expires_at?'<div class="fine">'+(q.expired?'Expired ':'Good until ')+E(new Date(q.expires_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}))+(q.expired?'. Tap "Email it again" for 14 more days.':'')+'</div>':'')+
+   (q.nudges?'<div class="fine">'+Object.keys(q.nudges).filter(function(k){return k!=='exp'}).map(function(k){return ({n3:'Check-in email sent',n11:'Expiry warning sent',exp:'Expired',d2:'Deposit reminder sent',b10:'Balance reminder sent (10 days out)',b7:'Balance due reminder sent',late:'You were told the balance is late'})[k]+' '+new Date(q.nudges[k]).toLocaleDateString('en-US',{month:'short',day:'numeric'})}).join(' · ')+'</div>':'')+'</div>';
   if(q.req){var r=q.req;h+='<div class="card"><div class="kick2">From the '+(q.source==='cart'?'coffee cart':'events')+' page</div>'+
     (q.flag==='price'?'<div class="qflag">Set your price before sending. Tap <b>Edit quote</b> and fill in the price.</div>':'')+
     '<div class="qmeta" style="margin-top:6px">'+[['Asked for',r.package],['Occasion',r.occasion],['Guests',r.guests],['Hours',r.hours],['Days',r.days&&r.days!=='1'?r.days:''],['Extras',(r.extras_label||r.extras||[]).join(', ')],['Budget',r.budget],['Style',r.style]].filter(function(x){return x[1]}).map(function(x){return '<b>'+x[0]+':</b> '+E(x[1])}).join('<br>')+'</div>'+
