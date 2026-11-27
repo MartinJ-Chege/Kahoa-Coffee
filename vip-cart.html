@@ -110,7 +110,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
   <div id=cb-packages style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
     <div class="prod-card cb-pkg" data-pkg="break" onclick="cbSelectPkg('break')" style="cursor:pointer;">
       <div class=prod-name>Coffee Break <span style="color:var(--gold);float:right;">$500</span></div>
-      <div class=prod-detail>1 hour &middot; up to ~40 guests &middot; 1 barista &middot; drip + <span style="color:#4a90d9;">Kifaru Spice Cold Brew</span> &middot; hot cocoa &amp; Kenyan hot tea with our house syrups &middot; 1 signature drink included, like Kenyan Masala Chai or Honey Cardamom Cocoa</div>
+      <div class=prod-detail>1 hour &middot; up to ~30 guests &middot; 1 barista &middot; drip coffee, hot cocoa &amp; Kenyan hot tea with our house syrups (honey cardamom, salted caramel, vanilla, mocha) &middot; cold brew available as an add-on</div>
     </div>
     <div class="prod-card cb-pkg" data-pkg="essentials" onclick="cbSelectPkg('essentials')" style="cursor:pointer;">
       <div class=prod-name>Essentials <span style="color:var(--gold);float:right;">$750</span></div>
@@ -136,6 +136,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
   </div>
   <p class=sub id=cb-style-note style="font-size:11px;margin-bottom:20px;">The latte art printer works with the espresso bar.</p>
 
+  <div id=cb-taps-wrap>
   <p class=sec-label>Cold Brew on Tap</p>
  <div style="display:flex;flex-direction:column;gap:2px;margin-bottom:8px;">
  <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox  id=cb-tap-cold checked onchange=cbTapsSync()> <span>Kifaru Spice Cold Brew <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; vanilla bean, ginger, cardamom, clove &amp; cinnamon stick</span></span></label>
@@ -143,6 +144,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
  </div>
  <input type=hidden id=cb-flavor value="Kifaru Spice Cold Brew">
  <p class=sub style="font-size:11px;margin-bottom:20px;">Our cart has 2 taps. Choose one or both. Kifaru Spice is spiced the way Kenya takes its chai, for a cup that runs a little closer to home.</p>
+  </div>
 
  <p class=sec-label>Signature Drinks (optional)</p>
  <div style="display:flex;flex-direction:column;gap:2px;margin-bottom:8px;">
@@ -159,6 +161,9 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
 
  <p class=sec-label>Add-Ons</p>
   <div style="display:flex;flex-direction:column;gap:2px;margin-bottom:20px;">
+    <label style="display:none;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;" id=cb-coldbrew-row>
+      <span><input type=checkbox id=cb-addon-coldbrew onchange=cbCalc()> Kifaru Spice Cold Brew<small class=cb-ad>Add our Kenyan spiced cold brew on tap to your Coffee Break. It's included in every other package.</small></span><span id=cb-price-coldbrew style="color:var(--gold);">+$75.00</span>
+    </label>
     <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
       <span><input type=checkbox id=cb-addon-tea checked disabled style="display:none"> Hot Tea &amp; Hot Cocoa<small class=cb-ad>Classic hot tea and hot cocoa for guests who skip coffee. Always included.</small></span><span id=cb-price-tea style="color:var(--gold);">Included</span>
     </label>
@@ -234,11 +239,12 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
 
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script>
 <script>
-var CART_PKG={break:500,essentials:750,premium:1100,full:1850};var SIG_INCLUDED={break:1,essentials:1,premium:2,full:3},SIG_EXTRA=50;function cbMenuExtra(){var n=document.querySelectorAll('.cb-drink:checked').length;var inc=cbSelectedPkg?SIG_INCLUDED[cbSelectedPkg]:0;return {n:n,inc:inc,extra:cbSelectedPkg?Math.max(0,n-inc):0};}
+var CART_PKG={break:500,essentials:750,premium:1100,full:1850};var SIG_INCLUDED={break:0,essentials:1,premium:2,full:3},SIG_EXTRA=50;function cbMenuExtra(){var n=document.querySelectorAll('.cb-drink:checked').length;var inc=cbSelectedPkg?SIG_INCLUDED[cbSelectedPkg]:0;return {n:n,inc:inc,extra:cbSelectedPkg?Math.max(0,n-inc):0};}
 var ADDON_TEA=0,ADDON_SIGDRINK=50,ADDON_STICKER_RATE=0.30,ADDON_STICKER_MIN=125,ADDON_PRINT_RATE=0.65,ADDON_PRINT_MIN=325;
 var DJ_PRICE={break:550,essentials:550,premium:650,full:750};
 var ADDON_LATTE=175;
 var ADDON_MANDAZI_PER50=80;
+var ADDON_COLDBREW_BREAK=75;
 var CB_TAX_RATE=0.0825;
 var CB_FULLPAY_DISCOUNT=0.05;
 var SQUARE_APP_ID='sq0idp-khlBwyn6FQYmXDU8zxjAiQ';
@@ -251,8 +257,8 @@ var AUSTIN_ZIPS='78701.78702.78703.78704.78705.78712.78717.78719.78721.78722.787
 var cbSelectedPkg=null;
 var BA_DRAFT_KEY='kahoa_ba_draft_cart',BA_SIGNED_KEY='kahoa_ba_signed_cart';
 var BA_DEFAULT_MSG='Next step: review and sign your Service Agreement. Your booking details fill in automatically — you only type your name — then you’ll come right back here to pay.';
-var CB_ADDON_IDS={tea:'cb-addon-tea',sig:'cb-addon-sig',sticker:'cb-addon-sticker',print:'cb-addon-print',dj:'cb-addon-dj',latte:'cb-addon-latte',mandazi:'cb-addon-mandazi'};
-var CB_ADDON_NAMES={mandazi:'Mother\'s Love Bites & Boba Tea',tea:'Hot Tea & Hot Cocoa',sig:'Custom Signature Drinks',sticker:'Logo Stickers on Cups',print:'Full Custom-Printed Cups',dj:'Event DJ',latte:'Latte Art Printer'};
+var CB_ADDON_IDS={coldbrew:'cb-addon-coldbrew',tea:'cb-addon-tea',sig:'cb-addon-sig',sticker:'cb-addon-sticker',print:'cb-addon-print',dj:'cb-addon-dj',latte:'cb-addon-latte',mandazi:'cb-addon-mandazi'};
+var CB_ADDON_NAMES={coldbrew:'Kifaru Spice Cold Brew (Coffee Break add-on)',mandazi:'Mother\'s Love Bites & Boba Tea',tea:'Hot Tea & Hot Cocoa',sig:'Custom Signature Drinks',sticker:'Logo Stickers on Cups',print:'Full Custom-Printed Cups',dj:'Event DJ',latte:'Latte Art Printer'};
 function baLoad(k){try{var s=sessionStorage.getItem(k);return s?JSON.parse(s):null;}catch(e){return null;}}
 function baSave(k,v){try{sessionStorage.setItem(k,JSON.stringify(v));return true;}catch(e){return false;}}
 function baClear(){try{sessionStorage.removeItem(BA_DRAFT_KEY);sessionStorage.removeItem(BA_SIGNED_KEY);}catch(e){}}
@@ -406,9 +412,12 @@ function cbCalc(){
   document.getElementById('cb-price-dj').textContent='+$'+djPrice.toFixed(2);
   var mandaziOn=document.getElementById('cb-addon-mandazi').checked,mandaziPrice=Math.ceil(guests/50)*ADDON_MANDAZI_PER50;
   document.getElementById('cb-price-mandazi').textContent='+$'+mandaziPrice.toFixed(2);
+  var isBreak=cbSelectedPkg==='break',cbCold=document.getElementById('cb-addon-coldbrew');document.getElementById('cb-coldbrew-row').style.display=isBreak?'flex':'none';if(!isBreak)cbCold.checked=false;
+  var coldOn=isBreak&&cbCold.checked,coldPrice=ADDON_COLDBREW_BREAK;document.getElementById('cb-taps-wrap').style.display=(!isBreak||coldOn)?'block':'none';
+  var _fl=document.getElementById('cb-flavor');if(isBreak&&!coldOn){_fl.value='None (Coffee Break)';}else if(/^None/.test(_fl.value)){cbTapsSync();}
 
   var _me=cbMenuExtra(),menuExtraPrice=_me.extra*SIG_EXTRA;var _nt=document.getElementById('cb-drinks-note');if(_nt)_nt.textContent=!cbSelectedPkg?'Pick the ones you would like on your menu. Choose a package above to see how many are included. Each extra drink is $50. We will confirm the final menu with you before the event.':'Your package includes '+_me.inc+' signature drink'+(_me.inc===1?'':'s')+'. You have picked '+_me.n+(_me.extra>0?', so '+_me.extra+' extra x $50 = $'+menuExtraPrice.toFixed(2)+' is added to your total.':'.')+' Each extra drink is $50. We will confirm the final menu with you before the event.';
- var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0)+(latteOn?lattePrice:0)+(mandaziOn?mandaziPrice:0)+menuExtraPrice;
+ var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0)+(latteOn?lattePrice:0)+(mandaziOn?mandaziPrice:0)+(coldOn?coldPrice:0)+menuExtraPrice;
   var preTax=pkgPrice+addonTotal;
   var taxTotal=preTax*CB_TAX_RATE;
   var grandTotal=preTax+taxTotal;
@@ -527,8 +536,9 @@ async function cbSubmit(){
   var djPrice=DJ_PRICE[cbSelectedPkg];
   var lattePrice=latteIncluded?0:ADDON_LATTE;
   var mandaziOn=document.getElementById('cb-addon-mandazi').checked,mandaziPrice=Math.ceil(guests/50)*ADDON_MANDAZI_PER50;
+  var coldOn=cbSelectedPkg==='break'&&document.getElementById('cb-addon-coldbrew').checked,coldPrice=ADDON_COLDBREW_BREAK;
   var _me=cbMenuExtra(),menuExtraPrice=_me.extra*SIG_EXTRA;
- var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0)+(latteOn?lattePrice:0)+(mandaziOn?mandaziPrice:0)+menuExtraPrice;
+ var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0)+(latteOn?lattePrice:0)+(mandaziOn?mandaziPrice:0)+(coldOn?coldPrice:0)+menuExtraPrice;
   var preTax=pkgPrice+addonTotal;
   var taxTotal=preTax*CB_TAX_RATE;
   var grandTotal=preTax+taxTotal;
@@ -546,6 +556,7 @@ async function cbSubmit(){
   if(printOn)addonList.push('Full Custom-Printed Cups ($'+printPrice.toFixed(2)+', billed in full at booking)');
   if(djOn)addonList.push('Event DJ ($'+djPrice.toFixed(2)+')');
   if(latteOn)addonList.push(latteIncluded?'Latte Art Printer (Included with Full Experience)':'Latte Art Printer ($'+lattePrice.toFixed(2)+')');
+  if(coldOn)addonList.push('Kifaru Spice Cold Brew ($'+coldPrice.toFixed(2)+')');
   if(mandaziOn)addonList.push('Mother\'s Love Bites & Boba Tea ($'+mandaziPrice.toFixed(2)+')');
   if(menuExtraPrice>0)addonList.push('Extra signature drinks ('+_me.extra+' x $'+SIG_EXTRA.toFixed(2)+' = $'+menuExtraPrice.toFixed(2)+')');
  var addonSummary=addonList.length?addonList.join(', '):'None';
@@ -580,7 +591,7 @@ async function cbSubmit(){
       baClear();
       if(payType==='deposit'&&data.payment_id){try{var _it=[{d:'Coffee Cart: '+pkgName+' ('+guests+' guests, '+time+')',p:Math.round(pkgPrice*100)}];
         if(sigOn&&!sigIncluded)_it.push({d:'Custom signature drink',p:Math.round(sigPrice*100)});if(stickerOn)_it.push({d:'Logo stickers on cups (paid at booking)',p:Math.round(stickerPrice*100)});if(printOn)_it.push({d:'Full custom-printed cups (paid at booking)',p:Math.round(printPrice*100)});
-        if(djOn)_it.push({d:'Event DJ',p:Math.round(djPrice*100)});if(latteOn&&!latteIncluded)_it.push({d:'Latte art printer',p:Math.round(lattePrice*100)});if(mandaziOn)_it.push({d:'Mother\'s Love Bites & Boba Tea',p:Math.round(mandaziPrice*100)});if(menuExtraPrice>0)_it.push({d:'Extra signature drinks ('+_me.extra+')',p:Math.round(menuExtraPrice*100)});
+        if(djOn)_it.push({d:'Event DJ',p:Math.round(djPrice*100)});if(latteOn&&!latteIncluded)_it.push({d:'Latte art printer',p:Math.round(lattePrice*100)});if(mandaziOn)_it.push({d:'Mother\'s Love Bites & Boba Tea',p:Math.round(mandaziPrice*100)});if(coldOn)_it.push({d:'Kifaru Spice Cold Brew',p:Math.round(coldPrice*100)});if(menuExtraPrice>0)_it.push({d:'Extra signature drinks ('+_me.extra+')',p:Math.round(menuExtraPrice*100)});
         fetch('https://kahoa-checkoutout.chegekibuthu1.workers.dev/staff/cart_booked',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({payment_id:data.payment_id,charged_cents:Math.round(chargeNow*100),pay_type:'deposit',items:_it,date:date,time:time,pkg_name:pkgName,name:name,email:email,phone:phone,location:location,signed_name:name})}).then(function(r){return r.json()}).then(function(d){if(d&&d.ok&&d.link){var el=document.getElementById('cb-success'),p=document.createElement('p');p.style.cssText='margin-top:12px;font-size:13px;';p.innerHTML='Your balance is due 7 days before your event. We\'ll email you a reminder, or <a href="'+d.link+'" style="color:var(--gold);font-weight:700;">pay it any time here</a>.';el.appendChild(p);}}).catch(function(e){console.error('Balance link FAILED:',e);});
       }catch(e){}}
       if(typeof emailjs!=='undefined'){
