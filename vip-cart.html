@@ -151,7 +151,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
  <p class=sec-label>Add-Ons</p>
   <div style="display:flex;flex-direction:column;gap:2px;margin-bottom:20px;">
     <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
-      <span><input type=checkbox id=cb-addon-tea onchange=cbCalc()> Hot Tea &amp; Hot Cocoa</span><span id=cb-price-tea style="color:var(--gold);">+$0.00</span>
+      <span><input type=checkbox id=cb-addon-tea checked disabled style="display:none"> Hot Tea &amp; Hot Cocoa</span><span id=cb-price-tea style="color:var(--gold);">Included</span>
     </label>
     <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
       <span><input type=checkbox id=cb-addon-sig onchange=cbCalc()> Custom Signature Drinks</span><span id=cb-price-sig style="color:var(--gold);">+$50.00</span>
@@ -223,7 +223,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script>
 <script>
 var CART_PKG={essentials:750,premium:1100,full:1850};var SIG_INCLUDED={essentials:1,premium:2,full:3},SIG_EXTRA=50;function cbMenuExtra(){var n=document.querySelectorAll('.cb-drink:checked').length;var inc=cbSelectedPkg?SIG_INCLUDED[cbSelectedPkg]:0;return {n:n,inc:inc,extra:cbSelectedPkg?Math.max(0,n-inc):0};}
-var ADDON_TEA=1,ADDON_SIGDRINK=50,ADDON_STICKER_RATE=0.30,ADDON_STICKER_MIN=125,ADDON_PRINT_RATE=0.65,ADDON_PRINT_MIN=325;
+var ADDON_TEA=0,ADDON_SIGDRINK=50,ADDON_STICKER_RATE=0.30,ADDON_STICKER_MIN=125,ADDON_PRINT_RATE=0.65,ADDON_PRINT_MIN=325;
 var DJ_PRICE={essentials:550,premium:650,full:750};
 var ADDON_LATTE=175;
 var CB_TAX_RATE=0.0825;
@@ -387,7 +387,7 @@ function cbCalc(){
   var djPrice=cbSelectedPkg?DJ_PRICE[cbSelectedPkg]:0;
   var lattePrice=latteIncluded?0:ADDON_LATTE;
 
-  document.getElementById('cb-price-tea').textContent='+$'+teaPrice.toFixed(2);
+  document.getElementById('cb-price-tea').textContent='Included';
   document.getElementById('cb-price-sticker').textContent='+$'+stickerPrice.toFixed(2);
   document.getElementById('cb-price-print').textContent='+$'+printPrice.toFixed(2);
   document.getElementById('cb-price-dj').textContent='+$'+djPrice.toFixed(2);
@@ -523,7 +523,7 @@ async function cbSubmit(){
   var chargeNow=(payType==='deposit'?serviceTotal*0.30:serviceTotal*(1-CB_FULLPAY_DISCOUNT))+brandingChargeNow;
 
   var addonList=[];
-  if(teaOn)addonList.push('Hot Tea & Cocoa ($'+teaPrice.toFixed(2)+')');
+  if(teaOn)addonList.push('Hot Tea & Cocoa (included)');
   if(sigOn)addonList.push(sigIncluded?'Custom Signature Drinks (Included with Full Experience)':'Custom Signature Drinks ($'+sigPrice.toFixed(2)+')');
   if(stickerOn)addonList.push('Logo Stickers ($'+stickerPrice.toFixed(2)+', billed in full at booking)');
   if(printOn)addonList.push('Full Custom-Printed Cups ($'+printPrice.toFixed(2)+', billed in full at booking)');
