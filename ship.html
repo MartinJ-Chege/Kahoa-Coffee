@@ -36,6 +36,10 @@
 .lbl .hb{height:.55in}
 .lbl .hnum{text-align:center;font-size:14pt;letter-spacing:5px;margin-top:2px;font-weight:500}
 @page{size:4in 6in;margin:0}
+.qflag{background:#FBECEA;color:var(--rust);border-radius:10px;padding:9px 11px;font-size:13.5px;margin-top:8px}
+.qmsg{background:var(--soft);border-radius:10px;padding:10px 12px;font-size:13.5px;font-style:italic;margin-top:8px;white-space:pre-line}
+.qnotes{margin:10px 0 0;padding-left:18px;font-size:13px;color:var(--mid)}.qnotes li{margin-bottom:4px}
+
 .qrow{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;padding:12px 0;border-bottom:1px solid var(--soft)}.qrow:last-child{border-bottom:0}
 .qrow .qn{min-width:0}.qrow .qn b{display:block;font-size:15px;color:var(--brown)}.qrow .qn small{display:block;font-size:12px;color:var(--muted);line-height:1.4}
 .qrow .qr{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}.qrow .qr b{font-size:14px}
@@ -667,7 +671,7 @@ var QPRESETS=[['Hosted Coffee Bar (4 hours, 2 baristas, up to 750 cups)',350000]
  ['Extra barista (per hour)',6000],['Extra hour of service',50000],['Peak week (SXSW, ACL, F1) +15%',0],['Rush booking (under 14 days) +15%',0],['Travel beyond 30 miles (per mile)',150]];
 function qM(c){return '$'+(Math.round(c)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function qDate(d){return d?new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'}):''}
-function qPill(s){return '<span class="pill'+(/Paid|Deposit/.test(s)?' ok':s==='Canceled'?' warn':s==='Signed'?' soft':'')+'">'+E(s)+'</span>'}
+function qPill(s){return '<span class="pill'+(/Paid|Deposit/.test(s)?' ok':/Canceled|Needs price/.test(s)?' warn':/Signed|New request/.test(s)?' soft':'')+'">'+E(s)+'</span>'}
 function admQuotes(){var b=$('adm-body');b.innerHTML='<div class="muted">Loading…</div>';A('quotes').then(function(d){if(!$('adm-body')||ATAB!=='quotes')return;if(!d.ok){b.innerHTML='<div class="err">'+E(d.error)+'</div>';return}
   QUOTES=d.quotes||[];QBANK=d.bank_note||'';var open=QUOTES.filter(function(q){return !q.canceled&&q.status!=='Paid in full'}),done=QUOTES.filter(function(q){return q.canceled||q.status==='Paid in full'});
   var h='<button class="btn wide" onclick="admQuoteEdit()">New quote</button>';
@@ -687,10 +691,14 @@ function admQuote(id){var q=qFind(id),b=$('adm-body');if(!q)return admQuotes();w
    (q.bal>0?'<div class="qpay"><div><b>Balance</b><small>'+qM(q.bal)+' bank · '+qM(q.bal_card)+' card</small></div><div>'+(q.bal_paid?'<span class="pill ok">Paid '+(q.bal_paid.method==='card'?'by card':'by bank')+'</span>':'<span class="pill">7 days before</span>')+'</div></div>':'')+
    (q.signed?'<div class="fine">Signed by '+E(q.signed.name)+(q.signed.title?', '+E(q.signed.title):'')+' on '+E(new Date(q.signed.at).toLocaleString('en-US',{timeZone:TZ,month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}))+'</div>':'')+
    (q.sent_at?'<div class="fine">Emailed to client '+E(new Date(q.sent_at).toLocaleString('en-US',{timeZone:TZ,month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}))+'</div>':'')+'</div>';
+  if(q.req){var r=q.req;h+='<div class="card"><div class="kick2">From the '+(q.source==='cart'?'coffee cart':'events')+' page</div>'+
+    (q.flag==='price'?'<div class="qflag">Set your price before sending. Tap <b>Edit quote</b> and fill in the price.</div>':'')+
+    '<div class="qmeta" style="margin-top:6px">'+[['Asked for',r.package],['Occasion',r.occasion],['Guests',r.guests],['Hours',r.hours],['Days',r.days&&r.days!=='1'?r.days:''],['Extras',(r.extras_label||r.extras||[]).join(', ')],['Budget',r.budget],['Style',r.style]].filter(function(x){return x[1]}).map(function(x){return '<b>'+x[0]+':</b> '+E(x[1])}).join('<br>')+'</div>'+
+    (r.message?'<div class="qmsg">“'+E(r.message)+'”</div>':'')+((r.notes||[]).length?'<ul class="qnotes">'+r.notes.map(function(n){return '<li>'+E(n)+'</li>'}).join('')+'</ul>':'')+'</div>'}
   if(!q.canceled){h+='<div class="card"><div class="qlink">'+E(q.link)+'</div><div class="row2"><button class="btn" onclick="copyTxt(\''+q.link+'\',this)">Copy link</button><a class="btn ghost" href="'+q.link+'" target="_blank">Open</a></div>'+
-   (q.status!=='Paid in full'?'<button class="btn wide dark" id="qsend" onclick="qSend('+q.id+')">'+(q.sent_at?'Email it again':'Email it to '+E(q.client.split(' ')[0]))+'</button>':'')+'</div>';
+   (q.status!=='Paid in full'?(q.flag==='price'?'<button class="btn wide dark" onclick="admQuoteEdit('+q.id+')">Set your price</button>':'<button class="btn wide dark" id="qsend" onclick="qSend('+q.id+')">'+(q.sent_at?'Email it again':'Email it to '+E(q.client.split(' ')[0]))+'</button>'):'')+'</div>';
    var acts='';
-   if(!q.dep_paid)acts+='<button class="btn wide ghost" onclick="qMark('+q.id+',\'dep\')">Deposit received by bank or Zelle ('+qM(q.dep)+')</button>';
+   if(!q.dep_paid&&q.flag!=='price')acts+='<button class="btn wide ghost" onclick="qMark('+q.id+',\'dep\')">Deposit received by bank or Zelle ('+qM(q.dep)+')</button>';
    else if(!q.bal_paid&&q.bal>0)acts+='<button class="btn wide ghost" onclick="qMark('+q.id+',\'bal\')">Balance received by bank or Zelle ('+qM(q.bal)+')</button>';
    if(!q.signed)acts+='<button class="btn wide ghost" onclick="admQuoteEdit('+q.id+')">Edit quote</button>';
    acts+='<button class="btn wide ghost" onclick="qCopy('+q.id+')">Make a copy</button>';

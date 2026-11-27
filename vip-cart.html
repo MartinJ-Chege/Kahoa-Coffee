@@ -105,6 +105,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
   </div>
 
   <p class=sec-label style="margin-top:16px;">Choose Your Package</p>
+  <p style="font-size:13px;color:rgba(255,255,255,0.6);margin:-4px 0 12px;">Less than 2 hours, fewer guests or a smaller budget? <a href="/coffee-cart.html#cc-inquire" style="color:var(--gold);font-weight:600;">Request a custom quote</a> and we'll price it for you.</p>
   <div id=cb-packages style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
     <div class="prod-card cb-pkg" data-pkg="essentials" onclick="cbSelectPkg('essentials')" style="cursor:pointer;">
       <div class=prod-name>Essentials <span style="color:var(--gold);float:right;">$750</span></div>
@@ -466,6 +467,7 @@ window.addEventListener('load',function(){
     if(el){el.addEventListener('input',cbCalc);el.addEventListener('change',cbCalc);}
   });
   cbRestoreDraft();
+  try{var _pk=(location.search.match(/[?&]pkg=(essentials|premium|full)\b/)||[])[1];if(_pk)cbSelectPkg(_pk);}catch(e){}
   cbCalc();
   if(window.KahoaCal)KahoaCal.attach('cb-date');
 });

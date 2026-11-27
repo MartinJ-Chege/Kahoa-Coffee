@@ -80,6 +80,9 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 .cc-pkg li:before{content:"\2713";position:absolute;left:0;color:var(--gold);font-weight:700;}
 .cc-pkg .cc-pkg-btn{display:block;text-align:center;background:transparent;border:1px solid var(--gold);color:var(--gold);padding:12px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;text-decoration:none;border-radius:3px;cursor:pointer;transition:background .2s;}
 .cc-pkg.featured .cc-pkg-btn{background:var(--gold);color:var(--coffee-dark);}
+.cc-pkg .cc-pkg-alt{display:block;text-align:center;color:rgba(255,255,255,0.55);font-size:12px;margin-top:10px;text-decoration:underline;text-underline-offset:3px;cursor:pointer;}
+.cc-small{max-width:720px;margin:26px auto 0;text-align:center;background:rgba(212,168,67,0.08);border:1px solid rgba(212,168,67,0.35);border-radius:6px;padding:16px 18px;color:rgba(255,255,255,0.8);font-size:14px;line-height:1.6;}
+.cc-small a{color:var(--gold);font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
 .cc-pkg .cc-pkg-btn:hover{background:var(--gold);color:var(--coffee-dark);}
 .cc-form-section{background:radial-gradient(ellipse 70% 80% at 50% 0,#1f1109,#0a0402);padding:70px 6%;}
 .cc-form{max-width:640px;margin:0 auto;background:rgba(255,255,255,0.03);border:1px solid rgba(212,168,67,0.2);border-radius:14px;padding:44px 40px;box-shadow:0 24px 60px rgba(0,0,0,0.35);}
@@ -243,7 +246,7 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 <li>Setup & cleanup included</li>
 <li>Latte Art Printer available <small style="opacity:.7">(+$175)</small></li>
 </ul>
-<a class="cc-pkg-btn" onclick="ccPick('Essentials')">Request a Quote</a>
+<a class="cc-pkg-btn" href="/vip-cart.html?pkg=essentials" onclick="kahoaTrack('select_item',{item_name:'coffee-cart-book-essentials'})">Book Now</a><a class="cc-pkg-alt" onclick="ccPick('Essentials')">or request a quote</a>
 </div>
 <div class="cc-pkg featured">
 <div class="cc-pkg-badge">Most Popular</div>
@@ -258,7 +261,7 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 <li>Setup & cleanup included</li>
 <li>Latte Art Printer available <small style="opacity:.7">(+$175)</small></li>
 </ul>
-<a class="cc-pkg-btn" onclick="ccPick('Premium')">Request a Quote</a>
+<a class="cc-pkg-btn" href="/vip-cart.html?pkg=premium" onclick="kahoaTrack('select_item',{item_name:'coffee-cart-book-premium'})">Book Now</a><a class="cc-pkg-alt" onclick="ccPick('Premium')">or request a quote</a>
 </div>
 <div class="cc-pkg">
 <h3>Full Experience</h3>
@@ -275,10 +278,11 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 <li>Latte Art Printer <small style="opacity:.7">included free</small></li>
 <li>Custom cup branding available <small style="opacity:.7">(billed separately)</small></li>
 </ul>
-<a class="cc-pkg-btn" onclick="ccPick('Full Experience')">Request a Quote</a>
+<a class="cc-pkg-btn" href="/vip-cart.html?pkg=full" onclick="kahoaTrack('select_item',{item_name:'coffee-cart-book-full'})">Book Now</a><a class="cc-pkg-alt" onclick="ccPick('Full Experience')">or request a quote</a>
 </div>
 </div>
 <p style="text-align:center;color:rgba(255,255,255,0.4);font-size:12px;margin-top:28px;">Austin metro included. Travel fees may apply for events outside the surrounding area. Final pricing depends on headcount, hours, and menu.</p>
+<div class="cc-small"><strong style="color:var(--gold);">Smaller or shorter event?</strong> Less than 2 hours, fewer guests, or a tighter budget, we still want to serve you. <a onclick="ccPick('Custom')">Request a custom quote</a> and we'll price it for you within 1 business day.</div>
 </section>
 
 <section class="cc-section">
@@ -300,7 +304,7 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 
 <section class="cc-form-section" id="cc-inquire">
 <h2 class="cc-h2">Request a Quote</h2>
-<p class="cc-h2-sub">Tell us about your event and we'll get back to you within 1 business day with a custom quote.</p>
+<p class="cc-h2-sub">Tell us about your event and we'll get back to you within 1 business day with a custom quote. Smaller or shorter events are welcome too.</p>
 <div class="cc-form">
 <div id="ccFormWrap">
 <div class="cc-row">
@@ -318,10 +322,12 @@ body{margin:0;background:var(--coffee-dark);color:var(--cream);font-family:Monts
 </div>
 <div class="cc-field"><label>Event Location / City *</label><input id="cc-location" type="text" placeholder="e.g. Downtown Austin office"></div>
 <div class="cc-field"><label>Package Interested In *</label><select id="cc-package" required><option value="">Select a package...</option><option>Essentials</option><option>Premium</option><option>Full Experience</option><option>Custom</option></select></div>
+<div class="cc-field"><label>Hours of service</label><select id="cc-hours"><option value="">Not sure yet</option><option value="1">1 hour</option><option value="1.5">1.5 hours</option><option value="2">2 hours</option><option value="3">3 hours</option><option value="4">4 hours</option><option value="5">5 hours</option><option value="6">6 hours or more</option></select></div>
 <div class="cc-field"><label>Event Type *</label><select id="cc-event-type" required><option value="">What are we celebrating?</option><option>Corporate Event / Office</option><option>Wedding / Private Celebration</option><option>Conference / Trade Show</option><option>Brand Activation / Product Launch</option><option>Other</option></select></div>
 <div class="cc-field"><label>Service Style</label><select id="cc-style"><option value="">Not sure yet, recommend one</option><option>Espresso Bar</option><option>Pour-Over Reserve</option><option>Both (Espresso Bar + Pour-Over Reserve)</option></select></div>
 <div class="cc-field"><label>Your taps (choose one or both, optional)</label><div id="cc-taps" style="display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;font-size:13px;color:rgba(255,255,255,0.75);"><label style="font-weight:400;text-transform:none;letter-spacing:0;font-size:13px;"><input type="checkbox" value="Spice Cold Brew"> Spice Cold Brew</label><label style="font-weight:400;text-transform:none;letter-spacing:0;font-size:13px;"><input type="checkbox" value="Spice Nitro"> Spice Nitro</label></div><p style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:6px;">Our cart has 2 taps. Choose Spice cold brew, Spice Nitro, or both (Premium &amp; Full Experience).</p></div>
 <div class="cc-field"><label>Tell us about your event</label><textarea id="cc-message" rows="4" placeholder="Optional — timing, vibe, or anything special we should know..."></textarea></div>
+<input type="text" id="cc-website" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
 <button class="cc-submit" onclick="ccSubmit()">Send My Request →</button>
 <p style="font-size:11px;color:rgba(255,255,255,0.35);text-align:center;margin-top:14px;">We'll never share your info. Response within 1 business day.</p>
 </div>
@@ -349,6 +355,8 @@ function ccSubmit(){
       pkg=(document.getElementById("cc-package").value||"Not specified").trim(),
       eventType=(document.getElementById("cc-event-type").value||"").trim(),
       message=(document.getElementById("cc-message").value||"").trim();
+  var hours=(document.getElementById("cc-hours")||{}).value||"",rawMsg=message;
+  if(hours)message=(message?message+" | ":"")+"Hours: "+hours;
   var style=(document.getElementById("cc-style")||{}).value||"";
   if(style)message=(message?message+" | ":"")+"Service style: "+style;
   var taps=[].slice.call(document.querySelectorAll("#cc-taps input:checked")).map(function(c){return c.value;});
@@ -358,6 +366,7 @@ function ccSubmit(){
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){alert("Please enter a valid email address.");return;}
   document.getElementById("ccFormWrap").style.display="none";
   document.getElementById("ccSuccess").style.display="block";
+  try{fetch("https://kahoa-checkoutout.chegekibuthu1.workers.dev/staff/quote_request",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({kind:"cart",name:fname+" "+lname,company:company,email:email,phone:phone,event_date:date,venue:location,package:pkg,occasion:eventType,guests:guests,hours:hours,style:style,message:rawMsg+(taps.length?(rawMsg?" | ":"")+"Taps: "+taps.join(" + "):""),website:(document.getElementById("cc-website")||{}).value||""})}).catch(function(e){console.error("Quote draft FAILED:",e);});}catch(e){}
   var ccParams={customer_name:fname+" "+lname,customer_email:email,customer_phone:phone,company:company,event_date:date||"TBD",guest_count:guests?guests+" guests":"TBD",location:location,package:pkg,event_type:eventType,service_name:"Coffee Cart",service_short:"Coffee Cart",message:message||"None"};
   if(typeof emailjs<"u"){
     emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_CC_BUSINESS_TMPL,ccParams).then(

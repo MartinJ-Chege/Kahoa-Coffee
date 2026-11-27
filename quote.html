@@ -54,6 +54,7 @@ input[type=text]{width:100%;font:inherit;padding:12px;border:1px solid var(--lin
 .signed{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap}.signed img{max-height:70px;border-bottom:1.5px solid var(--brown);padding-bottom:2px}
 .signed div{font-size:13px;color:var(--muted)}.signed div b{display:block;color:var(--brown);font-size:15px}
 .paid{display:flex;gap:10px;align-items:center;background:#E3F2E8;color:var(--green);border-radius:12px;padding:12px 14px;font-weight:600;font-size:14px;margin-top:10px}
+.zqr{display:block;width:190px;max-width:60%;margin:4px auto 12px;border-radius:10px}
 .bank{white-space:pre-line;background:var(--cream);border-radius:12px;padding:14px;font-size:14px}
 .msg{text-align:center;color:var(--muted);padding:60px 10px}
 .foot{text-align:center;font-size:12px;color:var(--muted);margin-top:18px}
@@ -107,7 +108,7 @@ function draw(){var q=Q,st=/^(Not sent|Sent)$/.test(q.status)?'Ready to sign':q.
       h+='<p style="margin:'+(q.dep_paid?'14px':'0')+' 0 12px;font-size:14px">'+(which==='dep'?'Pay your '+q.deposit_pct+'% deposit to hold your date.':'Your balance is due '+E(balDue(q.event_date))+'.')+'</p>'+
       '<div class="tabs"><button id="tc" class="'+(tab==='card'?'on':'')+'" onclick="kqTab(\'card\')">Card · '+M(cardAmt)+'</button><button id="tb" class="'+(tab==='bank'?'on':'')+'" onclick="kqTab(\'bank\')">Bank or Zelle · '+M(bank)+'</button></div>'+
       '<div id="pcard" style="display:'+(tab==='card'?'block':'none')+'"><div id="card"></div><button class="btn dark" id="pb" onclick="kqPay()">Pay '+M(cardAmt)+' by card</button><p style="font-size:12px;color:var(--muted);text-align:center;margin:8px 0 0">Secure card payment by Square. Card price includes a 3% processing fee. Pay by bank or Zelle to skip it.</p><div class="err" id="perr"></div></div>'+
-      '<div id="pbank" style="display:'+(tab==='bank'?'block':'none')+'"><p style="margin:0 0 10px;font-size:14px">Send <b>'+M(bank)+'</b> and put <b>'+E(q.num)+'</b> in the memo. We\'ll email you as soon as it arrives.</p><div class="bank">'+(BANK?E(BANK):'Email <a href="mailto:info@kahoa.shop?subject='+encodeURIComponent('Bank transfer for quote '+q.num)+'">info@kahoa.shop</a> and we\'ll send our bank transfer and Zelle details right away.')+'</div></div>'}
+      '<div id="pbank" style="display:'+(tab==='bank'?'block':'none')+'"><p style="margin:0 0 10px;font-size:14px">Send <b>'+M(bank)+'</b> and put <b>'+E(q.num)+'</b> in the memo. We\'ll email you as soon as it arrives.</p>'+(BANK&&/zelle/i.test(BANK)?'<img class="zqr" src="/zelle-qr.png" alt="Zelle QR code for Kahoa Coffee LLC">':'')+'<div class="bank">'+(BANK?E(BANK):'Email <a href="mailto:info@kahoa.shop?subject='+encodeURIComponent('Bank transfer for quote '+q.num)+'">info@kahoa.shop</a> and we\'ll send our bank transfer and Zelle details right away.')+'</div></div>'}
     h+='</div>'}
   h+='<p class="foot">Kahoa Coffee LLC · Austin, Texas · <a href="mailto:info@kahoa.shop">info@kahoa.shop</a> · <a href="https://kahoa.shop">kahoa.shop</a></p>';
   $('out').innerHTML=h;
