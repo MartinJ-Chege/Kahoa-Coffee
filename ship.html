@@ -298,10 +298,10 @@ var IC={
 /* ---------- navigation ---------- */
 function show(v){if(TICK){clearInterval(TICK);TICK=null}
   if(!ME&&v!=='pin')v='who';if(v==='admin'&&!(ME&&ME.is_admin))v='home';if(v==='ship'&&!(ME&&(ME.can_ship||ME.is_admin)))v='home';
-  VIEW=v;var sub=['ship','supplies','admin','getpaid','sign','w9','code'].indexOf(v)!==-1;
+  VIEW=v;var sub=['ship','supplies','admin','getpaid','sign','w9','code','idup','foodup'].indexOf(v)!==-1;
   $('hb').innerHTML=sub?'<button class="iconbtn" onclick="show(\'home\')" aria-label="Back">'+IC.back+'</button>':(v==='pin'?'<button class="iconbtn" onclick="show(\'who\')" aria-label="Back">'+IC.back+'</button>':'');
   $('hr').innerHTML=ME&&v!=='who'&&v!=='pin'?'<button class="me" onclick="pickAvatar()" aria-label="Change your photo">'+av(ME,'me-av')+'</button>':'';
-  window.scrollTo(0,0);({who:vWho,pin:vPin,home:vHome,ship:vShip,supplies:vSupplies,admin:vAdmin,getpaid:vGetPaid,sign:vSign,w9:vW9,code:vCode})[v]()}
+  window.scrollTo(0,0);({who:vWho,pin:vPin,home:vHome,ship:vShip,supplies:vSupplies,admin:vAdmin,getpaid:vGetPaid,sign:vSign,w9:vW9,code:vCode,idup:function(){vDoc('id')},foodup:function(){vDoc('food')}})[v]()}
 document.addEventListener('visibilitychange',function(){if(!document.hidden&&VIEW==='home')vHome()});
 
 /* ---------- who are you ---------- */
@@ -355,9 +355,11 @@ function jobDay(dstr){var today=ymd(new Date()),tm=ymd(new Date(Date.now()+86400
 function drawNextJob(){var el=$('nextjob');if(!el)return;var j=NEXTJOB;if(!j){el.innerHTML='';return}
   el.innerHTML='<div class="nextjob"><span class="nj-when"><small>'+(jobDay(j.date)==='Today'?'Today':'Next job · '+jobDay(j.date))+'</small><b>'+fmtHM(j.start_min)+' – '+fmtHM(j.end_min)+'</b></span><span class="nj-where">'+IC.pin+'<span>'+E(j.venue||'Venue to be confirmed')+(j.note?'<small>'+E(j.note)+'</small>':'')+'</span></span></div>';
   var v=$('venue');if(v&&!v.value&&j.venue&&jobDay(j.date)==='Today')v.value=j.venue}
-function drawDocBar(){var el=$('docbar');if(!el)return;if(!DOCS||!DOCS.need||(DOCS.signed&&DOCS.w9)){el.innerHTML='';return}
-  el.innerHTML=!DOCS.signed?'<button class="docbar" onclick="show(\'sign\')"><span class="ti">'+IC.pen+'</span><span class="tt"><b>Sign your contractor agreement</b><small>Needed before you can clock in. Takes a minute.</small></span>'+IC.chev+'</button>':
-   '<button class="docbar soft" onclick="show(\'w9\')"><span class="ti">'+IC.doc+'</span><span class="tt"><b>Upload your W-9</b><small>Needed before your first payment</small></span>'+IC.chev+'</button>'}
+function nextDoc(){if(!DOCS||!DOCS.need)return null;if(!DOCS.signed)return'sign';if(!DOCS.w9)return'w9';if(!DOCS.id)return'idup';if(!DOCS.food)return'foodup';return null}
+var DOCBAR={w9:['Upload your W-9','Needed before your first payment'],idup:['Upload a photo of your ID','Driver\'s license or state ID, for your file'],foodup:['Upload your food handler card','Texas requires one to serve food and drinks']};
+function drawDocBar(){var el=$('docbar');if(!el)return;var n=nextDoc();if(!n){el.innerHTML='';return}
+  el.innerHTML=n==='sign'?'<button class="docbar" onclick="show(\'sign\')"><span class="ti">'+IC.pen+'</span><span class="tt"><b>Sign your contractor agreement</b><small>Needed before you can clock in. Takes a minute.</small></span>'+IC.chev+'</button>':
+   '<button class="docbar soft" onclick="show(\''+n+'\')"><span class="ti">'+IC.doc+'</span><span class="tt"><b>'+DOCBAR[n][0]+'</b><small>'+DOCBAR[n][1]+'</small></span>'+IC.chev+'</button>'}
 function drawClock(){var c=$('clock');if(!c)return;if(TICK){clearInterval(TICK);TICK=null}
   if(OPEN){c.className='clock on';c.innerHTML='<div class="state"><i></i>On the clock</div><div class="timer" id="timer"></div><div class="since">Since '+t(OPEN.clock_in)+(OPEN.in_note?' · '+E(OPEN.in_note):'')+'</div>'+
     '<button class="punch out" id="punch" onclick="punch(\'out\')">Clock out</button><div class="err" id="cerr"></div>';
@@ -471,7 +473,7 @@ function sigClear(){if(SIGP){SIGP.x.clearRect(0,0,SIGP.c.width,SIGP.c.height);SI
 function agSign(){var e=$('sge2'),b=$('sgb');e.textContent='';if(!SIGP||SIGP.n<8){e.textContent='Please sign in the box.';return}if(!$('sgok').checked){e.textContent='Tick the box to agree.';return}
   b.disabled=true;b.textContent='Signing…';
   call('sign',Object.assign(auth(),{version:AGV,legal_name:$('sgn').value,address:$('sga').value,email:$('sge').value,agree:true,signature:SIGP.c.toDataURL('image/png')})).then(function(d){b.disabled=false;b.textContent='Sign agreement';
-    if(!d.ok){e.textContent=d.error||'Try again.';return}DOCS=d.docs;done('Signed','Welcome to the team! A copy is on its way to your email.');show(DOCS.w9?'home':'w9')})}
+    if(!d.ok){e.textContent=d.error||'Try again.';return}DOCS=d.docs;done('Signed','Welcome to the team! A copy is on its way to your email.');show(nextDoc()||'home')})}
 function vW9(){$('v').innerHTML='<h1 class="title">Your W-9</h1><p class="lead">Kahoa needs this to send your 1099 at tax time. Only Martin can see it.</p>'+
   '<div class="card"><div class="step"><span class="num">1</span><div><b>Fill in the IRS form</b><small>Your name, address, and your Social Security number (or EIN). Sign and date it.</small><a class="btn ghost" href="https://www.irs.gov/pub/irs-pdf/fw9.pdf" target="_blank" rel="noopener">'+IC.doc+'Open the W-9 form</a></div></div>'+
   '<div class="step"><span class="num">2</span><div><b>Upload it here</b><small>A clear photo of the paper form, or the filled-in PDF.</small></div></div>'+
@@ -483,7 +485,23 @@ function w9Got(inp){var f=inp.files&&inp.files[0],p=$('w9p');W9F=null;$('w9b').d
     var r=new FileReader();r.onload=function(){W9F=r.result;p.classList.add('has');p.style.backgroundImage='';p.querySelector('.pp-in').innerHTML=IC.doc+'<b>'+E(f.name)+'</b>';$('w9b').disabled=false};r.readAsDataURL(f);return}
   shrink(f,1800,false,0.82).then(function(u){W9F=u;p.classList.add('has');p.style.backgroundImage='url('+u+')';p.querySelector('.pp-in').innerHTML=IC.cam+'<b>Change</b>';$('w9b').disabled=false}).catch(function(){$('w9e').textContent="That file didn't work. Try a photo."})}
 function w9Send(){var b=$('w9b');if(!W9F)return;b.disabled=true;b.textContent='Uploading…';call('w9',Object.assign(auth(),{file:W9F})).then(function(d){b.disabled=false;b.textContent='Upload W-9';
-  if(!d.ok){$('w9e').textContent=d.error||'Try again.';return}DOCS=d.docs;W9F=null;done('W-9 received','Thank you. You\'re all set.');show('home')})}
+  if(!d.ok){$('w9e').textContent=d.error||'Try again.';return}DOCS=d.docs;W9F=null;done('W-9 received','Thank you.');show(nextDoc()||'home')})}
+/* ---------- photo ID + food handler card ---------- */
+var DOCF=null,DOCK='';
+function vDoc(k){DOCK=k;DOCF=null;var food=k==='food',has=DOCS&&DOCS[k];
+  $('v').innerHTML='<h1 class="title">'+(food?'Food handler card':'Your photo ID')+'</h1><p class="lead">'+(food?'Texas requires a food handler card for anyone who serves food or drinks. We keep a copy in your file. Only Martin can see it.':'A photo of your driver\'s license or state ID for your contractor file. Only Martin can see it.')+'</p>'+
+  '<div class="card">'+(food?'<div class="step"><span class="num">1</span><div><b>No card yet?</b><small>Take a Texas-accredited food handler course online. It takes about an hour, and you get the card right away. It\'s good for 2 years.</small></div></div>'+
+   '<div class="step"><span class="num">2</span><div><b>Upload your card</b><small>A clear photo of the card or certificate, or the PDF.</small></div></div>':'<div class="step"><span class="num">1</span><div><b>Take a clear photo of the front</b><small>All four corners in the picture, no glare.</small></div></div>')+
+  '<label class="photo-pick" id="dcp"><input type="file" accept="image/*,application/pdf" onchange="docGot(this)"><span class="pp-in">'+IC.cam+'<b>Choose photo or PDF</b><small>'+(has?'You already sent one. Upload again to replace it.':'')+'</small></span></label>'+
+  (food?'<label class="lbl2">Expiration date on the card</label><input type="date" id="dce" value="'+E(DOCS&&DOCS.food_expires||'')+'">':'')+
+  '<button class="btn wide" id="dcb" onclick="docSend()" disabled>Upload</button><div class="err" id="dcerr"></div></div><button class="switch" onclick="show(\'home\')">Do this later</button>'}
+function docGot(inp){var f=inp.files&&inp.files[0],p=$('dcp');DOCF=null;$('dcb').disabled=true;$('dcerr').textContent='';if(!f)return;
+  if(f.type==='application/pdf'){if(f.size>1100000){$('dcerr').textContent='That PDF is too big. Take a photo instead.';return}
+    var r=new FileReader();r.onload=function(){DOCF=r.result;p.classList.add('has');p.style.backgroundImage='';p.querySelector('.pp-in').innerHTML=IC.doc+'<b>'+E(f.name)+'</b>';$('dcb').disabled=false};r.readAsDataURL(f);return}
+  shrink(f,1800,false,0.82).then(function(u){DOCF=u;p.classList.add('has');p.style.backgroundImage='url('+u+')';p.querySelector('.pp-in').innerHTML=IC.cam+'<b>Change</b>';$('dcb').disabled=false}).catch(function(){$('dcerr').textContent="That file didn't work. Try a photo."})}
+function docSend(){var b=$('dcb'),e=$('dcerr');if(!DOCF)return;var x=$('dce');if(x&&!x.value){e.textContent='Add the expiration date from your card.';return}
+  b.disabled=true;b.textContent='Uploading…';call('upload',Object.assign(auth(),{kind:DOCK,file:DOCF,expires:x?x.value:''})).then(function(d){b.disabled=false;b.textContent='Upload';
+  if(!d.ok){e.textContent=d.error||'Try again.';return}DOCS=d.docs;DOCF=null;done(DOCK==='food'?'Card received':'ID received','Thank you.'+(nextDoc()?'':' Your file is complete.'));show(nextDoc()||'home')})}
 
 /* ---------- change my code ---------- */
 function vCode(){var first=!!FIRSTCODE;$('v').innerHTML=(first?'<h1 class="title">Pick your own code</h1><p class="lead">The code Martin sent you only works once. Choose 4 to 8 numbers you\'ll remember and use them from now on.</p>':
@@ -596,7 +614,7 @@ function delJob(id){if(!confirm('Remove this job?'))return;A('job_delete',{id:id
 function admPerson(id){var b=$('adm-body');b.innerHTML='<div class="muted">Loading…</div>';window.scrollTo(0,0);A('person',{staff_id:id}).then(function(d){if(!$('adm-body'))return;if(!d.ok){b.innerHTML='<div class="err">'+E(d.error)+'</div>';return}
   var p=d.person,r=d.reliability,h='<button class="link" onclick="admTeam()">‹ All team</button>';
   h+='<div class="card phead">'+av(p,'big')+'<div><div class="pname">'+E(p.name)+'</div><div class="muted xs">'+money(p.rate_cents/100)+'/h'+(d.pay?' · '+E(payLabel(d.pay)):' · no payment info')+'</div>'+
-    (p.is_admin?'':'<div class="muted xs">'+(d.docs.signed?'Agreement ✓':'<span class="warnt">Agreement not signed</span>')+' · '+(d.docs.w9?'W-9 ✓':'<span class="warnt">No W-9</span>')+'</div>')+
+    (p.is_admin?'':'<div class="muted xs">'+(d.docs.signed?'Agreement ✓':'<span class="warnt">Agreement not signed</span>')+' · '+(d.docs.w9?'W-9 ✓':'<span class="warnt">No W-9</span>')+' · '+(d.docs.id?'ID ✓':'<span class="warnt">No ID</span>')+' · '+(d.docs.food?(d.docs.food_expires&&d.docs.food_expires<ymd(new Date())?'<span class="warnt">Food card expired</span>':'Food card ✓'+(d.docs.food_expires?' (exp. '+E(d.docs.food_expires)+')':'')):'<span class="warnt">No food card</span>')+'</div>')+
     '<div class="plinks"><button class="link" onclick="admTeam('+p.id+')">Edit</button>'+(p.is_admin?'':'<a class="link" href="/agreement.html?p='+p.id+'" target="_blank">File</a>')+'</div></div></div>';
   h+='<div class="stats"><div class="stat"><small>This week</small><b>'+hrs(d.week.hours)+'h</b></div><div class="stat"><small>This month</small><b>'+hrs(d.month.hours)+'h</b></div><div class="stat"><small>Unpaid</small><b>'+money(d.unpaid.pay)+'</b></div></div>';
   h+='<div class="card"><div class="sec0">Last 30 days</div>'+(r.jobs?'<div class="rel"><b>'+r.on_time+'</b> of <b>'+r.jobs+'</b> jobs on time</div><div class="pills">'+

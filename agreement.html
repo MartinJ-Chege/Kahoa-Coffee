@@ -65,7 +65,16 @@ table{width:100%;border-collapse:collapse;margin-top:20px;font-size:12.5px;page-
     else if(d.w9.mime==='application/pdf'){var bin=atob(d.w9.file.split(',')[1]),u8=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);var url=URL.createObjectURL(new Blob([u8],{type:'application/pdf'}));
       h+='<p>Uploaded '+E(when(d.w9.uploaded_at))+' as a PDF. <a href="'+url+'" target="_blank" download="'+E(p.name)+'-W9.pdf">Open or download the W-9</a></p>'}
     else h+='<p style="color:#8B6040;font-size:12px">Uploaded '+E(when(d.w9.uploaded_at))+'</p><img src="'+d.w9.file+'" alt="W-9">';
-    h+='<p class="noprint" style="font-size:12px;color:#8B6040;margin-top:14px">This file has private tax information. Keep printed copies somewhere safe.</p></div>';
+    h+='</div>';
+    [['id_doc','Photo ID','No photo ID on file yet.'],['food','Food Handler Card','No food handler card on file yet.']].forEach(function(k){var f=d[k[0]];
+      h+='<div class="page w9"><h2>'+k[1]+'</h2>';
+      if(!f)h+='<p style="color:#8B6040">'+k[2]+' '+E(p.name)+' will see a reminder on their home screen.</p>';
+      else{var meta='Uploaded '+E(when(f.uploaded_at))+(f.expires?' · Expires '+E(new Date(f.expires+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}))+(f.expires<new Date().toLocaleDateString('en-CA',{timeZone:TZ})?' <b style="color:#b22730">(expired)</b>':''):'');
+        if(f.mime==='application/pdf'){var bn=atob(f.file.split(',')[1]),u=new Uint8Array(bn.length);for(var j=0;j<bn.length;j++)u[j]=bn.charCodeAt(j);var ur=URL.createObjectURL(new Blob([u],{type:'application/pdf'}));
+          h+='<p>'+meta+' as a PDF. <a href="'+ur+'" target="_blank" download="'+E(p.name)+'-'+k[1].replace(/ /g,'-')+'.pdf">Open or download</a></p>'}
+        else h+='<p style="color:#8B6040;font-size:12px">'+meta+'</p><img src="'+f.file+'" alt="'+k[1]+'">'}
+      h+='</div>'});
+    h+='<p class="noprint" style="font-size:12px;color:#8B6040;margin:14px auto;max-width:8.5in;padding:0 .2in">This file has private tax and ID information. Keep printed copies somewhere safe.</p>';
     out.innerHTML=h;
   }).catch(function(){out.innerHTML='<p class="msg">Could not load. Check your connection and refresh.</p>'});
 })();
