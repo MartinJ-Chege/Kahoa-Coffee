@@ -129,6 +129,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
   <p class=sec-label>Service Style</p>
   <div class=field style="margin-bottom:6px;">
     <select id=cb-style>
+      <option value="Hot bar: drip coffee, hot cocoa &amp; Kenyan tea" id=cb-style-hot hidden>Hot bar &mdash; drip coffee, hot cocoa &amp; Kenyan tea (Coffee Break)</option>
       <option value="Espresso Bar">Espresso Bar &mdash; lattes, cappuccinos &amp; more (best for 75+ guests)</option>
       <option value="Pour-Over Reserve">Pour-Over Reserve &mdash; hand-poured Kenyan single-origin (best for up to ~50 guests)</option>
       <option value="Both (Espresso Bar + Pour-Over Reserve)">Both &mdash; espresso bar plus a pour-over moment</option>
@@ -359,8 +360,13 @@ function cbSelectPkg(key){
   cbCalc();
 }
 function cbCalc(){
+  (function(){var isBreak=cbSelectedPkg==='break';
+  var _st=document.getElementById('cb-style'),_hot=document.getElementById('cb-style-hot'),_lr=document.getElementById('cb-latte-row');
+  if(isBreak){_hot.hidden=false;_st.value=_hot.value;_st.disabled=true;_lr.style.display='none';document.getElementById('cb-addon-latte').checked=false;var _n=document.getElementById('cb-style-note');if(_n)_n.textContent='Coffee Break is a hot bar. Want lattes? Essentials and up include the espresso bar.';}
+  else{if(_st.disabled){_st.disabled=false;_st.value='Espresso Bar';}_hot.hidden=true;_lr.style.display='flex';}
+  })();
   var _sn=document.getElementById('cb-style-note'),_sv=cbVal('cb-style');
-  if(_sn)_sn.textContent=_sv==='Pour-Over Reserve'?'Pour-over is made one cup at a time, so it suits smaller guest counts. The latte art printer needs the espresso bar.':_sv.indexOf('Both')===0?'Espresso bar for the crowd plus a pour-over moment for your head table and special guests.':'The latte art printer works with the espresso bar.';
+  if(_sn&&cbSelectedPkg!=='break')_sn.textContent=_sv==='Pour-Over Reserve'?'Pour-over is made one cup at a time, so it suits smaller guest counts. The latte art printer needs the espresso bar.':_sv.indexOf('Both')===0?'Espresso bar for the crowd plus a pour-over moment for your head table and special guests.':'The latte art printer works with the espresso bar.';
   var guests=Math.max(1,parseInt(document.getElementById('cb-guests').value)||1);
   var pkgPrice=cbSelectedPkg?CART_PKG[cbSelectedPkg]:0;
 
@@ -412,7 +418,8 @@ function cbCalc(){
   document.getElementById('cb-price-dj').textContent='+$'+djPrice.toFixed(2);
   var mandaziOn=document.getElementById('cb-addon-mandazi').checked,mandaziPrice=Math.ceil(guests/50)*ADDON_MANDAZI_PER50;
   document.getElementById('cb-price-mandazi').textContent='+$'+mandaziPrice.toFixed(2);
-  var isBreak=cbSelectedPkg==='break',cbCold=document.getElementById('cb-addon-coldbrew');document.getElementById('cb-coldbrew-row').style.display=isBreak?'flex':'none';if(!isBreak)cbCold.checked=false;
+  var isBreak=cbSelectedPkg==='break',cbCold=document.getElementById('cb-addon-coldbrew');
+  document.getElementById('cb-coldbrew-row').style.display=isBreak?'flex':'none';if(!isBreak)cbCold.checked=false;
   var coldOn=isBreak&&cbCold.checked,coldPrice=ADDON_COLDBREW_BREAK;document.getElementById('cb-taps-wrap').style.display=(!isBreak||coldOn)?'block':'none';
   var _fl=document.getElementById('cb-flavor');if(isBreak&&!coldOn){_fl.value='None (Coffee Break)';}else if(/^None/.test(_fl.value)){cbTapsSync();}
 
