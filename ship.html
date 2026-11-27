@@ -256,7 +256,7 @@ function printOne(r){printLabels(ORDERS.filter(function(o){return o.row===r}))}
 function printAll(){printLabels(ORDERS.filter(function(o){return !o.status&&/austin/i.test(o.address)}))}
 
 var API='https://kahoa-checkoutout.chegekibuthu1.workers.dev/staff/',TZ='America/Chicago';
-var DOCS=null,NEXTJOB=null,PAYME=null,PAYM={cashapp:'Cash App',venmo:'Venmo',zelle:'Zelle',paypal:'PayPal'},PEOPLE=[],ORDERS=[],DELIV=[],DPHOTO={},ME=null,VIEW='',PIN='',PICK=null,TICK=null,OPEN=null,SHIPM={};
+var FIRSTCODE='',DOCS=null,NEXTJOB=null,PAYME=null,PAYM={cashapp:'Cash App',venmo:'Venmo',zelle:'Zelle',paypal:'PayPal'},PEOPLE=[],ORDERS=[],DELIV=[],DPHOTO={},ME=null,VIEW='',PIN='',PICK=null,TICK=null,OPEN=null,SHIPM={};
 try{ME=JSON.parse(localStorage.getItem('kahoa_team_me')||'null')}catch(e){}
 function saveMe(m){ME=m;try{m?localStorage.setItem('kahoa_team_me',JSON.stringify(m)):localStorage.removeItem('kahoa_team_me')}catch(e){}}
 function E(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
@@ -325,7 +325,7 @@ document.addEventListener('keydown',function(e){if(VIEW!=='pin')return;if(/^\d$/
 function submitPin(){var pad=document.querySelector('.pad');pad.classList.add('busy');
   call('check',{person_id:PICK.id,code:PIN,remember:true}).then(function(d){pad.classList.remove('busy');
     if(!d.ok||!d.token){PIN='';dots();$('perr').textContent=d.error||'Try again.';var el=$('dots');el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake');return}
-    saveMe({id:PICK.id,name:d.person.name,is_admin:d.person.is_admin,can_ship:d.person.can_ship,token:d.token,pv:d.person.pv||0});PIN='';show('home')})}
+    saveMe({id:PICK.id,name:d.person.name,is_admin:d.person.is_admin,can_ship:d.person.can_ship,token:d.token,pv:d.person.pv||0});if(d.person.must_change){FIRSTCODE=PIN;PIN='';show('code');return}PIN='';show('home')})}
 function pickAvatar(){var i=document.createElement('input');i.type='file';i.accept='image/*';i.onchange=function(){var f=i.files&&i.files[0];if(!f)return;
   shrink(f,360,true,0.8).then(function(u){return call('avatar',Object.assign(auth(),{photo:u}))}).then(function(d){if(!d.ok){alert(d.error||'Try again.');return}saveMe(Object.assign({},ME,{pv:d.pv}));show(VIEW)}).catch(function(){alert("That photo didn't work. Try another one.")})};i.click()}
 function payLabel(p){if(!p)return '';return p.method==='cashapp'?'Cash App $'+p.handle:p.method==='venmo'?'Venmo @'+p.handle:p.method==='paypal'?'PayPal.me/'+p.handle:'Zelle '+p.handle}
@@ -347,7 +347,7 @@ function vHome(){var hr=hourCT(),g=hr<12?'Good morning':hr<17?'Good afternoon':'
    '<button class="tile" onclick="show(\'getpaid\')"><span class="ti">'+IC.cash+'</span><span class="tt"><b>Get paid</b><small id="paysub">'+(PAYME?E(payLabel(PAYME)):'Add your Cash App, Venmo, Zelle or PayPal')+'</small></span>'+IC.chev+'</button>'+
    (ME.is_admin?'<button class="tile" onclick="show(\'admin\')"><span class="ti">'+IC.chart+'</span><span class="tt"><b>Admin</b><small>Hours, pay, requests, team</small></span>'+IC.chev+'</button>':'')+'</div>'+
    '<div class="footlinks"><button class="switch" onclick="show(\'code\')">Change my code</button><button class="switch" onclick="switchUser()">Not '+E(ME.name)+'? Switch person</button></div>';
-  call('check',auth()).then(function(d){if(VIEW!=='home'||!d.ok)return;if((d.person.pv||0)!==(ME.pv||0)||d.person.name!==ME.name||!!d.person.is_admin!==!!ME.is_admin||!!d.person.can_ship!==!!ME.can_ship){saveMe(Object.assign({},ME,{pv:d.person.pv||0,name:d.person.name,is_admin:d.person.is_admin,can_ship:d.person.can_ship}));vHome();return}OPEN=d.open;PAYME=d.pay||null;DOCS=d.docs||null;drawDocBar();NEXTJOB=d.next_job||null;drawNextJob();if($('paysub'))$('paysub').textContent=PAYME?payLabel(PAYME):'Add your Cash App, Venmo, Zelle or PayPal';drawClock();
+  call('check',auth()).then(function(d){if(VIEW!=='home'||!d.ok)return;if(d.person.must_change){show('code');return}if((d.person.pv||0)!==(ME.pv||0)||d.person.name!==ME.name||!!d.person.is_admin!==!!ME.is_admin||!!d.person.can_ship!==!!ME.can_ship){saveMe(Object.assign({},ME,{pv:d.person.pv||0,name:d.person.name,is_admin:d.person.is_admin,can_ship:d.person.can_ship}));vHome();return}OPEN=d.open;PAYME=d.pay||null;DOCS=d.docs||null;drawDocBar();NEXTJOB=d.next_job||null;drawNextJob();if($('paysub'))$('paysub').textContent=PAYME?payLabel(PAYME):'Add your Cash App, Venmo, Zelle or PayPal';drawClock();
     $('week').innerHTML='This week <b>'+hrs(d.week.hours)+' hrs</b>'+(d.week.overtime?' · '+hrs(d.week.overtime)+' overtime':'')})}
 function fmtHM(m){var h=Math.floor(m/60),mm=m%60;return (h%12||12)+':'+String(mm).padStart(2,'0')+' '+(h<12?'AM':'PM')}
 function fmtMin(m){return m<60?m+' min':Math.floor(m/60)+' h'+(m%60?' '+(m%60)+' min':'')}
@@ -486,13 +486,14 @@ function w9Send(){var b=$('w9b');if(!W9F)return;b.disabled=true;b.textContent='U
   if(!d.ok){$('w9e').textContent=d.error||'Try again.';return}DOCS=d.docs;W9F=null;done('W-9 received','Thank you. You\'re all set.');show('home')})}
 
 /* ---------- change my code ---------- */
-function vCode(){$('v').innerHTML='<h1 class="title">Change my code</h1><p class="lead">Pick 4 to 8 numbers you\'ll remember. This phone stays signed in; other phones will ask for the new code.</p>'+
-  '<div class="card"><label class="lbl2">Current code</label><input type="password" inputmode="numeric" maxlength="8" id="cc0" autocomplete="off">'+
+function vCode(){var first=!!FIRSTCODE;$('v').innerHTML=(first?'<h1 class="title">Pick your own code</h1><p class="lead">The code Martin sent you only works once. Choose 4 to 8 numbers you\'ll remember and use them from now on.</p>':
+  '<h1 class="title">Change my code</h1><p class="lead">Pick 4 to 8 numbers you\'ll remember. This phone stays signed in; other phones will ask for the new code.</p>')+
+  '<div class="card"><div'+(first?' class="hide"':'')+'><label class="lbl2">Current code</label><input type="password" inputmode="numeric" maxlength="8" id="cc0" autocomplete="off" value="'+E(FIRSTCODE)+'"></div>'+
   '<label class="lbl2">New code</label><input type="password" inputmode="numeric" maxlength="8" id="cc1" autocomplete="off"><label class="lbl2">New code again</label><input type="password" inputmode="numeric" maxlength="8" id="cc2" autocomplete="off">'+
   '<button class="btn wide" id="ccb" onclick="ccSave()">Save new code</button><div class="err" id="cce"></div></div>'}
 function ccSave(){var e=$('cce'),b=$('ccb'),c0=$('cc0').value.trim(),c1=$('cc1').value.trim(),c2=$('cc2').value.trim();e.textContent='';
   if(!c0){e.textContent='Type your current code.';return}if(!/^\d{4,8}$/.test(c1)){e.textContent='Your new code needs 4 to 8 numbers.';return}if(c1!==c2){e.textContent="The new codes don't match.";return}
-  b.disabled=true;call('change_code',Object.assign(auth(),{current:c0,new_code:c1})).then(function(d){b.disabled=false;if(!d.ok){e.textContent=d.error||'Try again.';return}done('Code changed','Use your new code next time you sign in.');show('home')})}
+  b.disabled=true;call('change_code',Object.assign(auth(),{current:c0,new_code:c1})).then(function(d){b.disabled=false;if(!d.ok){e.textContent=d.error||'Try again.';return}var f=!!FIRSTCODE;FIRSTCODE='';done(f?'You\'re all set':'Code changed',f?'Use your new code from now on.':'Use your new code next time you sign in.');show('home')})}
 
 /* ---------- supplies ---------- */
 function vSupplies(){$('v').innerHTML='<h1 class="title">Request supplies</h1><p class="lead">Tell Martin what you need. He\'ll update you here.</p>'+
