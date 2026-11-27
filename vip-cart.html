@@ -201,7 +201,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
   <div style="display:flex;gap:10px;margin-bottom:20px;">
     <label class="prod-card" style="flex:1;cursor:pointer;text-align:center;padding:14px 8px;">
       <input type=radio name=cb-paytype value=deposit checked onchange=cbCalc()><br>
-      <span style="font-size:13px;color:#fff;">30% Deposit</span><br>
+      <span style="font-size:13px;color:#fff;" id=cb-dep-label>30% Deposit</span><br>
       <span id=cb-deposit-amt style="color:var(--gold);font-weight:700;">$0.00</span>
     </label>
     <label class="prod-card" style="flex:1;cursor:pointer;text-align:center;padding:14px 8px;">
@@ -248,6 +248,7 @@ var ADDON_MANDAZI_PER50=80;
 var ADDON_COLDBREW_BREAK=75;
 var CB_TAX_RATE=0.0825;
 var CB_FULLPAY_DISCOUNT=0.05;
+function cbDepPct(){return cbSelectedPkg==='break'?0.5:0.3;}
 var SQUARE_APP_ID='sq0idp-khlBwyn6FQYmXDU8zxjAiQ';
 var SQUARE_LOC='L2M4GT1KDJZPY';
 var WORKER='https://kahoa-checkoutout.chegekibuthu1.workers.dev/charge';
@@ -441,7 +442,7 @@ function cbCalc(){
   var serviceTax=servicePreTax*CB_TAX_RATE;
   var serviceTotal=servicePreTax+serviceTax;
 
-  var depositAmt=serviceTotal*0.30+brandingChargeNow;
+  var depositAmt=serviceTotal*cbDepPct()+brandingChargeNow;document.getElementById('cb-dep-label').textContent=Math.round(cbDepPct()*100)+'% Deposit';
   var fullPayAmt=serviceTotal*(1-CB_FULLPAY_DISCOUNT)+brandingChargeNow;
   document.getElementById('cb-deposit-amt').textContent='$'+depositAmt.toFixed(2);
   document.getElementById('cb-full-amt').textContent='$'+fullPayAmt.toFixed(2);
@@ -554,7 +555,7 @@ async function cbSubmit(){
   var brandingChargeNow=brandingPreTax+brandingPreTax*CB_TAX_RATE;
   var servicePreTax=preTax-brandingPreTax;
   var serviceTotal=servicePreTax+servicePreTax*CB_TAX_RATE;
-  var chargeNow=(payType==='deposit'?serviceTotal*0.30:serviceTotal*(1-CB_FULLPAY_DISCOUNT))+brandingChargeNow;
+  var chargeNow=(payType==='deposit'?serviceTotal*cbDepPct():serviceTotal*(1-CB_FULLPAY_DISCOUNT))+brandingChargeNow;
 
   var addonList=[];
   if(teaOn)addonList.push('Hot Tea & Cocoa (included)');
@@ -583,7 +584,7 @@ async function cbSubmit(){
       source_id:result.token,
       verification_token:(result.details&&result.details.verificationToken)||undefined,
       product_name:'Coffee Cart Booking \u2014 '+pkgName+' ('+date+' '+time+', '+guests+' guests)',
-      grind:payType==='deposit'?'30% Deposit':'Paid in Full',
+      grind:payType==='deposit'?Math.round(cbDepPct()*100)+'% Deposit':'Paid in Full',
       quantity:1,
       unit_price_cents:Math.round(chargeNow*100),
       shipping:null,
@@ -599,17 +600,17 @@ async function cbSubmit(){
       if(payType==='deposit'&&data.payment_id){try{var _it=[{d:'Coffee Cart: '+pkgName+' ('+guests+' guests, '+time+')',p:Math.round(pkgPrice*100)}];
         if(sigOn&&!sigIncluded)_it.push({d:'Custom signature drink',p:Math.round(sigPrice*100)});if(stickerOn)_it.push({d:'Logo stickers on cups (paid at booking)',p:Math.round(stickerPrice*100)});if(printOn)_it.push({d:'Full custom-printed cups (paid at booking)',p:Math.round(printPrice*100)});
         if(djOn)_it.push({d:'Event DJ',p:Math.round(djPrice*100)});if(latteOn&&!latteIncluded)_it.push({d:'Latte art printer',p:Math.round(lattePrice*100)});if(mandaziOn)_it.push({d:'Mother\'s Love Bites & Boba Tea',p:Math.round(mandaziPrice*100)});if(coldOn)_it.push({d:'Kifaru Spice Cold Brew',p:Math.round(coldPrice*100)});if(menuExtraPrice>0)_it.push({d:'Extra signature drinks ('+_me.extra+')',p:Math.round(menuExtraPrice*100)});
-        fetch('https://kahoa-checkoutout.chegekibuthu1.workers.dev/staff/cart_booked',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({payment_id:data.payment_id,charged_cents:Math.round(chargeNow*100),pay_type:'deposit',items:_it,date:date,time:time,pkg_name:pkgName,name:name,email:email,phone:phone,location:location,signed_name:name})}).then(function(r){return r.json()}).then(function(d){if(d&&d.ok&&d.link){var el=document.getElementById('cb-success'),p=document.createElement('p');p.style.cssText='margin-top:12px;font-size:13px;';p.innerHTML='Your balance is due 7 days before your event. We\'ll email you a reminder, or <a href="'+d.link+'" style="color:var(--gold);font-weight:700;">pay it any time here</a>.';el.appendChild(p);}}).catch(function(e){console.error('Balance link FAILED:',e);});
+        fetch('https://kahoa-checkoutout.chegekibuthu1.workers.dev/staff/cart_booked',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({payment_id:data.payment_id,charged_cents:Math.round(chargeNow*100),pay_type:'deposit',dep_pct:Math.round(cbDepPct()*100),items:_it,date:date,time:time,pkg_name:pkgName,name:name,email:email,phone:phone,location:location,signed_name:name})}).then(function(r){return r.json()}).then(function(d){if(d&&d.ok&&d.link){var el=document.getElementById('cb-success'),p=document.createElement('p');p.style.cssText='margin-top:12px;font-size:13px;';p.innerHTML='Your balance is due 7 days before your event. We\'ll email you a reminder, or <a href="'+d.link+'" style="color:var(--gold);font-weight:700;">pay it any time here</a>.';el.appendChild(p);}}).catch(function(e){console.error('Balance link FAILED:',e);});
       }catch(e){}}
       if(typeof emailjs!=='undefined'){
         emailjs.init(EJKEY);
-        var notes=calNote+' Package: '+pkgName+' ($'+pkgPrice.toFixed(2)+'). Service Style: '+styleChoice+'. Cold Brew on Tap: '+flavorChoice+'. Signature Drinks: '+(drinkChoice||'None selected')+'. Add-ons: '+addonSummary+'. Subtotal: $'+preTax.toFixed(2)+'. Tax (8.25%): $'+taxTotal.toFixed(2)+'. Event total: $'+grandTotal.toFixed(2)+'. Charged today ('+(payType==='deposit'?'30% deposit':'paid in full, 5% discount applied')+'): $'+chargeNow.toFixed(2)+'. '+(payType==='deposit'?'Balance due 7 days before event: $'+(grandTotal-chargeNow).toFixed(2)+'.':'Discount savings: $'+(grandTotal-chargeNow).toFixed(2)+'.')+' Event time: '+time+'. Signed: '+signature+'. Overage/overtime authorization: '+(agreedOverage?'YES':'NO')+'.';
+        var notes=calNote+' Package: '+pkgName+' ($'+pkgPrice.toFixed(2)+'). Service Style: '+styleChoice+'. Cold Brew on Tap: '+flavorChoice+'. Signature Drinks: '+(drinkChoice||'None selected')+'. Add-ons: '+addonSummary+'. Subtotal: $'+preTax.toFixed(2)+'. Tax (8.25%): $'+taxTotal.toFixed(2)+'. Event total: $'+grandTotal.toFixed(2)+'. Charged today ('+(payType==='deposit'?Math.round(cbDepPct()*100)+'% deposit':'paid in full, 5% discount applied')+'): $'+chargeNow.toFixed(2)+'. '+(payType==='deposit'?'Balance due 7 days before event: $'+(grandTotal-chargeNow).toFixed(2)+'.':'Discount savings: $'+(grandTotal-chargeNow).toFixed(2)+'.')+' Event time: '+time+'. Signed: '+signature+'. Overage/overtime authorization: '+(agreedOverage?'YES':'NO')+'.';
         var tp={to_email:'info@kahoa.shop',checkout_url:data.receipt_url||'',order_type:'VIP COFFEE CART BOOKING',customer_name:name,customer_email:email,customer_phone:phone,customer_address:location,product_name:'Coffee Cart \u2014 '+pkgName,grind:date+' '+time,price:'$'+chargeNow.toFixed(2)+' charged today',notes:notes};
         emailjs.send(EJSVC,EJTMPL,tp).catch(function(e){console.error('Cart booking email error',e);});
         var custTp=Object.assign({},tp,{to_email:email,order_type:'Your Kahoa Coffee Cart Booking'});
         emailjs.send(EJSVC,EJTMPL,custTp).catch(function(e){console.error('Cust email error',e);});
       }
-      try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:phone,product:'Coffee Cart Booking \u2014 '+pkgName+' ('+styleChoice+'; '+flavorChoice+')',grind:date,total:'$'+grandTotal.toFixed(2)+' ('+(payType==='deposit'?'30% deposit paid':'paid in full')+')',coupon:'',address:location,opted_in:'Yes',source:'kahoa.shop/vip-cart'})}).catch(function(){});}catch(e){}
+      try{fetch(SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({timestamp:new Date().toISOString(),name:name,email:email,phone:phone,product:'Coffee Cart Booking \u2014 '+pkgName+' ('+styleChoice+'; '+flavorChoice+')',grind:date,total:'$'+grandTotal.toFixed(2)+' ('+(payType==='deposit'?Math.round(cbDepPct()*100)+'% deposit paid':'paid in full')+')',coupon:'',address:location,opted_in:'Yes',source:'kahoa.shop/vip-cart'})}).catch(function(){});}catch(e){}
     }else{
       throw new Error((data.detail&&data.detail.errors&&data.detail.errors[0]&&data.detail.errors[0].detail)||data.error||'Please try again.');
     }
