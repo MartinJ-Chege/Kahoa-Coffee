@@ -84,6 +84,9 @@ input[type=time]{width:100%;font:inherit;font-size:16px;padding:13px 14px;border
 .tap{cursor:pointer}.go{font-size:11.5px;font-weight:600;color:var(--muted);margin-left:4px}
 .phead{display:flex;gap:16px;align-items:center}.phead .av.big{width:72px;height:72px;font-size:32px;margin:0}.pname{font-family:'Cormorant Garamond',Georgia,serif;font-size:28px;font-weight:700;color:var(--brown);line-height:1.1}
 .plinks{display:flex;gap:16px;margin-top:4px}.plinks a.link{text-decoration:underline}.rel{font-size:16px}.rel b{color:var(--brown)}
+.lochelp{text-align:left;color:#FBF4E6}.lochelp b{display:block;font-size:18px;color:var(--gold2);margin-bottom:6px}.lochelp p{margin:0 0 10px;font-size:14px;color:rgba(251,244,230,.85)}.lochelp b b,.lochelp p b{display:inline;font-size:inherit;color:#fff}
+.lochelp .btn{background:var(--gold);color:var(--brown)}
+.pill svg{width:12px!important;height:12px!important;vertical-align:-1px;margin-right:3px}#jb-here{display:block;margin-top:6px}
 .spots{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.spots .chip{box-shadow:none;background:var(--soft)}.spots .chip.on{background:var(--brown);color:var(--gold2)}
 #v{max-width:520px;margin:0 auto;padding:22px 18px 48px}
 .title{font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:34px;line-height:1.1;margin:4px 0 4px;color:var(--brown)}
@@ -360,16 +363,24 @@ function drawClock(){var c=$('clock');if(!c)return;if(TICK){clearInterval(TICK);
     '<button class="punch out" id="punch" onclick="punch(\'out\')">Clock out</button><div class="err" id="cerr"></div>';
     var tick=function(){var s=Math.max(0,Math.floor((Date.now()-OPEN.clock_in)/1000)),el=$('timer');if(el)el.textContent=Math.floor(s/3600)+':'+String(Math.floor(s/60)%60).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};tick();TICK=setInterval(tick,1000)}
   else{c.className='clock off';c.innerHTML='<div class="state">Off the clock</div><input type="text" id="venue" placeholder="Where are you working today?" maxlength="200" autocomplete="off" value="'+(NEXTJOB&&NEXTJOB.venue&&jobDay(NEXTJOB.date)==='Today'?E(NEXTJOB.venue):'')+'">'+
-    '<button class="punch in" id="punch" onclick="punch(\'in\')">Clock in</button><div class="err" id="cerr"></div><div class="fine">Your location is saved when you clock in or out, if you allow it.</div>'}}
-function getLoc(){return new Promise(function(res){if(!navigator.geolocation)return res(null);var done=false;var tm=setTimeout(function(){if(!done){done=true;res(null)}},6000);
-  navigator.geolocation.getCurrentPosition(function(p){if(done)return;done=true;clearTimeout(tm);res({lat:p.coords.latitude,lng:p.coords.longitude})},function(){if(done)return;done=true;clearTimeout(tm);res(null)},{enableHighAccuracy:true,timeout:5500,maximumAge:60000})})}
+    '<button class="punch in" id="punch" onclick="punch(\'in\')">Clock in</button><div class="err" id="cerr"></div><div class="fine">Your location is checked against the job address when you clock in.</div>'}}
+function getLoc(){return new Promise(function(res){if(!navigator.geolocation)return res(null);var done=false;var tm=setTimeout(function(){if(!done){done=true;res(null)}},12000);
+  navigator.geolocation.getCurrentPosition(function(p){if(done)return;done=true;clearTimeout(tm);res({lat:p.coords.latitude,lng:p.coords.longitude,acc:p.coords.accuracy})},function(){if(done)return;done=true;clearTimeout(tm);res(null)},{enableHighAccuracy:true,timeout:11000,maximumAge:0})})}
+function fmtDist(m){return m<160?Math.round(m*3.281)+' ft':(m/1609.34).toFixed(1)+' mi'}
+function locHelp(){var ios=/iPhone|iPad|iPod/.test(navigator.userAgent);return '<div class="lochelp"><b>Turn on location to clock in</b><p>Kahoa checks you\'re at the job when you clock in.</p>'+
+  (ios?'<p>iPhone: open <b>Settings → Privacy &amp; Security → Location Services</b>. Make sure it\'s on, then tap <b>Safari Websites</b> and pick <b>While Using the App</b>. Come back and tap Try again.</p>':
+   '<p>Android: in Chrome, tap the <b>icon left of the web address → Permissions → Location → Allow</b>. Also check your phone\'s location is on. Then tap Try again.</p>')+'<button class="btn wide" onclick="vHome()">Try again</button></div>'}
 function punch(action){var b=$('punch'),e=$('cerr');e.textContent='';b.disabled=true;b.textContent=action==='in'?'Clocking in…':'Clocking out…';
   var note=$('venue')?$('venue').value.trim():'';
-  getLoc().then(function(loc){return call('clock',Object.assign(auth(),{action:action,note:note,lat:loc&&loc.lat,lng:loc&&loc.lng}))}).then(function(d){
+  b.textContent=action==='in'?'Checking your location…':'Clocking out…';
+  getLoc().then(function(loc){if(action==='in'&&!loc&&!ME.is_admin)return {ok:false,need_location:true};
+    return call('clock',Object.assign(auth(),{action:action,note:note,lat:loc&&loc.lat,lng:loc&&loc.lng,acc:loc&&loc.acc}))}).then(function(d){
     if(!ME)return;
     if(!d.ok&&d.need_agreement){show('sign');return}
+    if(!d.ok&&d.need_location){$('clock').innerHTML=locHelp();return}
+    if(!d.ok&&d.far){$('clock').innerHTML='<div class="lochelp"><b>You\'re '+fmtDist(d.distance_m)+' from '+E(d.venue)+'</b><p>You can clock in once you\'re there. If you are there and this looks wrong, text Martin and he\'ll fix your hours.</p><button class="btn wide" onclick="vHome()">Try again</button></div>';return}
     if(!d.ok){e.textContent=d.error||'Try again.';b.disabled=false;b.textContent=action==='in'?'Clock in':'Clock out';if(/already|not clocked/i.test(d.error||''))setTimeout(vHome,1500);return}
-    done(action==='in'?'Clocked in':'Clocked out',action==='in'?'Have a great shift, '+E(d.name)+'!':hrs(d.hours)+' hrs this shift. Asante sana, '+E(d.name)+'!',action,t(d.at))})}
+    done(action==='in'?'Clocked in':'Clocked out',action==='in'?(d.venue?'You\'re checked in at '+E(d.venue)+'. ':'')+'Have a great shift, '+E(d.name)+'!':hrs(d.hours)+' hrs this shift. Asante sana, '+E(d.name)+'!',action,t(d.at))})}
 function done(big,small,kind,time){var o=$('done');o.className='done show '+(kind||'');o.innerHTML='<div class="ring">'+IC.check+'</div><div class="dbig">'+big+'</div>'+(time?'<div class="dtime">'+time+'</div>':'')+'<div class="dsmall">'+small+'</div><div class="dtap">Tap to continue</div>';
   var close=function(){if(!o.classList.contains('show'))return;o.className='done';if(VIEW==='home')vHome()};o.onclick=close;setTimeout(close,4000)}
 
@@ -554,25 +565,32 @@ function saveReq(id){var s=$('rs'+id).querySelector('.sel');A('request_update',{
 function admTeam(editId){var b=$('adm-body');b.innerHTML='<div class="muted">Loading…</div>';A('people').then(function(d){if(!$('adm-body'))return;if(!d.ok){b.innerHTML='<div class="err">'+E(d.error)+'</div>';return}window._PPL=d.people;
   b.innerHTML=d.people.map(function(p){return '<div class="card" id="p'+p.id+'"><div class="payrow"><span class="tap" onclick="admPerson('+p.id+')">'+av(p,'xs')+'</span><span class="pr-n tap" onclick="admPerson('+p.id+')"><b>'+E(p.name)+' <span class="go">Hours &amp; record ›</span></b><small>'+money(p.rate_cents/100)+'/h'+(p.is_admin?' · admin':'')+(p.active?'':' · inactive')+(p.locked_until>Date.now()?' · locked':'')+(p.phones?' · on '+p.phones+' phone'+(p.phones>1?'s':''):'')+(p.pay_method?'<br>'+E(payLabel({method:p.pay_method,handle:p.pay_handle})):'')+(p.is_admin?'':'<br>'+(p.signed_at?'Agreement ✓ '+day(p.signed_at):'<span class="warnt">Agreement not signed</span>')+' · '+(p.w9_at?'W-9 ✓':'<span class="warnt">No W-9</span>'))+'</small></span><span class="pbtns"><button class="link" onclick="editPerson('+p.id+')">Edit</button>'+(p.is_admin?'':'<a class="link" href="/agreement.html?p='+p.id+'" target="_blank">File</a>')+'</span></div></div>'}).join('')+
    '<details class="card"><summary>Add a team member</summary>'+personForm(null)+'</details>';if(editId)editPerson(editId)})}
-var ISS={late:['Late','warn'],left_early:['Left early','warn'],no_show:['No-show','warn'],no_clock_out:['Forgot to clock out?','warn'],long_shift:['Over 12 hours','warn'],fixed_by_admin:['Fixed by you','soft']};
-function issueRow(i){var x=ISS[i.type]||[i.type,'soft'],extra=i.type==='late'?fmtMin(i.minutes)+' late':i.type==='left_early'?'left '+fmtMin(i.minutes)+' early':i.type==='no_clock_out'?'clocked in '+fmtMin(i.minutes)+' ago':i.type==='long_shift'?fmtMin(i.minutes)+' shift':i.type==='no_show'?'didn\'t clock in':'added or edited';
+var ISS={far_in:['Away from job','warn'],far_out:['Left the job','warn'],no_job:['No job booked','soft'],late:['Late','warn'],left_early:['Left early','warn'],no_show:['No-show','warn'],no_clock_out:['Forgot to clock out?','warn'],long_shift:['Over 12 hours','warn'],fixed_by_admin:['Fixed by you','soft']};
+function issueRow(i){var x=ISS[i.type]||[i.type,'soft'],extra=i.type==='late'?fmtMin(i.minutes)+' late':i.type==='left_early'?'left '+fmtMin(i.minutes)+' early':i.type==='no_clock_out'?'clocked in '+fmtMin(i.minutes)+' ago':i.type==='long_shift'?fmtMin(i.minutes)+' shift':i.type==='no_show'?'didn\'t clock in':i.type==='far_in'?'clocked in '+fmtDist(i.meters)+' from the job':i.type==='far_out'?'clocked out '+fmtDist(i.meters)+' from the job':i.type==='no_job'?'clocked in with no job booked':'added or edited';
   return '<div class="issue"><span class="pill '+x[1]+'">'+x[0]+'</span><span><b>'+E(i.name)+'</b> '+extra+'<small>'+day(i.at)+' · '+t(i.at)+(i.venue?' · '+E(i.venue):'')+'</small></span></div>'}
 var JST={upcoming:['',''],due:['Not in yet','warn'],working:['Clocked in','ok'],on_time:['On time','ok'],late:['Late','warn'],no_show:['No-show','warn']};
 function jobRow(j,showName){var st=JST[j.status]||['',''],lbl=j.status==='late'?'Late '+fmtMin(j.late_min):st[0];
   return '<div class="jobrow"><div class="jt"><b>'+fmtHM(j.start_min)+'</b><small>'+fmtHM(j.end_min)+'</small></div><div class="jm">'+(showName?'<b>'+E(j.name)+'</b>':'<b>'+E(j.venue||'Venue TBC')+'</b>')+'<small>'+(showName?E(j.venue||'Venue TBC'):jobDay(j.date))+(j.note?' · '+E(j.note):'')+'</small>'+
-   (lbl||j.left_early?'<div class="pills">'+(lbl?'<span class="pill '+st[1]+'">'+lbl+'</span>':'')+(j.left_early?'<span class="pill warn">Left '+fmtMin(j.early_min)+' early</span>':'')+'</div>':'')+'</div>'+
+   '<div class="pills">'+(lbl?'<span class="pill '+st[1]+'">'+lbl+'</span>':'')+(j.left_early?'<span class="pill warn">Left '+fmtMin(j.early_min)+' early</span>':'')+(j.away?'<span class="pill warn">'+fmtDist(j.in_dist)+' away</span>':'')+
+    (j.status==='upcoming'||j.status==='due'?(j.lat!==null&&j.lat!==undefined?'<span class="pill soft">'+IC.pin+'Location set</span>':'<span class="pill warn">No location</span>'):'')+'</div>'+'</div>'+
    (showName&&j.status==='upcoming'?'<button class="link" onclick="delJob('+j.id+')">Remove</button>':'')+'</div>'}
 function admJobs(){var b=$('adm-body');b.innerHTML='<div class="muted">Loading…</div>';var go=function(){A('jobs').then(function(d){if(!$('adm-body')||ATAB!=='jobs')return;if(!d.ok){b.innerHTML='<div class="err">'+E(d.error)+'</div>';return}
   var up=d.jobs.filter(function(j){return j.date>=d.today}),past=d.jobs.filter(function(j){return j.date<d.today}).reverse(),h='';
   h+='<details class="card" id="bookjob"><summary>Book a job</summary><select id="jb-p">'+PEOPLE.map(function(p){return '<option value="'+p.id+'">'+E(p.name)+'</option>'}).join('')+'</select>'+
     '<label class="lbl2">Date</label><input type="date" id="jb-d" value="'+d.today+'"><div class="row2"><div style="flex:1"><label class="lbl2">Start</label><input type="time" id="jb-s" value="09:00"></div><div style="flex:1"><label class="lbl2">End</label><input type="time" id="jb-e" value="13:00"></div></div>'+
-    '<input type="text" id="jb-v" placeholder="Venue (e.g. Troutman, 300 Colorado St)" maxlength="120"><input type="text" id="jb-n" placeholder="Note for them (optional)" maxlength="300"><button class="btn wide" onclick="saveJob()">Book job</button><div class="err" id="jb-err"></div>'+
+    '<input type="text" id="jb-v" placeholder="Venue name (e.g. Troutman)" maxlength="120" list="jb-vl" oninput="fillPlace()"><datalist id="jb-vl">'+(d.places||[]).map(function(p){return '<option value="'+E(p.venue||'')+'">'+E(p.address)+'</option>'}).join('')+'</datalist>'+
+    '<input type="text" id="jb-a" placeholder="Address (street, city, ZIP)" maxlength="200" autocomplete="off"><button class="link" id="jb-here" onclick="pinHere()">Or use where I am now</button><input type="text" id="jb-n" placeholder="Note for them (optional)" maxlength="300"><button class="btn wide" onclick="saveJob()">Book job</button><div class="err" id="jb-err"></div>'+
     '<div class="fine">They see their next job on their home screen. If they clock in more than 5 minutes late, leave more than 10 minutes early, or don\'t show, it\'s flagged here and on their record.</div></details>';
   if(!up.length)h+='<div class="card empty">No jobs booked yet. Book one above.</div>';
   var lastD='';up.forEach(function(j){if(j.date!==lastD){h+=(lastD?'</div>':'')+'<div class="sech">'+jobDay(j.date)+'</div><div class="card">';lastD=j.date}h+=jobRow(j,true)});if(lastD)h+='</div>';
   if(past.length)h+='<div class="sech">Last 7 days</div><div class="card">'+past.map(function(j){return jobRow(Object.assign({},j,{note:jobDay(j.date)+(j.note?' · '+j.note:'')}),true)}).join('')+'</div>';
-  b.innerHTML=h})};if(!PEOPLE.length)call('people').then(function(x){if(x.ok)PEOPLE=x.people||[];go()});else go()}
-function saveJob(){var e=$('jb-err');e.textContent='';A('job_save',{staff_id:+$('jb-p').value,date:$('jb-d').value,start:$('jb-s').value,end:$('jb-e').value,venue:$('jb-v').value,note:$('jb-n').value}).then(function(d){if(!d.ok){e.textContent=d.error;return}admJobs()})}
+  b.innerHTML=h;window._PLACES=d.places||[]})};if(!PEOPLE.length)call('people').then(function(x){if(x.ok)PEOPLE=x.people||[];go()});else go()}
+var JPIN=null;
+function fillPlace(){var v=$('jb-v').value.trim().toLowerCase(),p=(window._PLACES||[]).filter(function(x){return (x.venue||'').toLowerCase()===v})[0];if(p&&!$('jb-a').value)$('jb-a').value=p.address}
+function pinHere(){var bt=$('jb-here');bt.textContent='Getting your location…';getLoc().then(function(l){if(!l){bt.textContent="Couldn't get your location. Type the address instead.";return}JPIN=l;bt.textContent='✓ Using where you are now (±'+fmtDist(l.acc||0)+')'})}
+function saveJob(){var e=$('jb-err');e.textContent='';if(!$('jb-a').value.trim()&&!JPIN){e.textContent='Add the address so we can check they\'re there.';return}
+  A('job_save',{staff_id:+$('jb-p').value,date:$('jb-d').value,start:$('jb-s').value,end:$('jb-e').value,venue:$('jb-v').value,address:$('jb-a').value,lat:JPIN?JPIN.lat:null,lng:JPIN?JPIN.lng:null,note:$('jb-n').value}).then(function(d){if(!d.ok){e.textContent=d.error;return}JPIN=null;
+    if(!d.located)alert("Booked, but we couldn't find that address on the map, so location won't be checked for this job. Edit the address with street, city and ZIP, or book it again from the venue using \"Use where I am now\".");else done('Job booked','Location check: '+E(d.geo||'set'));admJobs()})}
 function delJob(id){if(!confirm('Remove this job?'))return;A('job_delete',{id:id}).then(function(){admJobs()})}
 function admPerson(id){var b=$('adm-body');b.innerHTML='<div class="muted">Loading…</div>';window.scrollTo(0,0);A('person',{staff_id:id}).then(function(d){if(!$('adm-body'))return;if(!d.ok){b.innerHTML='<div class="err">'+E(d.error)+'</div>';return}
   var p=d.person,r=d.reliability,h='<button class="link" onclick="admTeam()">‹ All team</button>';
