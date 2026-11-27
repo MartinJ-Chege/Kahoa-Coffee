@@ -36,6 +36,24 @@
 .lbl .hb{height:.55in}
 .lbl .hnum{text-align:center;font-size:14pt;letter-spacing:5px;margin-top:2px;font-weight:500}
 @page{size:4in 6in;margin:0}
+.qrow{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;padding:12px 0;border-bottom:1px solid var(--soft)}.qrow:last-child{border-bottom:0}
+.qrow .qn{min-width:0}.qrow .qn b{display:block;font-size:15px;color:var(--brown)}.qrow .qn small{display:block;font-size:12px;color:var(--muted);line-height:1.4}
+.qrow .qr{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}.qrow .qr b{font-size:14px}
+.qhead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.kick2{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold2,#9a7424);font-weight:700}
+.qt{font-family:'Cormorant Garamond',Georgia,serif;font-size:24px;font-weight:700;color:var(--brown);line-height:1.15;margin-bottom:4px}
+.qmeta{font-size:13.5px;color:var(--muted);margin:8px 0 10px;line-height:1.5}
+table.qt2{width:100%;border-collapse:collapse;font-size:14px}table.qt2 td{padding:7px 0;border-bottom:1px solid var(--soft);vertical-align:top}table.qt2 td+td{text-align:right;white-space:nowrap;padding-left:10px}
+table.qt2 tr.s td{color:var(--muted);font-size:13px}table.qt2 tr.g td{font-weight:700;border-bottom:0}table.qt2 small{font-weight:500;color:var(--muted)}
+.qpay{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-top:1px dashed var(--soft)}.qpay small{display:block;font-size:12px;color:var(--muted)}
+.qlink{font-size:12px;color:var(--muted);word-break:break-all;background:var(--soft);border-radius:10px;padding:9px 10px;margin-bottom:6px}
+.btn.ghost{background:#fff;color:var(--brown);border:1.5px solid var(--soft);box-shadow:none;text-align:center;text-decoration:none;display:block}.btn.dark{background:var(--brown);color:var(--gold)}
+.card .btn.wide+.btn.wide{margin-top:8px}.link.danger{color:var(--rust);display:block;margin:10px auto 0}
+.qi{border-bottom:1px dashed var(--soft);padding-bottom:8px;margin-bottom:8px}.qi .row2{align-items:center}.qi .row2 input:first-child{flex:0 0 92px}.qx{color:var(--muted);font-weight:700}
+.qdel{flex:none;width:36px;height:36px;border-radius:10px;background:var(--soft);color:var(--rust);font-size:20px;line-height:1}
+.qtot{margin-top:10px;font-size:13.5px}.qtot div{display:flex;justify-content:space-between;padding:3px 0}.qtot .g{font-weight:700;font-size:15px;border-top:1.5px solid var(--brown);margin-top:4px;padding-top:6px}.qtot .c{color:var(--muted);font-size:12.5px}
+.qpct{display:flex;align-items:center;font-weight:700;color:var(--muted)}#qdp{flex:0 0 90px}
+textarea{width:100%;font:inherit;font-size:15px;padding:12px;border:1.5px solid var(--soft);border-radius:12px;background:#fff;color:var(--brown);margin-top:10px;resize:vertical}
+
 :root{--bg:#F6EFE3;--card:#fff;--ink:#1C0E06;--brown:#2b1810;--mid:#5A2E1A;--muted:#8B6040;--gold:#D4A843;--gold2:#E8C878;--green:#2F7A45;--rust:#A8432A;--line:#EADFCD;--soft:#F1E7D6}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{background:var(--brown)}
@@ -526,9 +544,9 @@ function loadMyReqs(){call('my-requests',auth()).then(function(d){if(!d.ok||!$('
 
 /* ---------- admin ---------- */
 var ATAB='pay',RANGE=null;
-function vAdmin(){$('v').innerHTML='<h1 class="title">Admin</h1><div class="seg big" id="atabs">'+[['pay','Pay'],['jobs','Jobs'],['req','Requests'],['team','Team']].map(function(x){return '<button id="a-'+x[0]+'" onclick="admTab(\''+x[0]+'\')">'+x[1]+'</button>'}).join('')+'</div><div id="adm-body"></div>';
+function vAdmin(){$('v').innerHTML='<h1 class="title">Admin</h1><div class="seg big" id="atabs">'+[['pay','Pay'],['jobs','Jobs'],['quotes','Quotes'],['req','Asks'],['team','Team']].map(function(x){return '<button id="a-'+x[0]+'" onclick="admTab(\''+x[0]+'\')">'+x[1]+'</button>'}).join('')+'</div><div id="adm-body"></div>';
   if(!PEOPLE.length)call('people').then(function(d){if(d.ok)PEOPLE=d.people||[]});admTab(ATAB)}
-function admTab(n){ATAB=n;['pay','jobs','req','team'].forEach(function(x){$('a-'+x).className=x===n?'on':''});if(n==='pay')admPay();if(n==='jobs')admJobs();if(n==='req')admReq();if(n==='team')admTeam()}
+function admTab(n){ATAB=n;['pay','jobs','quotes','req','team'].forEach(function(x){$('a-'+x).className=x===n?'on':''});if(n==='pay')admPay();if(n==='quotes')admQuotes();if(n==='jobs')admJobs();if(n==='req')admReq();if(n==='team')admTeam()}
 function preset(k){var now=new Date(),c=new Date(ymd(now)+'T12:00:00'),wd=(c.getDay()+6)%7,mon=new Date(c);mon.setDate(c.getDate()-wd);var f,to;
   if(k==='week'){f=mon;to=new Date(mon);to.setDate(mon.getDate()+6)}
   else if(k==='last'){f=new Date(mon);f.setDate(mon.getDate()-7);to=new Date(mon);to.setDate(mon.getDate()-1)}
@@ -640,4 +658,78 @@ function savePerson(id){var k=id||'new',cs;if(id)cs=$('ps'+k).checked;else{var o
     PEOPLE=[];call('people').then(function(x){if(x.ok)PEOPLE=x.people||[]});admTeam()})}
 
 show(ME?'home':'who');
+
+/* ---------- Quotes & invoices (admin) ---------- */
+var QUOTES=[],QBANK='',QEDIT=null;
+var QPRESETS=[['Hosted Coffee Bar (4 hours, 2 baristas, up to 750 cups)',350000],['Signature Brand Activation (6 hours, 3 baristas, up to 1,200 cups)',650000],['Flagship Festival Takeover, per day (8 hours, 4 baristas)',850000],
+ ['Coffee Cart: Essentials (2 hours, ~50 guests)',75000],['Coffee Cart: Premium (3 hours, ~100 guests)',110000],['Coffee Cart: Full Experience (4 hours, 150+ guests)',185000],
+ ['Custom logo cups (per cup)',75],['Logo stickers on cups (per cup)',30],['Latte art printer (per day)',35000],['VIP Pour-Over Reserve (per day)',45000],['Custom signature drink',25000],['Custom menu cards (per 100)',15000],
+ ['Extra barista (per hour)',6000],['Extra hour of service',50000],['Peak week (SXSW, ACL, F1) +15%',0],['Rush booking (under 14 days) +15%',0],['Travel beyond 30 miles (per mile)',150]];
+function qM(c){return '$'+(Math.round(c)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function qDate(d){return d?new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'}):''}
+function qPill(s){return '<span class="pill'+(/Paid|Deposit/.test(s)?' ok':s==='Canceled'?' warn':s==='Signed'?' soft':'')+'">'+E(s)+'</span>'}
+function admQuotes(){var b=$('adm-body');b.innerHTML='<div class="muted">Loading…</div>';A('quotes').then(function(d){if(!$('adm-body')||ATAB!=='quotes')return;if(!d.ok){b.innerHTML='<div class="err">'+E(d.error)+'</div>';return}
+  QUOTES=d.quotes||[];QBANK=d.bank_note||'';var open=QUOTES.filter(function(q){return !q.canceled&&q.status!=='Paid in full'}),done=QUOTES.filter(function(q){return q.canceled||q.status==='Paid in full'});
+  var h='<button class="btn wide" onclick="admQuoteEdit()">New quote</button>';
+  h+=open.length?'<div class="sech">Open</div><div class="card">'+open.map(qRow).join('')+'</div>':'<div class="card empty">No open quotes. Make one above. The client gets a link to review it, sign and pay.</div>';
+  if(done.length)h+='<div class="sech">Paid and canceled</div><div class="card">'+done.map(qRow).join('')+'</div>';
+  h+='<details class="card"><summary>Bank transfer and Zelle details</summary><div class="fine" style="margin-top:6px">Clients see this when they choose to pay by bank or Zelle (no card fee). Leave it empty and they\'ll be asked to email you instead.</div><textarea id="qbank" rows="4" maxlength="500" placeholder="e.g. Zelle: info@kahoa.shop (Kahoa Coffee LLC)">'+E(QBANK)+'</textarea><button class="btn wide" onclick="saveBank()">Save</button></details>';
+  b.innerHTML=h})}
+function qRow(q){return '<button class="qrow" onclick="admQuote('+q.id+')"><span class="qn"><b>'+E(q.company||q.client)+'</b><small>'+E(q.num)+' · '+E(q.event)+' · '+E(qDate(q.event_date))+'</small></span><span class="qr"><b>'+qM(q.total)+'</b>'+qPill(q.status)+'</span></button>'}
+function saveBank(){A('bank_note',{text:$('qbank').value}).then(function(d){if(d.ok)done('Saved','Clients will see this on their quote.');else alert(d.error)})}
+function qFind(id){return QUOTES.filter(function(q){return q.id===id})[0]}
+function admQuote(id){var q=qFind(id),b=$('adm-body');if(!q)return admQuotes();window.scrollTo(0,0);
+  var h='<button class="link" onclick="admQuotes()">‹ All quotes</button><div class="card"><div class="qhead"><div><div class="kick2">'+E(q.num)+'</div><div class="qt">'+E(q.event)+'</div></div>'+qPill(q.status)+'</div>'+
+   '<div class="qmeta">'+E(q.client)+(q.company?' · '+E(q.company):'')+'<br>'+E(q.email)+(q.phone?' · '+E(q.phone):'')+'<br>'+E(qDate(q.event_date))+(q.venue?' · '+E(q.venue):'')+'</div>'+
+   '<table class="qt2">'+q.items.map(function(it){return '<tr><td>'+E(it.d)+(it.q!==1?' <span class="muted">× '+it.q+'</span>':'')+'</td><td>'+qM(it.q*it.p)+'</td></tr>'}).join('')+
+   '<tr class="s"><td>Tax 8.25%</td><td>'+qM(q.tax)+'</td></tr><tr class="g"><td>Total (bank / card)</td><td>'+qM(q.total)+'<br><small>'+qM(q.total_card)+'</small></td></tr></table>'+
+   '<div class="qpay"><div><b>Deposit '+q.deposit_pct+'%</b><small>'+qM(q.dep)+' bank · '+qM(q.dep_card)+' card</small></div><div>'+(q.dep_paid?'<span class="pill ok">Paid '+(q.dep_paid.method==='card'?'by card':'by bank')+'</span>':'<span class="pill">Due now</span>')+'</div></div>'+
+   (q.bal>0?'<div class="qpay"><div><b>Balance</b><small>'+qM(q.bal)+' bank · '+qM(q.bal_card)+' card</small></div><div>'+(q.bal_paid?'<span class="pill ok">Paid '+(q.bal_paid.method==='card'?'by card':'by bank')+'</span>':'<span class="pill">7 days before</span>')+'</div></div>':'')+
+   (q.signed?'<div class="fine">Signed by '+E(q.signed.name)+(q.signed.title?', '+E(q.signed.title):'')+' on '+E(new Date(q.signed.at).toLocaleString('en-US',{timeZone:TZ,month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}))+'</div>':'')+
+   (q.sent_at?'<div class="fine">Emailed to client '+E(new Date(q.sent_at).toLocaleString('en-US',{timeZone:TZ,month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}))+'</div>':'')+'</div>';
+  if(!q.canceled){h+='<div class="card"><div class="qlink">'+E(q.link)+'</div><div class="row2"><button class="btn" onclick="copyTxt(\''+q.link+'\',this)">Copy link</button><a class="btn ghost" href="'+q.link+'" target="_blank">Open</a></div>'+
+   (q.status!=='Paid in full'?'<button class="btn wide dark" id="qsend" onclick="qSend('+q.id+')">'+(q.sent_at?'Email it again':'Email it to '+E(q.client.split(' ')[0]))+'</button>':'')+'</div>';
+   var acts='';
+   if(!q.dep_paid)acts+='<button class="btn wide ghost" onclick="qMark('+q.id+',\'dep\')">Deposit received by bank or Zelle ('+qM(q.dep)+')</button>';
+   else if(!q.bal_paid&&q.bal>0)acts+='<button class="btn wide ghost" onclick="qMark('+q.id+',\'bal\')">Balance received by bank or Zelle ('+qM(q.bal)+')</button>';
+   if(!q.signed)acts+='<button class="btn wide ghost" onclick="admQuoteEdit('+q.id+')">Edit quote</button>';
+   acts+='<button class="btn wide ghost" onclick="qCopy('+q.id+')">Make a copy</button>';
+   if(q.status!=='Paid in full')acts+='<button class="link danger" onclick="qCancel('+q.id+')">Cancel this quote</button>';
+   h+='<div class="card">'+acts+'</div>'}
+  else h+='<div class="card"><button class="btn wide ghost" onclick="qCopy('+q.id+')">Make a copy</button></div>';
+  b.innerHTML=h}
+function qSend(id){var bt=$('qsend');bt.disabled=true;bt.textContent='Sending…';A('quote_send',{id:id}).then(function(d){bt.disabled=false;if(!d.ok){bt.textContent='Try again';alert(d.error);return}done('Quote sent','They got an email with the link to sign and pay.');A('quotes').then(function(x){if(x.ok){QUOTES=x.quotes;admQuote(id)}})})}
+function qMark(id,w){var q=qFind(id);if(!confirm('Mark the '+(w==='dep'?'deposit':'balance')+' of '+qM(w==='dep'?q.dep:q.bal)+' as received by bank or Zelle? The client gets a thank-you email.'))return;
+  A('quote_mark',{id:id,which:w}).then(function(d){if(!d.ok){alert(d.error);return}done('Marked paid','We emailed '+E(q.client.split(' ')[0])+' a thank-you.');A('quotes').then(function(x){if(x.ok){QUOTES=x.quotes;admQuote(id)}})})}
+function qCopy(id){A('quote_copy',{id:id}).then(function(d){if(!d.ok){alert(d.error);return}A('quotes').then(function(x){if(x.ok){QUOTES=x.quotes;admQuoteEdit(d.id)}})})}
+function qCancel(id){if(!confirm('Cancel this quote? The client\'s link will say it was canceled.'))return;A('quote_cancel',{id:id}).then(function(d){if(!d.ok&&d.paid){if(!confirm(d.error+'\n\nAlready refunded? Cancel anyway.'))return;return A('quote_cancel',{id:id,confirm_paid:true}).then(function(){admQuotes()})}if(!d.ok){alert(d.error);return}admQuotes()})}
+function admQuoteEdit(id){var q=id?qFind(id):null,b=$('adm-body');QEDIT=id||null;window.scrollTo(0,0);
+  var items=q?q.items.map(function(it){return{d:it.d,q:it.q,p:it.p}}):[{d:'',q:1,p:0}];
+  var h='<button class="link" onclick="'+(q?'admQuote('+q.id+')':'admQuotes()')+'">‹ Back</button><div class="card"><div class="qt">'+(q?'Edit '+E(q.num):'New quote')+'</div>'+
+   '<label class="lbl2">Client name</label><input type="text" id="qc" value="'+E(q?q.client:'')+'" placeholder="Who signs" maxlength="80">'+
+   '<label class="lbl2">Company (optional)</label><input type="text" id="qco" value="'+E(q?q.company:'')+'" maxlength="100">'+
+   '<label class="lbl2">Email</label><input type="email" id="qe" value="'+E(q?q.email:'')+'" maxlength="120">'+
+   '<label class="lbl2">Phone (optional)</label><input type="tel" id="qph" value="'+E(q?q.phone:'')+'" maxlength="30">'+
+   '<label class="lbl2">Event</label><input type="text" id="qev" value="'+E(q?q.event:'')+'" placeholder="e.g. Acme SXSW Lounge" maxlength="120">'+
+   '<label class="lbl2">Event date</label><input type="date" id="qd" value="'+E(q?q.event_date:'')+'">'+
+   '<label class="lbl2">Venue / address (optional)</label><input type="text" id="qv" value="'+E(q?q.venue:'')+'" maxlength="200"></div>'+
+   '<div class="card"><div class="qt">Line items</div><div id="qitems"></div>'+
+   '<select id="qpre" onchange="qAddPreset()"><option value="">+ Add a common item…</option>'+QPRESETS.map(function(p,i){return '<option value="'+i+'">'+E(p[0])+(p[1]?' · '+qM(p[1]):'')+'</option>'}).join('')+'</select>'+
+   '<button class="link" onclick="qAddRow()">+ Add a blank line</button><div id="qtot" class="qtot"></div>'+
+   '<label class="lbl2">Deposit to hold the date</label><div class="row2"><input type="number" id="qdp" min="10" max="100" step="5" value="'+(q?q.deposit_pct:50)+'" oninput="qTot()"><span class="qpct">%</span></div></div>'+
+   '<div class="card"><label class="lbl2" style="margin-top:0">Note to the client (optional)</label><textarea id="qn" rows="3" maxlength="1500" placeholder="Shows at the top of their quote and in the email">'+E(q?q.note:'')+'</textarea>'+
+   '<button class="btn wide" onclick="qSave()">Save quote</button><div class="err" id="qerr"></div><div class="fine">Prices are before tax. We add 8.25% Texas sales tax. The client sees two prices: bank transfer or Zelle, and card (+3%).</div></div>';
+  b.innerHTML=h;window._QI=items;qDraw()}
+function qDraw(){var el=$('qitems');if(!el)return;el.innerHTML=window._QI.map(function(it,i){return '<div class="qi"><input type="text" placeholder="Description" value="'+E(it.d)+'" oninput="_QI['+i+'].d=this.value" maxlength="200"><div class="row2"><input type="number" inputmode="decimal" min="0" step="any" value="'+it.q+'" oninput="_QI['+i+'].q=+this.value;qTot()" aria-label="Quantity"><span class="qx">×</span><input type="number" inputmode="decimal" min="0" step="0.01" placeholder="Price $" value="'+(it.p?(it.p/100).toFixed(2):'')+'" oninput="_QI['+i+'].p=Math.round(parseFloat(this.value||0)*100);qTot()" aria-label="Price"><button class="qdel" onclick="qDel('+i+')" aria-label="Remove">×</button></div></div>'}).join('');qTot()}
+function qAddRow(){window._QI.push({d:'',q:1,p:0});qDraw()}
+function qDel(i){window._QI.splice(i,1);if(!window._QI.length)window._QI.push({d:'',q:1,p:0});qDraw()}
+function qAddPreset(){var s=$('qpre'),p=QPRESETS[+s.value];s.value='';if(!p)return;var sub=window._QI.reduce(function(t,it){return t+it.q*it.p},0);
+  var price=p[1];if(/\+15%/.test(p[0]))price=Math.round(sub*0.15);
+  var it={d:p[0].replace(/ \(per [^)]*\)$/,''),q:/per cup|per mile|per hour|per 100/.test(p[0])?1:1,p:price};
+  if(window._QI.length===1&&!window._QI[0].d&&!window._QI[0].p)window._QI[0]=it;else window._QI.push(it);qDraw()}
+function qTot(){var el=$('qtot');if(!el)return;var sub=window._QI.reduce(function(t,it){return t+Math.round((+it.q||0)*(+it.p||0))},0),tax=Math.round(sub*0.0825),tot=sub+tax,dp=+($('qdp')?$('qdp').value:50)||0,dep=Math.round(tot*dp/100);
+  el.innerHTML='<div><span>Subtotal</span><span>'+qM(sub)+'</span></div><div><span>Tax 8.25%</span><span>'+qM(tax)+'</span></div><div class="g"><span>Total</span><span>'+qM(tot)+'</span></div><div class="c"><span>By card (+3%)</span><span>'+qM(Math.round(tot*1.03))+'</span></div><div class="c"><span>Deposit '+dp+'%</span><span>'+qM(dep)+' · card '+qM(Math.round(dep*1.03))+'</span></div>'}
+function qSave(){var e=$('qerr');e.textContent='';
+  A('quote_save',{id:QEDIT,client:$('qc').value,company:$('qco').value,email:$('qe').value,phone:$('qph').value,event:$('qev').value,event_date:$('qd').value,venue:$('qv').value,note:$('qn').value,deposit_pct:+$('qdp').value,items:window._QI}).then(function(d){
+    if(!d.ok){e.textContent=d.error;return}A('quotes').then(function(x){if(x.ok){QUOTES=x.quotes;admQuote(d.id)}})})}
 </script></body></html>

@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Your Quote · Kahoa Coffee</title>
+<link rel="icon" href="/ship-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://web.squarecdn.com/v1/square.js" defer></script>
+<style>
+:root{--brown:#1C0E06;--mid:#5A2E1A;--muted:#8B6040;--gold:#D4A843;--golddk:#9a7424;--cream:#FAF5EC;--line:#EADFCD;--green:#2E7D4F;--red:#B22730}
+*{box-sizing:border-box}
+body{margin:0;background:#EFE7DA;color:var(--brown);font-family:Montserrat,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:15px;line-height:1.55}
+.bar{background:var(--brown);border-bottom:3px solid var(--gold);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.bar img{height:34px;display:block}
+.bar button{background:transparent;color:var(--gold);border:1px solid rgba(212,168,67,.5);border-radius:10px;padding:8px 12px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.wrap{max-width:760px;margin:0 auto;padding:18px 16px 60px}
+.card{background:#fff;border-radius:16px;padding:20px;margin:0 0 14px;box-shadow:0 2px 14px rgba(28,14,6,.06)}
+.kick{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--golddk);font-weight:700;margin:0 0 4px}
+h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:34px;line-height:1.1;margin:0 0 6px}
+h2{font-family:'Cormorant Garamond',Georgia,serif;font-size:24px;margin:0 0 10px}
+.pill{display:inline-block;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:20px;background:#F1E7D6;color:var(--mid)}
+.pill.ok{background:#E3F2E8;color:var(--green)}.pill.no{background:#FBEBEB;color:var(--red)}
+.meta{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14px;margin-top:12px}.meta b{color:var(--muted);font-weight:600}
+.note{background:var(--cream);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:12px 14px;white-space:pre-line;font-size:14px;margin-top:14px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--golddk);padding:8px 6px;border-bottom:2px solid var(--gold)}
+td{padding:10px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+.r{text-align:right;white-space:nowrap}
+tr.t td{border:0;padding:5px 6px}tr.g td{font-weight:700;font-size:16px;border-top:2px solid var(--brown);padding-top:10px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.opt{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--cream)}
+.opt small{display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:700}
+.opt b{font-family:'Cormorant Garamond',Georgia,serif;font-size:26px;display:block;line-height:1.2}
+.opt span{font-size:12px;color:var(--muted)}
+.sched{margin-top:12px;font-size:14px}.sched div{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line)}
+.terms{max-height:340px;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:14px;font-size:13.5px;background:#FFFDF9}
+.terms p{margin:0 0 10px}.terms p b{color:var(--mid)}
+label.l{display:block;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin:14px 0 6px}
+input[type=text]{width:100%;font:inherit;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.sigpad{position:relative;border:1.5px dashed #CDB894;border-radius:12px;background:#FFFDF9;height:150px;touch-action:none}
+.sigpad canvas{width:100%;height:100%;display:block}
+.sigpad .hint{position:absolute;left:14px;bottom:10px;font-size:12px;color:#B9A27A;pointer-events:none}
+.sigpad button{position:absolute;right:8px;top:8px;border:0;background:#F1E7D6;color:var(--mid);border-radius:8px;padding:5px 10px;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.agree{display:flex;gap:10px;align-items:flex-start;margin:14px 0;font-size:14px}.agree input{width:20px;height:20px;margin-top:2px;flex:none}
+.btn{display:block;width:100%;border:0;border-radius:12px;background:var(--gold);color:var(--brown);font:inherit;font-weight:700;font-size:16px;padding:15px;cursor:pointer}
+.btn:disabled{opacity:.55;cursor:default}
+.btn.dark{background:var(--brown);color:var(--gold)}
+.err{color:var(--red);font-size:14px;margin-top:10px;min-height:1px}
+.tabs{display:flex;gap:6px;background:#F4ECDD;border-radius:12px;padding:4px;margin-bottom:14px}
+.tabs button{flex:1;border:0;background:transparent;border-radius:9px;padding:10px;font:inherit;font-weight:600;font-size:14px;color:var(--mid);cursor:pointer}
+.tabs button.on{background:#fff;color:var(--brown);box-shadow:0 1px 6px rgba(0,0,0,.08)}
+#card{min-height:90px;margin-bottom:12px}
+.signed{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap}.signed img{max-height:70px;border-bottom:1.5px solid var(--brown);padding-bottom:2px}
+.signed div{font-size:13px;color:var(--muted)}.signed div b{display:block;color:var(--brown);font-size:15px}
+.paid{display:flex;gap:10px;align-items:center;background:#E3F2E8;color:var(--green);border-radius:12px;padding:12px 14px;font-weight:600;font-size:14px;margin-top:10px}
+.bank{white-space:pre-line;background:var(--cream);border-radius:12px;padding:14px;font-size:14px}
+.msg{text-align:center;color:var(--muted);padding:60px 10px}
+.foot{text-align:center;font-size:12px;color:var(--muted);margin-top:18px}
+small.qp{display:none;color:var(--muted);font-size:12.5px}
+@media(max-width:520px){.two{grid-template-columns:1fr}h1{font-size:30px}.n{display:none}small.qp{display:block}}
+@media print{body{background:#fff}.bar,.noprint,#paycard,#signcard{display:none!important}.card{box-shadow:none;padding:6px 0;break-inside:avoid}.terms{max-height:none;overflow:visible;border:0;padding:0}}
+</style></head><body>
+<div class="bar"><img src="/kahoa-logo-transparent.png" alt="Kahoa Coffee"><button class="noprint" onclick="window.print()">Print or save PDF</button></div>
+<div class="wrap" id="out"><p class="msg">Loading your quote…</p></div>
+<script>
+(function(){
+var API='https://kahoa-checkoutout.chegekibuthu1.workers.dev/staff/',APP='sq0idp-khlBwyn6FQYmXDU8zxjAiQ',LOC='L2M4GT1KDJZPY',TZ='America/Chicago';
+var tok=(location.search.match(/[?&]q=([a-f0-9]{32})/)||[])[1],Q=null,BANK='',card=null,tab='card';
+function $(i){return document.getElementById(i)}
+function E(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function M(c){return '$'+(Math.round(c)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function D(d){return d?new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}):''}
+function W(ms){return new Date(ms).toLocaleString('en-US',{timeZone:TZ,month:'long',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'})+' Central'}
+function balDue(d){var x=new Date(d+'T12:00:00');x.setDate(x.getDate()-7);return x.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}
+function post(a,b){return fetch(API+a,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({token:tok},b||{}))}).then(function(r){return r.json()}).catch(function(){return{ok:false,error:'Could not connect. Check your internet and try again.'}})}
+if(!tok){$('out').innerHTML='<p class="msg">This link is missing part of the address. Open the link from your email again, or email <a href="mailto:info@kahoa.shop">info@kahoa.shop</a>.</p>';return}
+post('quote').then(function(d){if(!d.ok){$('out').innerHTML='<p class="msg">'+E(d.error||'Could not load this quote.')+'</p>';return}Q=d.quote;BANK=d.bank_note||'';draw()});
+function draw(){var q=Q,st=/^(Not sent|Sent)$/.test(q.status)?'Ready to sign':q.status,pc=/Paid|Deposit/.test(st)?'ok':st==='Canceled'?'no':'';
+  document.title='Quote '+q.num+' · Kahoa Coffee';
+  var h='<div class="card"><p class="kick">Quote '+E(q.num)+'</p><h1>'+E(q.event)+'</h1><span class="pill '+pc+'">'+E(st)+'</span>'+
+   '<div class="meta"><b>For</b><span>'+E(q.client)+(q.company?', '+E(q.company):'')+'</span><b>Date</b><span>'+E(D(q.event_date))+'</span>'+(q.venue?'<b>Where</b><span>'+E(q.venue)+'</span>':'')+'</div>'+
+   (q.note?'<div class="note">'+E(q.note)+'<br><br><i>Martin Kibuthu, Founder</i></div>':'')+'</div>';
+  h+='<div class="card"><h2>Your quote</h2><table><thead><tr><th>What</th><th class="r n">Qty</th><th class="r n">Price</th><th class="r">Total</th></tr></thead><tbody>'+
+   q.items.map(function(it){return '<tr><td>'+E(it.d)+(it.q!==1?'<small class="qp">'+E(it.q)+' × '+M(it.p)+'</small>':'')+'</td><td class="r n">'+E(it.q)+'</td><td class="r n">'+M(it.p)+'</td><td class="r">'+M(it.q*it.p)+'</td></tr>'}).join('')+
+   '<tr class="t"><td>Subtotal</td><td class="n"></td><td class="n"></td><td class="r">'+M(q.sub)+'</td></tr><tr class="t"><td>Texas sales tax (8.25%)</td><td class="n"></td><td class="n"></td><td class="r">'+M(q.tax)+'</td></tr>'+
+   '<tr class="g"><td>Total</td><td class="n"></td><td class="n"></td><td class="r">'+M(q.total)+'</td></tr></tbody></table>'+
+   '<div class="two"><div class="opt"><small>Bank transfer or Zelle</small><b>'+M(q.total)+'</b><span>No fee</span></div><div class="opt"><small>Card</small><b>'+M(q.total_card)+'</b><span>Includes 3% card processing</span></div></div>'+
+   '<div class="sched"><div><span><b>Deposit ('+q.deposit_pct+'%)</b> · holds your date</span><span>'+M(q.dep)+' · card '+M(q.dep_card)+'</span></div>'+
+   (q.bal>0?'<div><span><b>Balance</b> · due '+E(balDue(q.event_date))+'</span><span>'+M(q.bal)+' · card '+M(q.bal_card)+'</span></div>':'')+'</div></div>';
+  h+='<div class="card"><h2>Agreement</h2><div class="terms">'+q.terms.split('\n\n').slice(2).map(function(p){return '<p>'+E(p).replace(/^(\d+\.\s[^.]+\.)/,'<b>$1</b>')+'</p>'}).join('')+'</div>';
+  if(q.signed)h+='<div class="signed" style="margin-top:16px"><img src="'+q.signed.sig+'" alt="Signature"><div><b>'+E(q.signed.name)+'</b>'+(q.signed.title?E(q.signed.title)+' · ':'')+'Signed electronically '+E(W(q.signed.at))+'</div></div>';
+  h+='</div>';
+  if(q.canceled)h+='<div class="card"><p style="margin:0">This quote was canceled. Questions? Email <a href="mailto:info@kahoa.shop">info@kahoa.shop</a>.</p></div>';
+  else if(!q.signed)h+='<div class="card noprint" id="signcard"><h2>Sign to book</h2><p style="margin:0;font-size:14px;color:var(--muted)">Read the agreement above, then sign. Next, you\'ll pay the deposit to hold your date.</p>'+
+   '<label class="l">Your full name</label><input type="text" id="sn" autocomplete="name" value="'+E(q.client)+'">'+
+   '<label class="l">Your title (optional)</label><input type="text" id="stt" placeholder="e.g. Event Manager">'+
+   '<label class="l">Sign here with your finger or mouse</label><div class="sigpad"><canvas id="pad"></canvas><span class="hint" id="padhint">Sign here</span><button type="button" onclick="kqClear()">Clear</button></div>'+
+   '<label class="agree"><input type="checkbox" id="sa"><span>I agree to this quote and the Kahoa Coffee LLC event agreement above'+(q.company?', for '+E(q.company):'')+'.</span></label>'+
+   '<button class="btn" id="sb" onclick="kqSign()">Sign agreement</button><div class="err" id="serr"></div></div>';
+  else{h+='<div class="card" id="paycard"><h2>Payment</h2>';
+    if(q.dep_paid)h+='<div class="paid">✓ Deposit of '+M(q.dep_paid.amount)+' received '+E(W(q.dep_paid.at).replace(/ at .*/,''))+(q.dep_paid.method==='card'?' by card':' by bank transfer or Zelle')+'</div>';
+    if(q.bal_paid)h+='<div class="paid">✓ Balance of '+M(q.bal_paid.amount)+' received '+E(W(q.bal_paid.at).replace(/ at .*/,''))+(q.bal_paid.method==='card'?' by card':' by bank transfer or Zelle')+'</div>';
+    var which=!q.dep_paid?'dep':(!q.bal_paid&&q.bal>0?'bal':null);
+    if(!which)h+='<p style="margin:14px 0 0">You\'re paid in full. Asante sana! We can\'t wait to serve your guests.</p>';
+    else{var bank=which==='dep'?q.dep:q.bal,cardAmt=which==='dep'?q.dep_card:q.bal_card;
+      h+='<p style="margin:'+(q.dep_paid?'14px':'0')+' 0 12px;font-size:14px">'+(which==='dep'?'Pay your '+q.deposit_pct+'% deposit to hold your date.':'Your balance is due '+E(balDue(q.event_date))+'.')+'</p>'+
+      '<div class="tabs"><button id="tc" class="'+(tab==='card'?'on':'')+'" onclick="kqTab(\'card\')">Card · '+M(cardAmt)+'</button><button id="tb" class="'+(tab==='bank'?'on':'')+'" onclick="kqTab(\'bank\')">Bank or Zelle · '+M(bank)+'</button></div>'+
+      '<div id="pcard" style="display:'+(tab==='card'?'block':'none')+'"><div id="card"></div><button class="btn dark" id="pb" onclick="kqPay()">Pay '+M(cardAmt)+' by card</button><p style="font-size:12px;color:var(--muted);text-align:center;margin:8px 0 0">Secure card payment by Square. Card price includes a 3% processing fee. Pay by bank or Zelle to skip it.</p><div class="err" id="perr"></div></div>'+
+      '<div id="pbank" style="display:'+(tab==='bank'?'block':'none')+'"><p style="margin:0 0 10px;font-size:14px">Send <b>'+M(bank)+'</b> and put <b>'+E(q.num)+'</b> in the memo. We\'ll email you as soon as it arrives.</p><div class="bank">'+(BANK?E(BANK):'Email <a href="mailto:info@kahoa.shop?subject='+encodeURIComponent('Bank transfer for quote '+q.num)+'">info@kahoa.shop</a> and we\'ll send our bank transfer and Zelle details right away.')+'</div></div>'}
+    h+='</div>'}
+  h+='<p class="foot">Kahoa Coffee LLC · Austin, Texas · <a href="mailto:info@kahoa.shop">info@kahoa.shop</a> · <a href="https://kahoa.shop">kahoa.shop</a></p>';
+  $('out').innerHTML=h;
+  if(!q.signed&&!q.canceled)setupPad();
+  if(q.signed&&!q.canceled&&tab==='card'&&$('card'))initCard();
+}
+var pad,ctx,drawn=false,down=false;
+function setupPad(){pad=$('pad');var r=pad.getBoundingClientRect(),dpr=window.devicePixelRatio||1;pad.width=r.width*dpr;pad.height=r.height*dpr;ctx=pad.getContext('2d');ctx.scale(dpr,dpr);ctx.lineWidth=2.4;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#1C0E06';drawn=false;
+  function pt(e){var b=pad.getBoundingClientRect();return[e.clientX-b.left,e.clientY-b.top]}
+  pad.onpointerdown=function(e){down=true;pad.setPointerCapture(e.pointerId);var p=pt(e);ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.lineTo(p[0]+.1,p[1]+.1);ctx.stroke();drawn=true;$('padhint').style.display='none'};
+  pad.onpointermove=function(e){if(!down)return;var p=pt(e);ctx.lineTo(p[0],p[1]);ctx.stroke()};
+  pad.onpointerup=pad.onpointercancel=function(){down=false}}
+window.kqClear=function(){if(!ctx)return;ctx.clearRect(0,0,pad.width,pad.height);drawn=false;$('padhint').style.display=''};
+window.kqSign=function(){var e=$('serr'),n=$('sn').value.trim();e.textContent='';
+  if(n.split(/\s+/).length<2)return e.textContent='Type your full name (first and last).';
+  if(!drawn)return e.textContent='Sign in the box with your finger or mouse.';
+  if(!$('sa').checked)return e.textContent='Tick the box to agree.';
+  var b=$('sb');b.disabled=true;b.textContent='Signing…';
+  post('quote_sign',{name:n,title:$('stt').value.trim(),agree:true,signature:pad.toDataURL('image/png'),num:Q.num,total:Q.total}).then(function(d){
+    if(!d.ok){b.disabled=false;b.textContent='Sign agreement';e.textContent=d.error||'Try again.';return}
+    Q=d.quote;BANK=d.bank_note||BANK;draw();var pc=$('paycard');if(pc)pc.scrollIntoView({behavior:'smooth'})})};
+window.kqTab=function(t){tab=t;$('tc').className=t==='card'?'on':'';$('tb').className=t==='bank'?'on':'';$('pcard').style.display=t==='card'?'block':'none';$('pbank').style.display=t==='bank'?'block':'none';if(t==='card')initCard()};
+var starting=false;
+async function initCard(){if(card||starting)return;starting=true;
+  try{for(var i=0;i<40&&typeof Square==='undefined';i++)await new Promise(function(r){setTimeout(r,150)});
+    var p=await Square.payments(APP,LOC);card=await p.card();await card.attach('#card')}catch(e){card=null;var pe=$('perr');if(pe)pe.textContent='The card form did not load. Refresh the page, or pay by bank or Zelle.'}
+  starting=false}
+window.kqPay=async function(){var e=$('perr'),b=$('pb');e.textContent='';
+  if(!card){await initCard();if(!card)return}
+  var which=!Q.dep_paid?'dep':'bal',amt=which==='dep'?Q.dep_card:Q.bal_card,label=b.textContent;b.disabled=true;b.textContent='Processing…';
+  try{var t=await card.tokenize();if(t.status!=='OK')throw new Error(t.errors&&t.errors[0]?t.errors[0].message:'Check your card details.');
+    var d=await post('quote_pay',{amount:amt,source_id:t.token,verification_token:(t.details&&t.details.verificationToken)||undefined});
+    if(!d.ok)throw new Error(d.error||'The payment did not go through.');
+    try{await card.destroy()}catch(x){}card=null;Q=d.quote;draw();window.scrollTo({top:0,behavior:'smooth'})}
+  catch(x){b.disabled=false;b.textContent=label;e.textContent=x.message}};
+})();
+</script>
+</body></html>
