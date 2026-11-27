@@ -110,7 +110,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
   <div id=cb-packages style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
     <div class="prod-card cb-pkg" data-pkg="break" onclick="cbSelectPkg('break')" style="cursor:pointer;">
       <div class=prod-name>Coffee Break <span style="color:var(--gold);float:right;">$500</span></div>
-      <div class=prod-detail>1 hour &middot; up to ~40 guests &middot; 1 barista &middot; drip + <span style="color:#4a90d9;">Kifaru Spice Cold Brew</span></div>
+      <div class=prod-detail>1 hour &middot; up to ~40 guests &middot; 1 barista &middot; drip + <span style="color:#4a90d9;">Kifaru Spice Cold Brew</span> &middot; hot cocoa &amp; Kenyan hot tea with our house syrups &middot; 1 signature drink included, like Kenyan Masala Chai or Honey Cardamom Cocoa</div>
     </div>
     <div class="prod-card cb-pkg" data-pkg="essentials" onclick="cbSelectPkg('essentials')" style="cursor:pointer;">
       <div class=prod-name>Essentials <span style="color:var(--gold);float:right;">$750</span></div>
@@ -151,6 +151,9 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
  <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox class=cb-drink onchange=cbCalc()  value="Kahawa Tamu"> <span>Kahawa Tamu <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; Kenyan-style iced milk coffee, strong &amp; sweet</span></span></label>
  <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox class=cb-drink onchange=cbCalc()  value="Barafu Pour-Over"> <span>Barafu Pour-Over <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; pour-over brewed onto ice</span></span></label>
  <label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox class=cb-drink onchange=cbCalc()  value="Rift Valley Fizz"> <span>Rift Valley Fizz <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; espresso over Topo Chico with an orange peel</span></span></label>
+<label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox class=cb-drink onchange=cbCalc()  value="Kenyan Masala Chai"> <span>Kenyan Masala Chai <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; Kenyan black tea steeped with ginger, cardamom, clove and cinnamon, with steamed milk</span></span></label>
+<label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox class=cb-drink onchange=cbCalc()  value="Mombasa Honey Cardamom Cocoa"> <span>Mombasa Honey Cardamom Cocoa <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; rich dark cocoa, steamed milk, Texas wildflower honey and green cardamom</span></span></label>
+<label style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;"><input type=checkbox class=cb-drink onchange=cbCalc()  value="Salted Caramel Velvet Cocoa"> <span>Salted Caramel Velvet Cocoa <span style="color:rgba(255,255,255,0.5);font-size:11px;">&mdash; dark cocoa, steamed milk and our house salted caramel</span></span></label>
  </div>
  <p class=sub id=cb-drinks-note style="font-size:11px;margin-bottom:20px;">Pick the ones you would like on your menu. Your package includes a set number, and each extra is $50. We will confirm the final menu with you before the event.</p>
 
@@ -231,7 +234,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
 
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script>
 <script>
-var CART_PKG={break:500,essentials:750,premium:1100,full:1850};var SIG_INCLUDED={break:0,essentials:1,premium:2,full:3},SIG_EXTRA=50;function cbMenuExtra(){var n=document.querySelectorAll('.cb-drink:checked').length;var inc=cbSelectedPkg?SIG_INCLUDED[cbSelectedPkg]:0;return {n:n,inc:inc,extra:cbSelectedPkg?Math.max(0,n-inc):0};}
+var CART_PKG={break:500,essentials:750,premium:1100,full:1850};var SIG_INCLUDED={break:1,essentials:1,premium:2,full:3},SIG_EXTRA=50;function cbMenuExtra(){var n=document.querySelectorAll('.cb-drink:checked').length;var inc=cbSelectedPkg?SIG_INCLUDED[cbSelectedPkg]:0;return {n:n,inc:inc,extra:cbSelectedPkg?Math.max(0,n-inc):0};}
 var ADDON_TEA=0,ADDON_SIGDRINK=50,ADDON_STICKER_RATE=0.30,ADDON_STICKER_MIN=125,ADDON_PRINT_RATE=0.65,ADDON_PRINT_MIN=325;
 var DJ_PRICE={break:550,essentials:550,premium:650,full:750};
 var ADDON_LATTE=175;
