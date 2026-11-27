@@ -39,21 +39,26 @@ table{width:100%;border-collapse:collapse;margin-top:20px;font-size:12.5px;page-
   function when(ms){return new Date(ms).toLocaleString('en-US',{timeZone:TZ,month:'long',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'})+' Central'}
   var me=null;try{me=JSON.parse(localStorage.getItem('kahoa_team_me')||'null')}catch(e){}
   var pid=Number((location.search.match(/[?&]p=(\d+)/)||[])[1]);
-  if(!me||!me.is_admin||!me.token){out.innerHTML='<p class="msg">Open this from Admin → Team on your phone, signed in as Martin.</p>';return}
-  fetch(API+'admin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({person_id:me.id,token:me.token,op:'file',staff_id:pid})}).then(function(r){return r.json()}).then(function(d){
+  if(!me||!me.token){out.innerHTML='<p class="msg">Open this from the Kahoa Team page on your phone: <a href="/team">kahoa.shop/team</a></p>';return}
+  var own=!(me.is_admin&&pid);
+  fetch(API+(own?'my_file':'admin'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(own?{person_id:me.id,token:me.token}:{person_id:me.id,token:me.token,op:'file',staff_id:pid})}).then(function(r){return r.json()}).then(function(d){
     if(!d.ok){out.innerHTML='<p class="msg">'+E(d.error||'Could not load this file.')+'</p>';return}
-    var p=d.person,a=d.agreement,h='';document.getElementById('who').textContent=p.name+' · contractor file';document.title=p.name+' · Kahoa contractor file';
+    var p=d.person,a=d.agreement,h='';document.getElementById('who').textContent=d.own?'Your contractor agreement':p.name+' · contractor file';document.title=d.own?'My Kahoa agreement':p.name+' · Kahoa contractor file';
+    if(!a&&d.own){out.innerHTML='<p class="msg">You haven\'t signed your agreement yet. Open <a href="/team">kahoa.shop/team</a> to sign it.</p>';return}
     if(!a){h+='<div class="page"><p class="msg" style="margin:20px auto">'+E(p.name)+' has not signed the contractor agreement yet. They\'ll be asked to the next time they open Kahoa Team.</p></div>'}
     else{
       var parts=a.text.split('\n\n'),body=parts.slice(2,-1),acc=parts[parts.length-1];
       h+='<div class="page"><img class="logo" src="/kahoa-logo-transparent.png" alt="Kahoa"><div class="co">Kahoa Coffee LLC · Austin, Texas</div><h1>Independent Contractor Agreement</h1><div class="rule"></div>'+
-        (a.version!==d.current_version?'<div class="warn noprint">This was signed on an older version of the agreement ('+E(a.version)+'). They will be asked to sign the new one.</div>':'')+
+        (a.version!==d.current_version&&!d.own?'<div class="warn noprint">This was signed on an older version of the agreement ('+E(a.version)+'). They will be asked to sign the new one.</div>':'')+
         body.map(function(x){return '<p>'+E(x).replace(/^(\d+\.\s[^.]+\.)/,'<b>$1</b>')+'</p>'}).join('')+
         '<div class="sign"><div><div class="sigbox"><img src="'+a.sig+'" alt="Signature"></div><div class="cap"><b>'+E(a.legal_name)+'</b>Contractor · signed electronically '+E(when(a.signed_at))+'</div></div>'+
         '<div><div class="sigbox"><span class="kahoa-sig">Martin Kibuthu</span></div><div class="cap"><b>Kahoa Coffee LLC</b>By Martin Kibuthu, Founder · '+E(acc.replace(/^.*Accepted electronically on /,'accepted electronically on ').replace(/\.$/,''))+'</div></div></div>'+
         '<table><tr><td>Legal name</td><td>'+E(a.legal_name)+'</td></tr><tr><td>Mailing address</td><td>'+E(a.address)+'</td></tr><tr><td>Email</td><td>'+E(a.email)+'</td></tr>'+
         '<tr><td>Rate at signing</td><td>$'+(a.rate_cents/100).toFixed(2)+' per hour</td></tr>'+(d.pay?'<tr><td>Paid by</td><td>'+E({cashapp:'Cash App $',venmo:'Venmo @',paypal:'PayPal.me/',zelle:'Zelle '}[d.pay.method]||'')+E(d.pay.handle)+'</td></tr>':'')+
-        '<tr><td>Signed</td><td>'+E(when(a.signed_at))+'</td></tr><tr><td>Signing record</td><td>Agreement '+E(a.version)+' · IP '+E(a.ip||'n/a')+'<br><span style="color:#8B6040">'+E(a.ua||'')+'</span></td></tr></table></div>';
+        '<tr><td>Signed</td><td>'+E(when(a.signed_at))+'</td></tr>'+(d.own?'':'<tr><td>Signing record</td><td>Agreement '+E(a.version)+' · IP '+E(a.ip||'n/a')+'<br><span style="color:#8B6040">'+E(a.ua||'')+'</span></td></tr>')+'</table></div>';
+    }
+    if(d.own){out.innerHTML=h;return}
+    {
     }
     h+='<div class="page w9"><h2>Form W-9</h2>';
     if(!d.w9)h+='<p style="color:#8B6040">No W-9 on file yet. '+E(p.name)+' will see a reminder on their home screen.</p>';
