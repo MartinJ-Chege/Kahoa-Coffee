@@ -113,8 +113,8 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
       <div class=prod-detail>1 hour &middot; up to ~30 guests &middot; 1 barista &middot; drip coffee, hot cocoa &amp; Kenyan hot tea with our house syrups (honey cardamom, salted caramel, vanilla, mocha) &middot; cold brew available as an add-on</div>
     </div>
     <div class="prod-card cb-pkg" data-pkg="essentials" onclick="cbSelectPkg('essentials')" style="cursor:pointer;">
-      <div class=prod-name>Essentials <span style="color:var(--gold);float:right;">$750</span></div>
-      <div class=prod-detail>2 hours &middot; up to ~50 guests &middot; 1 barista &middot; drip + <span style="color:#4a90d9;">Kifaru Spice Cold Brew</span> &middot; 1 signature drink included</div>
+      <div class=prod-name>Essentials <span style="color:var(--gold);float:right;">$850</span></div>
+      <div class=prod-detail>2 hours &middot; up to ~50 guests &middot; 1 barista &middot; espresso bar (lattes, cappuccinos &amp; more) + <span style="color:#4a90d9;">Kifaru Spice Cold Brew</span> &middot; 1 signature drink included</div>
     </div>
     <div class="prod-card cb-pkg" data-pkg="premium" onclick="cbSelectPkg('premium')" style="cursor:pointer;border-color:var(--gold);">
       <div class=prod-name>Premium &#9733; <span style="color:var(--gold);float:right;">$1,100</span></div>
@@ -223,6 +223,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
     <div class=field><input type=tel id=cb-phone placeholder="Phone"></div>
     <div class=field><input type=text id=cb-location placeholder="Event Location / Address"></div>
   </div>
+  <p style="margin:-4px 0 8px;font-size:11px;color:rgba(255,255,255,0.5);">Travel within 30 miles of Austin is included. Farther venues add $1.50 per mile round trip, added to your balance (San Antonio is about $240).</p>
 
   <p class=sec-label style="margin-top:16px;">Service Agreement</p>
   <div id=cb-agreement-box style="border:1px solid rgba(212,168,67,0.3);background:rgba(212,168,67,0.06);padding:14px 16px;margin-bottom:16px;font-size:12px;line-height:1.6;color:rgba(255,255,255,0.75);">Next step: review and sign your Service Agreement. Your booking details fill in automatically &mdash; you only type your name &mdash; then you'll come right back here to pay.</div>
@@ -243,7 +244,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
 
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script>
 <script>
-var CART_PKG={break:500,essentials:750,premium:1100,full:1850};var SIG_INCLUDED={break:0,essentials:1,premium:2,full:3},SIG_EXTRA=50;function cbMenuExtra(){var n=document.querySelectorAll('.cb-drink:checked').length;var inc=cbSelectedPkg?SIG_INCLUDED[cbSelectedPkg]:0;return {n:n,inc:inc,extra:cbSelectedPkg?Math.max(0,n-inc):0};}
+var CART_PKG={break:500,essentials:850,premium:1100,full:1850};var SIG_INCLUDED={break:0,essentials:1,premium:2,full:3},SIG_EXTRA=50;function cbMenuExtra(){var n=document.querySelectorAll('.cb-drink:checked').length;var inc=cbSelectedPkg?SIG_INCLUDED[cbSelectedPkg]:0;return {n:n,inc:inc,extra:cbSelectedPkg?Math.max(0,n-inc):0};}
 var ADDON_TEA=0,ADDON_SIGDRINK=50,ADDON_STICKER_RATE=0.30,ADDON_STICKER_MIN=125,ADDON_PRINT_RATE=0.65,ADDON_PRINT_MIN=325,ADDON_SLEEVE_BASE=150,ADDON_SLEEVE_PER250=50;
 var DJ_PRICE={break:550,essentials:550,premium:650,full:750};
 var ADDON_LATTE=175;
