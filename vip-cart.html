@@ -174,6 +174,9 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
     <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
       <span><input type=checkbox id=cb-addon-sticker onchange=cbCalc()> Logo Stickers on Cups<small class=cb-ad>Your logo or monogram on a sticker on every cup. $0.30 per guest, $125 minimum. Order at least 2 weeks before your event.</small></span><span id=cb-price-sticker style="color:var(--gold);">+$125.00</span>
     </label>
+    <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;">
+      <span><input type=checkbox id=cb-addon-sleeve onchange=cbCalc()> Custom Logo Sleeves<small class=cb-ad>Cup sleeves printed with your logo, monogram or names, on every hot drink. $150 for up to 250 guests, then $50 for each extra 250. Order at least 3 weeks before your event.</small></span><span id=cb-price-sleeve style="color:var(--gold);">+$150.00</span>
+    </label>
     <label style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:13px;color:#fff;" id=cb-print-row>
       <span><input type=checkbox id=cb-addon-print onchange=cbCalc()> Full Custom-Printed Cups<small class=cb-ad>Cups printed in full color with your design. $0.65 per guest, $325 minimum. Order at least 21 business days (about 4 weeks) before your event.</small></span><span id=cb-price-print style="color:var(--gold);">+$325.00</span>
     </label>
@@ -188,7 +191,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
     </label>
   </div>
   <p id=cb-branding-leadtime style="font-size:11px;color:var(--gold);margin:-6px 0 10px;display:none;"></p>
-  <p class=sub style="font-size:11px;margin-top:-2px;margin-bottom:20px;">Logo stickers and printed cups are made just for your event, so they are paid in full at booking. We can refund them until you approve the design proof.</p>
+  <p class=sub style="font-size:11px;margin-top:-2px;margin-bottom:20px;">Logo stickers, sleeves and printed cups are made just for your event, so they are paid in full at booking. We can refund them until you approve the design proof.</p>
 
   <div class=cart-totals style="display:block;margin-bottom:20px;">
     <div class=cart-row><span>Package</span><span id=cb-pkg-total>$0.00</span></div>
@@ -241,7 +244,7 @@ h1{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;line-he
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script>
 <script>
 var CART_PKG={break:500,essentials:750,premium:1100,full:1850};var SIG_INCLUDED={break:0,essentials:1,premium:2,full:3},SIG_EXTRA=50;function cbMenuExtra(){var n=document.querySelectorAll('.cb-drink:checked').length;var inc=cbSelectedPkg?SIG_INCLUDED[cbSelectedPkg]:0;return {n:n,inc:inc,extra:cbSelectedPkg?Math.max(0,n-inc):0};}
-var ADDON_TEA=0,ADDON_SIGDRINK=50,ADDON_STICKER_RATE=0.30,ADDON_STICKER_MIN=125,ADDON_PRINT_RATE=0.65,ADDON_PRINT_MIN=325;
+var ADDON_TEA=0,ADDON_SIGDRINK=50,ADDON_STICKER_RATE=0.30,ADDON_STICKER_MIN=125,ADDON_PRINT_RATE=0.65,ADDON_PRINT_MIN=325,ADDON_SLEEVE_BASE=150,ADDON_SLEEVE_PER250=50;
 var DJ_PRICE={break:550,essentials:550,premium:650,full:750};
 var ADDON_LATTE=175;
 var ADDON_MANDAZI_PER50=80;
@@ -259,8 +262,8 @@ var AUSTIN_ZIPS='78701.78702.78703.78704.78705.78712.78717.78719.78721.78722.787
 var cbSelectedPkg=null;
 var BA_DRAFT_KEY='kahoa_ba_draft_cart',BA_SIGNED_KEY='kahoa_ba_signed_cart';
 var BA_DEFAULT_MSG='Next step: review and sign your Service Agreement. Your booking details fill in automatically — you only type your name — then you’ll come right back here to pay.';
-var CB_ADDON_IDS={coldbrew:'cb-addon-coldbrew',tea:'cb-addon-tea',sig:'cb-addon-sig',sticker:'cb-addon-sticker',print:'cb-addon-print',dj:'cb-addon-dj',latte:'cb-addon-latte',mandazi:'cb-addon-mandazi'};
-var CB_ADDON_NAMES={coldbrew:'Kifaru Spice Cold Brew (Coffee Break add-on)',mandazi:'Mother\'s Love Bites & Boba Tea',tea:'Hot Tea & Hot Cocoa',sig:'Custom Signature Drinks',sticker:'Logo Stickers on Cups',print:'Full Custom-Printed Cups',dj:'Event DJ',latte:'Latte Art Printer'};
+var CB_ADDON_IDS={coldbrew:'cb-addon-coldbrew',tea:'cb-addon-tea',sig:'cb-addon-sig',sticker:'cb-addon-sticker',sleeve:'cb-addon-sleeve',print:'cb-addon-print',dj:'cb-addon-dj',latte:'cb-addon-latte',mandazi:'cb-addon-mandazi'};
+var CB_ADDON_NAMES={coldbrew:'Kifaru Spice Cold Brew (Coffee Break add-on)',mandazi:'Mother\'s Love Bites & Boba Tea',tea:'Hot Tea & Hot Cocoa',sig:'Custom Signature Drinks',sticker:'Logo Stickers on Cups',sleeve:'Custom Logo Sleeves',print:'Full Custom-Printed Cups',dj:'Event DJ',latte:'Latte Art Printer'};
 function baLoad(k){try{var s=sessionStorage.getItem(k);return s?JSON.parse(s):null;}catch(e){return null;}}
 function baSave(k,v){try{sessionStorage.setItem(k,JSON.stringify(v));return true;}catch(e){return false;}}
 function baClear(){try{sessionStorage.removeItem(BA_DRAFT_KEY);sessionStorage.removeItem(BA_SIGNED_KEY);}catch(e){}}
@@ -374,6 +377,7 @@ function cbCalc(){
   var teaOn=document.getElementById('cb-addon-tea').checked;
   var sigOn=document.getElementById('cb-addon-sig').checked;
   var stickerOn=document.getElementById('cb-addon-sticker').checked;
+  var sleeveOn=document.getElementById('cb-addon-sleeve').checked;
   var printOn=document.getElementById('cb-addon-print').checked;
   var djOn=document.getElementById('cb-addon-dj').checked;
 
@@ -409,12 +413,14 @@ function cbCalc(){
   var teaPrice=guests*ADDON_TEA;
   var sigPrice=sigIncluded?0:ADDON_SIGDRINK;
   var stickerPrice=Math.max(ADDON_STICKER_MIN,guests*ADDON_STICKER_RATE);
+  var sleevePrice=ADDON_SLEEVE_BASE+ADDON_SLEEVE_PER250*Math.ceil(Math.max(0,guests-250)/250);
   var printPrice=Math.max(ADDON_PRINT_MIN,guests*ADDON_PRINT_RATE);
   var djPrice=cbSelectedPkg?DJ_PRICE[cbSelectedPkg]:0;
   var lattePrice=latteIncluded?0:ADDON_LATTE;
 
   document.getElementById('cb-price-tea').textContent='Included';
   document.getElementById('cb-price-sticker').textContent='+$'+stickerPrice.toFixed(2);
+  document.getElementById('cb-price-sleeve').textContent='+$'+sleevePrice.toFixed(2);
   document.getElementById('cb-price-print').textContent='+$'+printPrice.toFixed(2);
   document.getElementById('cb-price-dj').textContent='+$'+djPrice.toFixed(2);
   var mandaziOn=document.getElementById('cb-addon-mandazi').checked,mandaziPrice=Math.ceil(guests/50)*ADDON_MANDAZI_PER50;
@@ -425,7 +431,7 @@ function cbCalc(){
   var _fl=document.getElementById('cb-flavor');if(isBreak&&!coldOn){_fl.value='None (Coffee Break)';}else if(/^None/.test(_fl.value)){cbTapsSync();}
 
   var _me=cbMenuExtra(),menuExtraPrice=_me.extra*SIG_EXTRA;var _nt=document.getElementById('cb-drinks-note');if(_nt)_nt.textContent=!cbSelectedPkg?'Pick the ones you would like on your menu. Choose a package above to see how many are included. Each extra drink is $50. We will confirm the final menu with you before the event.':'Your package includes '+_me.inc+' signature drink'+(_me.inc===1?'':'s')+'. You have picked '+_me.n+(_me.extra>0?', so '+_me.extra+' extra x $50 = $'+menuExtraPrice.toFixed(2)+' is added to your total.':'.')+' Each extra drink is $50. We will confirm the final menu with you before the event.';
- var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0)+(latteOn?lattePrice:0)+(mandaziOn?mandaziPrice:0)+(coldOn?coldPrice:0)+menuExtraPrice;
+ var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(sleeveOn?sleevePrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0)+(latteOn?lattePrice:0)+(mandaziOn?mandaziPrice:0)+(coldOn?coldPrice:0)+menuExtraPrice;
   var preTax=pkgPrice+addonTotal;
   var taxTotal=preTax*CB_TAX_RATE;
   var grandTotal=preTax+taxTotal;
@@ -435,7 +441,7 @@ function cbCalc(){
   document.getElementById('cb-tax-total').textContent='$'+taxTotal.toFixed(2);
   document.getElementById('cb-grand-total').textContent='$'+grandTotal.toFixed(2);
 
-  var brandingPreTax=(stickerOn?stickerPrice:0)+(printOn?printPrice:0);
+  var brandingPreTax=(stickerOn?stickerPrice:0)+(sleeveOn?sleevePrice:0)+(printOn?printPrice:0);
   var brandingTax=brandingPreTax*CB_TAX_RATE;
   var brandingChargeNow=brandingPreTax+brandingTax;
   var servicePreTax=preTax-brandingPreTax;
@@ -460,6 +466,9 @@ function cbCalc(){
   if(leadTimeNote){
     if(printOn){
       leadTimeNote.textContent='Full Custom-Printed Cups need 21 business days (3 weeks) lead time \u2014 book early if this matters for your date.';
+      leadTimeNote.style.display='block';
+    }else if(sleeveOn){
+      leadTimeNote.textContent='Custom Logo Sleeves need about 3 weeks lead time \u2014 book early if this matters for your date.';
       leadTimeNote.style.display='block';
     }else if(stickerOn){
       leadTimeNote.textContent='Logo Stickers need 10 business days lead time \u2014 book early if this matters for your date.';
@@ -533,6 +542,7 @@ async function cbSubmit(){
   var teaOn=document.getElementById('cb-addon-tea').checked;
   var sigOn=document.getElementById('cb-addon-sig').checked;
   var stickerOn=document.getElementById('cb-addon-sticker').checked;
+  var sleeveOn=document.getElementById('cb-addon-sleeve').checked;
   var printOn=document.getElementById('cb-addon-print').checked;
   var djOn=document.getElementById('cb-addon-dj').checked;
   var latteIncluded=cbSelectedPkg==='full';
@@ -540,18 +550,19 @@ async function cbSubmit(){
   var sigIncluded=cbSelectedPkg==='full';
   var teaPrice=guests*ADDON_TEA,sigPrice=sigIncluded?0:ADDON_SIGDRINK;
   var stickerPrice=Math.max(ADDON_STICKER_MIN,guests*ADDON_STICKER_RATE);
+  var sleevePrice=ADDON_SLEEVE_BASE+ADDON_SLEEVE_PER250*Math.ceil(Math.max(0,guests-250)/250);
   var printPrice=Math.max(ADDON_PRINT_MIN,guests*ADDON_PRINT_RATE);
   var djPrice=DJ_PRICE[cbSelectedPkg];
   var lattePrice=latteIncluded?0:ADDON_LATTE;
   var mandaziOn=document.getElementById('cb-addon-mandazi').checked,mandaziPrice=Math.ceil(guests/50)*ADDON_MANDAZI_PER50;
   var coldOn=cbSelectedPkg==='break'&&document.getElementById('cb-addon-coldbrew').checked,coldPrice=ADDON_COLDBREW_BREAK;
   var _me=cbMenuExtra(),menuExtraPrice=_me.extra*SIG_EXTRA;
- var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0)+(latteOn?lattePrice:0)+(mandaziOn?mandaziPrice:0)+(coldOn?coldPrice:0)+menuExtraPrice;
+ var addonTotal=(teaOn?teaPrice:0)+(sigOn?sigPrice:0)+(stickerOn?stickerPrice:0)+(sleeveOn?sleevePrice:0)+(printOn?printPrice:0)+(djOn?djPrice:0)+(latteOn?lattePrice:0)+(mandaziOn?mandaziPrice:0)+(coldOn?coldPrice:0)+menuExtraPrice;
   var preTax=pkgPrice+addonTotal;
   var taxTotal=preTax*CB_TAX_RATE;
   var grandTotal=preTax+taxTotal;
   var payType=document.querySelector('input[name=cb-paytype]:checked').value;
-  var brandingPreTax=(stickerOn?stickerPrice:0)+(printOn?printPrice:0);
+  var brandingPreTax=(stickerOn?stickerPrice:0)+(sleeveOn?sleevePrice:0)+(printOn?printPrice:0);
   var brandingChargeNow=brandingPreTax+brandingPreTax*CB_TAX_RATE;
   var servicePreTax=preTax-brandingPreTax;
   var serviceTotal=servicePreTax+servicePreTax*CB_TAX_RATE;
@@ -560,6 +571,7 @@ async function cbSubmit(){
   var addonList=[];
   if(teaOn)addonList.push('Hot Tea & Cocoa (included)');
   if(sigOn)addonList.push(sigIncluded?'Custom Signature Drinks (Included with Full Experience)':'Custom Signature Drinks ($'+sigPrice.toFixed(2)+')');
+  if(sleeveOn)addonList.push('Custom Logo Sleeves ($'+sleevePrice.toFixed(2)+', billed in full at booking)');
   if(stickerOn)addonList.push('Logo Stickers ($'+stickerPrice.toFixed(2)+', billed in full at booking)');
   if(printOn)addonList.push('Full Custom-Printed Cups ($'+printPrice.toFixed(2)+', billed in full at booking)');
   if(djOn)addonList.push('Event DJ ($'+djPrice.toFixed(2)+')');
@@ -598,7 +610,7 @@ async function cbSubmit(){
       if(calHold.ok)KahoaCal.confirm(calHold.hold_id,data.payment_id);
       baClear();
       if(payType==='deposit'&&data.payment_id){try{var _it=[{d:'Coffee Cart: '+pkgName+' ('+guests+' guests, '+time+')',p:Math.round(pkgPrice*100)}];
-        if(sigOn&&!sigIncluded)_it.push({d:'Custom signature drink',p:Math.round(sigPrice*100)});if(stickerOn)_it.push({d:'Logo stickers on cups (paid at booking)',p:Math.round(stickerPrice*100)});if(printOn)_it.push({d:'Full custom-printed cups (paid at booking)',p:Math.round(printPrice*100)});
+        if(sigOn&&!sigIncluded)_it.push({d:'Custom signature drink',p:Math.round(sigPrice*100)});if(stickerOn)_it.push({d:'Logo stickers on cups (paid at booking)',p:Math.round(stickerPrice*100)});if(sleeveOn)_it.push({d:'Custom logo sleeves (paid at booking)',p:Math.round(sleevePrice*100)});if(printOn)_it.push({d:'Full custom-printed cups (paid at booking)',p:Math.round(printPrice*100)});
         if(djOn)_it.push({d:'Event DJ',p:Math.round(djPrice*100)});if(latteOn&&!latteIncluded)_it.push({d:'Latte art printer',p:Math.round(lattePrice*100)});if(mandaziOn)_it.push({d:'Mother\'s Love Bites & Boba Tea',p:Math.round(mandaziPrice*100)});if(coldOn)_it.push({d:'Kifaru Spice Cold Brew',p:Math.round(coldPrice*100)});if(menuExtraPrice>0)_it.push({d:'Extra signature drinks ('+_me.extra+')',p:Math.round(menuExtraPrice*100)});
         fetch('https://kahoa-checkoutout.chegekibuthu1.workers.dev/staff/cart_booked',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({payment_id:data.payment_id,charged_cents:Math.round(chargeNow*100),pay_type:'deposit',dep_pct:Math.round(cbDepPct()*100),items:_it,date:date,time:time,pkg_name:pkgName,name:name,email:email,phone:phone,location:location,signed_name:name})}).then(function(r){return r.json()}).then(function(d){if(d&&d.ok&&d.link){var el=document.getElementById('cb-success'),p=document.createElement('p');p.style.cssText='margin-top:12px;font-size:13px;';p.innerHTML='Your balance is due 7 days before your event. We\'ll email you a reminder, or <a href="'+d.link+'" style="color:var(--gold);font-weight:700;">pay it any time here</a>.';el.appendChild(p);}}).catch(function(e){console.error('Balance link FAILED:',e);});
       }catch(e){}}
